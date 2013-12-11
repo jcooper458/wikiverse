@@ -1,0 +1,27 @@
+/* link colors */
+a,a:visited,h1 a:hover,h2 a:hover,H3 a:hover,h4 a:hover,.item-title a:hover,h5 a:hover,.nivo-caption h3,h1#tag-title span,.base-menu ul li a span:hover,.base-menu ul a:hover,.base-menu ul li.sfHover a,.base-menu ul li.current-cat a span,.base-menu ul li.current_page_item a span,.base-menu ul li.current-menu-item a span,div.item-options a:hover,#sidebar #message p strong,div.item-list-tabs ul li a:hover {
+	color: #D24545;
+}
+/* border colors */
+.main-wrap {
+	border-top: 5px solid #FF5C5C;
+}
+#sub-menu-wrap {
+	border-color: #FF5C5C #DDDDDD #9C9C9C;
+}
+div.item-list-tabs {
+	border-bottom: 2px solid #FF5C5C;
+}
+#powered-by,#content .item-list-tabs {
+	border-bottom: 2px solid #FF5C5C;
+}
+#member-box,#feature-box {
+	border-top: 3px solid #FF5C5C;
+}
+/* subtle background */
+,.activity-list .activity-content .activity-inner,.activity-list .activity-content blockquote,form#whats-new-form #whats-new-textarea,div.activity-comments form.ac-form {
+	background: none repeat scroll 0 0 #FCF9F9;
+}
+div.item-list-tabs ul li.selected a span,div.item-list-tabs ul li.current a span {
+	background-color: #45BCD2;
+}

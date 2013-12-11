@@ -1,0 +1,444 @@
+/*
+Theme Name: Wikiverse
+Theme URI: http://infinity.presscrew.com/
+Description: Infinity Theme Anti-Framework Skeleton Files
+Tags: buddypress
+Version: 1.0
+Author: PressCrew
+Author URI: http://community.presscrew.com/
+Template: berlin
+*/
+
+
+/*------------------------------------------------
+  Add your custom design styles to THIS file.
+
+  !!! DO NOT EDIT themes/infinity/style.css !!!
+
+  Every child, grandchild, great-grandchild theme,
+  etc must have its Template set to infinity,
+  exactly like it is shown above!
+-------------------------------------------------*/
+/* Fonts and Typography */
+h2.page-title a,
+h2.post-title a,
+h1.page-title a,h1.post-title a{
+	color: #545454;
+	margin-top: 0;
+}
+h1 {
+	font-size: 2.3em;
+}
+a,
+.feature-item h4 a:hover,
+li.load-more a:hover,
+#activity-stream .button:hover  {
+	color: #80B5D2;
+	text-decoration: none;
+	-webkit-transition: color 0.1s linear;
+	-moz-transition: color 0.1s linear;
+	-o-transition: color 0.1s linear;
+	-ms-transition: color 0.1s linear;
+	transition: color 0.1s linear;
+}
+a:hover {
+	color: #777;
+}
+.base-menu a:hover,#object-nav a:hover,#subnav a:hover,#logo-menu-wrap a:hover,.sidebar-activity-tabs a:hover {
+	border: none;
+}
+/* GLOBAL & WRAPS */
+#infinity-base {
+	background: url("assets/images/snow.png") fixed 0 0px #FFF;
+	position: relative;
+	z-index: 0;
+	background-size: 100%;
+}
+/* LAYOUT */
+.row {
+	width: 100%;
+}
+#wrapper {
+	padding-top: 80px;
+}
+#wrapper .top-wrap {
+    background: none repeat scroll 0 0 #84CEE4;
+    border-bottom: 1px solid #2AA8BE;
+    margin-bottom: 23px;
+    margin-top: -85px;
+    padding-bottom: 8px;
+    padding-top: 12px;
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+}
+
+.top-wrap #header {
+	background: transparent;
+    border: 0 none;
+    box-shadow: none;
+    margin: auto;
+    padding-bottom: 0;
+    padding-top: 0;
+    z-index: 100;
+}
+.main-wrap {
+	margin-bottom: 30px;
+}
+/* HEADER */
+#logo-menu-wrap {
+	padding-top: 4px;
+}
+.icext-feature.icext-header-logo img{
+    height: 30px;
+    margin-top: 5px;
+    width: auto;
+}
+h1.icext-feature.icext-header-logo img {
+    margin-bottom: -13px;
+    margin-top: -21px;
+}
+.main-menu {
+	margin-top: -30px;
+	padding: 5px;
+}
+#header {
+	margin-top: -30px;
+	padding-bottom: 15px;
+	padding-top: 30px;
+}
+#infinity-base .icext-feature a {
+	left: 0px;
+	position: inherit;
+}
+#infinity-base .icext-header-logo {
+	position: absolute;
+}
+/* Menus */
+#main-menu-wrap {
+	padding: 10px 0 0;
+}
+.base-menu {
+	padding-left: 30px;
+	padding-right: 30px;
+}
+#main-menu-wrap .sub-menu {
+	margin: 8px 0 0;
+}
+
+.main-menu {
+	padding: 5px;
+}
+.main-menu ul a {
+	margin-right: 10px;
+}
+/* Footer */
+#footer {
+	padding-top: 0px;
+}
+#footer .footer-widget {
+	color: #EFEFEF;
+	font-weight: 400;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	width: 33%;
+}
+#footer .widget h4 {
+	background: transparent;
+	border-bottom: 1px solid #3E3C3C;
+	color: #FFFFFF;
+	padding-bottom: 15px;
+	text-shadow: 0 -1px 0 #000000;
+}
+#footer .widget, .error404 #content .widget {
+	background: transparent;
+	padding: 0;
+	box-shadow: none;
+}
+
+#powered-by {
+	min-height: inherit;
+	padding-bottom: 10px;
+}
+
+/* NAVIGATION MENUS */
+.base-menu ul a,div.item-list-tabs ul li a,div.item-list-tabs ul li span,#footer-menu ul li a {
+	color: #EFEFEF;
+}
+.main-menu {
+	border-radius: 6px 6px 6px 6px;
+	font-size: 115%;
+}
+.main-menu ul a {
+    color: #FFFFFF;
+    font-size: 85%;
+    letter-spacing: 1.5px;
+    text-shadow: none;
+    text-transform: uppercase;
+}
+.main-menu ul a:hover {
+	background: transparent;
+	color: #333;
+}
+.main-menu ul a {
+	margin-right: 0px;
+	padding: 3px 12px 7px;
+}
+
+/* Sidebar */
+#inside-sidebar {
+	margin-right: -30px;
+	padding-bottom: 30px;
+}
+body #sidebar {
+	background: none repeat scroll 0 0 #2F2F2F;
+    box-shadow: none;
+    margin-top: -30px;
+    padding-bottom: 0;
+    padding-top: 30px;
+}
+#sidebar .widget {
+	background: transparent;
+	padding: 30px;
+	margin: 0 0 30px;
+}
+#sidebar .widget h4 {
+    background: none repeat scroll 0 0 #333333;
+    border-bottom: 1px solid #2C2B2B;
+    border-top: 1px solid #434343;
+    color: #CDCDCD;
+    font-size: 80%;
+    letter-spacing: 1.8px;
+    padding: 10px;
+    position: relative;
+    text-shadow: 0 1px 0 #222222 !important;
+    text-transform: uppercase;
+}
+.sidebar-left #inside-sidebar {
+    margin-left: -30px;
+    margin-right: -30px;
+}
+
+/* WORDPRESS */
+#category-description,#tag-description {
+	padding: 10px 10px 10px 0;
+}
+.comment-container {
+	padding: 10px;
+}
+.children .comment-container {
+	background: transparent;
+}
+#comments .reply {
+	left: inherit;
+	top: 45px;
+}
+.postthumb {
+	margin-left: -30px;
+	margin-right: -30px;
+}
+.single .author-box {
+	margin-top: 0px;
+}
+.authorbox h3 {
+	padding-left: 25px;
+}
+h1#category-title span, h1#tag-title span {
+    color: #FFF;
+}
+h1#category-title,h1#tag-title {
+	color: #999;
+	font-size: 125%;
+}
+
+
+/* GLOBAL CSS3 AND PADDING */
+#content,#sidebar,#content-full,#footer,#header {
+	padding: 30px;
+}
+/* Global Negative Horizontal Padding */
+#bbpress-forums,div.bbp-breadcrumb,#item-body form#whats-new-form,div.item-list-tabs,#powered-by,#header #site-title,.negative,#group-navigation,#profile-sidebar,.sidebar-activity-tabs,#sidebar .widget h4,#vertical-activity-tabs,.sidebar-activity-tabs ul li,#content ul.item-list li,.homepage-widgets .widget h4,#feature-box,.author-box,.category-box,.tag-box,.info-box,.directory.activity #content h3,.no-widget h4,#content #vertical-activity-tabs {
+	margin-left: -30px;
+	margin-right: -30px;
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+/* Global CSS3 Stuff */
+.top-menu,.top-wrap .sub-menu,.item-list-tabs,.footer-wrap,thead:first-child tr th,thead:first-child tr td,.base-menu ul ul,.sidebar-activity-tabs ul li.current,.sidebar-activity-tabs ul li.selected,.docs .toggle-switch,.post-title:before,.callout-box,#feature-box,#content #object-nav,#user-header-nav li a,.author-box,.category-box,.tag-box,.info-box,#bbpress-forums li.bbp-header,#wrapper .top-wrap {
+    background-color: none repeat scroll 0 0 #4E4E4A;
+}
+
+/* ============ */
+/* ! Tooltips   */
+/* ============ */
+.tooltip {
+  position: absolute;
+  z-index: 1030;
+  display: block;
+  visibility: visible;
+  padding: 5px;
+  font-size: 11px;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+.tooltip.in {
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+}
+.tooltip.top {
+  margin-top: -3px;
+}
+.admin-bar-showing .tooltip.bottom {
+  margin-top: -28px;
+}
+.admin-bar-showing .tooltip.right {
+  margin-left: -1%;
+  margin-top: -28px;
+}
+.tooltip.bottom {
+  margin-top: 0px;
+}
+.tooltip.left {
+  margin-left: -3px;
+}
+
+.tooltip-inner {
+  max-width: 200px;
+  padding: 3px 8px;
+  color: #ffffff;
+  text-align: center;
+  text-decoration: none;
+  background-color: #000000;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.tooltip-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+.tooltip.top .tooltip-arrow {
+  bottom: 0;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px 5px 0;
+  border-top-color: #000000;
+}
+.tooltip.right .tooltip-arrow {
+  top: 50%;
+  left: 0;
+  margin-top: -5px;
+  border-width: 5px 5px 5px 0;
+  border-right-color: #000000;
+}
+.tooltip.left .tooltip-arrow {
+  top: 50%;
+  right: 0;
+  margin-top: -5px;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #000000;
+}
+.tooltip.bottom .tooltip-arrow {
+  top: 0;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 0 5px 5px;
+  border-bottom-color: #000000;
+}
+/* Responsive Tweaks */
+@media only screen and (max-width: 768px) { 
+	#infinity-base {
+		margin-top: 0px !important;
+	}
+	body #wrapper { 
+		padding-top: 105px;
+	}
+	body #inside-sidebar {
+		margin-left: -30px !important;
+		margin-right: -30px !important;
+	}
+	#wrapper .top-wrap {
+		position: relative;
+	}
+    #main-menu-wrap .main-menu {
+    padding: 0;
+    width: 100%;
+    background-image: -webkit-linear-gradient(top, #333333 0%, #222222 100%);
+	background-image: -moz-linear-gradient(top, #333333 0%, #222222 100%);
+	background-image: -o-linear-gradient(top, #333333 0%, #222222 100%);
+	background-image: -ms-linear-gradient(top, #333333 0%, #222222 100%);
+	background-image: linear-gradient(top, #333333 0%, #222222 100%);
+	background-repeat: repeat-x;
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;
+	border-bottom: 1px solid #292525;
+	border-top: 2px solid #525151;
+	border-left: 1px solid #222;
+	border-radius: 1px solid #222;
+    }
+    #vertical-activity-tabs {
+	    display: none;
+    }
+    #content #vertical-activity-tabs {
+	    display: block !important;
+    }
+    html {
+	    margin-top: 0px !important;
+    }
+    body #header { min-height: 50px;}
+}
+.author-box,.category-box,.tag-box,.info-box,#sidebar,.activity-inner,div.activity-comments form.ac-form,.postthumb img,span.activity,h1#site-title,div#site-title,#inner-sidebar,.sidebar-activity-tabs ul li,div#subnav.item-list-tabs,#top-homepage,.fluid-width-video-wrapper {
+	border-bottom: 1px solid #FBFBFB;
+	border-top: 1px solid #F5EEEE;
+}
+/* ======== */
+/* ! Wiki   */
+/* ======== */
+body.wiki.single-bp_doc #subnav {
+	display: none;
+}
+/* BBPress Bleeding */
+.groups.forums #item-header {
+	display: none;
+}
+#bbpress-forums {
+	font-size: inherit;
+}
+thead:first-child tr th, thead:first-child tr td {
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 0;
+}
+.tags-cell,.author-cell,.created-date-cell {
+	display: none;
+}
+#item-body .title-cell {
+    width: 75%;
+}
+
+.entry {
+    line-height: 170%;
+}
+#infinity-base #sidebar .button {
+    background: none repeat scroll 0 0 #fa8b43;
+    border: 0 none;
+    border-radius: 2px 2px 2px 2px;
+    box-shadow: none;
+    color: #FFFFFF;
+    padding: 8px 24px;
+    text-align: center;
+    text-shadow: 0 1px 0 #2E2E2E;
+}
+#infinity-base #sidebar .button:hover {
+    background: none repeat scroll 0 0 #fb9a5c;
+    border: 0 none;
+    border-radius: 2px 2px 2px 2px;
+    box-shadow: none;
+    color: #FFFFFF;
+    padding: 8px 24px;
+    text-align: center;
+    text-shadow: 0 1px 0 #2E2E2E;
+}

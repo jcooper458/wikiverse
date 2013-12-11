@@ -1,0 +1,21 @@
+/* link colors */
+.main-menu ul li.current-cat a,
+.main-menu ul li.current_page_item a,
+.main-menu ul li.current-menu-item a
+{
+    color: #25c425;
+}
+#wrapper .top-wrap,
+body #vertical-activity-tabs {
+	border-color: #25c425;
+}
+a,
+.feature-item h4 a:hover,
+li.load-more a:hover,
+.bp-user #item-buttons .generic-button a:hover,
+#profile-nav-menu a:hover,
+#vertical-activity-tabs ul li a:hover,
+.sidebar-activity-tabs ul li a:hover,
+#user-header-nav span {
+    color: #2bd72b
+}

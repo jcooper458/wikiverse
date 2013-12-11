@@ -1,0 +1,41 @@
+/* Using some fancy CSS magic to add our icons */
+.callout-widget h2:before,.resolved:before,#bbpress-forums .bbp-forums-list li a:before,.bbp-forum-title:before,.single-topic h1:before,#favorite-toggle:before,#subscription-toggle:before,.link-home h2:before,ul.checkbox li:before,ul.remove li:before,ul.plus li:before,.small-theme-feature h4:before,.callout-widget .button span:before,.super-sticky .bbp-topic-title:before,.sticky .bbp-topic-title:before {
+    font-weight: normal;
+    font-family: "iconsweetsRegular";
+    color: inherit;
+    padding-right: 2px;
+    font-size: 130%;
+    position: relative;
+    top: 2px;
+}
+@font-face {
+    font-family: 'ProximaNova-Semibold';
+    src: url('239676_0_0.eot');
+    src: url('239676_0_0.eot?#iefix') format('embedded-opentype'),url('239676_0_0.woff') format('woff'),url('239676_0_0.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'ProximaNova-Regular';
+    src: url('proximanova-regular-webfont.eot');
+    src: url('proximanova-regular-webfont.eot?#iefix') format('embedded-opentype'),url('proximanova-regular-webfont.woff') format('woff'),url('proximanova-regular-webfont.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'ProximaNova-Bold';
+    src: url('proximanova-bold-webfont.eot');
+    src: url('proximanova-bold-webfont.eot?#iefix') format('embedded-opentype'),url('proximanova-bold-webfont.woff') format('woff'),url('proximanova-bold-webfont.ttf') format('truetype');
+}
+#infinity-base,#tinymce {
+    color: #676767;
+    font-family: "ProximaNova-Regular";
+    font-size: 15.5px;
+    line-height: 150% !important;
+}
+h1,h2,h3,h4,h5,h6,.testimonial-widget span, .testimonial-text-full span {
+    font-family: "ProximaNova-Regular";
+}
+b,strong,li.selected,a.button,.generic-button,a.more-link,button,input[type="submit"],input[type="reset"],input[type="button"],#review_form #submit,div.item-list-tabs ul li.selected a,div.item-list-tabs ul li.selected a,div.item-list-tabs ul li.current a,label,th,.bbp-header,.resolved,div.item-options,div#message p,#bbps-post-count,#home-description span,h1,h2,h3,h4,h5,h6,.testimonial-widget span, .testimonial-text-full span {
+    font-family: "ProximaNova-Bold";
+    font-weight: normal !important;
+}
+h1,h2 {
+    font-weight: 600;
+}
