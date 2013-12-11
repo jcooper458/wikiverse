@@ -4,7 +4,7 @@ wp-config.php
 !.gitignore
 !wv/
 wv/*
-!wv/plugins/
+!wv/plugins/wall-creator/
 !wv/themes/
 *~
 .DS_Store
