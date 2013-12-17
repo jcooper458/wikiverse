@@ -18,13 +18,7 @@ function buildWall(){
 			buildYoutube(this.Topic);
 		}
 	});
-	
-	
-	
-	
 }
-
-
 
 function furtherAuthor($post, language){
 	
@@ -44,57 +38,17 @@ function furtherAuthor($post, language){
 function buildWikipedia(topic, language) {
     var title = topic;
     jQuery.ajax({
-        url: 'http://'+language+'.wikipedia.org/w/api.php',
+        url: 'http://en.wikipedia.org/w/api.php',
         data:{
-            action:'parse',
-            prop:'text',
-            page:title,
-            format:'json',
-            redirects:''
+            action:'query',
+            list:'search',
+            srsearch:title,
+            format:'json'
         },
         dataType:'jsonp',
         success: function(data){
-            if(typeof data.parse !== 'undefined'){
-                
-                var wikidesc = jQuery("<div>"+data.parse.text['*']+"<div>").children('p');
-                var wikicard = jQuery("<div>"+data.parse.text['*']+"<div>").children('.infobox');
-                
-                wikidesc.find('sup').remove();
-                wikidesc.find('span.IPA').remove();
-                wikidesc.find('span.nowrap').remove();
-                wikidesc.find('.dablink').remove();
-                wikidesc.find('.editsection').remove();
-                wikidesc.find('.magnify').remove();
-                wikidesc.find('.toc').remove();
-                wikidesc.find('.error').remove();
-                wikidesc.find('a[href$="ogg"]').remove();
-                wikidesc.find('a:contains("edit")').remove();
-                
-                var $desc = wikidesc.html();
-                var $card = wikicard.html();
-                
-                if($desc){
-
-                    var $box_desc = jQuery('<p></p>').append($card);
-                    
-                    if ($card){ $box_desc = $box_desc.append("<br><div id='line'></div><br>" );}
-                        
-                        $box_desc = $box_desc.append($desc);
-
-                        
-                        $box_desc = jQuery('<div class="brick" type="wiki" lang="'+language+'" title="'+title+'"></div>').append($box_desc);
-                        $box_desc.prepend('<span class="cross"> ✘ </span>');
-
-                        $container.append($box_desc).packery( 'appended', $box_desc);
-
-						$box_desc.each( makeEachDraggable );
-                                          
-                        furtherAuthor($box_desc, language);
-                               
-                }
-                }
-              else{console.log("Nothing found on Wikipedia");}
-        },
+			console.log(data);
+		},
         error: function (data){
         
                 var $container = jQuery('#packery');
@@ -175,7 +129,7 @@ function getSearchBoxes(){
 	$('#searchbox').typeahead({
 		source: function(query, process) {
 		return $.ajax({
-				url: "http://"+lang+".wikipedia.org/w/api.php",
+				url: "http://en.wikipedia.org/w/api.php",
 				dataType: "jsonp",
 				data: {
 					'action': "opensearch",
