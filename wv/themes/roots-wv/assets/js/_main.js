@@ -22,7 +22,6 @@ var ExampleSite = {
 				$container.packery( 'remove', thisBrick );
 			});
 
-		// REMOVE ITEM
 		$( "#packery" ).on( "click", ".more-link", function() {
 
 				var topic = jQuery(this).parents(".brick").attr("title");

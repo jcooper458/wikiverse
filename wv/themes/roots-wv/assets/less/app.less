@@ -18,8 +18,9 @@ body { }
 }
 
 
-.brick { width: 24%; min-width: 240px; background: #F8F8F8; border: 1px solid #E7E7E7;}
-.brick.w2 { width: 48%; }
+.brick { width: 300px; background: #F8F8F8; border: 1px solid #E7E7E7;}
+.brick p {overflow: hidden;}
+.brick.w2 { width: 00px; }
 .brick.w2-tube { width: 640px!important; }
 .brick.w2-vimeo { width: 500px!important; }
 
@@ -38,7 +39,18 @@ body { }
     position: absolute;
     top: -14px;}
 .brick:hover .cross {display: block;}
-.more-link{cursor: pointer;} 
+.wiki-result{cursor: pointer;} 
+
+.brick .table-hover {
+  > tbody {
+    > tr:hover {
+      > td,
+      > th {
+        background-color: #E7E7E7;
+      }
+    }
+  }
+}
 /* ==========================================================================
    Header
    ========================================================================== */

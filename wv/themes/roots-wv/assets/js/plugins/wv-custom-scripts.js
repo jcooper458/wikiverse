@@ -1,5 +1,5 @@
 var $container = $('#packery');
-
+var $wikisearch = $("#wikipedia-search");
 
 
 function buildNextTopic($brick, lang){
@@ -11,37 +11,22 @@ function buildNextTopic($brick, lang){
 		var topic = $(this).attr("title");
 		$(this).contents().unwrap();
 
-		buildWikipedia(topic, lang, $brick);
+		buildWikipedia(topic, lang);
 		return false;
 	});
 }
 
-function expandWiki(topic, lang, $brick) {
-
-    $.ajax({
-        url: 'http://'+lang+'.wikipedia.org/w/api.php',
-        data:{
-            action:'parse',
-            page: topic,
-            format:'json',
-            //redirects:true,
-            prop:'text',
-            section:0,
-        },
-        dataType:'jsonp',
-        success: function(data){
-            var wikitext = $("<div>"+data.parse.text['*']+"<div>").children('p, .infobox');
-
-            wikitext.find('.error').remove();
-			wikitext.find('.reference').remove();
-
-            $brick.find('.snippet').replaceWith(wikitext);
-            buildNextTopic($brick, lang);
-        }
-    });
+function strip(html)
+{
+   var tmp = document.createElement("DIV");
+   tmp.innerHTML = html;
+   return tmp.textContent || tmp.innerText || "";
 }
 
 function getWikis(topic, lang) {
+
+	$wikisearch.append('<table id="wiki-results" class="table table-hover"></table>');
+	var $wikitable = $('#wiki-results');
 
     $.ajax({
         url: 'http://'+lang+'.wikipedia.org/w/api.php',
@@ -58,15 +43,18 @@ function getWikis(topic, lang) {
 				var title = this.title;
 				var snippet = this.snippet;
 
-                var $brick = $('<p><img class="wiki-icon pull-right" src="/wv/themes/roots-wv/assets/img/wikipedia_xs.png"></p>').append('<h4>'+title+'</h4>');
-                $brick = $brick.append('<div class="snippet">'+snippet+'</div><br><small class="more-link pull-right" href="#">expand</small>');
+				
+					$wikitable.append('<tr><td class="wiki-result" data-toggle="tooltip" title="'+strip(snippet)+'">'+title+'</td></tr>');
+					$('td.wiki-result').tooltip({animation: true});
 
-                $brick = $('<div class="brick" type="wiki" lang="'+lang+'" title="'+title+'"></div>').append($brick);
-                $brick.prepend('<span class="cross"> ✘ </span>');
+					$wikitable.find("td").unbind('click').click(function(e) {
+		
+						var topic = $(this).html();
+						
+						buildWikipedia(topic, lang);
+						return false;
+					});
 
-                $container.append($brick).packery( 'appended', $brick);
-                $brick.each( makeEachDraggable );
-                
 			});
 		},
         error: function (data){
@@ -102,7 +90,10 @@ function buildWikipedia(topic, lang){
 
 				wikitext.find('.error').remove();
 				wikitext.find('.reference').remove();
-            
+				wikitext.find('*').css('max-width', '280px');
+				wikitext.find('img').unwrap();
+				wikitext.find('img').addClass('pull-right');
+
             var $brick = $('<p><img class="wiki-icon pull-right" src="/wv/themes/roots-wv/assets/img/wikipedia_xs.png"></p>').append('<h4>'+topic+'</h4>');
                 
                 $.each(wikitext, function(){
@@ -133,7 +124,7 @@ function buildWall(){
 	$.each(wikiverse, function() {
 	
 		if(this.Type === "wiki"){
-			getWikis(this.Topic, this.Language);
+			buildWikipedia(this.Topic, this.Language);
 		}
 		if(this.Type === "vimeo"){
 			buildVimeo(this.Topic);
@@ -235,8 +226,6 @@ function getSearchBoxes(){
 	
 	$("#wikipedia-icon").on("click", function(){
 	
-		var $wikisearch = $("#wikipedia-search");
-		
 		$wikisearch.removeClass("invisible");
 		$container.append($wikisearch).packery( 'prepended', $wikisearch);
 
