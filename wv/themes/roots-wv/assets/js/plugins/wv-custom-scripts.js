@@ -1,5 +1,50 @@
 var $container = jQuery('#packery');
 
+function buildSearches(topic, language) {
+    var title = topic;
+    jQuery.ajax({
+        url: 'http://'+language+'.wikipedia.org/w/api.php',
+        data:{
+            action:'query',
+            list:'search',
+            srsearch:title,
+            format:'json'
+        },
+        dataType:'jsonp',
+        success: function(data){
+			$.each(data.query.search, function(){
+
+				var title = this.title;
+				var snippet = this.snippet;
+
+                var $brick = jQuery('<p><img class="wiki-icon pull-right" src="/wv/themes/roots-wv/assets/img/wikipedia_xs.png"></p>').append('<strong>'+title+'</strong>');
+                $brick = $brick.append('<br><br><div class="snippet">'+snippet+'</div><br><small class="more-link pull-right" href="#">expand</small>');
+
+                $brick = jQuery('<div class="brick" type="wiki" lang="'+language+'" title="'+title+'"></div>').append($brick);
+                $brick.prepend('<span class="cross"> ✘ </span>');
+
+                $container.append($brick).packery( 'appended', $brick);
+                $brick.each( makeEachDraggable );
+                
+			});
+		},
+        error: function (data){
+        
+                var $container = jQuery('#packery');
+                var content = "Wikipedia seems to have the hickup..";
+                var $box = jQuery('<p></p>').append(content);
+                    $box = jQuery('<div class="brick "></div>').append($box);
+                  
+					$container.packery( 'appended', $box );
+					
+            
+                return false;
+                }
+    });
+}
+
+
+
 function buildWall(){
 
 	var str = jQuery("#wikiverse").html();
@@ -9,7 +54,7 @@ function buildWall(){
 	$.each(wikiverse, function() {
 	
 		if(this.Type === "wiki"){
-			buildWikipedia(this.Topic, this.Language);
+			buildSearches(this.Topic, this.Language);
 		}
 		if(this.Type === "vimeo"){
 			buildVimeo(this.Topic);
@@ -30,42 +75,9 @@ function furtherAuthor($post, language){
 		jQuery(this).contents().unwrap();
 		
 		var id = $post.attr("data-sort");
-		buildWikipedia(topic, language);
+		//buildSearches(topic, language);
 		return false;
 	});
-}
-
-function buildWikipedia(topic, language) {
-    var title = topic;
-    jQuery.ajax({
-        url: 'http://'+language+'.wikipedia.org/w/api.php',
-        data:{
-            action:'query',
-            list:'search',
-            srsearch:title,
-            format:'json'
-        },
-        dataType:'jsonp',
-        success: function(data){
-			$.each(data.query.search, function(){
-
-				console.log(this);
-
-			});
-		},
-        error: function (data){
-        
-                var $container = jQuery('#packery');
-                var content = "Wikipedia seems to have the hickup..";
-                var $box = jQuery('<p></p>').append(content);
-                    $box = jQuery('<div class="brick "></div>').append($box);
-                  
-					$container.packery( 'appended', $box );
-					
-            
-                return false;
-                }
-    });
 }
 
 function buildYoutube(query){
@@ -167,7 +179,7 @@ function getSearchBoxes(){
 			
 		var topic = $("#searchbox").val();
 
-		buildWikipedia( topic, lang );
+		buildSearches( topic, lang );
 		
 	});
 	

@@ -26,13 +26,19 @@ body { }
 .brick p,.brick iframe{ padding:10px; }
 
 #wikiverse, #postID{display: none;}
+
 .invisible{display:none;}
+
 .brick .container {padding:0;}
-.cross { cursor: pointer;
+
+.cross { display:none;
+    cursor: pointer;
     font-size: 19px;
     left: -5px;
     position: absolute;
     top: -14px;}
+.brick:hover .cross {display: block;}
+.more-link{cursor: pointer;} 
 /* ==========================================================================
    Header
    ========================================================================== */
