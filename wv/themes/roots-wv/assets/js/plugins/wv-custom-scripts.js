@@ -38,7 +38,7 @@ function furtherAuthor($post, language){
 function buildWikipedia(topic, language) {
     var title = topic;
     jQuery.ajax({
-        url: 'http://en.wikipedia.org/w/api.php',
+        url: 'http://'+language+'.wikipedia.org/w/api.php',
         data:{
             action:'query',
             list:'search',
@@ -47,7 +47,11 @@ function buildWikipedia(topic, language) {
         },
         dataType:'jsonp',
         success: function(data){
-			console.log(data);
+			$.each(data.query.search, function(){
+
+				console.log(this);
+
+			});
 		},
         error: function (data){
         
@@ -129,7 +133,7 @@ function getSearchBoxes(){
 	$('#searchbox').typeahead({
 		source: function(query, process) {
 		return $.ajax({
-				url: "http://en.wikipedia.org/w/api.php",
+				url: "http://"+lang+".wikipedia.org/w/api.php",
 				dataType: "jsonp",
 				data: {
 					'action': "opensearch",
