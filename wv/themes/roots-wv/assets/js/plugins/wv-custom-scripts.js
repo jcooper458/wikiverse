@@ -25,7 +25,13 @@ function strip(html)
 
 function getWikis(topic, lang) {
 
-	$wikisearch.append('<table id="wiki-results" class="table table-hover"></table>');
+	//if no table is already in the brick
+	if($wikisearch.find('#wiki-results').length === 0){
+
+		$wikisearch.append('<table id="wiki-results" class="table table-hover"></table>');
+	
+	}
+
 	var $wikitable = $('#wiki-results');
 
     $.ajax({
@@ -38,16 +44,19 @@ function getWikis(topic, lang) {
         },
         dataType:'jsonp',
         success: function(data){
+
 			$.each(data.query.search, function(){
 
 				var title = this.title;
 				var snippet = this.snippet;
-
-				
+					
+					
+					//append Table to searchbox: 
 					$wikitable.append('<tr><td class="wiki-result" data-toggle="tooltip" title="'+strip(snippet)+'">'+title+'</td></tr>');
-					$('td.wiki-result').tooltip({animation: true});
+					
+					$('td.wiki-result').tooltip({animation: true, placement: 'bottom'});
 
-					$wikitable.find("td").unbind('click').click(function(e) {
+					$wikitable.find('td').unbind('click').click(function(e) {
 		
 						var topic = $(this).html();
 						
@@ -56,6 +65,24 @@ function getWikis(topic, lang) {
 					});
 
 			});
+
+			//if no nav is already in the brick	
+			if($wikisearch.find('.nav').length === 0 ){
+
+				//append a clear button
+				$wikisearch.append('<ul class="nav nav-pills"><li class="pull-right"><a id="clear"><h6>clear results</h6></a></li></ul>');
+
+			}
+			
+
+			$('#clear').on('click', function(){
+
+					$wikitable.remove();
+					$(this).parents('.nav').remove();
+			});
+
+			//relayout packery: 
+			$container.packery();
 		},
         error: function (data){
         
@@ -92,7 +119,7 @@ function buildWikipedia(topic, lang){
 				wikitext.find('.reference').remove();
 				wikitext.find('*').css('max-width', '280px');
 				wikitext.find('img').unwrap();
-				wikitext.find('img').addClass('pull-right');
+				wikitext.find('img').addClass('pull-left');
 
             var $brick = $('<p><img class="wiki-icon pull-right" src="/wv/themes/roots-wv/assets/img/wikipedia_xs.png"></p>').append('<h4>'+topic+'</h4>');
                 
