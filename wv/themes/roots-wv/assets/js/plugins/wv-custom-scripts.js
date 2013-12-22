@@ -44,48 +44,81 @@ function getWikis(topic, lang) {
         },
         dataType:'jsonp',
         success: function(data){
+			if(data.query.search.length !== 0 ){
+				$.each(data.query.search, function(){
 
-			$.each(data.query.search, function(){
-
-				var title = this.title;
-				var snippet = this.snippet;
-					
-					
-					//append Table to searchbox: 
-					$wikitable.append('<tr><td class="wiki-result" data-toggle="tooltip" title="'+strip(snippet)+'">'+title+'</td></tr>');
-					
-					$('td.wiki-result').tooltip({animation: true, placement: 'bottom'});
-
-					$wikitable.find('td').unbind('click').click(function(e) {
-		
-						var topic = $(this).html();
+					var title = this.title;
+					var snippet = this.snippet;
 						
-						buildWikipedia(topic, lang);
-						return false;
-					});
+						
+						//append row to searchbox-table 
+						$wikitable.append('<tr><td class="wiki-result" data-toggle="tooltip" title="'+strip(snippet)+'">'+title+'</td></tr>');
+						
+						//create the tooltips
+						$('td.wiki-result').tooltip({animation: true, placement: 'bottom'});
 
-			});
+						//bind event to every row -> so you can start the wikiverse
+						$wikitable.find('td').unbind('click').click(function(e) {
+			
+							var topic = $(this).html();
+							
+							buildWikipedia(topic, lang);
+							return false;
+						});
 
-			//if no nav is already in the brick	
-			if($wikisearch.find('.nav').length === 0 ){
+				});
 
-				//append a clear button
-				$wikisearch.append('<ul class="nav nav-pills"><li class="pull-right"><a id="clear"><h6>clear results</h6></a></li></ul>');
+				//if no nav is already in the brick	
+				if($wikisearch.find('.nav').length === 0 ){
+
+					//append a clear button
+					$wikisearch.append('<ul class="nav nav-pills"><li class="pull-right"><a id="clear"><h6>clear results</h6></a></li></ul>');
+
+				}
+				
+				//when clear results is clicked
+				$('#clear').on('click', function(){
+
+						//remove all UI elements
+						$wikitable.remove();
+						$(this).parents('.nav').remove();
+
+						//empty the wiki-searchbox for new search
+						$('#searchbox').val('');
+				});
+
+				//relayout packery
+				$container.packery();
+			}else{
+
+				//append row to searchbox-table: NO RESULTS
+				$wikitable.append('<tr class="no-results"><td>No Wikipedia articles found for "'+topic+'"</td></tr>');
+
+				//destroy all UI after 2 seconds
+				setTimeout( function(){
+
+					//if only one result is there, delete everything
+					if($('#wiki-results tr').length ===  1){
+
+						//remove all UI elements
+						$wikitable.remove();
+
+						//empty the wiki-searchbox for new search
+						$('#searchbox').val('');
+
+					}else{
+						//only remove the not-found row
+						$wikitable.find('.no-results').remove();
+						$('#searchbox').val('');
+					}
+					
+
+				}, 2000 );
 
 			}
-			
-
-			$('#clear').on('click', function(){
-
-					$wikitable.remove();
-					$(this).parents('.nav').remove();
-			});
-
-			//relayout packery: 
-			$container.packery();
 		},
         error: function (data){
-        
+				
                 var $container = $('#packery');
                 var content = "Wikipedia seems to have the hickup..";
                 var $box = $('<p></p>').append(content);
