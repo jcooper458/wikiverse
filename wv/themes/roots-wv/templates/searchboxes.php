@@ -1,14 +1,12 @@
 <div id="wikipedia-search" class="brick invisible search">
 	<span class="cross"> ✘ </span>
 	<div class="container top-buffer-small">
-		<div class="col-lg-2">
-			<img class="icon" id="wikipedia-icon" src="<?php echo get_stylesheet_directory_uri();?>/assets/img/wikipedia.png">
-		</div>
+
 		<div class="col-lg-2">
 			
 	  		<?php get_template_part('templates/languages'); ?>
 		</div>
-	  	<div class="col-lg-8">
+	  	<div class="col-lg-10">
 	  	
 	  	<div class="input-group">
 	      <input type="text" id="searchbox" placeholder="insert a topic" class="form-control">

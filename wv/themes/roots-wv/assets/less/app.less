@@ -18,21 +18,44 @@ body { }
 }
 
 
-.brick { width: 24%; min-width: 220px; background: #F8F8F8; border: 1px solid #E7E7E7;}
-.brick.w2 { width: 48%; }
+.brick { width: 300px; background: #F8F8F8; border: 1px solid #E7E7E7;}
+.brick p {overflow: hidden;}
+.brick.w2 { width: 00px; }
 .brick.w2-tube { width: 640px!important; }
 .brick.w2-vimeo { width: 500px!important; }
 
 .brick p,.brick iframe{ padding:10px; }
 
 #wikiverse, #postID{display: none;}
+
 .invisible{display:none;}
+
 .brick .container {padding:0;}
-.cross { cursor: pointer;
+
+.cross { display:none;
+    cursor: pointer;
     font-size: 19px;
     left: -5px;
     position: absolute;
     top: -14px;}
+.brick:hover .cross {display: block;}
+.wiki-result, #clear{cursor: pointer;} 
+
+.brick .table-hover {
+  > tbody {
+    > tr:hover {
+      > td,
+      > th {
+        background-color: #E7E7E7;
+      }
+    }
+  }
+}
+.brick .nav>li>a {
+position: relative;
+display: block;
+padding: 3px 10px;
+}
 /* ==========================================================================
    Header
    ========================================================================== */
