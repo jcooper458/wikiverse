@@ -1,5 +1,6 @@
 var $container = $('#packery');
-var $wikisearch = $("#wikipedia-search");
+var $wikiSearchBrick = $("#wikipedia-search");
+var $youtubeSearchBrick = $("#youtube-search");
 
 
 function buildNextTopic($brick, lang){
@@ -23,16 +24,130 @@ function strip(html)
    return tmp.textContent || tmp.innerText || "";
 }
 
-function getWikis(topic, lang) {
 
+function getYoutubes(topic, lang) {
+
+	var $tableYoutubeResults = $('<table class="table table-hover youtube"></table>');
 	//if no table is already in the brick
-	if($wikisearch.find('#wiki-results').length === 0){
+	if($youtubeSearchBrick.find('table.youtube').length === 0){
 
-		$wikisearch.append('<table id="wiki-results" class="table table-hover"></table>');
-	
+		$youtubeSearchBrick.append($tableYoutubeResults);
 	}
 
-	var $wikitable = $('#wiki-results');
+    $.ajax({
+        url: 'https://gdata.youtube.com/feeds/api/videos',
+        data:{
+
+            q:topic,
+            alt: 'json',
+            'max-results': 10
+        },
+        dataType:'jsonp',
+        success: function(data){
+
+			if(data.feed.entry ){
+				$.each(data.feed.entry, function(){
+					
+					var title = this.title.$t;
+					var snippet = this.content.$t;
+					var youtubeID = this.id.$t.match(/[^\\/]+$/);
+					var thumbnailURL = this.media$group.media$thumbnail[1].url;
+
+					//append row to searchbox-table 
+					$tableYoutubeResults.append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td class="youtubeThumb"><img src="'+thumbnailURL+'"></td><td class="result" youtubeID="'+youtubeID+'">'+title+'</td></tr>');
+					
+					//create the tooltips
+					$('tr').tooltip({animation: true, placement: 'bottom'});
+
+					//bind event to every row -> so you can start the wikiverse
+					$tableYoutubeResults.find('tr').unbind('click').click(function(e) {
+		
+						var currentYoutubeID = $(this).find('.result').attr('youtubeID');
+						
+						buildYoutube(currentYoutubeID);
+
+						return false;
+					});
+
+				});
+
+				//if no nav is already in the brick	
+				if($youtubeSearchBrick.find('.nav').length === 0 ){
+			
+					//append a clear button and the wikipedia icon
+					$youtubeSearchBrick.append('<div class="search-ui"><ul class="nav nav-pills"><li class="pull-right"><a id="clear"><h6>clear results</h6></a></li></ul></div');
+
+				}
+				
+				//when clear results is clicked
+				$('#clear').on('click', function(){
+
+					//remove all UI elements
+					$tableYoutubeResults.remove();
+					$(this).parents('.search-ui').remove();
+
+					//empty the youtube-searchbox for new search
+					$('#youtube-searchinput').val('');
+				});
+
+				//relayout packery
+				$container.packery();
+
+			//nothing has been found on Wikipedia
+			}else{
+
+				//append row to searchbox-table: NO RESULTS
+				$tableYoutubeResults.append('<tr class="no-results"><td>No Youtube Videos found for "'+topic+'"</td></tr>');
+
+				//destroy all UI after 2 seconds
+				setTimeout( function(){
+
+					//if only one result is there, delete everything
+					if($('table#youtube.results tr').length ===  1){
+
+						//remove all UI elements
+						$tableYoutubeResults.remove();
+
+						//empty the wiki-searchbox for new search
+						$('#youtube-searchinput').val('');
+
+					}else{
+						//only remove the not-found row
+						$tableYoutubeResults.find('.no-results').remove();
+						$('#youtube-searchinput').val('');
+					}
+					
+
+				}, 2000 );
+
+			}
+
+		},
+        error: function (data){
+				
+            var $container = $('#packery');
+            var content = "Wikipedia seems to have the hickup..";
+            var $box = $('<p></p>').append(content);
+                $box = $('<div class="brick "></div>').append($box);
+              
+				$container.append($box).packery( 'appended', $box );
+	
+        
+            return false;
+            }
+    });
+}
+
+function getWikis(topic, lang) {
+
+	var $tableWikiResults = $('<table class="table table-hover wiki"></table>');
+
+	//if no table is already in the brick
+	if($wikiSearchBrick.find('table.wiki').length === 0){
+
+		$wikiSearchBrick.append($tableWikiResults);
+	
+	}
 
     $.ajax({
         url: 'http://'+lang+'.wikipedia.org/w/api.php',
@@ -45,34 +160,33 @@ function getWikis(topic, lang) {
         dataType:'jsonp',
         success: function(data){
 			if(data.query.search.length !== 0 ){
+
 				$.each(data.query.search, function(){
 
 					var title = this.title;
 					var snippet = this.snippet;
+										
+					//append row to searchbox-table 
+					$tableWikiResults.append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td class="result">'+title+'</td><td class="pull-right">'+lang+'</el></td></tr>');
+					
+					//create the tooltips
+					$('tr').tooltip({animation: true, placement: 'bottom'});
+					//bind event to every row -> so you can start the wikiverse
+					$tableWikiResults.find('tr').unbind('click').click(function(e) {
+		
+						var topic = $(this).find('.result').html();
 						
-						
-						//append row to searchbox-table 
-						$wikitable.append('<tr><td class="wiki-result" data-toggle="tooltip" title="'+strip(snippet)+'">'+title+'</td></tr>');
-						
-						//create the tooltips
-						$('td.wiki-result').tooltip({animation: true, placement: 'bottom'});
-
-						//bind event to every row -> so you can start the wikiverse
-						$wikitable.find('td').unbind('click').click(function(e) {
-			
-							var topic = $(this).html();
-							
-							buildWikipedia(topic, lang);
-							return false;
-						});
+						buildWikipedia(topic, lang);
+						return false;
+					});
 
 				});
 
 				//if no nav is already in the brick	
-				if($wikisearch.find('.nav').length === 0 ){
+				if($wikiSearchBrick.find('.nav').length === 0 ){
 
-					//append a clear button
-					$wikisearch.append('<ul class="nav nav-pills"><li class="pull-right"><a id="clear"><h6>clear results</h6></a></li></ul>');
+					//append a clear button and the wikipedia icon
+					$wikiSearchBrick.append('<div class="search-ui"><img class="wiki-icon pull-left" src="/wv/themes/roots-wv/assets/img/wikipedia_xs.png"><ul class="nav nav-pills"><li class="pull-right"><a id="clear"><h6>clear results</h6></a></li></ul></div');
 
 				}
 				
@@ -80,36 +194,38 @@ function getWikis(topic, lang) {
 				$('#clear').on('click', function(){
 
 						//remove all UI elements
-						$wikitable.remove();
-						$(this).parents('.nav').remove();
+						$tableWikiResults.remove();
+						$(this).parents('.search-ui').remove();
 
 						//empty the wiki-searchbox for new search
-						$('#searchbox').val('');
+						$('#wiki-searchinput').val('');
 				});
 
 				//relayout packery
 				$container.packery();
+
+			//nothing has been found on Wikipedia
 			}else{
 
 				//append row to searchbox-table: NO RESULTS
-				$wikitable.append('<tr class="no-results"><td>No Wikipedia articles found for "'+topic+'"</td></tr>');
+				$tableWikiResults.append('<tr class="no-results"><td>No Wikipedia articles found for "'+topic+'"</td></tr>');
 
 				//destroy all UI after 2 seconds
 				setTimeout( function(){
 
 					//if only one result is there, delete everything
-					if($('#wiki-results tr').length ===  1){
+					if($('table#wiki.results tr').length ===  1){
 
 						//remove all UI elements
-						$wikitable.remove();
+						$tableWikiResults.remove();
 
 						//empty the wiki-searchbox for new search
-						$('#searchbox').val('');
+						$('#wiki-searchinput').val('');
 
 					}else{
 						//only remove the not-found row
-						$wikitable.find('.no-results').remove();
-						$('#searchbox').val('');
+						$tableWikiResults.find('.no-results').remove();
+						$('#wiki-searchinput').val('');
 					}
 					
 
@@ -119,16 +235,16 @@ function getWikis(topic, lang) {
 		},
         error: function (data){
 				
-                var $container = $('#packery');
-                var content = "Wikipedia seems to have the hickup..";
-                var $box = $('<p></p>').append(content);
-                    $box = $('<div class="brick "></div>').append($box);
-                  
-					$container.append($box).packery( 'appended', $box );
-					
-            
-                return false;
-                }
+            var $container = $('#packery');
+            var content = "Wikipedia seems to have the hickup..";
+            var $box = $('<p></p>').append(content);
+                $box = $('<div class="brick "></div>').append($box);
+              
+			$container.append($box).packery( 'appended', $box );
+	
+        
+            return false;
+            }
     });
 }
 
@@ -197,13 +313,13 @@ function buildWall(){
 
 
 
-function buildYoutube(query){
+function buildYoutube(youtubeID){
 	
 	
-	var $iframe = '<iframe id="ytplayer" type="text/html" width="640" height="390" src="http://www.youtube.com/embed/'+query+'" frameborder="0"/>';
+	var $iframe = '<iframe id="ytplayer" type="text/html" width="600" height="380" src="http://www.youtube.com/embed/'+youtubeID+'" frameborder="0"/>';
 	
 
-    $iframe = $('<div class="brick w2-tube" type="youtube" title="'+query+'"></div>').append($iframe);
+    $iframe = $('<div class="brick w2" type="youtube" title="'+youtubeID+'"></div>').append($iframe);
     $iframe.prepend('<span class="cross"> ✘ </span>');
                              
     $container.append($iframe).packery( 'appended', $iframe);
@@ -256,10 +372,8 @@ function getSearchBoxes(){
 		
 	});
 	
-	
-	
 	//WIKIPEDIA AUTOCOMPLETE
-	$('#searchbox').typeahead({
+	$('#wiki-searchinput').typeahead({
 		source: function(query, process) {
 		return $.ajax({
 				url: "http://"+lang+".wikipedia.org/w/api.php",
@@ -270,7 +384,6 @@ function getSearchBoxes(){
 					'search': query
 				},
 				success: function(json) {
-					
 					process(json[1]);
 				}
 				
@@ -282,18 +395,51 @@ function getSearchBoxes(){
 				}
 			}
 		});
-	
+
+	//YOUTUBE AUTOCOMPLETE
+	$('#youtube-searchinput').typeahead({
+
+		source: function(query, process) {
+			return $.ajax({
+					url: "http://suggestqueries.google.com/complete/search",
+					dataType: "jsonp",
+					data: {
+						'client': "youtube",
+						'ds': "yt",
+						'q': query
+					},
+					success: function(json) {
+
+						var resultArray = [];
+
+						$.each(json[1], function(){
+
+							resultArray.push(this[0]);
+
+						});
+						
+						process(resultArray);
+					}
+					
+					});
+				},
+		matcher: function (item) {
+			if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
+				return true;
+			}
+		}
+	});
 	
 	$("#wikipedia-icon").on("click", function(){
 	
-		$wikisearch.removeClass("invisible");
-		$container.append($wikisearch).packery( 'prepended', $wikisearch);
+		$wikiSearchBrick.removeClass("invisible");
+		$container.append($wikiSearchBrick).packery( 'prepended', $wikiSearchBrick);
 
 	});
 	
 	$("#wikipedia-search .start").on("click", function(){
 			
-		var topic = $("#searchbox").val();
+		var topic = $("#wiki-searchinput").val();
 
 		getWikis( topic, lang );
 		
@@ -302,25 +448,17 @@ function getSearchBoxes(){
 	
 	
 	$("#youtube-icon").on("click", function(){
-	
-		var $youtubesearch = $("#youtube-search");
 		
-		$youtubesearch.removeClass("invisible");
-		$container.append($youtubesearch).packery( 'prepended', $youtubesearch);
+		$youtubeSearchBrick.removeClass("invisible");
+		$container.append($youtubeSearchBrick).packery( 'prepended', $youtubeSearchBrick);
 	});
 	
 	$("#youtube-search .start").on("click", function(){
 		
-		var query = $("#youtube-search .searchbox").val();
+		var topic = $("#youtube-search .searchbox").val();
 		
-		var video_id = query.split('v=')[1];
-		var ampersandPosition = video_id.indexOf('&');
-		if(ampersandPosition !== -1) {
-			video_id = video_id.substring(0, ampersandPosition);
-		}
-		
-		buildYoutube(video_id);
-		
+		getYoutubes( topic );
+
 	});
 	
 	$("#vimeo-icon").on("click", function(){
