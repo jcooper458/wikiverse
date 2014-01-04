@@ -9,7 +9,7 @@
 	  	<div class="col-lg-10">
 	  	
 	  	<div class="input-group">
-	      <input type="text" id="searchbox" placeholder="insert a topic" class="form-control">
+	      <input type="text" id="wiki-searchinput" placeholder="insert a Wikipedia topic" class="form-control">
 	      <span class="input-group-btn">
 	        <button class="btn btn-default start"1 type="button">Start</button>
 	      </span>
@@ -29,7 +29,7 @@
 	  	<div class="col-lg-10 col-md-10 col-sm-10">
 	  	
 	  	<div class="input-group">
-	      <input type="text" placeholder="insert a youTube URL" class="form-control searchbox">
+	      <input type="text" id="youtube-searchinput" placeholder="insert a youTube URL" class="form-control searchbox">
 	      <span class="input-group-btn">
 	        <button class="btn btn-default start" type="button">Start</button>
 	      </span>

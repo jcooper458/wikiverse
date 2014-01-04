@@ -16,7 +16,6 @@
 	      	<img class="icon" id="wikipedia-icon" src="<?php echo get_stylesheet_directory_uri();?>/assets/img/wikipedia.png">
 	      	<img class="icon" id="youtube-icon" src="<?php echo get_stylesheet_directory_uri();?>/assets/img/youtube.png">
 	      	<!--<img class="icon" id="gmaps-icon" src="<?php echo get_stylesheet_directory_uri();?>/assets/img/gmaps.png">-->
-	      	<img class="icon" id="vimeo-icon" src="<?php echo get_stylesheet_directory_uri();?>/assets/img/vimeo.png">
 	      	
 	      	<?php if ( is_user_logged_in() ) { 
 	    		$nonce = wp_create_nonce( 'wall' ); ?>
