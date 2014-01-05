@@ -1,7 +1,8 @@
 var $container = $('#packery');
 var $wikiSearchBrick = $("#wikipedia-search");
 var $youtubeSearchBrick = $("#youtube-search");
-
+var $flickrSearchBrick = $("#flickr-search");
+var $gmapsSearchBrick = $("#gmaps-search");
 
 function buildNextTopic($brick, lang){
 	
@@ -17,6 +18,24 @@ function buildNextTopic($brick, lang){
 	});
 }
 
+function buildFlickr(photoURL){
+
+	var $flickrPhoto = $('<img width="600" src="'+photoURL+'">');
+	
+
+    var $flickrBrick = $('<div class="brick w2" type="flickr" topic="'+photoURL+'"></div>').append($flickrPhoto);
+	$flickrBrick.prepend('<span class="cross"> ✘ </span>');
+    
+	$flickrBrick.imagesLoaded(function(){
+
+		$container.append($flickrBrick).packery( 'appended', $flickrBrick);
+	
+	});
+
+	$flickrBrick.each( makeEachDraggable );
+
+}
+
 function strip(html)
 {
    var tmp = document.createElement("DIV");
@@ -24,8 +43,81 @@ function strip(html)
    return tmp.textContent || tmp.innerText || "";
 }
 
+function getFlickrs(topic) {
 
-function getYoutubes(topic, lang) {
+	var $divFlickrResults = $('<div class="flickr"></div>');
+	//if no table is already in the brick
+	if($flickrSearchBrick.find('div.flickr').length === 0){
+
+		$flickrSearchBrick.append($divFlickrResults);
+	}
+
+    $.ajax({
+        url: 'http://api.flickr.com/services/rest',
+        data:{
+
+            method: 'flickr.photos.search',
+            api_key: '1a7d3826d58da8a6285ef7062f670d30',
+            text: topic,
+            format: 'json',
+            nojsoncallback: 1,
+            per_page: 20,
+            sort: 'interestingness-desc'
+        },
+        success: function(data){
+
+			$.each(data.photos.photo, function(){
+
+				$.ajax({
+					url: 'http://api.flickr.com/services/rest',
+					data:{
+
+						method: 'flickr.photos.getSizes',
+						api_key: '1a7d3826d58da8a6285ef7062f670d30',
+						photo_id: this.id,
+						format: 'json',
+						nojsoncallback: 1
+					},
+					success: function(data){
+
+						var thumbURL = data.sizes.size[1].source;
+						var mediumURL = data.sizes.size[6].source;
+
+						//append row to searchbox-table 
+						$divFlickrResults.append('<img width="149" large="'+mediumURL+'" src="'+thumbURL+'">');
+						
+						//relayout packery
+						$container.packery();
+
+						$divFlickrResults.find('img').unbind('click').click(function(e) {
+
+							var thisURL = $(this).attr('large');
+							buildFlickr(thisURL);
+						});
+						
+
+					}
+
+				});
+			});
+
+		},
+        error: function (data){
+			console.log(data);
+            /*var $container = $('#packery');
+            var content = "Flickr error..";
+            var $box = $('<p></p>').append(content);
+                $box = $('<div class="brick "></div>').append($box);
+              
+				$container.append($box).packery( 'appended', $box );
+			*/
+        
+            return false;
+            }
+    });
+}
+
+function getYoutubes(topic) {
 
 	var $tableYoutubeResults = $('<table class="table table-hover youtube"></table>');
 	//if no table is already in the brick
@@ -167,7 +259,7 @@ function getWikis(topic, lang) {
 					var snippet = this.snippet;
 										
 					//append row to searchbox-table 
-					$tableWikiResults.append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td class="result">'+title+'</td><td class="pull-right">'+lang+'</el></td></tr>');
+					$tableWikiResults.append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td><el class="result">'+title+'</el><el class="pull-right">'+lang+'</el></td></tr>');
 					
 					//create the tooltips
 					$('tr').tooltip({animation: true, placement: 'bottom'});
@@ -278,7 +370,7 @@ function buildWikipedia(topic, lang){
 
                 });
 
-                $brick = $('<div class="brick" type="wiki" lang="'+lang+'" title="'+topic+'"></div>').append($brick);
+                $brick = $('<div class="brick" type="wiki" lang="'+lang+'" topic="'+topic+'"></div>').append($brick);
                 $brick.prepend('<span class="cross"> ✘ </span>');
 
                 $container.append($brick).packery( 'appended', $brick);
@@ -302,8 +394,8 @@ function buildWall(){
 		if(this.Type === "wiki"){
 			buildWikipedia(this.Topic, this.Language);
 		}
-		if(this.Type === "vimeo"){
-			buildVimeo(this.Topic);
+		if(this.Type === "flickr"){
+			buildFlickr(this.Topic);
 		}
 		if(this.Type === "youtube"){
 			buildYoutube(this.Topic);
@@ -319,35 +411,10 @@ function buildYoutube(youtubeID){
 	var $iframe = '<iframe id="ytplayer" type="text/html" width="600" height="380" src="http://www.youtube.com/embed/'+youtubeID+'" frameborder="0"/>';
 	
 
-    $iframe = $('<div class="brick w2" type="youtube" title="'+youtubeID+'"></div>').append($iframe);
+    $iframe = $('<div class="brick w2" type="youtube" topic="'+youtubeID+'"></div>').append($iframe);
     $iframe.prepend('<span class="cross"> ✘ </span>');
                              
     $container.append($iframe).packery( 'appended', $iframe);
-
-	$iframe.each( makeEachDraggable );
-	
-}
-
-function getVimeoId( url ) {
-  // look for a string with 'vimeo', then whatever, then a 
-  // forward slash and a group of digits.
-  var match = /vimeo.*\/(\d+)/i.exec( url );
-
-  // if the match isn't null (i.e. it matched)
-  if ( match ) {
-    // the grouped/matched digits from the regex
-    return match[1];
-  }
-}
-
-function buildVimeo(vimeoID){
-
-	var $iframe = '<iframe src="//player.vimeo.com/video/'+vimeoID+'" width="500" height="290" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
-	
-	$iframe = $('<div class="brick w2-vimeo" type="vimeo" title="'+vimeoID+'"></div>').append($iframe);
-	$iframe.prepend('<span class="cross"> ✘ </span>');
-
-	$container.append($iframe).packery( 'appended', $iframe);
 
 	$iframe.each( makeEachDraggable );
 	
@@ -461,17 +528,32 @@ function getSearchBoxes(){
 
 	});
 	
-	$("#vimeo-icon").on("click", function(){
-	
-		var $vimeosearch = $("#vimeo-search");
-		$vimeosearch.removeClass("invisible");
-		$container.append($vimeosearch).packery( 'prepended', $vimeosearch);
+
+	$("#flickr-icon").on("click", function(){
+
+		$flickrSearchBrick.removeClass("invisible");
+		$container.append($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
 	});
-	$("#vimeo-search .start").on("click", function(){
+
+	$("#flickr-search .start").on("click", function(){
 		
-		var query = $("#vimeo-search .searchbox").val();
-		var vimeoID = getVimeoId(query);
-		buildVimeo(vimeoID);
+		var query = $("#flickr-search .searchbox").val();
+
+		getFlickrs(query);
+		
+	});
+
+	$("#gmaps-icon").on("click", function(){
+	
+		$gmapsSearchBrick.removeClass("invisible");
+		$container.append($gmapsSearchBrick).packery( 'prepended', $gmapsSearchBrick);
+	});
+
+	$("#gmaps-search .start").on("click", function(){
+		
+		var query = $("#gmaps-search .searchbox").val();
+
+		//buildGmaps(query);
 		
 	});
 	
