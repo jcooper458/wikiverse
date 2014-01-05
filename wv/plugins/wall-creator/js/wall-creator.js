@@ -16,7 +16,7 @@ function apfaddpost(wpnonce) {
 	  $.each(itemElems, function(){
 		  
 		  var type = $(this).attr('type');
-		  var topic = $(this).attr('title');
+		  var topic = $(this).attr('topic');
 		  var language = $(this).attr('lang');
 		  
 		  
@@ -107,7 +107,7 @@ function apfeditpost(wpnonce) {
 	  $.each(itemElems, function(){
 		  
 		  var type = $(this).attr('type');
-		  var topic = $(this).attr('title');
+		  var topic = $(this).attr('topic');
 		  var language = $(this).attr('lang');
 		  
 		  
