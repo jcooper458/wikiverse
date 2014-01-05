@@ -9,7 +9,7 @@
 	  	<div class="col-lg-10">
 	  	
 	  	<div class="input-group">
-	      <input type="text" id="wiki-searchinput" placeholder="insert a Wikipedia topic" class="form-control">
+	      <input type="text" id="wiki-searchinput" placeholder="search Wikipedia" class="form-control">
 	      <span class="input-group-btn">
 	        <button class="btn btn-default start"1 type="button">Start</button>
 	      </span>
@@ -29,7 +29,7 @@
 	  	<div class="col-lg-10 col-md-10 col-sm-10">
 	  	
 	  	<div class="input-group">
-	      <input type="text" id="youtube-searchinput" placeholder="insert a youTube URL" class="form-control searchbox">
+	      <input type="text" id="youtube-searchinput" placeholder="search Youtube" class="form-control searchbox">
 	      <span class="input-group-btn">
 	        <button class="btn btn-default start" type="button">Start</button>
 	      </span>
@@ -39,17 +39,37 @@
 	</div> 
 </div>
 
-<div id="vimeo-search" class="brick invisible search">
+<div id="flickr-search" class="brick invisible search">
 	<span class="cross"> ✘ </span>
 	<div class="container top-buffer-small  bottom-buffer-small">
 		<div class="col-lg-2 col-md-2 col-sm-2">
-			<img class="icon" id="vimeo-icon" src="<?php echo get_stylesheet_directory_uri();?>/assets/img/vimeo.png">
+			<img class="icon" id="flickr-icon" src="<?php echo get_stylesheet_directory_uri();?>/assets/img/flickr.png">
 		</div>
 	
 	  	<div class="col-lg-10 col-md-10 col-sm-10">
 	  	
 	  	<div class="input-group">
-	      <input type="text" placeholder="insert a Vimeo URL" class="form-control searchbox">
+	      <input type="text" id="flickr-searchinput" placeholder="search flickr" class="form-control searchbox">
+	      <span class="input-group-btn">
+	        <button class="btn btn-default start" type="button">Start</button>
+	      </span>
+	    </div><!-- /input-group -->
+	   
+	   </div> 
+	</div> 
+</div>
+
+<div id="gmaps-search" class="brick invisible search">
+	<span class="cross"> ✘ </span>
+	<div class="container top-buffer-small  bottom-buffer-small">
+		<div class="col-lg-2 col-md-2 col-sm-2">
+			<img class="icon" id="gmaps-icon" src="<?php echo get_stylesheet_directory_uri();?>/assets/img/gmaps.png">
+		</div>
+	
+	  	<div class="col-lg-10 col-md-10 col-sm-10">
+	  	
+	  	<div class="input-group">
+	      <input type="text" id="gmaps-searchinput" placeholder="search gmaps" class="form-control searchbox">
 	      <span class="input-group-btn">
 	        <button class="btn btn-default start" type="button">Start</button>
 	      </span>
