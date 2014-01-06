@@ -552,7 +552,7 @@ function buildWikipedia(topic, lang){
 				wikitext.find('img').unwrap();
 				wikitext.find('img').addClass('pull-left');
 
-            var $brick = $('<p><img class="wiki-icon pull-right" src="/wv/themes/roots-wv/assets/img/wikipedia_xs.png"></p>').append('<h4>'+topic+'</h4>');
+            var $brick = $('<p></p>').append('<h4>'+topic+'</h4>');
                 
                 $.each(wikitext, function(){
 
@@ -561,7 +561,7 @@ function buildWikipedia(topic, lang){
                 });
 
                 $brick = $('<div class="brick" data-type="wiki" data-lang="'+lang+'" data-topic="'+topic+'"></div>').append($brick);
-                $brick.prepend('<span class="cross"> ✘ </span>');
+                $brick.prepend('<span class="cross"> ✘ </span><span class="handle"> <img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/wikipedia_xs.png"> </span>');
 
                 $container.append($brick).packery( 'appended', $brick);
                 $brick.each( makeEachDraggable );
@@ -606,7 +606,7 @@ function buildYoutube(youtubeID){
 	var $iframe = '<iframe id="ytplayer" type="text/html" width="600" height="380" src="http://www.youtube.com/embed/'+youtubeID+'" frameborder="0"/>';
 	
    $iframe = $('<div class="brick w2" data-type="youtube" data-topic="'+youtubeID+'"></div>').append($iframe);
-   $iframe.prepend('<span class="cross"> ✘ </span>');
+   $iframe.prepend('<span class="cross"> ✘ </span><span class="handle"> <img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/youtube_xs.png"> </span>');
                              
    $container.append($iframe).packery( 'appended', $iframe);
 
@@ -617,7 +617,9 @@ function buildYoutube(youtubeID){
 
 function makeEachDraggable( i, itemElem ) {
     // make element draggable with Draggabilly
-    var draggie = new Draggabilly( itemElem );
+    var draggie = new Draggabilly( itemElem, {
+      handle: '.handle'
+    } );
     // bind Draggabilly events to Packery
     $container.packery( 'bindDraggabillyEvents', draggie );
   }
