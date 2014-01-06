@@ -1,4 +1,5 @@
 var $container = $('#packery');
+
 var $wikiSearchBrick = $("#wikipedia-search");
 var $youtubeSearchBrick = $("#youtube-search");
 var $flickrSearchBrick = $("#flickr-search");
@@ -18,14 +19,108 @@ function buildNextTopic($brick, lang){
 	});
 }
 
+function getGmaps(query){
+
+	//create the geocoder
+	var geocoder = new google.maps.Geocoder();
+	var center;
+
+	//geocode adress
+	geocoder.geocode( { 'address': query}, function(results, status) {
+
+		if (status === google.maps.GeocoderStatus.OK) {
+			
+			center = results[0].geometry.location;
+			
+		} else {
+			console.log("Geocode was not successful for the following reason: " + status);
+		}
+		
+		buildGmaps(center, 10, "roadmap");
+		
+	});
+}
+
+function buildGmaps(center, zoom, maptype){
+
+	var map;
+	var myMaptypeID;
+	var $mapbrick;
+
+	var $mapcanvas = $('<div id="map-canvas"></div>');
+
+	$mapbrick = $('<div class="brick w2" type="gmaps"></div>').append($mapcanvas);
+	$mapbrick.prepend('<span class="cross"> ✘ </span>');
+	
+	$container.append($mapbrick).packery( 'appended', $mapbrick);
+
+	$mapbrick.each( makeEachDraggable );
+
+	
+	if (maptype.toLowerCase() === "roadmap"){
+		myMaptypeID = google.maps.MapTypeId.ROADMAP;
+	}
+	else if(maptype.toLowerCase() === "satellite"){
+		myMaptypeID = google.maps.MapTypeId.SATELLITE;
+	}
+	else if(maptype.toLowerCase() === "hybrid"){
+		myMaptypeID = google.maps.MapTypeId.HYBRID;
+	}
+	else if(maptype.toLowerCase() === "terrain"){
+		myMaptypeID = google.maps.MapTypeId.TERRAIN;
+	}
+	var newCenter = new google.maps.LatLng(center.hb, center.ib);
+
+	var mapOptions = {
+		zoom: Number(zoom),
+		center: center,
+		draggable: false,
+		scrollwheel: false,
+		mapTypeId: myMaptypeID
+	};
+	map = new google.maps.Map($mapcanvas[0], mapOptions);
+	
+	var marker = new google.maps.Marker({
+          map: map,
+          position: center
+      });
+
+	google.maps.event.addListener(map, 'idle', function() {
+
+			var currentMap = {
+
+				center: map.getCenter(),
+				zoom: map.getZoom(),
+				maptype: map.getMapTypeId()
+			};
+
+		$mapbrick.data( "map", currentMap );
+		console.log($mapbrick.data("map").center);
+	});
+
+	var thePanorama = map.getStreetView(); //get the streetview object
+
+	google.maps.event.addListener(thePanorama, 'pov_changed', function() { //detect if entering Streetview
+	
+			$mapbrick.attr("maptype", "streetview");
+			$mapbrick.attr("y", thePanorama.position.hb);
+			$mapbrick.attr("z", thePanorama.position.ib);
+			$mapbrick.attr("zoom", thePanorama.pov.zoom);
+			$mapbrick.attr("adress", thePanorama.links[0].description);
+			$mapbrick.attr("heading", thePanorama.pov.heading);
+			$mapbrick.attr("pitch", thePanorama.pov.pitch);
+							
+	});
+
+}
+
 function buildFlickr(photoURL){
 
 	var $flickrPhoto = $('<img width="600" src="'+photoURL+'">');
 	
-
-    var $flickrBrick = $('<div class="brick w2" type="flickr" topic="'+photoURL+'"></div>').append($flickrPhoto);
+	var $flickrBrick = $('<div class="brick w2" type="flickr" topic="'+photoURL+'"></div>').append($flickrPhoto);
 	$flickrBrick.prepend('<span class="cross"> ✘ </span>');
-    
+
 	$flickrBrick.imagesLoaded(function(){
 
 		$container.append($flickrBrick).packery( 'appended', $flickrBrick);
@@ -523,7 +618,6 @@ function getSearchBoxes(){
 	$("#youtube-search .start").on("click", function(){
 		
 		var topic = $("#youtube-search .searchbox").val();
-		
 		getYoutubes( topic );
 
 	});
@@ -538,7 +632,6 @@ function getSearchBoxes(){
 	$("#flickr-search .start").on("click", function(){
 		
 		var query = $("#flickr-search .searchbox").val();
-
 		getFlickrs(query);
 		
 	});
@@ -553,8 +646,155 @@ function getSearchBoxes(){
 		
 		var query = $("#gmaps-search .searchbox").val();
 
-		//buildGmaps(query);
+		getGmaps(query);
 		
 	});
 	
+}
+
+function apfaddpost(wpnonce) {
+	
+	
+	var wikiverse = {};
+
+	var $container = $('#packery');
+	
+	//remove search bricks: 
+	var searchBricks = jQuery(".search");
+	$container.packery( 'remove', searchBricks );
+
+	var itemElems = $container.packery('getItemElements');
+	
+	var tabindex = 0;
+	
+	$.each(itemElems, function(){
+
+		var type = $(this).attr('type');
+		var topic = $(this).attr('topic');
+		var language = $(this).attr('lang');
+		
+		
+		wikiverse[tabindex] = {
+		
+				Type: type,
+				Topic: topic,
+				Language: language,
+			
+		};
+		
+		
+		tabindex++;
+		
+	});
+	
+	var JSONwikiverse = JSON.stringify(wikiverse);
+		
+	
+	
+		$("#saveWallModal").modal('show');
+	
+		$('#wallTitle').keyup(function () {
+		
+		$("#wallSubmitButton").prop('disabled', false);
+		});
+		
+			$("#wallSubmitButton").on("click", function(){
+				
+				
+				var value=$.trim($("#wallTitle").val());
+
+				if(value.length>0)
+				{
+				
+					var title = $('#wallTitle').val();
+					
+					$.ajax({
+						type: 'POST',
+						url: "/wp-admin/admin-ajax.php",
+						data: {
+							action: 'apf_addpost',
+							walltitle: title,
+							wallmeta: JSONwikiverse,
+							nonce: wpnonce
+						},
+						success: function(data, textStatus, XMLHttpRequest) {
+							var id = '#apf-response';
+							$(id).html('');
+							$(id).append(data);
+							history.pushState('', 'wikiverse', data);
+						},
+						error: function(MLHttpRequest, textStatus, errorThrown) {
+							alert("cdascsacsa");
+						}
+					});
+					
+					$("#saveWallModal").modal('hide');
+					
+				 
+				}
+				else{
+					
+					$('#wallTitle').parent(".form-group").addClass("has-error");
+					
+				}
+			
+			});
+		
+}
+
+function apfeditpost(wpnonce) {
+	
+	var postid = $('#postID').html();
+	
+	var wikiverse = {};
+
+	var $container = $('#packery');
+	
+	//remove search bricks: 
+	var searchBricks = jQuery(".search");
+	$container.packery( 'remove', searchBricks );
+	
+	var itemElems = $container.packery('getItemElements');
+	
+	var tabindex = 0;
+	
+	$.each(itemElems, function(){
+		
+		var type = $(this).attr('type');
+		var topic = $(this).attr('topic');
+		var language = $(this).attr('lang');
+
+		wikiverse[tabindex] = {
+
+				Type: type,
+				Topic: topic,
+				Language: language,
+		
+		};
+
+		tabindex++;
+
+	});
+	
+	var JSONwikiverse = JSON.stringify(wikiverse);
+
+		$.ajax({
+			type: 'POST',
+			url: "/wp-admin/admin-ajax.php",
+			data: {
+				action: 'apf_editpost',
+				wallID: postid,
+				wallmeta: JSONwikiverse,
+				nonce: wpnonce
+			},
+			success: function(data, textStatus, XMLHttpRequest) {
+				var id = '#apf-response';
+				$(id).html('');
+				$(id).append(data);
+				
+			},
+			error: function(MLHttpRequest, textStatus, errorThrown) {
+				alert("cdascsacsa");
+			}
+		});
 }
