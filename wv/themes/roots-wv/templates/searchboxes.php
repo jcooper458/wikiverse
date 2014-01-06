@@ -69,7 +69,7 @@
 	  	<div class="col-lg-10 col-md-10 col-sm-10">
 	  	
 	  	<div class="input-group">
-	      <input type="text" id="gmaps-searchinput" placeholder="search gmaps" class="form-control searchbox">
+	      <input type="text" id="gmaps-searchinput" placeholder="search google maps" class="form-control searchbox">
 	      <span class="input-group-btn">
 	        <button class="btn btn-default start" type="button">Start</button>
 	      </span>

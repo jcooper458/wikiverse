@@ -21,10 +21,10 @@
 	      	<?php if ( is_user_logged_in() ) { 
 	    		$nonce = wp_create_nonce( 'wall' ); ?>
 	    		<?php if ( is_front_page() ) { ?>
-					<button class="btn btn-default"  id="saveWall" onclick="apfaddpost('<?php echo $nonce ?>');" type="button">Save Wall</button>
+					<button class="btn btn-default"  id="saveWall" onclick="createWall('<?php echo $nonce ?>');" type="button">Save Wall</button>
 				<?php }  ?>
 				<?php if ( is_singular("wall") ) { ?>
-					<button class="btn btn-default"  id="editWall" onclick="apfeditpost('<?php echo $nonce ?>');" type="button">Save Changes</button>
+					<button class="btn btn-default"  id="editWall" onclick="editWall('<?php echo $nonce ?>');" type="button">Save Changes</button>
 				<?php }  ?> 	
 			<?php }  ?> 
 	      	

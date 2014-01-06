@@ -24,101 +24,196 @@ function getGmaps(query){
 	//create the geocoder
 	var geocoder = new google.maps.Geocoder();
 	var center;
+	var currentMap;
 
 	//geocode adress
 	geocoder.geocode( { 'address': query}, function(results, status) {
 
 		if (status === google.maps.GeocoderStatus.OK) {
 			
-			center = results[0].geometry.location;
-			
+			//console.log(results[0].geometry.bounds);
+			currentMap = {
+					center: results[0].geometry.location,
+					bounds: results[0].geometry.bounds,
+					maptype: "roadmap"
+				};
+
+			buildGmaps(currentMap);
+		
 		} else {
-			console.log("Geocode was not successful for the following reason: " + status);
+			alert("No place has been found with that query.. Try something else.");
 		}
 		
-		buildGmaps(center, 10, "roadmap");
+		
 		
 	});
 }
 
-function buildGmaps(center, zoom, maptype){
+function buildGmaps(mapObj){
+
 
 	var map;
 	var myMaptypeID;
 	var $mapbrick;
+	var currentMap;
+	var currentStreetMap;
 
 	var $mapcanvas = $('<div id="map-canvas"></div>');
 
-	$mapbrick = $('<div class="brick w2" type="gmaps"></div>').append($mapcanvas);
+	$mapbrick = $('<div class="brick w2" data-type="gmaps" data-topic=""></div>').append($mapcanvas);
 	$mapbrick.prepend('<span class="cross"> ✘ </span>');
 	
 	$container.append($mapbrick).packery( 'appended', $mapbrick);
 
 	$mapbrick.each( makeEachDraggable );
 
-	
-	if (maptype.toLowerCase() === "roadmap"){
+
+	if (mapObj.maptype.toLowerCase() === "roadmap"){
 		myMaptypeID = google.maps.MapTypeId.ROADMAP;
 	}
-	else if(maptype.toLowerCase() === "satellite"){
+	else if(mapObj.maptype.toLowerCase() === "satellite"){
 		myMaptypeID = google.maps.MapTypeId.SATELLITE;
 	}
-	else if(maptype.toLowerCase() === "hybrid"){
+	else if(mapObj.maptype.toLowerCase() === "hybrid"){
 		myMaptypeID = google.maps.MapTypeId.HYBRID;
 	}
-	else if(maptype.toLowerCase() === "terrain"){
+	else if(mapObj.maptype.toLowerCase() === "terrain"){
 		myMaptypeID = google.maps.MapTypeId.TERRAIN;
 	}
-	var newCenter = new google.maps.LatLng(center.hb, center.ib);
+
+	//It is necessairy to re-build a valid LatLng object. The one recreated from the JSON string is invalid.
+	var myLatlng = new google.maps.LatLng(mapObj.center.nb, mapObj.center.ob);
+	
+	//same for the bounds, on top we need to rebuild LatLngs to re-build a bounds object
+	var LatLng1 = new google.maps.LatLng(mapObj.bounds.ea.d, mapObj.bounds.fa.b);
+	var LatLng2 = new google.maps.LatLng(mapObj.bounds.ea.b, mapObj.bounds.fa.d);
+	
+	//last but not least: the bound object with the newly created Latlngs
+	var myBounds = new google.maps.LatLngBounds(LatLng1, LatLng2);
 
 	var mapOptions = {
-		zoom: Number(zoom),
-		center: center,
+		zoom: 8,
+		center: myLatlng,
 		draggable: false,
 		scrollwheel: false,
 		mapTypeId: myMaptypeID
 	};
+
 	map = new google.maps.Map($mapcanvas[0], mapOptions);
-	
-	var marker = new google.maps.Marker({
-          map: map,
-          position: center
-      });
+
+	map.fitBounds(myBounds);
+
 
 	google.maps.event.addListener(map, 'idle', function() {
 
-			var currentMap = {
+		currentMap = {
+			center: map.getCenter(),
+			bounds: map.getBounds(),
+			maptype: map.getMapTypeId()
+		};
+	
+		$mapbrick.data( "topic", currentMap );
 
-				center: map.getCenter(),
-				zoom: map.getZoom(),
-				maptype: map.getMapTypeId()
-			};
+	});
 
-		$mapbrick.data( "map", currentMap );
-		console.log($mapbrick.data("map").center);
+	google.maps.event.addListener(map, 'maptypeid_changed', function() {
+
+		currentMap.maptype = map.getMapTypeId();
+		
+		$mapbrick.data( "topic", currentMap );
+
 	});
 
 	var thePanorama = map.getStreetView(); //get the streetview object
-
-	google.maps.event.addListener(thePanorama, 'pov_changed', function() { //detect if entering Streetview
 	
-			$mapbrick.attr("maptype", "streetview");
-			$mapbrick.attr("y", thePanorama.position.hb);
-			$mapbrick.attr("z", thePanorama.position.ib);
-			$mapbrick.attr("zoom", thePanorama.pov.zoom);
-			$mapbrick.attr("adress", thePanorama.links[0].description);
-			$mapbrick.attr("heading", thePanorama.pov.heading);
-			$mapbrick.attr("pitch", thePanorama.pov.pitch);
-							
+	//detect if entering Streetview -> Change the type to streetview
+	google.maps.event.addListener(thePanorama, 'visible_changed', function() {
+
+		if (thePanorama.getVisible()) {
+
+			currentStreetMap = {
+				center: thePanorama.position,
+				zoom: thePanorama.pov.zoom,
+				adress: thePanorama.links[0].description,
+				pitch: thePanorama.pov.pitch,
+				heading: thePanorama.pov.heading
+			};
+			$mapbrick.data( "type", "streetview" );
+			$mapbrick.data( "topic", currentStreetMap );
+		}
+	
 	});
 
+		//detect if entering Streetview -> Change the type to streetview
+	google.maps.event.addListener(thePanorama, 'pov_changed', function() {
+
+		if (thePanorama.getVisible()) {
+
+			currentStreetMap = {
+				center: thePanorama.position,
+				zoom: thePanorama.pov.zoom,
+				adress: thePanorama.links[0].description,
+				pitch: thePanorama.pov.pitch,
+				heading: thePanorama.pov.heading
+			};
+			$mapbrick.data( "topic", currentStreetMap );
+		}
+	
+	});
+
+}
+
+function buildStreetMap(streetObj) {
+
+	var $mapbrick;
+	var currentStreetMap;
+
+	var $mapcanvas = $('<div id="map-canvas"></div>');
+
+	$mapbrick = $('<div class="brick w2" data-type="streetview" data-topic=""></div>').append($mapcanvas);
+	$mapbrick.prepend('<span class="cross"> ✘ </span>');
+	
+	$container.append($mapbrick).packery( 'appended', $mapbrick);
+	$mapbrick.each( makeEachDraggable );
+
+
+	var center = new google.maps.LatLng(streetObj.center.nb, streetObj.center.ob);
+
+	var panoramaOptions = {
+			position:center,
+			pov: {
+				heading: parseFloat(streetObj.heading),
+				pitch: parseFloat(streetObj.pitch),
+				zoom: parseFloat(streetObj.zoom)
+			},
+			visible:true
+			};
+ 
+	var thePanorama = new google.maps.StreetViewPanorama($mapcanvas[0], panoramaOptions);
+
+	google.maps.event.addListener(thePanorama, 'pov_changed', function() { //detect if entering Streetview
+			
+		currentStreetMap = {
+			center: thePanorama.position,
+			zoom: thePanorama.pov.zoom,
+			adress: thePanorama.links[0].description,
+			pitch: thePanorama.pov.pitch,
+			heading: thePanorama.pov.heading
+		};
+
+		$mapbrick.data( "topic", currentStreetMap );
+
+	});
+
+	//if nothing changes, re-save the data-topic (otherwise its lost upon resave without moving)
+	$mapbrick.data( "topic", streetObj );
 }
 
 function buildFlickr(photoURL){
 
 	var $flickrPhoto = $('<img width="600" src="'+photoURL+'">');
 	
-	var $flickrBrick = $('<div class="brick w2" type="flickr" topic="'+photoURL+'"></div>').append($flickrPhoto);
+	var $flickrBrick = $('<div class="brick w2" data-type="flickr" data-topic="'+photoURL+'"></div>').append($flickrPhoto);
 	$flickrBrick.prepend('<span class="cross"> ✘ </span>');
 
 	$flickrBrick.imagesLoaded(function(){
@@ -465,7 +560,7 @@ function buildWikipedia(topic, lang){
 
                 });
 
-                $brick = $('<div class="brick" type="wiki" lang="'+lang+'" topic="'+topic+'"></div>').append($brick);
+                $brick = $('<div class="brick" data-type="wiki" data-lang="'+lang+'" data-topic="'+topic+'"></div>').append($brick);
                 $brick.prepend('<span class="cross"> ✘ </span>');
 
                 $container.append($brick).packery( 'appended', $brick);
@@ -483,9 +578,9 @@ function buildWall(){
 	var str = $("#wikiverse").html();
 	
 	var wikiverse =	JSON.parse(str);
-	
+
 	$.each(wikiverse, function() {
-	
+
 		if(this.Type === "wiki"){
 			buildWikipedia(this.Topic, this.Language);
 		}
@@ -495,6 +590,12 @@ function buildWall(){
 		if(this.Type === "youtube"){
 			buildYoutube(this.Topic);
 		}
+		if(this.Type === "gmaps"){
+			buildGmaps(this.Topic);
+		}
+		if(this.Type === "streetview"){
+			buildStreetMap(this.Topic);
+		}
 	});
 }
 
@@ -502,14 +603,12 @@ function buildWall(){
 
 function buildYoutube(youtubeID){
 	
-	
 	var $iframe = '<iframe id="ytplayer" type="text/html" width="600" height="380" src="http://www.youtube.com/embed/'+youtubeID+'" frameborder="0"/>';
 	
-
-    $iframe = $('<div class="brick w2" type="youtube" topic="'+youtubeID+'"></div>').append($iframe);
-    $iframe.prepend('<span class="cross"> ✘ </span>');
+   $iframe = $('<div class="brick w2" data-type="youtube" data-topic="'+youtubeID+'"></div>').append($iframe);
+   $iframe.prepend('<span class="cross"> ✘ </span>');
                              
-    $container.append($iframe).packery( 'appended', $iframe);
+   $container.append($iframe).packery( 'appended', $iframe);
 
 	$iframe.each( makeEachDraggable );
 	
@@ -652,7 +751,7 @@ function getSearchBoxes(){
 	
 }
 
-function apfaddpost(wpnonce) {
+function createWall(wpnonce) {
 	
 	
 	var wikiverse = {};
@@ -669,9 +768,9 @@ function apfaddpost(wpnonce) {
 	
 	$.each(itemElems, function(){
 
-		var type = $(this).attr('type');
-		var topic = $(this).attr('topic');
-		var language = $(this).attr('lang');
+		var type = $(this).data('type');
+		var topic = $(this).data('topic');
+		var language = $(this).data('lang');
 		
 		
 		wikiverse[tabindex] = {
@@ -742,7 +841,7 @@ function apfaddpost(wpnonce) {
 		
 }
 
-function apfeditpost(wpnonce) {
+function editWall(wpnonce) {
 	
 	var postid = $('#postID').html();
 	
@@ -760,9 +859,9 @@ function apfeditpost(wpnonce) {
 	
 	$.each(itemElems, function(){
 		
-		var type = $(this).attr('type');
-		var topic = $(this).attr('topic');
-		var language = $(this).attr('lang');
+		var type = $(this).data('type');
+		var topic = $(this).data('topic');
+		var language = $(this).data('lang');
 
 		wikiverse[tabindex] = {
 

@@ -35,7 +35,9 @@ body { }
     font-size: 19px;
     left: -5px;
     position: absolute;
-    top: -14px;}
+    top: -14px;
+    z-index: 1;
+}
 
 .brick:hover .cross {display: block;}
 table tr, .result, #clear{cursor: pointer;} 
@@ -61,6 +63,13 @@ padding: 1px 10px;
     padding-left: 6px;
     padding-top: 6px;
 }
+
+#map-canvas {
+  height: 400px;
+  margin: 0px;
+  padding: 0px
+}
+
 /* ==========================================================================
    Header
    ========================================================================== */
