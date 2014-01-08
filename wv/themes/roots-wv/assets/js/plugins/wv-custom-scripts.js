@@ -51,7 +51,6 @@ function getGmaps(query){
 
 function buildGmaps(mapObj){
 
-
 	var map;
 	var myMaptypeID;
 	var $mapbrick;
@@ -61,7 +60,7 @@ function buildGmaps(mapObj){
 	var $mapcanvas = $('<div id="map-canvas"></div>');
 
 	$mapbrick = $('<div class="brick w2" data-type="gmaps" data-topic=""></div>').append($mapcanvas);
-	$mapbrick.prepend('<span class="cross"> ✘ </span>');
+	$mapbrick.prepend('<span class="cross"> ✘ </span><span class="handle"> <img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/youtube_xs.png"> </span>');
 	
 	$container.append($mapbrick).packery( 'appended', $mapbrick);
 
@@ -82,26 +81,27 @@ function buildGmaps(mapObj){
 	}
 
 	//It is necessairy to re-build a valid LatLng object. The one recreated from the JSON string is invalid.
-	var myLatlng = new google.maps.LatLng(mapObj.center.nb, mapObj.center.ob);
-	
+	var myLatlng = new google.maps.LatLng(mapObj.center.b, mapObj.center.d);
+
 	//same for the bounds, on top we need to rebuild LatLngs to re-build a bounds object
-	var LatLng1 = new google.maps.LatLng(mapObj.bounds.ea.d, mapObj.bounds.fa.b);
-	var LatLng2 = new google.maps.LatLng(mapObj.bounds.ea.b, mapObj.bounds.fa.d);
+	var LatLng1 = new google.maps.LatLng(mapObj.bounds.la.d, mapObj.bounds.fa.b);
+	var LatLng2 = new google.maps.LatLng(mapObj.bounds.la.b, mapObj.bounds.fa.d);
 	
 	//last but not least: the bound object with the newly created Latlngs
 	var myBounds = new google.maps.LatLngBounds(LatLng1, LatLng2);
+	
+	
 
 	var mapOptions = {
 		zoom: 8,
 		center: myLatlng,
-		draggable: false,
 		scrollwheel: false,
 		mapTypeId: myMaptypeID
 	};
 
 	map = new google.maps.Map($mapcanvas[0], mapOptions);
 
-	map.fitBounds(myBounds);
+	//map.fitBounds(myBounds);
 
 
 	google.maps.event.addListener(map, 'idle', function() {
@@ -164,20 +164,20 @@ function buildGmaps(mapObj){
 }
 
 function buildStreetMap(streetObj) {
-
+	
 	var $mapbrick;
 	var currentStreetMap;
 
 	var $mapcanvas = $('<div id="map-canvas"></div>');
 
 	$mapbrick = $('<div class="brick w2" data-type="streetview" data-topic=""></div>').append($mapcanvas);
-	$mapbrick.prepend('<span class="cross"> ✘ </span>');
+	$mapbrick.prepend('<span class="cross"> ✘ </span><span class="handle"> <img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/youtube_xs.png"> </span>');
 	
 	$container.append($mapbrick).packery( 'appended', $mapbrick);
 	$mapbrick.each( makeEachDraggable );
 
 
-	var center = new google.maps.LatLng(streetObj.center.nb, streetObj.center.ob);
+	var center = new google.maps.LatLng(streetObj.center.b, streetObj.center.d);
 
 	var panoramaOptions = {
 			position:center,
