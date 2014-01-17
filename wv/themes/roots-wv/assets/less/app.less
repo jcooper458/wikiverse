@@ -18,11 +18,11 @@ body { }
 }
 
 
-.brick { width: 300px; background: #F8F8F8; border: 1px solid #E7E7E7;}
+.brick { width: 300px; background: #F8F8F8; border: 1px solid #E7E7E7;outline: 0;}
 .brick p {overflow: hidden;}
 .brick.w2 { width: 600px; }
 
-.brick p,.brick iframe{ padding:10px; }
+.brick p,.brick iframe{ padding:0px 5px; }
 
 #wikiverse, #postID{display: none;}
 
@@ -33,9 +33,9 @@ body { }
 .cross { display:none;
     cursor: pointer;
     font-size: 19px;
-    left: -5px;
+    left: -10px;
     position: absolute;
-    top: -14px;
+    top: -10px;
     z-index: 2;
 }
 .handle { 
@@ -82,6 +82,8 @@ padding: 1px 10px;
   margin: 0px;
   padding: 0px
 }
+
+.infobox{font-size: 12px;}
 
 /* ==========================================================================
    Header
