@@ -22,12 +22,15 @@ var ExampleSite = {
 				$container.packery( 'remove', thisBrick );
 			});
 
+		//show save wall button on packery change (needs work)
 		$container.packery( 'on', 'layoutComplete', function( pckryInstance, laidOutItems ) {
 			
 			$("#saveWall").fadeIn();
 			
 		});
 
+		$container.packery( 'on', 'layoutComplete', orderItems );
+		$container.packery( 'on', 'dragItemPositioned', orderItems );
     },
     finalize: function() {
 
