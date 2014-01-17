@@ -5,6 +5,303 @@ var $youtubeSearchBrick = $("#youtube-search");
 var $flickrSearchBrick = $("#flickr-search");
 var $gmapsSearchBrick = $("#gmaps-search");
 
+function getLanguage(langCode){
+
+var langarray = {
+	
+'en'	:	'English'	,
+'de'	:	'Deutsch'	,
+'fr'	:	'Français'	,
+'nl'	:	'Nederlands'	,
+'it'	:	'Italiano'	,
+'es'	:	'Español'	,
+'pl'	:	'Polski'	,
+'ru'	:	'Русский'	,
+'ja'	:	'日本語'	,
+'pt'	:	'Português'	,
+'zh'	:	'中文'	,
+'sv'	:	'Svenska'	,
+'vi'	:	'Tiếng Việt'	,
+'uk'	:	'Українська'	,
+'ca'	:	'Català'	,
+'no'	:	'Norsk (Bokmål)'	,
+'fi'	:	'Suomi'	,
+'cs'	:	'Čeština'	,
+'fa'	:	'فارسی'	,
+'hu'	:	'Magyar'	,
+'ko'	:	'한국어'	,
+'ro'	:	'Română'	,
+'id'	:	'Bahasa Indonesia'	,
+'ar'	:	'العربية'	,
+'tr'	:	'Türkçe'	,
+'sk'	:	'Slovenčina'	,
+'kk'	:	'Қазақша'	,
+'eo'	:	'Esperanto'	,
+'da'	:	'Dansk'	,
+'sr'	:	'Српски / Srpski'	,
+'lt'	:	'Lietuvių'	,
+'eu'	:	'Euskara'	,
+'ms'	:	'Bahasa Melayu'	,
+'he'	:	'עברית'	,
+'bg'	:	'Български'	,
+'sl'	:	'Slovenščina'	,
+'vo'	:	'Volapük'	,
+'hr'	:	'Hrvatski'	,
+'war'	:	'Winaray'	,
+'hi'	:	'हिन्दी'	,
+'et'	:	'Eesti'	,
+'gl'	:	'Galego'	,
+'nn'	:	'Nynorsk'	,
+'az'	:	'Azərbaycanca'	,
+'simple'	:	'Simple English'	,
+'la'	:	'Latina'	,
+'el'	:	'Ελληνικά'	,
+'th'	:	'ไทย'	,
+'sh'	:	'Srpskohrvatski / Српскохрватски'	,
+'oc'	:	'Occitan'	,
+'new'	:	'नेपाल भाषा'	,
+'mk'	:	'Македонски'	,
+'ka'	:	'ქართული'	,
+'roa-rup'	:	'Armãneashce'	,
+'tl'	:	'Tagalog'	,
+'pms'	:	'Piemontèis'	,
+'be'	:	'Беларуская'	,
+'ht'	:	'Krèyol ayisyen'	,
+'te'	:	'తెలుగు'	,
+'uz'	:	'O‘zbek'	,
+'ta'	:	'தமிழ்'	,
+'be-x-old'	:	'Беларуская (тарашкевіца)'	,
+'lv'	:	'Latviešu'	,
+'br'	:	'Brezhoneg'	,
+'sq'	:	'Shqip'	,
+'ceb'	:	'Sinugboanong Binisaya'	,
+'jv'	:	'Basa Jawa'	,
+'mg'	:	'Malagasy'	,
+'cy'	:	'Cymraeg'	,
+'mr'	:	'मराठी'	,
+'lb'	:	'Lëtzebuergesch'	,
+'is'	:	'Íslenska'	,
+'bs'	:	'Bosanski'	,
+'hy'	:	'Հայերեն'	,
+'my'	:	'မြန်မာဘာသာ'	,
+'yo'	:	'Yorùbá'	,
+'an'	:	'Aragonés'	,
+'lmo'	:	'Lumbaart'	,
+'ml'	:	'മലയാളം'	,
+'fy'	:	'Frysk'	,
+'pnb'	:	'شاہ مکھی پنجابی (Shāhmukhī Pañjābī)'	,
+'af'	:	'Afrikaans'	,
+'bpy'	:	'ইমার ঠার/বিষ্ণুপ্রিয়া মণিপুরী'	,
+'bn'	:	'বাংলা'	,
+'sw'	:	'Kiswahili'	,
+'io'	:	'Ido'	,
+'scn'	:	'Sicilianu'	,
+'ne'	:	'नेपाली'	,
+'gu'	:	'ગુજરાતી'	,
+'zh-yue'	:	'粵語'	,
+'ur'	:	'اردو'	,
+'ba'	:	'Башҡорт'	,
+'nds'	:	'Plattdüütsch'	,
+'ku'	:	'Kurdî / كوردی'	,
+'ast'	:	'Asturianu'	,
+'ky'	:	'Кыргызча'	,
+'qu'	:	'Runa Simi'	,
+'su'	:	'Basa Sunda'	,
+'diq'	:	'Zazaki'	,
+'tt'	:	'Tatarça / Татарча'	,
+'ga'	:	'Gaeilge'	,
+'cv'	:	'Чăваш'	,
+'ia'	:	'Interlingua'	,
+'nap'	:	'Nnapulitano'	,
+'bat-smg'	:	'Žemaitėška'	,
+'map-bms'	:	'Basa Banyumasan'	,
+'als'	:	'Alemannisch'	,
+'wa'	:	'Walon'	,
+'kn'	:	'ಕನ್ನಡ'	,
+'am'	:	'አማርኛ'	,
+'sco'	:	'Scots'	,
+'ckb'	:	'Soranî / کوردی'	,
+'gd'	:	'Gàidhlig'	,
+'bug'	:	'Basa Ugi'	,
+'tg'	:	'Тоҷикӣ'	,
+'mzn'	:	'مَزِروني'	,
+'hif'	:	'Fiji Hindi'	,
+'zh-min-nan'	:	'Bân-lâm-gú'	,
+'yi'	:	'ייִדיש'	,
+'vec'	:	'Vèneto'	,
+'arz'	:	'مصرى (Maṣrī)'	,
+'roa-tara'	:	'Tarandíne'	,
+'nah'	:	'Nāhuatl'	,
+'os'	:	'Иронау'	,
+'sah'	:	'Саха тыла (Saxa Tyla)'	,
+'mn'	:	'Монгол'	,
+'sa'	:	'संस्कृतम्'	,
+'pam'	:	'Kapampangan'	,
+'hsb'	:	'Hornjoserbsce'	,
+'li'	:	'Limburgs'	,
+'mi'	:	'Māori'	,
+'si'	:	'සිංහල'	,
+'se'	:	'Sámegiella'	,
+'co'	:	'Corsu'	,
+'gan'	:	'贛語'	,
+'glk'	:	'گیلکی'	,
+'bar'	:	'Boarisch'	,
+'bo'	:	'བོད་སྐད'	,
+'fo'	:	'Føroyskt'	,
+'ilo'	:	'Ilokano'	,
+'bcl'	:	'Bikol'	,
+'mrj'	:	'Кырык Мары (Kyryk Mary) '	,
+'fiu-vro'	:	'Võro'	,
+'nds-nl'	:	'Nedersaksisch'	,
+'ps'	:	'پښتو'	,
+'tk'	:	'تركمن / Туркмен'	,
+'vls'	:	'West-Vlams'	,
+'gv'	:	'Gaelg'	,
+'rue'	:	'русиньскый язык'	,
+'pa'	:	'ਪੰਜਾਬੀ'	,
+'xmf'	:	'მარგალური (Margaluri)'	,
+'pag'	:	'Pangasinan'	,
+'dv'	:	'Divehi'	,
+'nrm'	:	'Nouormand/Normaund'	,
+'zea'	:	'Zeêuws'	,
+'kv'	:	'Коми'	,
+'koi'	:	'Перем Коми (Perem Komi)'	,
+'km'	:	'ភាសាខ្មែរ'	,
+'rm'	:	'Rumantsch'	,
+'csb'	:	'Kaszëbsczi'	,
+'lad'	:	'Dzhudezmo'	,
+'udm'	:	'Удмурт кыл'	,
+'or'	:	'ଓଡ଼ିଆ'	,
+'mt'	:	'Malti'	,
+'mhr'	:	'Олык Марий (Olyk Marij)'	,
+'fur'	:	'Furlan'	,
+'lij'	:	'Líguru'	,
+'wuu'	:	'吴语'	,
+'ug'	:	'ئۇيغۇر تىلى'	,
+'frr'	:	'Nordfriisk'	,
+'pi'	:	'पाऴि'	,
+'sc'	:	'Sardu'	,
+'zh-classical'	:	'古文 / 文言文'	,
+'bh'	:	'भोजपुरी'	,
+'ksh'	:	'Ripoarisch'	,
+'nov'	:	'Novial'	,
+'ang'	:	'Englisc'	,
+'so'	:	'Soomaaliga'	,
+'stq'	:	'Seeltersk'	,
+'kw'	:	'Kernewek/Karnuack'	,
+'nv'	:	'Diné bizaad'	,
+'vep'	:	'Vepsän'	,
+'hak'	:	'Hak-kâ-fa / 客家話'	,
+'ay'	:	'Aymar'	,
+'frp'	:	'Arpitan'	,
+'pcd'	:	'Picard'	,
+'ext'	:	'Estremeñu'	,
+'szl'	:	'Ślůnski'	,
+'gag'	:	'Gagauz'	,
+'gn'	:	'Avañe'	,
+'ln'	:	'Lingala'	,
+'ie'	:	'Interlingue'	,
+'eml'	:	'Emiliàn e rumagnòl'	,
+'haw'	:	'Hawai`i'	,
+'xal'	:	'Хальмг'	,
+'pfl'	:	'Pfälzisch'	,
+'pdc'	:	'Deitsch'	,
+'rw'	:	'Ikinyarwanda'	,
+'krc'	:	'Къарачай-Малкъар (Qarachay-Malqar)'	,
+'crh'	:	'Qırımtatarca'	,
+'ace'	:	'Bahsa Acèh'	,
+'to'	:	'faka Tonga'	,
+'as'	:	'অসমীয়া'	,
+'ce'	:	'Нохчийн'	,
+'kl'	:	'Kalaallisut'	,
+'arc'	:	'Aramaic'	,
+'dsb'	:	'Dolnoserbski'	,
+'myv'	:	'Эрзянь (Erzjanj Kelj)'	,
+'pap'	:	'Papiamentu'	,
+'bjn'	:	'Bahasa Banjar'	,
+'sn'	:	'chiShona'	,
+'tpi'	:	'Tok Pisin'	,
+'lbe'	:	'Лакку'	,
+'lez'	:	'Лезги чІал (Lezgi č’al)'	,
+'kab'	:	'Taqbaylit'	,
+'mdf'	:	'Мокшень (Mokshanj Kälj)'	,
+'wo'	:	'Wolof'	,
+'jbo'	:	'Lojban'	,
+'av'	:	'Авар'	,
+'srn'	:	'Sranantongo'	,
+'cbk-zam'	:	'Chavacano de Zamboanga'	,
+'bxr'	:	'Буряад'	,
+'ty'	:	'Reo Mā`ohi'	,
+'lo'	:	'ລາວ'	,
+'kbd'	:	'Адыгэбзэ (Adighabze)'	,
+'ab'	:	'Аҧсуа'	,
+'tet'	:	'Tetun'	,
+'mwl'	:	'Mirandés'	,
+'ltg'	:	'Latgaļu'	,
+'na'	:	'dorerin Naoero'	,
+'kg'	:	'KiKongo'	,
+'ig'	:	'Igbo'	,
+'nso'	:	'Sesotho sa Leboa'	,
+'za'	:	'Cuengh'	,
+'kaa'	:	'Qaraqalpaqsha'	,
+'zu'	:	'isiZulu'	,
+'chy'	:	'Tsetsêhestâhese'	,
+'rmy'	:	'romani - रोमानी'	,
+'cu'	:	'Словѣньскъ'	,
+'tn'	:	'Setswana'	,
+'chr'	:	'ᏣᎳᎩ'	,
+'got'	:	'Gothic'	,
+'cdo'	:	'Mìng-dĕ̤ng-ngṳ̄'	,
+'sm'	:	'Gagana Samoa'	,
+'bi'	:	'Bislama'	,
+'mo'	:	'Молдовеняскэ'	,
+'bm'	:	'Bamanankan'	,
+'iu'	:	'ᐃᓄᒃᑎᑐᑦ'	,
+'pih'	:	'Norfuk'	,
+'ss'	:	'SiSwati'	,
+'sd'	:	'سنڌي، سندھی ، सिन्ध'	,
+'pnt'	:	'Ποντιακά'	,
+'ee'	:	'Eʋegbe'	,
+'ki'	:	'Gĩkũyũ'	,
+'om'	:	'Oromoo'	,
+'ha'	:	'هَوُسَ'	,
+'ti'	:	'ትግርኛ'	,
+'ts'	:	'Xitsonga'	,
+'ks'	:	'कश्मीरी / كشميري'	,
+'fj'	:	'Na Vosa Vakaviti'	,
+'sg'	:	'Sängö'	,
+'ve'	:	'Tshivenda'	,
+'rn'	:	'Kirundi'	,
+'cr'	:	'Nehiyaw'	,
+'ak'	:	'Akana'	,
+'tum'	:	'chiTumbuka'	,
+'lg'	:	'Luganda'	,
+'dz'	:	'ཇོང་ཁ'	,
+'ny'	:	'Chi-Chewa'	,
+'ik'	:	'Iñupiak'	,
+'ch'	:	'Chamoru'	,
+'ff'	:	'Fulfulde'	,
+'st'	:	'Sesotho'	,
+'tw'	:	'Twi'	,
+'xh'	:	'isiXhosa'	,
+'ng'	:	'Oshiwambo'	,
+'ii'	:	'ꆇꉙ'	,
+'cho'	:	'Choctaw'	,
+'mh'	:	'Ebon'	,
+'aa'	:	'Afar'	,
+'kj'	:	'Kuanyama'	,
+'ho'	:	'Hiri Motu'	,
+'mus'	:	'Muskogee'	,
+'kr'	:	'Kanuri'	,
+'hz'	:	'Otsiherero'
+};
+
+var language = langarray[langCode];
+
+return language;
+
+}
+
 function buildNextTopic($brick, lang){
 	
 	$brick.find("a").unbind('click').click(function(e) {
@@ -34,7 +331,7 @@ function getGmaps(query){
 			//console.log(results[0].geometry.bounds);
 			currentMap = {
 					center: results[0].geometry.location,
-					bounds: results[0].geometry.bounds,
+					bounds: results[0].geometry.viewport,
 					maptype: "roadmap"
 				};
 
@@ -60,7 +357,7 @@ function buildGmaps(mapObj){
 	var $mapcanvas = $('<div id="map-canvas"></div>');
 
 	$mapbrick = $('<div class="brick w2" data-type="gmaps" data-topic=""></div>').append($mapcanvas);
-	$mapbrick.prepend('<span class="cross"> ✘ </span><span class="handle"> <img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/youtube_xs.png"> </span>');
+	$mapbrick.prepend('<img class="cross" src="/wv/themes/roots-wv/assets/img/close.png"><span class="handle"> <img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/gmaps.png"> </span>');
 	
 	$container.append($mapbrick).packery( 'appended', $mapbrick);
 
@@ -84,11 +381,12 @@ function buildGmaps(mapObj){
 	var myLatlng = new google.maps.LatLng(mapObj.center.b, mapObj.center.d);
 
 	//same for the bounds, on top we need to rebuild LatLngs to re-build a bounds object
-	var LatLng1 = new google.maps.LatLng(mapObj.bounds.la.d, mapObj.bounds.fa.b);
-	var LatLng2 = new google.maps.LatLng(mapObj.bounds.la.b, mapObj.bounds.fa.d);
+	var LatLngSw = new google.maps.LatLng(mapObj.bounds.fa.d, mapObj.bounds.la.b);
+	var LatLngNe = new google.maps.LatLng(mapObj.bounds.fa.b, mapObj.bounds.la.d);
+	
 	
 	//last but not least: the bound object with the newly created Latlngs
-	var myBounds = new google.maps.LatLngBounds(LatLng1, LatLng2);
+	var myBounds = new google.maps.LatLngBounds(LatLngSw, LatLngNe);
 	
 	
 
@@ -101,7 +399,7 @@ function buildGmaps(mapObj){
 
 	map = new google.maps.Map($mapcanvas[0], mapOptions);
 
-	//map.fitBounds(myBounds);
+	map.fitBounds(myBounds);
 
 
 	google.maps.event.addListener(map, 'idle', function() {
@@ -171,7 +469,7 @@ function buildStreetMap(streetObj) {
 	var $mapcanvas = $('<div id="map-canvas"></div>');
 
 	$mapbrick = $('<div class="brick w2" data-type="streetview" data-topic=""></div>').append($mapcanvas);
-	$mapbrick.prepend('<span class="cross"> ✘ </span><span class="handle"> <img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/youtube_xs.png"> </span>');
+	$mapbrick.prepend('<img class="cross" src="/wv/themes/roots-wv/assets/img/close.png"><span class="handle"> <img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/gmaps.png"> </span>');
 	
 	$container.append($mapbrick).packery( 'appended', $mapbrick);
 	$mapbrick.each( makeEachDraggable );
@@ -181,6 +479,10 @@ function buildStreetMap(streetObj) {
 
 	var panoramaOptions = {
 			position:center,
+			zoomControl: false,
+			linksControl: false,
+			panControl: false,
+			disableDefaultUI: true,
 			pov: {
 				heading: parseFloat(streetObj.heading),
 				pitch: parseFloat(streetObj.pitch),
@@ -213,17 +515,17 @@ function buildFlickr(photoURL){
 
 	var $flickrPhoto = $('<img width="600" src="'+photoURL+'">');
 	
-	var $flickrBrick = $('<div class="brick w2" data-type="flickr" data-topic="'+photoURL+'"></div>').append($flickrPhoto);
-	$flickrBrick.prepend('<span class="cross"> ✘ </span>');
-
-	$flickrBrick.imagesLoaded(function(){
-
-		$container.append($flickrBrick).packery( 'appended', $flickrBrick);
-	
-	});
+	var $flickrBrick = $('<div class="brick w2" data-type="flickr" data-topic="'+photoURL+'"></div>');
+	$flickrBrick.prepend('<img class="cross" src="/wv/themes/roots-wv/assets/img/close.png"><span class="handle"><img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/flickr.png"> </span>');
+	$container.append($flickrBrick).packery( 'appended', $flickrBrick);
 
 	$flickrBrick.each( makeEachDraggable );
 
+	$flickrBrick.imagesLoaded(function(instance){
+
+		$flickrBrick.append($flickrPhoto);
+		$container.packery();
+	});
 }
 
 function strip(html)
@@ -420,6 +722,51 @@ function getYoutubes(topic) {
     });
 }
 
+function getWikiLanguages(topic, lang, $brick){
+
+	$.ajax({
+        url: 'http://'+lang+'.wikipedia.org/w/api.php',
+        data:{
+            action:'query',
+            titles:topic,
+            prop:'langlinks',
+            format:'json',
+            lllimit: 500
+        },
+		dataType:'jsonp',
+        success: function(data){
+
+			var languageObj = data.query.pages[Object.keys(data.query.pages)[0]].langlinks;
+
+			var langDropDown = $('<select class="selectpicker show-menu-arrow" data-size="20" data-live-search="true"></select>');
+
+			$.each(languageObj, function(){
+
+				langDropDown.append('<option value="'+this.lang+'" data-topic="'+this['*']+'">'+getLanguage(this.lang)+'</option>');
+
+			});
+
+			langDropDown.prepend('<option selected>Read in..</option>');
+
+			$brick.prepend(langDropDown);
+
+			//make it a beautiful dropdown with selectpicker
+			langDropDown.selectpicker();
+
+			langDropDown.change(function(){
+
+				var lang = $(this).children(":selected").attr('value');
+				var topic = $(this).children(":selected").data('topic');
+				
+				buildWikipedia(topic, lang);
+			});
+
+
+		}
+    });
+
+}
+
 function getWikis(topic, lang) {
 
 	var $tableWikiResults = $('<table class="table table-hover wiki"></table>');
@@ -441,6 +788,7 @@ function getWikis(topic, lang) {
         },
         dataType:'jsonp',
         success: function(data){
+
 			if(data.query.search.length !== 0 ){
 
 				$.each(data.query.search, function(){
@@ -449,7 +797,7 @@ function getWikis(topic, lang) {
 					var snippet = this.snippet;
 										
 					//append row to searchbox-table 
-					$tableWikiResults.append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td><el class="result">'+title+'</el><el class="pull-right">'+lang+'</el></td></tr>');
+					$tableWikiResults.append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td><el class="result">'+title+'</el></td></tr>');
 					
 					//create the tooltips
 					$('tr').tooltip({animation: true, placement: 'bottom'});
@@ -531,7 +879,15 @@ function getWikis(topic, lang) {
 }
 
 function buildWikipedia(topic, lang){
-	
+
+	var $brick = $('<p></p>').append('<h4>'+topic+'</h4>');
+
+		$brick = $('<div class="brick" data-type="wiki" data-lang="'+lang+'" data-topic="'+topic+'"></div>').append($brick);
+		$brick.prepend('<img class="cross" src="/wv/themes/roots-wv/assets/img/close.png"><span class="handle"> <img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/wikipedia_xs.png"> </span>');
+		$container.append($brick).packery( 'appended', $brick);
+		$brick.each( makeEachDraggable );
+		//$container.packery( 'bindDraggabillyEvents', $brick );
+
 	$.ajax({
         url: 'http://'+lang+'.wikipedia.org/w/api.php',
         data:{
@@ -548,26 +904,23 @@ function buildWikipedia(topic, lang){
 
 				wikitext.find('.error').remove();
 				wikitext.find('.reference').remove();
+				wikitext.find('.org').remove();
 				wikitext.find('*').css('max-width', '280px');
 				wikitext.find('img').unwrap();
-				wikitext.find('img').addClass('pull-left');
+				//wikitext.find('img').addClass('pull-left');
 
-            var $brick = $('<p></p>').append('<h4>'+topic+'</h4>');
-                
-                $.each(wikitext, function(){
 
-					$brick.append(this);
+            $.each(wikitext, function(){
 
-                });
+				var text = $("<p></p>").append(this);
+				$brick.append(text);
 
-                $brick = $('<div class="brick" data-type="wiki" data-lang="'+lang+'" data-topic="'+topic+'"></div>').append($brick);
-                $brick.prepend('<span class="cross"> ✘ </span><span class="handle"> <img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/wikipedia_xs.png"> </span>');
+            });
 
-                $container.append($brick).packery( 'appended', $brick);
-                $brick.each( makeEachDraggable );
-				
-				//enable to create new bricks out of links
-				buildNextTopic($brick, lang);
+            $container.packery();
+			//enable to create new bricks out of links
+			buildNextTopic($brick, lang);
+			getWikiLanguages(topic, lang, $brick);
         }
     });
 }
@@ -606,7 +959,7 @@ function buildYoutube(youtubeID){
 	var $iframe = '<iframe id="ytplayer" type="text/html" width="600" height="380" src="http://www.youtube.com/embed/'+youtubeID+'" frameborder="0"/>';
 	
    $iframe = $('<div class="brick w2" data-type="youtube" data-topic="'+youtubeID+'"></div>').append($iframe);
-   $iframe.prepend('<span class="cross"> ✘ </span><span class="handle"> <img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/youtube_xs.png"> </span>');
+   $iframe.prepend('<img class="cross" src="/wv/themes/roots-wv/assets/img/close.png"><span class="handle"> <img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/youtube_xs.png"> </span>');
                              
    $container.append($iframe).packery( 'appended', $iframe);
 
@@ -699,14 +1052,22 @@ function getSearchBoxes(){
 		$container.append($wikiSearchBrick).packery( 'prepended', $wikiSearchBrick);
 
 	});
+
+	
 	
 	$("#wikipedia-search .start").on("click", function(){
-			
+		
 		var topic = $("#wiki-searchinput").val();
-
 		getWikis( topic, lang );
 		
 	});
+
+	/*$("#wiki-searchinput").keyup(function(event){
+		if(event.keyCode === 13){
+			getWikis( topic, lang );
+		}
+	});*/
+
 	
 	
 	
@@ -753,12 +1114,21 @@ function getSearchBoxes(){
 	
 }
 
+
+function orderItems() {
+  var itemElems = $container.packery('getItemElements');
+  for ( var i=0, len = itemElems.length; i < len; i++ ) {
+    var elem = itemElems[i];
+
+    $(elem).attr( "tabindex", i );
+  }
+}
+
+
 function createWall(wpnonce) {
 	
 	
 	var wikiverse = {};
-
-	var $container = $('#packery');
 	
 	//remove search bricks: 
 	var searchBricks = jQuery(".search");
@@ -767,13 +1137,13 @@ function createWall(wpnonce) {
 	var itemElems = $container.packery('getItemElements');
 	
 	var tabindex = 0;
-	
+
 	$.each(itemElems, function(){
 
 		var type = $(this).data('type');
 		var topic = $(this).data('topic');
 		var language = $(this).data('lang');
-		
+		//var tabindex = $(this).attr('tabindex');
 		
 		wikiverse[tabindex] = {
 		
@@ -782,10 +1152,7 @@ function createWall(wpnonce) {
 				Language: language,
 			
 		};
-		
-		
 		tabindex++;
-		
 	});
 	
 	var JSONwikiverse = JSON.stringify(wikiverse);
@@ -848,33 +1215,30 @@ function editWall(wpnonce) {
 	var postid = $('#postID').html();
 	
 	var wikiverse = {};
-
-	var $container = $('#packery');
 	
 	//remove search bricks: 
 	var searchBricks = jQuery(".search");
 	$container.packery( 'remove', searchBricks );
 	
 	var itemElems = $container.packery('getItemElements');
-	
-	var tabindex = 0;
-	
+
+	//var tabindex = 0;
+
 	$.each(itemElems, function(){
 		
 		var type = $(this).data('type');
 		var topic = $(this).data('topic');
 		var language = $(this).data('lang');
+		var tabindex = $(this).attr('tabindex');
 
 		wikiverse[tabindex] = {
 
-				Type: type,
-				Topic: topic,
-				Language: language,
-		
+			Type: type,
+			Topic: topic,
+			Language: language,
+			
 		};
-
-		tabindex++;
-
+		//tabindex++;
 	});
 	
 	var JSONwikiverse = JSON.stringify(wikiverse);
