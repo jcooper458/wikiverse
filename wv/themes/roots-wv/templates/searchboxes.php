@@ -1,5 +1,5 @@
 <div id="wikipedia-search" class="brick invisible search">
-	<span class="cross"> ✘ </span>
+	<img class="cross" src="/wv/themes/roots-wv/assets/img/close.png">
 	<div class="container top-buffer-small">
 
 		<div class="col-lg-2">
@@ -20,7 +20,7 @@
 </div>
 
 <div id="youtube-search" class="brick invisible search">
-	<span class="cross"> ✘ </span>
+	<img class="cross" src="/wv/themes/roots-wv/assets/img/close.png">
 	<div class="container top-buffer-small  bottom-buffer-small">
 		<div class="col-lg-2 col-md-2 col-sm-2">
 			<img class="icon" id="youtube-icon" src="<?php echo get_stylesheet_directory_uri();?>/assets/img/youtube.png">
@@ -40,7 +40,7 @@
 </div>
 
 <div id="flickr-search" class="brick invisible search">
-	<span class="cross"> ✘ </span>
+	<img class="cross" src="/wv/themes/roots-wv/assets/img/close.png">
 	<div class="container top-buffer-small  bottom-buffer-small">
 		<div class="col-lg-2 col-md-2 col-sm-2">
 			<img class="icon" id="flickr-icon" src="<?php echo get_stylesheet_directory_uri();?>/assets/img/flickr.png">
@@ -60,7 +60,7 @@
 </div>
 
 <div id="gmaps-search" class="brick invisible search">
-	<span class="cross"> ✘ </span>
+	<img class="cross" src="/wv/themes/roots-wv/assets/img/close.png">
 	<div class="container top-buffer-small  bottom-buffer-small">
 		<div class="col-lg-2 col-md-2 col-sm-2">
 			<img class="icon" id="gmaps-icon" src="<?php echo get_stylesheet_directory_uri();?>/assets/img/gmaps.png">
