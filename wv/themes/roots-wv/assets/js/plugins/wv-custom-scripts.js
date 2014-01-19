@@ -347,7 +347,7 @@ function getGmaps(query){
 }
 
 function buildGmaps(mapObj){
-
+	//console.log(mapObj);
 	var map;
 	var myMaptypeID;
 	var $mapbrick;
@@ -381,8 +381,8 @@ function buildGmaps(mapObj){
 	var myLatlng = new google.maps.LatLng(mapObj.center.b, mapObj.center.d);
 
 	//same for the bounds, on top we need to rebuild LatLngs to re-build a bounds object
-	var LatLngSw = new google.maps.LatLng(mapObj.bounds.fa.d, mapObj.bounds.la.b);
-	var LatLngNe = new google.maps.LatLng(mapObj.bounds.fa.b, mapObj.bounds.la.d);
+	var LatLngSw = new google.maps.LatLng(mapObj.bounds.ea.d, mapObj.bounds.fa.b);
+	var LatLngNe = new google.maps.LatLng(mapObj.bounds.ea.b, mapObj.bounds.fa.d);
 	
 	
 	//last but not least: the bound object with the newly created Latlngs
