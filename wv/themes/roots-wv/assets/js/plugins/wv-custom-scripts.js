@@ -535,15 +535,27 @@ function strip(html)
    return tmp.textContent || tmp.innerText || "";
 }
 
-function getFlickrs(topic) {
+function getFlickrs(topic, sort) {
 
-	var $divFlickrResults = $('<div class="flickr"></div>');
+	//if sort not passed, set it to interesting
+	if(!sort){
+
+		sort = 'interestingness-desc';
+	}
+
+	var $divFlickrResults;
+
 	//if no table is already in the brick
 	if($flickrSearchBrick.find('div.flickr').length === 0){
 
+		$divFlickrResults = $('<div class="flickr"></div>');
 		$flickrSearchBrick.append($divFlickrResults);
 	}
+	else{
 
+		$divFlickrResults = $('div.flickr');
+
+	}
     $.ajax({
         url: 'http://api.flickr.com/services/rest',
         data:{
@@ -554,7 +566,7 @@ function getFlickrs(topic) {
             format: 'json',
             nojsoncallback: 1,
             per_page: 20,
-            sort: 'interestingness-desc'
+            sort: sort
         },
         success: function(data){
 
@@ -579,14 +591,36 @@ function getFlickrs(topic) {
 						$divFlickrResults.append('<img width="149" large="'+mediumURL+'" src="'+thumbURL+'">');
 						
 						//relayout packery
-						$container.packery();
+						//$container.packery();
 
 						$divFlickrResults.find('img').unbind('click').click(function(e) {
 
 							var thisURL = $(this).attr('large');
 							buildFlickr(thisURL);
+							$(this).remove();
 						});
 						
+										//if no nav is already in the brick	
+						if($flickrSearchBrick.find('.nav').length === 0 ){
+
+							//append a clear button and the wikipedia icon
+							$flickrSearchBrick.append('<div class="search-ui"><ul class="nav nav-pills"><li class="pull-right"><a class="clear"><h6>clear results</h6></a></li></ul></div');
+
+						}
+						
+						//when clear results is clicked
+						$('.clear').on('click', function(){
+
+								//remove all UI elements
+								$divFlickrResults.remove();
+								$(this).parents('.search-ui').remove();
+
+								//empty the wiki-searchbox for new search
+								$('#flickr-searchinput').val('');
+						});
+
+						//relayout packery
+						$container.packery();
 
 					}
 
@@ -611,11 +645,19 @@ function getFlickrs(topic) {
 
 function getYoutubes(topic) {
 
-	var $tableYoutubeResults = $('<table class="table table-hover youtube"></table>');
+	var $tableYoutubeResults;
+
 	//if no table is already in the brick
 	if($youtubeSearchBrick.find('table.youtube').length === 0){
 
+		$tableYoutubeResults = $('<table class="table table-hover youtube"></table>');
 		$youtubeSearchBrick.append($tableYoutubeResults);
+
+	}
+	else{
+
+		$tableYoutubeResults = $('table.youtube');
+
 	}
 
     $.ajax({
@@ -648,6 +690,9 @@ function getYoutubes(topic) {
 		
 						var currentYoutubeID = $(this).find('.result').attr('youtubeID');
 						
+						$(this).tooltip('destroy');
+						$(this).remove();
+						
 						buildYoutube(currentYoutubeID);
 
 						return false;
@@ -659,12 +704,12 @@ function getYoutubes(topic) {
 				if($youtubeSearchBrick.find('.nav').length === 0 ){
 			
 					//append a clear button and the wikipedia icon
-					$youtubeSearchBrick.append('<div class="search-ui"><ul class="nav nav-pills"><li class="pull-right"><a id="clear"><h6>clear results</h6></a></li></ul></div');
+					$youtubeSearchBrick.append('<div class="search-ui"><ul class="nav nav-pills"><li class="pull-right"><a class="clear"><h6>clear results</h6></a></li></ul></div');
 
 				}
 				
 				//when clear results is clicked
-				$('#clear').on('click', function(){
+				$('.clear').on('click', function(){
 
 					//remove all UI elements
 					$tableYoutubeResults.remove();
@@ -769,13 +814,19 @@ function getWikiLanguages(topic, lang, $brick){
 
 function getWikis(topic, lang) {
 
-	var $tableWikiResults = $('<table class="table table-hover wiki"></table>');
+	var $tableWikiResults;
 
 	//if no table is already in the brick
 	if($wikiSearchBrick.find('table.wiki').length === 0){
 
+		$tableWikiResults = $('<table class="table table-hover wiki"></table>');
 		$wikiSearchBrick.append($tableWikiResults);
 	
+	}
+	else{
+
+		$tableWikiResults = $('table.wiki');
+
 	}
 
     $.ajax({
@@ -807,6 +858,9 @@ function getWikis(topic, lang) {
 						var topic = $(this).find('.result').html();
 						
 						buildWikipedia(topic, lang);
+
+						$(this).tooltip('destroy');
+						$(this).remove();
 						return false;
 					});
 
@@ -816,7 +870,7 @@ function getWikis(topic, lang) {
 				if($wikiSearchBrick.find('.nav').length === 0 ){
 
 					//append a clear button and the wikipedia icon
-					$wikiSearchBrick.append('<div class="search-ui"><img class="wiki-icon pull-left" src="/wv/themes/roots-wv/assets/img/wikipedia_xs.png"><ul class="nav nav-pills"><li class="pull-right"><a id="clear"><h6>clear results</h6></a></li></ul></div');
+					$wikiSearchBrick.append('<div class="search-ui"><img class="wiki-icon pull-left" src="/wv/themes/roots-wv/assets/img/wikipedia_xs.png"><ul class="nav nav-pills"><li class="pull-right"><a class="clear"><h6>clear results</h6></a></li></ul></div');
 
 				}
 				
@@ -883,7 +937,10 @@ function buildWikipedia(topic, lang){
 	var $brick = $('<p></p>').append('<h4>'+topic+'</h4>');
 
 		$brick = $('<div class="brick" data-type="wiki" data-lang="'+lang+'" data-topic="'+topic+'"></div>').append($brick);
+		
 		$brick.prepend('<img class="cross" src="/wv/themes/roots-wv/assets/img/close.png"><span class="handle"> <img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/wikipedia_xs.png"> </span>');
+		$brick.prepend('<div class="wikiverse-nav"><img class="flickr-icon icon" src="/wv/themes/roots-wv/assets/img/flickr.png"><img class="youtube-icon icon" src="/wv/themes/roots-wv/assets/img/youtube.png"></div>');
+
 		$container.append($brick).packery( 'appended', $brick);
 		$brick.each( makeEachDraggable );
 		//$container.packery( 'bindDraggabillyEvents', $brick );
@@ -899,7 +956,7 @@ function buildWikipedia(topic, lang){
         },
         dataType:'jsonp',
         success: function(data){
-            
+
             var wikitext = $("<div>"+data.parse.text['*']+"<div>").children('.infobox, p');
 
 				wikitext.find('.error').remove();
@@ -909,6 +966,63 @@ function buildWikipedia(topic, lang){
 				wikitext.find('img').unwrap();
 				//wikitext.find('img').addClass('pull-left');
 
+
+				//needs work:  wiki images: 
+				$.ajax({
+					url: 'http://'+lang+'.wikipedia.org/w/api.php',
+					data:{
+					action:'query',
+					titles: topic,
+					format:'json',
+					prop:'images'
+					},
+					dataType:'jsonp',
+					success: function(data){/*console.log(data);*/}
+				});
+
+				//if article is about a location (has coordinates):
+				if(wikitext.find('.geo-nondefault .geo').length){
+
+					var geoPosition = wikitext.find('.geo-nondefault .geo').html();
+
+					$brick.find('.wikiverse-nav').prepend('<img class="gmaps-icon icon" src="/wv/themes/roots-wv/assets/img/gmaps.png">');
+
+					//if click on gmaps interconnection
+					$brick.find(".wikiverse-nav .gmaps-icon").on("click", function(){
+
+						getGmaps(topic);
+						
+					});
+
+				}
+
+				//create flickr interconnection button and trigger flickr search
+				$brick.find(".flickr-icon").on("click", function(){
+
+					$flickrSearchBrick.removeClass("invisible");
+					$container.append($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
+					$flickrSearchBrick.find('input').val(topic);
+					$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
+					$flickrSearchBrick.find('.start').addClass('disabled');
+					
+					$flickrSearchBrick.find('#sort-info').remove();
+					
+					$flickrSearchBrick.find('.start').trigger( "click" );
+					
+				});
+
+				//create youtube interconnection button and trigger flickr search
+				$brick.find(".youtube-icon").on("click", function(){
+
+					$youtubeSearchBrick.removeClass("invisible");
+					$container.append($youtubeSearchBrick).packery( 'prepended', $youtubeSearchBrick);
+					$youtubeSearchBrick.find('input').val(topic);
+					$youtubeSearchBrick.find('.searchbox').attr('disabled', 'true');
+					$youtubeSearchBrick.find('.start').addClass('disabled');
+					
+					$youtubeSearchBrick.find('.start').trigger( "click" );
+					
+				});
 
             $.each(wikitext, function(){
 
@@ -1094,7 +1208,9 @@ function getSearchBoxes(){
 	$("#flickr-search .start").on("click", function(){
 		
 		var query = $("#flickr-search .searchbox").val();
-		getFlickrs(query);
+		var sort = $("#flickr-search #sort-info input[type='radio']:checked").val();
+
+		getFlickrs(query, sort);
 		
 	});
 
