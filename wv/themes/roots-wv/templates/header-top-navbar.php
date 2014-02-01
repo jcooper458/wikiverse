@@ -35,8 +35,8 @@
 			<?php }  ?> 	
 
 			<?php } else {?> 
-				<button class="btn btn-default pull-right" id="editWall" type="button"><a href="/login" >Login</a></button>
-				<button class="btn btn-default pull-right" id="editWall" type="button"><a href="/wp-login.php?action=register" >Register</a></button>
+				<!--<button class="btn btn-default pull-right" id="editWall" type="button"><a href="/login" >Login</a></button>
+				<button class="btn btn-default pull-right" id="editWall" type="button"><a href="/wp-login.php?action=register" >Register</a></button>-->
 			<?php }  ?> 	
 	     </div>
     </div>
