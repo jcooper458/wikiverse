@@ -5,6 +5,10 @@ var $youtubeSearchBrick = $("#youtube-search");
 var $flickrSearchBrick = $("#flickr-search");
 var $gmapsSearchBrick = $("#gmaps-search");
 
+var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
+var youtube_icon = '<i class="fa fa-youtube-square"></i>';
+var wikiverse_nav = '<div class="wikiverse-nav"><i class="fa fa-youtube-square youtube-icon icon"></i>&nbsp;<i class="fa fa-flickr flickr-icon icon"></i></div>';
+
 function getLanguage(langCode){
 
 var langarray = {
@@ -334,7 +338,7 @@ function getGmaps(query){
 					bounds: results[0].geometry.viewport,
 					maptype: "roadmap"
 				};
-
+				
 			buildGmaps(currentMap);
 		
 		} else {
@@ -357,7 +361,7 @@ function buildGmaps(mapObj){
 	var $mapcanvas = $('<div id="map-canvas"></div>');
 
 	$mapbrick = $('<div class="brick w2" data-type="gmaps" data-topic=""></div>').append($mapcanvas);
-	$mapbrick.prepend('<img class="cross" src="/wv/themes/roots-wv/assets/img/close.png"><span class="handle"> <img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/gmaps.png"> </span>');
+	$mapbrick.prepend(close_icon + '<span class="handle"> <i class="fa fa-map-marker"></i> </span>');
 	
 	$container.append($mapbrick).packery( 'appended', $mapbrick);
 
@@ -381,9 +385,10 @@ function buildGmaps(mapObj){
 	var myLatlng = new google.maps.LatLng(mapObj.center.b, mapObj.center.d);
 
 	//same for the bounds, on top we need to rebuild LatLngs to re-build a bounds object
-	var LatLngSw = new google.maps.LatLng(mapObj.bounds.ea.d, mapObj.bounds.fa.b);
-	var LatLngNe = new google.maps.LatLng(mapObj.bounds.ea.b, mapObj.bounds.fa.d);
-	
+	//var LatLngSw = new google.maps.LatLng(mapObj.bounds.ea.d, mapObj.bounds.fa.b);
+	console.log(mapObj);
+	var LatLngSw = new google.maps.LatLng(mapObj.bounds.Ea.A, mapObj.bounds.wa.j);
+	var LatLngNe = new google.maps.LatLng(mapObj.bounds.Ea.A, mapObj.bounds.wa.j);
 	
 	//last but not least: the bound object with the newly created Latlngs
 	var myBounds = new google.maps.LatLngBounds(LatLngSw, LatLngNe);
@@ -469,7 +474,7 @@ function buildStreetMap(streetObj) {
 	var $mapcanvas = $('<div id="map-canvas"></div>');
 
 	$mapbrick = $('<div class="brick w2" data-type="streetview" data-topic=""></div>').append($mapcanvas);
-	$mapbrick.prepend('<img class="cross" src="/wv/themes/roots-wv/assets/img/close.png"><span class="handle"> <img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/gmaps.png"> </span>');
+	$mapbrick.prepend(close_icon + '<span class="handle"> <i class="fa fa-map-marker"></span>');
 	
 	$container.append($mapbrick).packery( 'appended', $mapbrick);
 	$mapbrick.each( makeEachDraggable );
@@ -516,7 +521,7 @@ function buildFlickr(photoURL){
 	var $flickrPhoto = $('<img width="600" src="'+photoURL+'">');
 	
 	var $flickrBrick = $('<div class="brick w2" data-type="flickr" data-topic="'+photoURL+'"></div>');
-	$flickrBrick.prepend('<img class="cross" src="/wv/themes/roots-wv/assets/img/close.png"><span class="handle"><img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/flickr.png"> </span>');
+	$flickrBrick.prepend(close_icon + '<span class="handle"><i class="fa fa-flickr"></i> </span>');
 	$container.append($flickrBrick).packery( 'appended', $flickrBrick);
 
 	$flickrBrick.each( makeEachDraggable );
@@ -557,7 +562,7 @@ function getFlickrs(topic, sort) {
 
 	}
     $.ajax({
-        url: 'http://api.flickr.com/services/rest',
+        url: 'https://api.flickr.com/services/rest',
         data:{
 
             method: 'flickr.photos.search',
@@ -573,7 +578,7 @@ function getFlickrs(topic, sort) {
 			$.each(data.photos.photo, function(){
 
 				$.ajax({
-					url: 'http://api.flickr.com/services/rest',
+					url: 'https://api.flickr.com/services/rest',
 					data:{
 
 						method: 'flickr.photos.getSizes',
@@ -870,7 +875,7 @@ function getWikis(topic, lang) {
 				if($wikiSearchBrick.find('.nav').length === 0 ){
 
 					//append a clear button and the wikipedia icon
-					$wikiSearchBrick.append('<div class="search-ui"><img class="wiki-icon pull-left" src="/wv/themes/roots-wv/assets/img/wikipedia_xs.png"><ul class="nav nav-pills"><li class="pull-right"><a class="clear"><h6>clear results</h6></a></li></ul></div');
+					$wikiSearchBrick.append('<div class="search-ui"><ul class="nav nav-pills"><li class="pull-right"><a class="clear"><h6>clear results</h6></a></li></ul></div');
 
 				}
 				
@@ -938,8 +943,8 @@ function buildWikipedia(topic, lang){
 
 		$brick = $('<div class="brick" data-type="wiki" data-lang="'+lang+'" data-topic="'+topic+'"></div>').append($brick);
 		
-		$brick.prepend('<img class="cross" src="/wv/themes/roots-wv/assets/img/close.png"><span class="handle"> <img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/wikipedia_xs.png"> </span>');
-		$brick.prepend('<div class="wikiverse-nav"><img class="flickr-icon icon" src="/wv/themes/roots-wv/assets/img/flickr.png"><img class="youtube-icon icon" src="/wv/themes/roots-wv/assets/img/youtube.png"></div>');
+		$brick.prepend(close_icon + '<span class="handle"><i class="fa fa-wikipedia"></i></span>');
+		$brick.prepend( wikiverse_nav );
 
 		$container.append($brick).packery( 'appended', $brick);
 		$brick.each( makeEachDraggable );
@@ -985,7 +990,7 @@ function buildWikipedia(topic, lang){
 
 					var geoPosition = wikitext.find('.geo-nondefault .geo').html();
 
-					$brick.find('.wikiverse-nav').prepend('<img class="gmaps-icon icon" src="/wv/themes/roots-wv/assets/img/gmaps.png">');
+					$brick.find('.wikiverse-nav').prepend('<i class="fa fa-map-marker gmaps-icon icon"></i>');
 
 					//if click on gmaps interconnection
 					$brick.find(".wikiverse-nav .gmaps-icon").on("click", function(){
@@ -1073,7 +1078,7 @@ function buildYoutube(youtubeID){
 	var $iframe = '<iframe id="ytplayer" type="text/html" width="600" height="380" src="http://www.youtube.com/embed/'+youtubeID+'" frameborder="0"/>';
 	
    $iframe = $('<div class="brick w2" data-type="youtube" data-topic="'+youtubeID+'"></div>').append($iframe);
-   $iframe.prepend('<img class="cross" src="/wv/themes/roots-wv/assets/img/close.png"><span class="handle"> <img class="wiki-icon" src="/wv/themes/roots-wv/assets/img/youtube_xs.png"> </span>');
+   $iframe.prepend(close_icon + '<span class="handle"> ' + youtube_icon + ' </span>');
                              
    $container.append($iframe).packery( 'appended', $iframe);
 

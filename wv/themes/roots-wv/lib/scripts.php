@@ -12,7 +12,7 @@
  */
 function roots_scripts() {
 
-  wp_enqueue_style('roots_main', get_template_directory_uri() . '/assets/css/main.min.css', false, '89a59a86ee34b73e84d189a61a9dd923');
+  wp_enqueue_style('roots_main', get_template_directory_uri() . '/assets/css/main.min.css', false, 'c93a8b67a4c5ec31210da5a6c2b2c2d1');
 
   // jQuery is loaded using the same method from HTML5 Boilerplate:
   // Grab Google CDN's latest jQuery with a protocol relative URL; fallback to local if offline
@@ -29,13 +29,15 @@ function roots_scripts() {
 
   wp_register_script('modernizr', get_template_directory_uri() . '/assets/js/vendor/modernizr-2.6.2.min.js', false, null, false);
 
-  wp_register_script('roots_scripts', get_template_directory_uri() . '/assets/js/scripts.min.js', false, '4dde48ab53f499e85b885a16019b16e2', true);
+  wp_register_script('roots_scripts', get_template_directory_uri() . '/assets/js/scripts.min.js', false, '0c9ffbf7b29250420cfc3b801226657a', true);
   wp_register_script('gmaps', '//maps.googleapis.com/maps/api/js?sensor=false', false, null, false);
+  wp_register_style('font_awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', false, null, false);
 
   wp_enqueue_script('modernizr');
   wp_enqueue_script('gmaps');
   wp_enqueue_script('jquery');
   wp_enqueue_script('roots_scripts');
+  wp_enqueue_style('font_awesome');
   
 }
 add_action('wp_enqueue_scripts', 'roots_scripts', 100);
