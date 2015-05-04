@@ -22,27 +22,15 @@ var ExampleSite = {
 				$container.packery( 'remove', thisBrick );
 			});
 
-		$( "#packery" ).on( "click", ".more-link", function() {
-
-				var topic = jQuery(this).parents(".brick").attr("title");
-				var lang = jQuery(this).parents(".brick").attr("lang");
-				var $brick = jQuery(this).parents(".brick");
-
-				$brick.find(".more-link").remove();
-
-				expandWiki(topic, lang, $brick);
-			});
-		
-			
+		//show save wall button on packery change (needs work)
 		$container.packery( 'on', 'layoutComplete', function( pckryInstance, laidOutItems ) {
 			
 			$("#saveWall").fadeIn();
 			
 		});
-			
-	
-      
-      
+
+		$container.packery( 'on', 'layoutComplete', orderItems );
+		$container.packery( 'on', 'dragItemPositioned', orderItems );
     },
     finalize: function() {
 

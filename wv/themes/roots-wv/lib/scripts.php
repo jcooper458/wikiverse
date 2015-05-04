@@ -11,7 +11,11 @@
  * 3. /theme/assets/js/main.min.js (in footer)
  */
 function roots_scripts() {
+<<<<<<< HEAD
   wp_enqueue_style('roots_main', get_template_directory_uri() . '/assets/css/main.min.css', false, '9675f91c4627079b0376cfd429cc24e1');
+=======
+  wp_enqueue_style('roots_main', get_template_directory_uri() . '/assets/css/main.min.css', false, 'c00df349f10786bae241a79f1aad7cc9');
+>>>>>>> eab071fbc4d44da26271dbe53b8166651a66f83b
 
   // jQuery is loaded using the same method from HTML5 Boilerplate:
   // Grab Google CDN's latest jQuery with a protocol relative URL; fallback to local if offline
@@ -27,9 +31,16 @@ function roots_scripts() {
   }
 
   wp_register_script('modernizr', get_template_directory_uri() . '/assets/js/vendor/modernizr-2.6.2.min.js', false, null, false);
+<<<<<<< HEAD
   wp_register_script('roots_scripts', get_template_directory_uri() . '/assets/js/scripts.min.js', false, '1ef96edef3b71e02f0aaab58610836b9', true);
  
+=======
+  wp_register_script('roots_scripts', get_template_directory_uri() . '/assets/js/scripts.min.js', false, 'f02223fbc55ef9b6619a879b370db240', true);
+  wp_register_script('gmaps', '//maps.googleapis.com/maps/api/js?sensor=false', false, null, false);
+
+>>>>>>> eab071fbc4d44da26271dbe53b8166651a66f83b
   wp_enqueue_script('modernizr');
+  wp_enqueue_script('gmaps');
   wp_enqueue_script('jquery');
   wp_enqueue_script('roots_scripts');
   

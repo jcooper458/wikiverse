@@ -18,13 +18,14 @@ body { }
 }
 
 
-.brick { width: 300px; background: #F8F8F8; border: 1px solid #E7E7E7;}
+.brick { width: 300px; background: #F8F8F8; border: 1px solid #E7E7E7;outline: 0;}
 .brick p {overflow: hidden;}
 .brick.w2 { width: 500px; }
 .brick.w2-tube { width: 640px!important; }
 .brick.w2-vimeo { width: 500px!important; }
 
-.brick p,.brick iframe{ padding:10px; }
+
+.brick p,.brick iframe{ padding:0px 5px; }
 
 #wikiverse, #postID{display: none;}
 
@@ -35,11 +36,27 @@ body { }
 .cross { display:none;
     cursor: pointer;
     font-size: 19px;
-    left: -5px;
+    left: -10px;
     position: absolute;
-    top: -14px;}
+    top: -10px;
+    z-index: 2;
+}
+.handle { 
+    cursor: move;
+    font-size: 19px;
+    right: -20px;
+    position: absolute;
+    top: -20px;
+    width:40px;
+    height:40px;
+    background:#F8F8F8;
+    border-radius: 20px;
+    border: 1px solid #E7E7E7;
+    z-index: 2;
+}
+
 .brick:hover .cross {display: block;}
-.wiki-result, #clear{cursor: pointer;} 
+table tr, .result, #clear{cursor: pointer;} 
 
 .brick .table-hover {
   > tbody {
@@ -51,11 +68,26 @@ body { }
     }
   }
 }
+.brick table {margin-bottom: 0px;}
 .brick .nav>li>a {
 position: relative;
 display: block;
-padding: 3px 10px;
+padding: 1px 10px;
 }
+
+.wiki-icon{
+    padding-left: 9px;
+    padding-top: 9px;
+}
+
+#map-canvas {
+  height: 400px;
+  margin: 0px;
+  padding: 0px
+}
+
+.infobox{font-size: 12px;}
+
 /* ==========================================================================
    Header
    ========================================================================== */

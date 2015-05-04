@@ -8,8 +8,9 @@ Version: 0.1
 Author URI: 
 */ 
 
+
 define('APFSURL', WP_PLUGIN_URL."/".dirname( plugin_basename( __FILE__ ) ) );  
-define('APFPATH', WP_PLUGIN_DIR."/".dirname( plugin_basename( __FILE__ ) ) ); 
+
 
 
 function wallCScripts(){
@@ -17,6 +18,7 @@ function wallCScripts(){
     wp_localize_script( 'apf', 'apfajax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
 }
 add_action('wp_enqueue_scripts', 'wallCScripts');
+
 
 
 
