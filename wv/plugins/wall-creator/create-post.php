@@ -13,7 +13,7 @@ define('APFPATH', WP_PLUGIN_DIR."/".dirname( plugin_basename( __FILE__ ) ) );
 
 
 function wallCScripts(){
-    wp_enqueue_script('apf', APFSURL.'/js/wall-creator.js', array('jquery'));  
+    wp_enqueue_script('apf', WP_PLUGIN_URL.'/wall-creator/js/wall-creator.js', array('jquery'));  
     wp_localize_script( 'apf', 'apfajax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
 }
 add_action('wp_enqueue_scripts', 'wallCScripts');
