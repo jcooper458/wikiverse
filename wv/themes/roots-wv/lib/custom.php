@@ -47,3 +47,10 @@ function register_cpt_wall() {
 
     register_post_type( 'wall', $args );
 }
+
+
+add_action( 'login_head', 'theme_hide_login_logo_login_head' );
+
+function theme_hide_login_logo_login_head() {
+    echo '<style> #login h1 { display: none; } </style>';
+}
