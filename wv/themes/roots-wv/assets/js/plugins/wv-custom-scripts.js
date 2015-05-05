@@ -387,7 +387,7 @@ function getGmaps(query){
 }
 
 function buildGmaps(place){
-	console.log(place);
+	//console.log(place);
 
 	var myMaptypeID;
 	var $mapbrick;
@@ -405,7 +405,7 @@ function buildGmaps(place){
 
 	var mapOptions = {
 		center: {lat: -33.8688, lng: 151.2195},
-		zoom: 13
+		zoom: 5
 	};
 
 	var map = new google.maps.Map($mapcanvas[0], mapOptions);
@@ -419,7 +419,7 @@ function buildGmaps(place){
 		location: place.geometry.location
 	});
 	var position = marker.getPosition();
-	map.setCenter(position);
+	console.log(marker);
 }
 
 function buildStreetMap(streetObj) {
