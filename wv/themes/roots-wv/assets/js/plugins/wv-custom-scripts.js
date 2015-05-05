@@ -320,75 +320,128 @@ function buildNextTopic($brick, lang){
 	});
 }
 
-function getGmaps(query){
+function getGmapsSearch(){
 
-	//create the geocoder
-	var geocoder = new google.maps.Geocoder();
-	var center;
-	var currentMap;
+	$gmapsSearchBrick.removeClass("invisible");
+	$container.append($gmapsSearchBrick).packery( 'prepended', $gmapsSearchBrick);
 
-	//geocode adress
-	geocoder.geocode( { 'address': query}, function(results, status) {
+	var mapOptions = {
+		center: {lat: 35, lng: 0},
+		zoom: 1
+	};
 
-		if (status === google.maps.GeocoderStatus.OK) {
-			
+	var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-			var $tableGmapsResults;
+	var input = document.getElementById('pac-input');
 
-			//if no table is already in the brick
-			if($gmapsSearchBrick.find('table.wiki').length === 0){
+	var autocomplete = new google.maps.places.Autocomplete(input);
 
-				$tableGmapsResults = $('<table class="table table-hover wiki"></table>');
-				$gmapsSearchBrick.append($tableGmapsResults);
-			
-			}
-			else{
+	autocomplete.bindTo('bounds', map);
 
-				$tableGmapsResults = $('table.wiki');
+	map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-			}
-
-			$.each(results, function(){
-				
-				var place = this;
-				var place_address = this.formatted_address;
-				var place_id = this.place_id;
-									
-				//append row to searchbox-table 
-				//$tableGmapsResults.append('<tr><td><el class="result">'+place_address+'</el></td></tr>');
-				
-				//bind event to every row -> so you can start the wikiverse
-				//$tableGmapsResults.find('tr').unbind('click').click(function(e) {
-	
-					
-					buildGmaps(place);
-
-				/*	return false;
-				});*/
-
-			});
-
-			//console.log(results[0].geometry.bounds);
-			/*currentMap = {
-					center: results[0].geometry.location,
-					bounds: results[0].geometry.viewport,
-					maptype: "roadmap"
-				};
-				console.log(results);
-			buildGmaps(currentMap);*/
-		
-		} else {
-			alert("No place has been found with that query.. Try something else.");
-		}
-		
-		
-		
+	var infowindow = new google.maps.InfoWindow();
+	var marker = new google.maps.Marker({
+		map: map
 	});
+	google.maps.event.addListener(marker, 'click', function() {
+		infowindow.open(map, marker);
+	});
+
+	google.maps.event.addListener(autocomplete, 'place_changed', function() {
+	infowindow.close();
+	var place = autocomplete.getPlace();
+	if (!place.geometry) {
+		return;
+	}
+
+	if (place.geometry.viewport) {
+		map.fitBounds(place.geometry.viewport);
+	} else {
+		map.setCenter(place.geometry.location);
+		map.setZoom(17);
+	}
+
+	// Set the position of the marker using the place ID and location
+	marker.setPlace({
+		placeId: place.place_id,
+		location: place.geometry.location
+	});
+	marker.setVisible(true);
+
+	infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+	//	'Place ID: ' + place.place_id + '<br>' +
+		place.formatted_address);
+
+	infowindow.open(map, marker);
+	});
+
+	google.maps.event.addListener(map, 'idle', function() {
+
+		currentMap = {
+			center: map.getCenter(),
+			bounds: map.getBounds(),
+			maptype: map.getMapTypeId()
+		};
+	
+		$gmapsSearchBrick.data("topic", currentMap );
+
+	});
+
+	google.maps.event.addListener(map, 'maptypeid_changed', function() {
+
+		currentMap.maptype = map.getMapTypeId();
+		
+		$gmapsSearchBrick.data( "topic", currentMap );
+
+	});
+
+	var thePanorama = map.getStreetView(); //get the streetview object
+	
+	//detect if entering Streetview -> Change the type to streetview
+	google.maps.event.addListener(thePanorama, 'visible_changed', function() {
+
+		if (thePanorama.getVisible()) {
+
+			currentStreetMap = {
+				center: thePanorama.position,
+				zoom: thePanorama.pov.zoom,
+				adress: thePanorama.links[0].description,
+				pitch: thePanorama.pov.pitch,
+				heading: thePanorama.pov.heading
+			};
+			$gmapsSearchBrick.data( "type", "streetview" );
+			$gmapsSearchBrick.data( "topic", currentStreetMap );
+		}
+	
+	});
+
+		//detect if entering Streetview -> Change the type to streetview
+	google.maps.event.addListener(thePanorama, 'pov_changed', function() {
+
+		if (thePanorama.getVisible()) {
+
+			currentStreetMap = {
+				center: thePanorama.position,
+				zoom: thePanorama.pov.zoom,
+				adress: thePanorama.links[0].description,
+				pitch: thePanorama.pov.pitch,
+				heading: thePanorama.pov.heading
+			};
+			$gmapsSearchBrick.data( "topic", currentStreetMap );
+		}
+	
+	});
+
+
+	
 }
 
-function buildGmaps(place){
-	//console.log(place);
+function buildGmaps(mapObj){
 
+	console.log(mapObj);
+
+	var map;
 	var myMaptypeID;
 	var $mapbrick;
 	var currentMap;
@@ -397,29 +450,107 @@ function buildGmaps(place){
 	var $mapcanvas = $('<div id="map-canvas"></div>');
 
 	$mapbrick = $('<div class="brick w2" data-type="gmaps" data-topic=""></div>').append($mapcanvas);
-	$mapbrick.prepend(close_icon + '<span class="handle"> <i class="fa fa-map-marker"></i> </span>');
+	$mapbrick.prepend(close_icon + '<span class="handle"> <i class="fa fa-map-marker"></i></span>');
 	
 	$container.append($mapbrick).packery( 'appended', $mapbrick);
 
 	$mapbrick.each( makeEachDraggable );
 
+
+	if (mapObj.maptype.toLowerCase() === "roadmap"){
+		myMaptypeID = google.maps.MapTypeId.ROADMAP;
+	}
+	else if(mapObj.maptype.toLowerCase() === "satellite"){
+		myMaptypeID = google.maps.MapTypeId.SATELLITE;
+	}
+	else if(mapObj.maptype.toLowerCase() === "hybrid"){
+		myMaptypeID = google.maps.MapTypeId.HYBRID;
+	}
+	else if(mapObj.maptype.toLowerCase() === "terrain"){
+		myMaptypeID = google.maps.MapTypeId.TERRAIN;
+	}
+
+	//It is necessairy to re-build a valid LatLng object. The one recreated from the JSON string is invalid.
+	var myLatlng = new google.maps.LatLng(mapObj.center.b, mapObj.center.d);
+
+	//same for the bounds, on top we need to rebuild LatLngs to re-build a bounds object
+	var LatLngSw = new google.maps.LatLng(mapObj.bounds.Ea.j, mapObj.bounds.wa.j);
+	var LatLngNe = new google.maps.LatLng(mapObj.bounds.Ea.A, mapObj.bounds.wa.A);
+	
+	
+	//last but not least: the bound object with the newly created Latlngs
+	var myBounds = new google.maps.LatLngBounds(LatLngSw, LatLngNe);
+	
+	
 	var mapOptions = {
-		center: {lat: -33.8688, lng: 151.2195},
-		zoom: 5
+		zoom: 8,
+		center: myLatlng,
+		scrollwheel: false,
+		mapTypeId: myMaptypeID
 	};
 
-	var map = new google.maps.Map($mapcanvas[0], mapOptions);
+	map = new google.maps.Map($mapcanvas[0], mapOptions);
 
-	var marker = new google.maps.Marker({
-		map: map
+	map.fitBounds(myBounds);
+
+
+	google.maps.event.addListener(map, 'idle', function() {
+
+		currentMap = {
+			center: map.getCenter(),
+			bounds: map.getBounds(),
+			maptype: map.getMapTypeId()
+		};
+	
+		$mapbrick.data( "topic", currentMap );
+
 	});
 
-	marker.setPlace({
-		placeId: place.place_id,
-		location: place.geometry.location
+	google.maps.event.addListener(map, 'maptypeid_changed', function() {
+
+		currentMap.maptype = map.getMapTypeId();
+		
+		$mapbrick.data( "topic", currentMap );
+
 	});
-	var position = marker.getPosition();
-	console.log(marker);
+
+	var thePanorama = map.getStreetView(); //get the streetview object
+	
+	//detect if entering Streetview -> Change the type to streetview
+	google.maps.event.addListener(thePanorama, 'visible_changed', function() {
+
+		if (thePanorama.getVisible()) {
+
+			currentStreetMap = {
+				center: thePanorama.position,
+				zoom: thePanorama.pov.zoom,
+				adress: thePanorama.links[0].description,
+				pitch: thePanorama.pov.pitch,
+				heading: thePanorama.pov.heading
+			};
+			$mapbrick.data( "type", "streetview" );
+			$mapbrick.data( "topic", currentStreetMap );
+		}
+	
+	});
+
+		//detect if entering Streetview -> Change the type to streetview
+	google.maps.event.addListener(thePanorama, 'pov_changed', function() {
+
+		if (thePanorama.getVisible()) {
+
+			currentStreetMap = {
+				center: thePanorama.position,
+				zoom: thePanorama.pov.zoom,
+				adress: thePanorama.links[0].description,
+				pitch: thePanorama.pov.pitch,
+				heading: thePanorama.pov.heading
+			};
+			$mapbrick.data( "topic", currentStreetMap );
+		}
+	
+	});
+
 }
 
 function buildStreetMap(streetObj) {
@@ -430,7 +561,7 @@ function buildStreetMap(streetObj) {
 	var $mapcanvas = $('<div id="map-canvas"></div>');
 
 	$mapbrick = $('<div class="brick w2" data-type="streetview" data-topic=""></div>').append($mapcanvas);
-	$mapbrick.prepend(close_icon + '<span class="handle"> <i class="fa fa-map-marker"></span>');
+	$mapbrick.prepend(close_icon + '<span class="handle"> <i class="fa fa-map-marker"></i></span>');
 	
 	$container.append($mapbrick).packery( 'appended', $mapbrick);
 	$mapbrick.each( makeEachDraggable );
@@ -951,7 +1082,7 @@ function buildWikipedia(topic, lang){
 					//if click on gmaps interconnection
 					$brick.find(".wikiverse-nav .gmaps-icon").on("click", function(){
 
-						getGmaps(topic);
+						//getGmaps(topic);
 						
 					});
 
@@ -1176,18 +1307,9 @@ function getSearchBoxes(){
 	});
 
 	$("#gmaps-icon").on("click", function(){
-	
-		$gmapsSearchBrick.removeClass("invisible");
-		$container.append($gmapsSearchBrick).packery( 'prepended', $gmapsSearchBrick);
+		getGmapsSearch();
 	});
 
-	$("#gmaps-search .start").on("click", function(){
-		
-		var query = $("#gmaps-search .searchbox").val();
-
-		getGmaps(query);
-		
-	});
 	
 }
 

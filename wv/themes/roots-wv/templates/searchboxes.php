@@ -59,21 +59,13 @@
 	</div> 
 </div>
 
-<div id="gmaps-search" class="brick invisible search">
+<div id="gmaps-search" data-type="gmaps" data-topic="" class="brick invisible w2">
 	<span class="cross"><i class="fa fa-close"></i></span>
+	<span class="handle"> <i class="fa fa-map-marker"></i></span>
 	<div class="container top-buffer-small  bottom-buffer-small">
-		<div class="col-lg-2 col-md-2 col-sm-2">
-			<i class="fa fa-map-marker"></i>
-		</div>
-	
-	  	<div class="col-lg-10 col-md-10 col-sm-10">
-	  	
-	  	<div class="input-group">
-	      <input type="text" id="gmaps-searchinput" placeholder="search google maps" class="form-control searchbox">
-	      <span class="input-group-btn">
-	        <button class="btn btn-default start" type="button">Start</button>
-	      </span>
-	    </div><!-- /input-group -->
+
+		<input id="pac-input" class="controls" type="text" placeholder="Enter a location">
+		<div id="map-canvas"></div> 
 	   
 	   </div> 
 	</div> 
