@@ -4,8 +4,13 @@ wp-config.php
 !.gitignore
 !wv/
 wv/*
-!wv/plugins/wall-creator/
-!wv/themes/roots-wv
+!wv/themes/
+wv/themes/*
+wv/themes/roots-*/scripts.php
+!wv/themes/roots-*
+!wv/plugins/
+wv/plugins/*
+!wv/plugins/wall*
 *~
 .DS_Store
 .svn
@@ -16,3 +21,4 @@ Thumbs.db
 *.log
 sitemap.xml
 sitemap.xml.gz
+

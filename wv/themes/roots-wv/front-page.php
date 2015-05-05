@@ -14,6 +14,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel">Save this wall</h4>
+        <i class="fa fa-buysellads"></i>
       </div>
       <div class="modal-body">
       

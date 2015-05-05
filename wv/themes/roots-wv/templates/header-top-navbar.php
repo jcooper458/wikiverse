@@ -14,10 +14,10 @@
     <div class="row">
 	    <div class="col-lg-5 col-md-5 col-sm-5 top-buffer-small">
 	    	
-	      	<img class="icon" id="wikipedia-icon" src="<?php echo get_stylesheet_directory_uri();?>/assets/img/wikipedia.png">
-	      	<img class="icon" id="youtube-icon" src="<?php echo get_stylesheet_directory_uri();?>/assets/img/youtube.png">
-	      	<img class="icon" id="flickr-icon" src="<?php echo get_stylesheet_directory_uri();?>/assets/img/flickr.png">
-	        <img class="icon" id="gmaps-icon" src="<?php echo get_stylesheet_directory_uri();?>/assets/img/gmaps.png">
+	      	<i id="wikipedia-icon" class="fa fa-wikipedia"></i>
+	      	<i id="youtube-icon"   class="fa fa-youtube-square"></i>
+	      	<i id="flickr-icon"    class="fa fa-flickr"></i>
+	      	<i id="gmaps-icon"     class="fa fa-map-marker"></i>
 	    </div>
 	     <div class="col-lg-2 col-md-2 col-sm-2">
 	     	<a class="navbar-brand" id="logo" href="<?php echo home_url(); ?>/"><?php bloginfo('name'); ?></a>
