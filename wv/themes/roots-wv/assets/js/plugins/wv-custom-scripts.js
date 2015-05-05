@@ -324,7 +324,8 @@ function getGmapsSearch(){
 
 	$gmapsSearchBrick.removeClass("invisible");
 	$container.append($gmapsSearchBrick).packery( 'prepended', $gmapsSearchBrick);
-
+	$gmapsSearchBrick.each( makeEachDraggable );
+	
 	var mapOptions = {
 		center: {lat: 35, lng: 0},
 		zoom: 1
@@ -433,7 +434,7 @@ function getGmapsSearch(){
 	
 	});
 
-
+	
 	
 }
 
