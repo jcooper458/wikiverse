@@ -15,9 +15,9 @@ function apfaddpost(wpnonce) {
 	  
 	  $.each(itemElems, function(){
 		  
-		  var type = $(this).attr('type');
-		  var topic = $(this).attr('title');
-		  var language = $(this).attr('lang');
+		  var type = $(this).data('type');
+		  var topic = $(this).data('title');
+		  var language = $(this).data('lang');
 		  
 		  wikiverse[tabindex] = {
 		  
@@ -105,9 +105,9 @@ function apfeditpost(wpnonce) {
 	  
 	  $.each(itemElems, function(){
 		  
-		  var type = $(this).attr('type');
-		  var topic = $(this).attr('title');
-		  var language = $(this).attr('lang');
+		  var type = $(this).data('type');
+		  var topic = $(this).data('title');
+		  var language = $(this).data('lang');
 		  
 		  wikiverse[tabindex] = {
 		  

@@ -8,7 +8,7 @@ var $gmapsSearchBrick = $("#gmaps-search");
 var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
 var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 var wikiverse_nav = '<div class="wikiverse-nav"><i class="fa fa-youtube-square youtube-icon icon"></i>&nbsp;<i class="fa fa-flickr flickr-icon icon"></i></div>';
-var $brick = $('<div class="brick jumbotron" data-type="" data-parent="" data-topic="">' + close_icon + '<span class="handle"> <i class="fa fa-arrows"></i></span></div>');
+var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle"> <i class="fa fa-arrows"></i></span></div>';
 
 
 
@@ -310,11 +310,11 @@ function getLanguage(langCode){
 }
 
 function buildNextTopic($brick, lang){
-	
+
 	$brick.find("a").unbind('click').click(function(e) {
-		
+
 		e.preventDefault();
-		
+
 		var topic = $(this).attr("title");
 		$(this).contents().unwrap();
 
@@ -329,7 +329,7 @@ function getGmapsSearch(){
 	$gmapsSearchBrick.removeClass("invisible");
 	$container.append($gmapsSearchBrick).packery( 'prepended', $gmapsSearchBrick);
 	$gmapsSearchBrick.each( makeEachDraggable );
-	
+
 	var mapOptions = {
 		center: {lat: 35, lng: 0},
 		zoom: 1
@@ -387,7 +387,7 @@ function getGmapsSearch(){
 			center: map.getCenter().toUrlValue(),
 			bounds: {
 				southWest : map.getBounds().getSouthWest().toUrlValue(),
-				northEast : map.getBounds().getNorthEast().toUrlValue()				
+				northEast : map.getBounds().getNorthEast().toUrlValue()
 			},
 			maptype: map.getMapTypeId()
 		};
@@ -399,16 +399,16 @@ function getGmapsSearch(){
 	google.maps.event.addListener(map, 'maptypeid_changed', function() {
 
 		currentMap.maptype = map.getMapTypeId();
-		
+
 		$gmapsSearchBrick.data( "topic", currentMap );
 
 	});
 
 	var thePanorama = map.getStreetView(); //get the streetview object
-	
+
 	//detect if entering Streetview -> Change the type to streetview
 	google.maps.event.addListener(thePanorama, 'visible_changed', function() {
-		
+
 		console.log(thePanorama);
 
 		if (thePanorama.getVisible()) {
@@ -447,44 +447,43 @@ function getGmapsSearch(){
 
 	}
 
+function buildGmaps(mapObj){
+
+	var map;
+	var myMaptypeID;
+	var currentMap;
+	var currentStreetMap;
+
+	var $mapcanvas = $('<div id="map-canvas"></div>');
+
+	var $mapbrick = $(defaultBrick);
+
+	$mapbrick.data('type', 'gmaps');
+	$mapbrick.addClass('w2');
+	$mapbrick.prepend($mapcanvas);
+
+	$container.append($mapbrick).packery( 'appended', $mapbrick);
+
+	$mapbrick.each( makeEachDraggable );
 
 
-	function buildGmaps(mapObj){
-
-		var map;
-		var myMaptypeID;
-		var $mapbrick;
-		var currentMap;
-		var currentStreetMap;
-
-		var $mapcanvas = $('<div id="map-canvas"></div>');
-
-		$mapbrick = $brick;
-		$mapbrick.addClass('w2');
-		$mapbrick.data('type', 'gmaps');
-
-		$container.append($mapbrick).packery( 'appended', $mapbrick);
-
-		$mapbrick.each( makeEachDraggable );
-
-
-		if (mapObj.maptype.toLowerCase() === "roadmap"){
-			myMaptypeID = google.maps.MapTypeId.ROADMAP;
-		}
-		else if(mapObj.maptype.toLowerCase() === "satellite"){
-			myMaptypeID = google.maps.MapTypeId.SATELLITE;
-		}
-		else if(mapObj.maptype.toLowerCase() === "hybrid"){
-			myMaptypeID = google.maps.MapTypeId.HYBRID;
-		}
-		else if(mapObj.maptype.toLowerCase() === "terrain"){
-			myMaptypeID = google.maps.MapTypeId.TERRAIN;
-		}
+	if (mapObj.maptype.toLowerCase() === "roadmap"){
+		myMaptypeID = google.maps.MapTypeId.ROADMAP;
+	}
+	else if(mapObj.maptype.toLowerCase() === "satellite"){
+		myMaptypeID = google.maps.MapTypeId.SATELLITE;
+	}
+	else if(mapObj.maptype.toLowerCase() === "hybrid"){
+		myMaptypeID = google.maps.MapTypeId.HYBRID;
+	}
+	else if(mapObj.maptype.toLowerCase() === "terrain"){
+		myMaptypeID = google.maps.MapTypeId.TERRAIN;
+	}
 
 	//It is necessairy to re-build a valid LatLng object. The one recreated from the JSON string is invalid.
 	var myCenter = new google.maps.LatLng(mapObj.center.split(",")[0], mapObj.center.split(",")[1]);
 
-	
+
 	//same for the bounds, on top we need to rebuild LatLngs to re-build a bounds object
 	var LatLngNe = new google.maps.LatLng(mapObj.bounds.northEast.split(",")[0], mapObj.bounds.northEast.split(",")[1]);
 	var LatLngSw = new google.maps.LatLng(mapObj.bounds.southWest.split(",")[0], mapObj.bounds.southWest.split(",")[1]);
@@ -504,12 +503,12 @@ function getGmapsSearch(){
 	map.fitBounds(myBounds);
 
 	google.maps.event.addListener(map, 'idle', function() {
-		
+
 		currentMap = {
 			center: map.getCenter().toUrlValue(),
 			bounds: {
 				southWest : map.getBounds().getSouthWest().toUrlValue(),
-				northEast : map.getBounds().getNorthEast().toUrlValue()				
+				northEast : map.getBounds().getNorthEast().toUrlValue()
 			},
 			maptype: map.getMapTypeId()
 		};
@@ -521,13 +520,13 @@ function getGmapsSearch(){
 	google.maps.event.addListener(map, 'maptypeid_changed', function() {
 
 		currentMap.maptype = map.getMapTypeId();
-		
+
 		$mapbrick.data( "topic", currentMap );
 
 	});
 
 	var thePanorama = map.getStreetView(); //get the streetview object
-	
+
 	//detect if entering Streetview -> Change the type to streetview
 	google.maps.event.addListener(thePanorama, 'visible_changed', function() {
 
@@ -565,37 +564,40 @@ function getGmapsSearch(){
 
 	}
 
-	function buildStreetMap(streetObj) {
+function buildStreetMap(streetObj) {
 
-		var $mapbrick;
-		var currentStreetMap;
+	var $mapbrick;
+	var currentStreetMap;
 
-		var $mapcanvas = $('<div id="map-canvas"></div>');
+	var $mapcanvas = $('<div id="map-canvas"></div>');
 
-		$mapbrick = $('<div class="brick w2" data-type="streetview" data-topic=""></div>').append($mapcanvas);
-		$mapbrick.prepend(close_icon + '<span class="handle"> <i class="fa fa-arrows"></i></span>');
+	var $mapbrick = $(defaultBrick);
 
-		$container.append($mapbrick).packery( 'appended', $mapbrick);
-		$mapbrick.each( makeEachDraggable );
+	$mapbrick.data('type', 'streetview');
+	$mapbrick.addClass('w2');
+	$mapbrick.prepend($mapcanvas);
+
+	$container.append($mapbrick).packery( 'appended', $mapbrick);
+	$mapbrick.each( makeEachDraggable );
 
 
-		var myCenter = new google.maps.LatLng(streetObj.center.split(",")[0], streetObj.center.split(",")[1]);
+	var myCenter = new google.maps.LatLng(streetObj.center.split(",")[0], streetObj.center.split(",")[1]);
 
-		var panoramaOptions = {
-			position:myCenter,
-			zoomControl: false,
-			linksControl: false,
-			panControl: false,
-			disableDefaultUI: true,
-			pov: {
-				heading: parseFloat(streetObj.heading),
-				pitch: parseFloat(streetObj.pitch),
-				zoom: parseFloat(streetObj.zoom)
-			},
-			visible:true
-		};
+	var panoramaOptions = {
+		position:myCenter,
+		zoomControl: false,
+		linksControl: false,
+		panControl: false,
+		disableDefaultUI: true,
+		pov: {
+			heading: parseFloat(streetObj.heading),
+			pitch: parseFloat(streetObj.pitch),
+			zoom: parseFloat(streetObj.zoom)
+		},
+		visible:true
+	};
 
-		var thePanorama = new google.maps.StreetViewPanorama($mapcanvas[0], panoramaOptions);
+	var thePanorama = new google.maps.StreetViewPanorama($mapcanvas[0], panoramaOptions);
 
 	google.maps.event.addListener(thePanorama, 'pov_changed', function() { //detect if entering Streetview
 
@@ -618,9 +620,12 @@ function getGmapsSearch(){
 function buildFlickr(photoURL){
 
 	var $flickrPhoto = $('<img width="280" src="'+photoURL+'">');
-	
-	var $flickrBrick = $('<div class="brick" data-type="flickr" data-topic="'+photoURL+'"></div>');
-	$flickrBrick.prepend(close_icon + '<span class="handle"><i class="fa fa-arrows"></i> </span>');
+
+	var $flickrBrick = $(defaultBrick);
+
+	$flickrBrick.data('type', 'flickr');
+	$flickrBrick.data('topic', photoURL);
+
 	$container.append($flickrBrick).packery( 'appended', $flickrBrick);
 
 	$flickrBrick.each( makeEachDraggable );
@@ -691,9 +696,9 @@ function getFlickrs(topic, sort) {
 						var thumbURL = data.sizes.size[1].source;
 						var mediumURL = data.sizes.size[6].source;
 
-						//append row to searchbox-table 
+						//append row to searchbox-table
 						$divFlickrResults.append('<img width="145" large="'+mediumURL+'" src="'+thumbURL+'">');
-						
+
 						//relayout packery
 						//$container.packery();
 
@@ -703,15 +708,15 @@ function getFlickrs(topic, sort) {
 							buildFlickr(thisURL);
 							$(this).remove();
 						});
-						
-										//if no nav is already in the brick	
+
+										//if no nav is already in the brick
 										if($flickrSearchBrick.find('.nav').length === 0 ){
 
 							//append a clear button and the wikipedia icon
 							$flickrSearchBrick.append('<div class="search-ui"><ul class="nav nav-pills"><li class="pull-right"><a class="clear"><h6>clear results</h6></a></li></ul></div');
 
 						}
-						
+
 						//when clear results is clicked
 						$('.clear').on('click', function(){
 
@@ -738,7 +743,7 @@ error: function (data){
             var content = "Flickr error..";
             var $box = $('<p></p>').append(content);
                 $box = $('<div class="brick "></div>').append($box);
-              
+
 				$container.append($box).packery( 'appended', $box );
 				*/
 
@@ -774,13 +779,13 @@ function getYoutubes(topic) {
 			part: 'snippet'
 		},
 		dataType:'jsonp',
-		success: function(data){ 
+		success: function(data){
 
 
 
 			if(data.items ){
 				$.each(data.items, function(){
-					
+
 					console.log(this);
 
 					var title = this.snippet.channelTitle;
@@ -788,9 +793,9 @@ function getYoutubes(topic) {
 					var youtubeID = this.id.videoId;
 					var thumbnailURL = this.snippet.thumbnails.default.url;
 
-					//append row to searchbox-table 
+					//append row to searchbox-table
 					$tableYoutubeResults.append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td class="youtubeThumb"><img src="'+thumbnailURL+'"></td><td class="result" youtubeID="'+youtubeID+'">'+title+'</td></tr>');
-					
+
 					//create the tooltips
 					$('tr').tooltip({animation: true, placement: 'bottom'});
 
@@ -798,10 +803,10 @@ function getYoutubes(topic) {
 					$tableYoutubeResults.find('tr').unbind('click').click(function(e) {
 
 						var currentYoutubeID = $(this).find('.result').attr('youtubeID');
-						
+
 						$(this).tooltip('destroy');
 						$(this).remove();
-						
+
 						buildYoutube(currentYoutubeID);
 
 						return false;
@@ -809,14 +814,14 @@ function getYoutubes(topic) {
 
 				});
 
-				//if no nav is already in the brick	
+				//if no nav is already in the brick
 				if($youtubeSearchBrick.find('.nav').length === 0 ){
 
 					//append a clear button and the wikipedia icon
 					$youtubeSearchBrick.append('<div class="search-ui"><ul class="nav nav-pills"><li class="pull-right"><a class="clear"><h6>clear results</h6></a></li></ul></div');
 
 				}
-				
+
 				//when clear results is clicked
 				$('.clear').on('click', function(){
 
@@ -854,7 +859,7 @@ function getYoutubes(topic) {
 						$tableYoutubeResults.find('.no-results').remove();
 						$('#youtube-searchinput').val('');
 					}
-					
+
 
 				}, 2000 );
 
@@ -911,7 +916,7 @@ function getWikiLanguages(topic, lang, $brick){
 
 				var lang = $(this).children(":selected").attr('value');
 				var topic = $(this).children(":selected").data('topic');
-				
+
 				buildWikipedia(topic, lang, $brick.attr("tabindex"));
 			});
 
@@ -956,16 +961,16 @@ function getWikis(topic, lang) {
 					var title = this.title;
 					var snippet = this.snippet;
 
-					//append row to searchbox-table 
+					//append row to searchbox-table
 					$tableWikiResults.append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td><el class="result">'+title+'</el></td></tr>');
-					
+
 					//create the tooltips
 					$('tr').tooltip({animation: true, placement: 'bottom'});
 					//bind event to every row -> so you can start the wikiverse
 					$tableWikiResults.find('tr').unbind('click').click(function(e) {
 
 						var topic = $(this).find('.result').html();
-						
+
 						buildWikipedia(topic, lang, -1);
 
 						$(this).tooltip('destroy');
@@ -975,14 +980,14 @@ function getWikis(topic, lang) {
 
 				});
 
-				//if no nav is already in the brick	
+				//if no nav is already in the brick
 				if($wikiSearchBrick.find('.nav').length === 0 ){
 
 					//append a clear button and the wikipedia icon
 					$wikiSearchBrick.append('<div class="search-ui"><ul class="nav nav-pills"><li class="pull-right"><a class="clear"><h6>clear results</h6></a></li></ul></div');
 
 				}
-				
+
 				//when clear results is clicked
 				$('#clear').on('click', function(){
 
@@ -1020,7 +1025,7 @@ function getWikis(topic, lang) {
 						$tableWikiResults.find('.no-results').remove();
 						$('#wiki-searchinput').val('');
 					}
-					
+
 
 				}, 2000 );
 
@@ -1043,14 +1048,18 @@ function getWikis(topic, lang) {
 
 function buildWikipedia(topic, lang, parent){
 
-	var $brick = $('<p></p>').append('<h4>'+topic+'</h4>');
+	var $brick = $(defaultBrick);
 
-	$brick = $('<div class="brick" data-type="wiki" data-parent="' + parent + '" data-lang="' + lang + '" data-topic="' + topic + '"></div>').append($brick);
+	$brick.data('type', 'wiki');
+	$brick.data('parent', parent);
+	$brick.data('lang', lang);
+	$brick.data('topic', topic);
 
-	$brick.prepend(close_icon + '<span class="handle"><i class="fa fa-arrows"></i></span>');
 	$brick.prepend( wikiverse_nav );
+	$brick.prepend('<p><h4>'+topic+'</h4></p>');
 
 	$container.append($brick).packery( 'appended', $brick);
+
 	$brick.each( makeEachDraggable );
 		//$container.packery( 'bindDraggabillyEvents', $brick );
 
@@ -1076,7 +1085,7 @@ function buildWikipedia(topic, lang, parent){
 				//wikitext.find('img').addClass('pull-left');
 
 
-				//needs work:  wiki images: 
+				//needs work:  wiki images:
 				$.ajax({
 					url: 'http://'+lang+'.wikipedia.org/w/api.php',
 					data:{
@@ -1105,9 +1114,9 @@ function buildWikipedia(topic, lang, parent){
 						e = jQuery.Event("keypress");
 						e.which = 13; //choose the one you want
 					    d = jQuery.Event("keydown");
-    					d.keyCode = 50;     
-    					$("#pac-input").trigger('click');                
-    					//$("#pac-input").trigger(d); 
+    					d.keyCode = 50;
+    					$("#pac-input").trigger('click');
+    					//$("#pac-input").trigger(d);
     					//  $("#pac-input").trigger(e);*/
 
     				});
@@ -1122,11 +1131,11 @@ function buildWikipedia(topic, lang, parent){
 					$flickrSearchBrick.find('input').val(topic);
 					$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
 					$flickrSearchBrick.find('.start').addClass('disabled');
-					
+
 					$flickrSearchBrick.find('#sort-info').remove();
-					
+
 					$flickrSearchBrick.find('.start').trigger( "click" );
-					
+
 				});
 
 				//create youtube interconnection button and trigger flickr search
@@ -1137,9 +1146,9 @@ function buildWikipedia(topic, lang, parent){
 					$youtubeSearchBrick.find('input').val(topic);
 					$youtubeSearchBrick.find('.searchbox').attr('disabled', 'true');
 					$youtubeSearchBrick.find('.start').addClass('disabled');
-					
+
 					$youtubeSearchBrick.find('.start').trigger( "click" );
-					
+
 				});
 
 				$.each(wikitext, function(){
@@ -1161,7 +1170,7 @@ function buildWikipedia(topic, lang, parent){
 function buildWall(){
 
 	var str = $("#wikiverse").html();
-	
+
 	var wikiverse =	JSON.parse(str);
 
 	$.each(wikiverse, function() {
@@ -1187,16 +1196,20 @@ function buildWall(){
 
 
 function buildYoutube(youtubeID){
-	
+
 	var $iframe = '<iframe id="ytplayer" type="text/html" width="290" height="190" src="http://www.youtube.com/embed/'+youtubeID+'" frameborder="0"/>';
-	
-	$iframe = $('<div class="brick" data-type="youtube" data-topic="'+youtubeID+'"></div>').append($iframe);
-	$iframe.prepend(close_icon + '<span class="handle"> <i class="fa fa-arrows"></i> </span>');
 
-	$container.append($iframe).packery( 'appended', $iframe);
+	var $youtubeBrick = $(defaultBrick);
 
-	$iframe.each( makeEachDraggable );
-	
+	$youtubeBrick.data('type', 'youtube');
+	$youtubeBrick.data('topic', youtubeID);
+
+    $youtubeBrick.append($iframe);
+
+	$container.append($youtubeBrick).packery( 'appended', $youtubeBrick);
+
+	$youtubeBrick.each( makeEachDraggable );
+
 }
 
 
@@ -1211,15 +1224,15 @@ function makeEachDraggable( i, itemElem ) {
 
 
 function getSearchBoxes(){
-	
+
 	var lang = $("#langselect").val();
-	
+
 	$( "#langselect" ).change(function() {
-		
+
 		lang = $(this).val();
-		
+
 	});
-	
+
 	//WIKIPEDIA AUTOCOMPLETE
 	$('#wiki-searchinput').typeahead({
 		source: function(query, process) {
@@ -1234,7 +1247,7 @@ function getSearchBoxes(){
 				success: function(json) {
 					process(json[1]);
 				}
-				
+
 			});
 		},
 		matcher: function (item) {
@@ -1277,7 +1290,7 @@ function getSearchBoxes(){
 			}
 		}
 	});
-	
+
 	$("#wikipedia-icon").on("click", function(){
 
 		$wikiSearchBrick.removeClass("invisible");
@@ -1285,13 +1298,13 @@ function getSearchBoxes(){
 
 	});
 
-	
-	
+
+
 	$("#wikipedia-search .start").on("click", function(){
-		
+
 		var topic = $("#wiki-searchinput").val();
 		getWikis( topic, lang );
-		
+
 	});
 
 	/*$("#wiki-searchinput").keyup(function(event){
@@ -1350,16 +1363,16 @@ function orderItems() {
 }
 
 
-function createWall(wpnonce) {	
-	
+function createWall(wpnonce) {
+
 	var wikiverse = {};
-	
-	//remove search bricks: 
+
+	//remove search bricks:
 	var searchBricks = jQuery(".search");
 	$container.packery( 'remove', searchBricks );
 
 	var itemElems = $container.packery('getItemElements');
-	
+
 	var tabindex = 0;
 
 	$.each(itemElems, function(){
@@ -1368,8 +1381,7 @@ function createWall(wpnonce) {
 		var topic = $(this).data('topic');
 		var language = $(this).data('lang');
 		var parent = $(this).data('parent');
-		//var tabindex = $(this).attr('tabindex');
-		
+
 		wikiverse[tabindex] = {
 
 			Type: type,
@@ -1379,15 +1391,15 @@ function createWall(wpnonce) {
 		};
 		tabindex++;
 	});
-	
+
 	var JSONwikiverse = JSON.stringify(wikiverse);
 
-	
-	
+
+
 	$("#saveWallModal").modal('show');
-	
+
 	$('#wallTitle').keyup(function () {
-		
+
 		$("#wallSubmitButton").prop('disabled', false);
 	});
 
@@ -1436,21 +1448,21 @@ function createWall(wpnonce) {
 }
 
 function editWall(wpnonce) {
-	
+
 	var postid = $('#postID').html();
-	
+
 	var wikiverse = {};
-	
-	//remove search bricks: 
+
+	//remove search bricks:
 	var searchBricks = jQuery(".search");
 	$container.packery( 'remove', searchBricks );
-	
+
 	var itemElems = $container.packery('getItemElements');
 
 	//var tabindex = 0;
 
 	$.each(itemElems, function(){
-		
+
 		var type = $(this).data('type');
 		var topic = $(this).data('topic');
 		var language = $(this).data('lang');
@@ -1463,11 +1475,11 @@ function editWall(wpnonce) {
 			Topic: topic,
 			Language: language,
 			Parent: parent
-			
+
 		};
-		//tabindex++;
+
 	});
-	
+
 	var JSONwikiverse = JSON.stringify(wikiverse);
 
 	$.ajax({
