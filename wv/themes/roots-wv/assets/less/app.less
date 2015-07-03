@@ -3,6 +3,8 @@
  */
 
 @import "bootstrap/bootstrap.less";
+@import "bootswatch/variables.less";
+@import "bootswatch/bootswatch.less";
 
 /* ==========================================================================
    Base
@@ -18,22 +20,33 @@ body { }
 }
 
 
-.brick { width: 300px; background: #F8F8F8; border: 1px solid #E7E7E7;outline: 0;}
+.brick { 
+  width: 300px; 
+  /*background: #F8F8F8; */
+  padding:5px; 
+  border-radius: 4px;
+  outline: 0;
+  border-bottom: 4px solid #e7e7e7;
+}
 .brick p {overflow: hidden;}
 .brick.w2 { width: 600px; }
 .brick.w2-tube { width: 640px!important; }
 .brick.w2-vimeo { width: 500px!important; }
 
 
-.brick p,.brick iframe{ padding:0px 5px; }
+.brick p,.brick iframe{ /*padding:0px 5px;*/ margin-top:5px; }
 
 .brick{
-
   .fa{
-    font-size:30px!important;
-     margin: 3px -5px 0 3px;
+      font-size: 20px!important;
+    }
+  .handle{
+    .fa{
+      cursor: move;
+      margin: 8px 0px 0px 8px;
+      font-size: 25px!important;
+    }
   }
-
   .controls {
     background-color: #fff;
     border-radius: 2px;
@@ -72,12 +85,13 @@ body { }
 
 .cross { display:none;
     cursor: pointer;
-    left: -15px;
+    left: -5px;
     position: absolute;
-    top: -22px;
+    top: -10px;
     z-index: 2;
 }
 .handle { 
+    display: none;
     cursor: move;
     font-size: 19px;
     right: -20px;
@@ -87,7 +101,6 @@ body { }
     height:40px;
     background:#F8F8F8;
     border-radius: 20px;
-    border: 1px solid #E7E7E7;
     z-index: 2;
 }
 .fa{
@@ -103,7 +116,7 @@ content: "VV"; letter-spacing:-0.45em; margin-right:0.5em; }
 
 
 
-.brick:hover .cross {display: block;}
+.brick:hover .cross, .brick:hover .handle {display: block;}
 table tr, .result, #clear{cursor: pointer;} 
 
 .brick .table-hover {

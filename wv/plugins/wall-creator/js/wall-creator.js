@@ -19,7 +19,6 @@ function apfaddpost(wpnonce) {
 		  var topic = $(this).attr('title');
 		  var language = $(this).attr('lang');
 		  
-		  
 		  wikiverse[tabindex] = {
 		  
 		  		Type: type,
@@ -110,7 +109,6 @@ function apfeditpost(wpnonce) {
 		  var topic = $(this).attr('title');
 		  var language = $(this).attr('lang');
 		  
-		  
 		  wikiverse[tabindex] = {
 		  
 		  		Type: type,
@@ -119,7 +117,6 @@ function apfeditpost(wpnonce) {
 			  
 		  };
 		  
-		
 		  tabindex++;
 		  
 	  });
@@ -143,7 +140,7 @@ function apfeditpost(wpnonce) {
 	    		
 	        },  
 	        error: function(MLHttpRequest, textStatus, errorThrown) {  
-	            alert("cdascsacsa");  
+	            alert("Error in the AJAX for saving the wall");  
 	        }  
 	    }); 
 	    
