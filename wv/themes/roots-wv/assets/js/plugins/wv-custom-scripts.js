@@ -988,8 +988,6 @@ function getWikiLanguages(topic, lang, $brick){
 
 				buildWikipedia(topic, lang, $brick.attr("tabindex"));
 			});
-
-
 		}
 	});
 
@@ -1130,7 +1128,7 @@ function buildWikipedia(topic, lang, parent){
 	$packeryContainer.append($brick).packery( 'appended', $brick);
 
 	$brick.each( makeEachDraggable );
-		//$packeryContainer.packery( 'bindDraggabillyEvents', $brick );
+
 
 	$.ajax({
 		url: 'http://'+lang+'.wikipedia.org/w/api.php',
@@ -1200,16 +1198,19 @@ function buildWikipedia(topic, lang, parent){
 
 										},
 										dataType:'jsonp',
-										success: function(data){
-											if(data.query.pages['-1'].imageinfo.length){
-												var imageUrl = data.query.pages['-1'].imageinfo[0].url;
-												var image = $('<img width="290" src="' + imageUrl + '"><br>');
+										success: function(data){							
+																	
+											//get the first key in obj
+											for (first in data.query.pages) break;
+					
+											var imageUrl = data.query.pages[first].imageinfo[0].url;
+											var image = $('<img width="290" src="' + imageUrl + '">');
 
-												image.insertAfter($brick.find("h2"));
-											}
+											image.insertAfter($brick.find("h2"));
+											
 										}
 									});
-									//break the loop
+									//break the loop if a jpg was found
 									return false;
 								}else{
 									return true;
@@ -1253,13 +1254,14 @@ function buildWikipedia(topic, lang, parent){
 
 						}
 						//enable to create new bricks out of links
-						buildNextTopic($brick, lang);				
+						buildNextTopic($brick, lang);	
 
+						getWikiLanguages(topic, lang, $brick);
 						$packeryContainer.packery();
 					}
 				});
 
-				getWikiLanguages(topic, lang, $brick);
+				
 
 				$packeryContainer.packery();
 			}	
@@ -1343,7 +1345,7 @@ function buildSection(topic, lang, index, parent){
 
 			//enable to create new bricks out of links
 			buildNextTopic($brick, lang);
-			getWikiLanguages(topic, lang, $brick);
+			//getWikiLanguages(topic, lang, $brick);
 
 			$packeryContainer.packery();
 		}
@@ -1362,6 +1364,9 @@ function buildWall(){
 
 		if(this.Type === "wiki"){
 			buildWikipedia(this.Topic, this.Language, this.Parent);
+		}
+		if(this.Type === "wikiSection"){
+			buildSection(this.Topic, this.Language, this.Index, this.Parent);
 		}
 		if(this.Type === "flickr"){
 			buildFlickr(this.Topic);
