@@ -1245,11 +1245,12 @@ function buildSection(topic, lang, index, parent){
 		dataType:'jsonp',
 		success: function(data){
 			
+			$brick.append($(data.parse.text['*']));
 		
 
 			//enable to create new bricks out of links
 			buildNextTopic($brick, lang);
-			getWikiLanguages(topic, lang, $brick);*/
+			getWikiLanguages(topic, lang, $brick);
 
 			$container.packery();
 		}
