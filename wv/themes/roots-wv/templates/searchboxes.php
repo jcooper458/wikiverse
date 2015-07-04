@@ -1,21 +1,17 @@
 <div id="wikipedia-search" class="brick invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
-	<div class="container top-buffer-small">
+	<div class="container">
 
-		<div class="col-lg-2">
-			
-	  		<?php get_template_part('templates/languages'); ?>
-		</div>
-	  	<div class="col-lg-10">
+	  	<?php get_template_part('templates/languages'); ?>
 	  	
 	  	<div class="input-group">
 	      <input type="text" id="wiki-searchinput" placeholder="search Wikipedia" class="form-control">
 	      <span class="input-group-btn">
-	        <button class="btn btn-default start"1 type="button">Start</button>
+	        <button class="btn btn-default start"1 type="button">Search</button>
 	      </span>
 	    </div><!-- /input-group -->
 	   
-	   </div> 
+
 	</div> 
 </div>
 
@@ -31,7 +27,7 @@
 	  	<div class="input-group">
 	      <input type="text" id="youtube-searchinput" placeholder="search Youtube" class="form-control searchbox">
 	      <span class="input-group-btn">
-	        <button class="btn btn-default start" type="button">Start</button>
+	        <button class="btn btn-default start" type="button">Search</button>
 	      </span>
 	    </div><!-- /input-group -->
 	   
@@ -51,7 +47,7 @@
 	  	<div class="input-group">
 	      <input type="text" id="flickr-searchinput" placeholder="search flickr" class="form-control searchbox">
 	      <span class="input-group-btn">
-	        <button class="btn btn-default start" type="button">Start</button>
+	        <button class="btn btn-default start" type="button">Search</button>
 	      </span>
 	    </div><!-- /input-group -->
 	   
