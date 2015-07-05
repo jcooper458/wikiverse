@@ -1,36 +1,11 @@
 // Modified http://paulirish.com/2009/markup-based-unobtrusive-comprehensive-dom-ready-execution/
 // Only fires on body class (working off strictly WordPress body_class)
-var $container = $('#packery');
 var ExampleSite = {
   // All pages
   common: {
     init: function() {
     
-		$('.selectpicker').selectpicker();
-		
-		getSearchBoxes();
-		
-		// initialize Packery
-		$container.packery({
-			itemSelector: '.brick',
-			gutter: 10
-		});
-		
-		// REMOVE ITEM
-		$( "#packery" ).on( "click", ".cross", function() {
-				var thisBrick = jQuery(this).parent(".brick");
-				$container.packery( 'remove', thisBrick );
-			});
 
-		//show save wall button on packery change (needs work)
-		$container.packery( 'on', 'layoutComplete', function( pckryInstance, laidOutItems ) {
-			
-			$("#saveWall").fadeIn();
-			
-		});
-
-		$container.packery( 'on', 'layoutComplete', orderItems );
-		$container.packery( 'on', 'dragItemPositioned', orderItems );
     },
     finalize: function() {
 
