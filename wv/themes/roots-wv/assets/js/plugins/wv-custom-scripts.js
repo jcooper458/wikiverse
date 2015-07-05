@@ -40,7 +40,7 @@ $packeryContainer.on("click", ".flickr-icon", function(){
 
 	var topic = $thisBrick.data("topic");
 	
-	$flickrSearchBrick.find('input').val(topic);
+	$flickrSearchBrick.find('input').val(topic.title);
 	$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
 	$flickrSearchBrick.find('.start').addClass('disabled');
 
@@ -60,7 +60,7 @@ $packeryContainer.on("click", ".youtube-icon", function(){
 
 	var topic = $thisBrick.data("topic");
 	
-	$youtubeSearchBrick.find('input').val(topic);
+	$youtubeSearchBrick.find('input').val(topic.title);
 	$youtubeSearchBrick.find('.searchbox').attr('disabled', 'true');
 	$youtubeSearchBrick.find('.start').addClass('disabled');
 
@@ -391,7 +391,7 @@ function buildNextTopic($brick, lang){
 			title: topic,
 			language: lang
 		}
-		console.log(brickData)
+
 		//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
 		buildWikipedia(brickData, $brick.attr("tabindex") - 1);
 		return false;
@@ -998,6 +998,26 @@ function getWikiLanguages(topic, lang, $brick){
 
 }
 
+function getInterWikiLinks(section, $brick){
+	console.log(section)
+	$.ajax({
+		url: 'http://' + section.language + '.wikipedia.org/w/api.php',
+		data:{
+			action:'query',
+			titles:section.title,
+			prop:'links',
+			format:'json',
+			section: section.section
+		},
+		dataType:'jsonp',
+		success: function(data){
+
+			console.log(data);
+		}
+	});
+
+}
+
 function getWikis(topic, lang) {
 
 	var $tableWikiResults;
@@ -1154,28 +1174,29 @@ function buildWikipedia(topic, parent){
 		},
 		dataType:'jsonp',
 		success: function(data){
-			//console.log(data)
-			if(data.parse.sections.length){
 
-				//remove the last three, usually stuff we dont want on wikiverse
-				console.log(data.parse.sections)
-				data.parse.sections.splice(-1,10);
+			//console.log(data);
+
+			if(data.parse.sections.length){
 
 				$tableSectionResults = $('<table class="table table-hover wiki"></table>');
 				$brick.append($tableSectionResults);
 
 				data.parse.sections.forEach(function(section){
-					//console.log(section);
-					$tableSectionResults.append('<tr><td><div class="result" title="' + section.anchor + '" index="' + section.index + '">' + section.line + '</div></td></tr>');
 					
+					//remove unwanted sections: 
+					if((section.line !== "References") && (section.line !== "Notes") && (section.line !== "External links") && (section.line !== "Citations") && (section.line !== "Bibliography") && (section.line !== "Notes and references")) {
+					 	$tableSectionResults.append('<tr><td><div class="result" title="' + section.anchor + '" index="' + section.index + '">' + section.line + '</div></td></tr>');
+					}
 				});			
 
+				//create the section object and trigger the creation of a section brick
 				$tableSectionResults.find(".result").on('click', function() {
 
 					var section = {
 
-						parentTitle: topic.title,
-						parentLang: topic.language,
+						title: topic.title,
+						language: topic.language,
 						index: $(this).attr("index")
 					}
 				
@@ -1224,7 +1245,7 @@ function buildWikipedia(topic, parent){
 											var image = $('<img width="290" src="' + imageUrl + '">');
 
 											image.insertAfter($brick.find("h2"));
-											
+											//$packeryContainer.packery();
 										}
 									});
 									//break the loop if a jpg was found
@@ -1294,7 +1315,7 @@ function buildSection(section, parent){
 	$brick.data('parent', parent);
 	$brick.data('topic', section);
 	
-	$brick.prepend('<p><h2>' + section.parentTitle + '</h2></p>');
+	$brick.prepend('<p><h2>' + section.title + '</h2></p>');
 	$brick.prepend( wikiverse_nav );
 
 	$packeryContainer.append($brick).packery( 'appended', $brick);
@@ -1303,10 +1324,10 @@ function buildSection(section, parent){
 		//$packeryContainer.packery( 'bindDraggabillyEvents', $brick );
 
 	$.ajax({
-		url: 'http://' + section.parentLang + '.wikipedia.org/w/api.php',
+		url: 'http://' + section.language + '.wikipedia.org/w/api.php',
 		data:{
 			action:'parse',
-			page: section.parentTitle,
+			page: section.title,
 			format:'json',
 			prop:'text',
 			disableeditsection: true,
@@ -1361,36 +1382,9 @@ function buildSection(section, parent){
 				});
 			}// end if geo 
 
-			//Go Recreate all Interwiki links 
-			/*$.ajax({
-				url: 'http://' + section.parentLang + '.wikipedia.org/w/api.php',
-				data:{
-					action:'parse',
-					page: section.parentTitle,
-					prop:'links',
-					format: 'json',
-					section: section.index
-				},
-				dataType:'jsonp',
-				success: function(data){
-
-					data.parse.links.forEach(function(item){
-
-						var regex = new RegExp("/\b" + item['*'] + "\b/g");
-						console.log(regex);
-						console.log(item['*']);
-
-						sectionHTML.html(function(index, value) {
-						    return value.replace(item['*'].toLowerCase(), '<a href="#" title="' + item["*"] + '">' + item["*"] + '</a>');
-						});
-
-					});		
-	
-				}
-			});*/
-
 			//enable to create new bricks out of links
-			buildNextTopic($brick, section.parentLang);
+			buildNextTopic($brick, section.language);
+			getInterWikiLinks(section, $brick);
 
 			$packeryContainer.packery();
 		}
@@ -1432,7 +1426,7 @@ function buildWall(){
 
 function buildYoutube(youtubeID){
 
-	var $iframe = '<iframe id="ytplayer" type="text/html" width="290" height="190" src="http://www.youtube.com/embed/'+youtubeID+'" frameborder="0"/>';
+	var $iframe = '<iframe id="ytplayer" type="text/html" width="290" height="190" src="http://www.youtube.com/embed/'+youtubeID+'" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0"/>';
 
 	var $youtubeBrick = $(defaultBrick);
 
