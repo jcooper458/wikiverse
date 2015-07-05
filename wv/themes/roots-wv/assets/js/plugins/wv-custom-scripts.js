@@ -386,9 +386,14 @@ function buildNextTopic($brick, lang){
 
 		var topic = $(this).attr("title");
 		$(this).contents().unwrap();
-
+		
+		var brickData = {
+			title: topic,
+			language: lang
+		}
+		console.log(brickData)
 		//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
-		buildWikipedia(topic, lang, $brick.attr("tabindex") - 1);
+		buildWikipedia(brickData, $brick.attr("tabindex") - 1);
 		return false;
 	});
 }
@@ -986,7 +991,7 @@ function getWikiLanguages(topic, lang, $brick){
 				var lang = $(this).children(":selected").attr('value');
 				var topic = $(this).children(":selected").data('topic');
 
-				buildWikipedia(topic, lang, $brick.attr("tabindex"));
+				buildWikipedia(topic, $brick.attr("tabindex"));
 			});
 		}
 	});
@@ -1036,9 +1041,12 @@ function getWikis(topic, lang) {
 					//bind event to every row -> so you can start the wikiverse
 					$tableWikiResults.find('tr').unbind('click').click(function(e) {
 
-						var topic = $(this).find('.result').html();
+						var topic = {
+							title: $(this).find('.result').html(),
+							language: lang
+						}
 
-						buildWikipedia(topic, lang, -1);
+						buildWikipedia(topic, -1);
 
 						$(this).tooltip('destroy');
 						$(this).remove();
@@ -1113,16 +1121,15 @@ function getWikis(topic, lang) {
 	});
 }
 
-function buildWikipedia(topic, lang, parent){
+function buildWikipedia(topic, parent){
 
 	var $brick = $(defaultBrick);
 
 	$brick.data('type', 'wiki');
 	$brick.data('parent', parent);
-	$brick.data('lang', lang);
 	$brick.data('topic', topic);
 	
-	$brick.prepend('<p><h2>'+topic+'</h2></p>');
+	$brick.prepend('<p><h2>' + topic.title + '</h2></p>');
 	$brick.prepend( wikiverse_nav );
 
 	$packeryContainer.append($brick).packery( 'appended', $brick);
@@ -1131,10 +1138,10 @@ function buildWikipedia(topic, lang, parent){
 
 
 	$.ajax({
-		url: 'http://'+lang+'.wikipedia.org/w/api.php',
+		url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
 		data:{
 			action:'parse',
-			page: topic,
+			page: topic.title,
 			format:'json',
 			prop:'sections',
 			/*disableeditsection: true,
@@ -1150,6 +1157,10 @@ function buildWikipedia(topic, lang, parent){
 			//console.log(data)
 			if(data.parse.sections.length){
 
+				//remove the last three, usually stuff we dont want on wikiverse
+				console.log(data.parse.sections)
+				data.parse.sections.splice(-1,10);
+
 				$tableSectionResults = $('<table class="table table-hover wiki"></table>');
 				$brick.append($tableSectionResults);
 
@@ -1161,19 +1172,25 @@ function buildWikipedia(topic, lang, parent){
 
 				$tableSectionResults.find(".result").on('click', function() {
 
-					var index = $(this).attr("index");
+					var section = {
+
+						parentTitle: topic.title,
+						parentLang: topic.language,
+						index: $(this).attr("index")
+					}
+				
 					$(this).parents('tr').remove();
 
-					buildSection(topic, lang, index, $brick.attr("tabindex"));
+					buildSection(section, $brick.attr("tabindex"));
 		
 				});
 
 				//Go get the Main Image - 2 API Calls necessairy.. :( 
 				$.ajax({
-					url: 'http://'+lang+'.wikipedia.org/w/api.php',
+					url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
 					data:{
 						action:'parse',
-						page: topic,
+						page: topic.title,
 						format:'json',
 						prop:'images'
 
@@ -1222,10 +1239,10 @@ function buildWikipedia(topic, lang, parent){
 				
 				//Go get the first Paragraph of the article
 				$.ajax({
-					url: 'http://'+lang+'.wikipedia.org/w/api.php',
+					url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
 					data:{
 						action:'parse',
-						page: topic,
+						page: topic.title,
 						format:'json',
 						prop:'text',
 						disableeditsection: true,
@@ -1254,9 +1271,9 @@ function buildWikipedia(topic, lang, parent){
 
 						}
 						//enable to create new bricks out of links
-						buildNextTopic($brick, lang);	
+						buildNextTopic($brick, topic.language);	
 
-						getWikiLanguages(topic, lang, $brick);
+						getWikiLanguages(topic.title, topic.language, $brick);
 						$packeryContainer.packery();
 					}
 				});
@@ -1269,17 +1286,15 @@ function buildWikipedia(topic, lang, parent){
 	});
 }
 
-function buildSection(topic, lang, index, parent){
-
+function buildSection(section, parent){
 
 	var $brick = $(defaultBrick);
 
-	$brick.data('type', 'wiki');
+	$brick.data('type', 'wikiSection');
 	$brick.data('parent', parent);
-	$brick.data('lang', lang);
-	$brick.data('topic', topic);
+	$brick.data('topic', section);
 	
-	$brick.prepend('<p><h2>'+topic+'</h2></p>');
+	$brick.prepend('<p><h2>' + section.parentTitle + '</h2></p>');
 	$brick.prepend( wikiverse_nav );
 
 	$packeryContainer.append($brick).packery( 'appended', $brick);
@@ -1288,34 +1303,37 @@ function buildSection(topic, lang, index, parent){
 		//$packeryContainer.packery( 'bindDraggabillyEvents', $brick );
 
 	$.ajax({
-		url: 'http://'+lang+'.wikipedia.org/w/api.php',
+		url: 'http://' + section.parentLang + '.wikipedia.org/w/api.php',
 		data:{
 			action:'parse',
-			page: topic,
+			page: section.parentTitle,
 			format:'json',
 			prop:'text',
 			disableeditsection: true,
 			disablepp: true,
 			//preview: true,
 			//sectionprevue: true,
-			section: index,
+			section: section.index,
 			disabletoc: true,
 			mobileformat:true
 		},
 		dataType:'jsonp',
 		success: function(data){
-			
-			var wikiHTML = $(data.parse.text['*']); 
+		
+			var sectionHTML = $(data.parse.text['*']); 
 
-			wikiHTML.find('.error').remove();
-			wikiHTML.find('.reference').remove();
-			wikiHTML.find('.references').remove();
-			wikiHTML.find('.ambox').remove();
-			wikiHTML.find('.org').remove();
-			wikiHTML.find('*').css('max-width', '290px');
-			wikiHTML.find('img').unwrap();
+			sectionHTML.find('.error').remove();
+			sectionHTML.find('.reference').remove();
+			sectionHTML.find('.references').remove();
+			sectionHTML.find('.notice').remove();
+			sectionHTML.find('.ambox').remove();
+			sectionHTML.find('.org').remove();
+			sectionHTML.find('*').css('max-width', '290px');
+			sectionHTML.find('img').unwrap();
 
-			$brick.append(wikiHTML);
+			sectionHTML.find('a[class*=exter]').remove();
+
+			$brick.append(sectionHTML);
 		
 			//check if there is Geolocations
 
@@ -1341,11 +1359,38 @@ function buildSection(topic, lang, index, parent){
 					$("#pac-input").trigger(d);
 					$("#pac-input").trigger(e);*/
 				});
-			}
+			}// end if geo 
+
+			//Go Recreate all Interwiki links 
+			/*$.ajax({
+				url: 'http://' + section.parentLang + '.wikipedia.org/w/api.php',
+				data:{
+					action:'parse',
+					page: section.parentTitle,
+					prop:'links',
+					format: 'json',
+					section: section.index
+				},
+				dataType:'jsonp',
+				success: function(data){
+
+					data.parse.links.forEach(function(item){
+
+						var regex = new RegExp("/\b" + item['*'] + "\b/g");
+						console.log(regex);
+						console.log(item['*']);
+
+						sectionHTML.html(function(index, value) {
+						    return value.replace(item['*'].toLowerCase(), '<a href="#" title="' + item["*"] + '">' + item["*"] + '</a>');
+						});
+
+					});		
+	
+				}
+			});*/
 
 			//enable to create new bricks out of links
-			buildNextTopic($brick, lang);
-			//getWikiLanguages(topic, lang, $brick);
+			buildNextTopic($brick, section.parentLang);
 
 			$packeryContainer.packery();
 		}
@@ -1366,7 +1411,7 @@ function buildWall(){
 			buildWikipedia(this.Topic, this.Language, this.Parent);
 		}
 		if(this.Type === "wikiSection"){
-			buildSection(this.Topic, this.Language, this.Index, this.Parent);
+			buildSection(this.Topic, this.Parent);
 		}
 		if(this.Type === "flickr"){
 			buildFlickr(this.Topic);
@@ -1569,14 +1614,12 @@ function createWall(wpnonce) {
 
 		var type = $(this).data('type');
 		var topic = $(this).data('topic');
-		var language = $(this).data('lang');
 		var parent = $(this).data('parent');
 
 		wikiverse[tabindex] = {
 
 			Type: type,
 			Topic: topic,
-			Language: language,
 			Parent: parent
 		};
 		tabindex++;
@@ -1655,7 +1698,6 @@ function editWall(wpnonce) {
 
 		var type = $(this).data('type');
 		var topic = $(this).data('topic');
-		var language = $(this).data('lang');
 		var parent = $(this).data('parent');
 		var tabindex = $(this).attr('tabindex');
 
@@ -1663,7 +1705,6 @@ function editWall(wpnonce) {
 
 			Type: type,
 			Topic: topic,
-			Language: language,
 			Parent: parent
 
 		};
