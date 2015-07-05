@@ -998,26 +998,6 @@ function getWikiLanguages(topic, lang, $brick){
 
 }
 
-function getInterWikiLinks(section, $brick){
-	console.log(section)
-	$.ajax({
-		url: 'http://' + section.language + '.wikipedia.org/w/api.php',
-		data:{
-			action:'query',
-			titles:section.title,
-			prop:'links',
-			format:'json',
-			section: section.section
-		},
-		dataType:'jsonp',
-		success: function(data){
-
-			console.log(data);
-		}
-	});
-
-}
-
 function getWikis(topic, lang) {
 
 	var $tableWikiResults;
@@ -1195,8 +1175,8 @@ function buildWikipedia(topic, parent){
 
 					var section = {
 
-						title: topic.title,
-						language: topic.language,
+						parentTitle: topic.title,
+						parentLang: topic.language,
 						index: $(this).attr("index")
 					}
 				
@@ -1315,7 +1295,7 @@ function buildSection(section, parent){
 	$brick.data('parent', parent);
 	$brick.data('topic', section);
 	
-	$brick.prepend('<p><h2>' + section.title + '</h2></p>');
+	$brick.prepend('<p><h2>' + section.parentTitle + '</h2></p>');
 	$brick.prepend( wikiverse_nav );
 
 	$packeryContainer.append($brick).packery( 'appended', $brick);
@@ -1324,10 +1304,10 @@ function buildSection(section, parent){
 		//$packeryContainer.packery( 'bindDraggabillyEvents', $brick );
 
 	$.ajax({
-		url: 'http://' + section.language + '.wikipedia.org/w/api.php',
+		url: 'http://' + section.parentLang + '.wikipedia.org/w/api.php',
 		data:{
 			action:'parse',
-			page: section.title,
+			page: section.parentTitle,
 			format:'json',
 			prop:'text',
 			disableeditsection: true,
@@ -1382,9 +1362,36 @@ function buildSection(section, parent){
 				});
 			}// end if geo 
 
+			//Go Recreate all Interwiki links 
+			/*$.ajax({
+				url: 'http://' + section.parentLang + '.wikipedia.org/w/api.php',
+				data:{
+					action:'parse',
+					page: section.parentTitle,
+					prop:'links',
+					format: 'json',
+					section: section.index
+				},
+				dataType:'jsonp',
+				success: function(data){
+
+					data.parse.links.forEach(function(item){
+
+						var regex = new RegExp("/\b" + item['*'] + "\b/g");
+						console.log(regex);
+						console.log(item['*']);
+
+						sectionHTML.html(function(index, value) {
+						    return value.replace(item['*'].toLowerCase(), '<a href="#" title="' + item["*"] + '">' + item["*"] + '</a>');
+						});
+
+					});		
+	
+				}
+			});*/
+
 			//enable to create new bricks out of links
-			buildNextTopic($brick, section.language);
-			getInterWikiLinks(section, $brick);
+			buildNextTopic($brick, section.parentLang);
 
 			$packeryContainer.packery();
 		}
