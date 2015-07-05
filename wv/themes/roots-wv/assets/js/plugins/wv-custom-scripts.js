@@ -691,14 +691,14 @@ function buildStreetMap(streetObj) {
 	$mapbrick.data( "topic", streetObj );
 }
 
-function buildFlickr(photoURL){
+function buildFlickr(photoObj){
 
-	var $flickrPhoto = $('<img width="280" src="'+photoURL+'">');
+	var $flickrPhoto = $('<img width="280" owner="' + photoObj.owner + '" src="' + photoObj.mediumURL + '">');
 
 	var $flickrBrick = $(defaultBrick);
 
 	$flickrBrick.data('type', 'flickr');
-	$flickrBrick.data('topic', photoURL);
+	$flickrBrick.data('topic', photoObj);
 
 	$packeryContainer.append($flickrBrick).packery( 'appended', $flickrBrick);
 
@@ -753,17 +753,15 @@ function getFlickrs(topic, sort) {
 		},
 		success: function(data){
 
-			console.log(data)
-			
-			$.each(data.photos.photo, function(){
-
+			data.photos.photo.forEach(function(item, index){
+				
 				$.ajax({
 					url: 'https://api.flickr.com/services/rest',
 					data:{
 
 						method: 'flickr.photos.getSizes',
 						api_key: '1a7d3826d58da8a6285ef7062f670d30',
-						photo_id: this.id,
+						photo_id: item.id,
 						format: 'json',
 						nojsoncallback: 1
 					},
@@ -773,20 +771,26 @@ function getFlickrs(topic, sort) {
 						var mediumURL = data.sizes.size[6].source;
 
 						//append row to searchbox-table
-						$divFlickrResults.append('<img width="145" large="'+mediumURL+'" src="'+thumbURL+'">');
+						$divFlickrResults.append('<img width="145" owner="' + item.owner + '" large="' + mediumURL + '" thumb="' + thumbURL + '" src="' + thumbURL + '">');
 
 						//relayout packery
 						//$packeryContainer.packery();
 
 						$divFlickrResults.find('img').unbind('click').click(function(e) {
 
-							var thisURL = $(this).attr('large');
-							buildFlickr(thisURL);
+							var thisPhoto = {
+
+								thumbURL: $(this).attr('thumb'),
+								mediumURL: $(this).attr('large'),
+								owner: $(this).attr('owner')
+
+							}
+							buildFlickr(thisPhoto);
 							$(this).remove();
 						});
 
-										//if no nav is already in the brick
-										if($flickrSearchBrick.find('.nav').length === 0 ){
+						//if no nav is already in the brick
+						if($flickrSearchBrick.find('.nav').length === 0 ){
 
 							//append a clear button and the wikipedia icon
 							$flickrSearchBrick.append('<div class="search-ui"><ul class="nav nav-pills"><li class="pull-right"><a class="clear"><h6>clear results</h6></a></li></ul></div');
