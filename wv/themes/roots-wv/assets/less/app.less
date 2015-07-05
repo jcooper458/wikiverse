@@ -117,7 +117,17 @@ content: "VV"; letter-spacing:-0.45em; margin-right:0.5em; }
 
 
 .brick:hover .cross, .brick:hover .handle {display: block;}
-table tr, .result, #clear{cursor: pointer;} 
+table tr, .result, #clear, .flickr img{cursor: pointer;} 
+
+.flickr img {
+    opacity: 1;
+    filter: alpha(opacity=100); /* For IE8 and earlier */
+}
+
+.flickr img:hover {
+    opacity: 0.8;
+    filter: alpha(opacity=80); /* For IE8 and earlier */
+} 
 
 .brick .table-hover {
   > tbody {

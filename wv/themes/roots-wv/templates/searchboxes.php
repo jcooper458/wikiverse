@@ -38,6 +38,7 @@
 <div id="flickr-search" class="brick invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<div class="container top-buffer-small  bottom-buffer-small">
+	 
 		<div class="col-lg-2 col-md-2 col-sm-2">
 			<i class="fa fa-flickr"></i>
 		</div>
@@ -50,7 +51,17 @@
 	        <button class="btn btn-default start" type="button">Search</button>
 	      </span>
 	    </div><!-- /input-group -->
-	   
+
+
+	   	<label class="radio-inline">
+		  <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="interestingness-desc" checked="checked"> Interestingness
+		</label>
+		<label class="radio-inline">
+		  <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="relevance"> Relevance
+		</label>
+
+
+
 	   </div> 
 	</div> 
 </div>
