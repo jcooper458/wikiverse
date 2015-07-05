@@ -747,12 +747,14 @@ function getFlickrs(topic, sort) {
 			api_key: '1a7d3826d58da8a6285ef7062f670d30',
 			text: topic,
 			format: 'json',
-			nojsoncallback: 1,
-			per_page: 20,
+			nojsoncallback: 	1,
+			per_page: 40,
 			sort: sort
 		},
 		success: function(data){
 
+			console.log(data)
+			
 			$.each(data.photos.photo, function(){
 
 				$.ajax({
@@ -1595,7 +1597,7 @@ $("#flickr-icon").on("click", function(){
 $("#flickr-search .start").on("click", function(){
 
 	var query = $("#flickr-search .searchbox").val();
-	var sort = $("#flickr-search #sort-info input[type='radio']:checked").val();
+	var sort = $("#flickr-search .radio-inline input[type='radio']:checked").val();
 
 	getFlickrs(query, sort);
 
