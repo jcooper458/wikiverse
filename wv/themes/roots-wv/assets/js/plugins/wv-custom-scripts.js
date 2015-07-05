@@ -483,7 +483,7 @@ function getGmapsSearch(){
 	//detect if entering Streetview -> Change the type to streetview
 	google.maps.event.addListener(thePanorama, 'visible_changed', function() {
 
-		console.log(thePanorama);
+		//console.log(thePanorama);
 
 		if (thePanorama.getVisible()) {
 
@@ -504,7 +504,7 @@ function getGmapsSearch(){
 		google.maps.event.addListener(thePanorama, 'pov_changed', function() {
 
 			if (thePanorama.getVisible()) {
-				console.log(thePanorama);
+				//console.log(thePanorama);
 				currentStreetMap = {
 					center: thePanorama.position.toUrlValue(),
 					zoom: thePanorama.pov.zoom,
@@ -860,7 +860,7 @@ function getYoutubes(topic) {
 			if(data.items ){
 				$.each(data.items, function(){
 
-					console.log(this);
+					//console.log(this);
 
 					var title = this.snippet.channelTitle;
 					var snippet = this.snippet.description;
@@ -993,6 +993,53 @@ function getWikiLanguages(topic, lang, $brick){
 
 				buildWikipedia(topic, $brick.attr("tabindex"));
 			});
+		}
+	});
+
+}
+
+function getInterWikiLinks(section, $brick){
+
+	$.ajax({
+		url: 'http://' + section.language + '.wikipedia.org/w/api.php',
+		data:{
+			action:'parse',
+			page: section.title,
+			format:'json',
+			prop:'links',
+			section: section.index
+		},
+		dataType:'jsonp',
+		success: function(data){
+
+			var interWikiArray = data.parse.links;
+
+			var interWikiDropDown = $('<select class="selectpicker pull-right show-menu-arrow" data-size="20" data-live-search="true"></select>');
+
+			interWikiArray.forEach(function(link, index){
+		
+				interWikiDropDown.append('<option index="' + link.ns + '" topic="' + link['*'] + '">' + link['*'] + '</option>');
+
+			});
+
+			interWikiDropDown.prepend('<option selected>Points to..</option>');
+
+			$brick.prepend(interWikiDropDown);
+
+			//make it a beautiful dropdown with selectpicker
+			interWikiDropDown.selectpicker();
+
+			interWikiDropDown.change(function(){
+
+				var topic = {
+
+					title: $(this).children(":selected").attr('topic'),
+					language: section.language
+				};
+
+				buildWikipedia(topic, $brick.attr("tabindex"));
+			});
+
 		}
 	});
 
@@ -1175,8 +1222,8 @@ function buildWikipedia(topic, parent){
 
 					var section = {
 
-						parentTitle: topic.title,
-						parentLang: topic.language,
+						title: topic.title,
+						language: topic.language,
 						index: $(this).attr("index")
 					}
 				
@@ -1219,9 +1266,10 @@ function buildWikipedia(topic, parent){
 										success: function(data){							
 																	
 											//get the first key in obj
-											for (first in data.query.pages) break;
-					
-											var imageUrl = data.query.pages[first].imageinfo[0].url;
+											//for (first in data.query.pages) break;
+											//now done better like this: 
+											
+											var imageUrl = data.query.pages[Object.keys(data.query.pages)[0]].imageinfo[0].url;
 											var image = $('<img width="290" src="' + imageUrl + '">');
 
 											image.insertAfter($brick.find("h2"));
@@ -1295,7 +1343,7 @@ function buildSection(section, parent){
 	$brick.data('parent', parent);
 	$brick.data('topic', section);
 	
-	$brick.prepend('<p><h2>' + section.parentTitle + '</h2></p>');
+	$brick.prepend('<p><h2>' + section.title + '</h2></p>');
 	$brick.prepend( wikiverse_nav );
 
 	$packeryContainer.append($brick).packery( 'appended', $brick);
@@ -1304,10 +1352,10 @@ function buildSection(section, parent){
 		//$packeryContainer.packery( 'bindDraggabillyEvents', $brick );
 
 	$.ajax({
-		url: 'http://' + section.parentLang + '.wikipedia.org/w/api.php',
+		url: 'http://' + section.language + '.wikipedia.org/w/api.php',
 		data:{
 			action:'parse',
-			page: section.parentTitle,
+			page: section.title,
 			format:'json',
 			prop:'text',
 			disableeditsection: true,
@@ -1340,7 +1388,6 @@ function buildSection(section, parent){
 
 			if($brick.find('.geo-dms').length){
 
-				console.log("cjdsklcjldsajscdak");
 				var geoPosition = $brick.find('.geo-nondefault .geo').html();
 
 				$brick.find('.wikiverse-nav').prepend('<i class="fa fa-map-marker gmaps-icon icon"></i>&nbsp;');
@@ -1362,36 +1409,9 @@ function buildSection(section, parent){
 				});
 			}// end if geo 
 
-			//Go Recreate all Interwiki links 
-			/*$.ajax({
-				url: 'http://' + section.parentLang + '.wikipedia.org/w/api.php',
-				data:{
-					action:'parse',
-					page: section.parentTitle,
-					prop:'links',
-					format: 'json',
-					section: section.index
-				},
-				dataType:'jsonp',
-				success: function(data){
-
-					data.parse.links.forEach(function(item){
-
-						var regex = new RegExp("/\b" + item['*'] + "\b/g");
-						console.log(regex);
-						console.log(item['*']);
-
-						sectionHTML.html(function(index, value) {
-						    return value.replace(item['*'].toLowerCase(), '<a href="#" title="' + item["*"] + '">' + item["*"] + '</a>');
-						});
-
-					});		
-	
-				}
-			});*/
-
 			//enable to create new bricks out of links
-			buildNextTopic($brick, section.parentLang);
+			buildNextTopic($brick, section.language);
+			getInterWikiLinks(section, $brick);
 
 			$packeryContainer.packery();
 		}
