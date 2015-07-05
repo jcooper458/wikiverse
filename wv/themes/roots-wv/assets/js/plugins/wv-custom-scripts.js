@@ -516,10 +516,7 @@ function getGmapsSearch(){
 		}
 
 	});
-
-
-
-	}
+}
 
 function buildGmaps(mapObj){
 
@@ -691,22 +688,22 @@ function buildStreetMap(streetObj) {
 	$mapbrick.data( "topic", streetObj );
 }
 
-function buildFlickr(photoObj){
+function buildFoto(photoObj, type){
 
-	var $flickrPhoto = $('<img width="280" owner="' + photoObj.owner + '" src="' + photoObj.mediumURL + '">');
+	var $photo = $('<img width="280" owner="' + photoObj.owner + '" src="' + photoObj.mediumURL + '">');
 
-	var $flickrBrick = $(defaultBrick);
+	var $brick = $(defaultBrick);
 
-	$flickrBrick.data('type', 'flickr');
-	$flickrBrick.data('topic', photoObj);
+	$brick.data('type', type);
+	$brick.data('topic', photoObj);
 
-	$packeryContainer.append($flickrBrick).packery( 'appended', $flickrBrick);
+	$packeryContainer.append($brick).packery( 'appended', $brick);
 
-	$flickrBrick.each( makeEachDraggable );
+	$brick.each( makeEachDraggable );
 
-	$flickrBrick.imagesLoaded(function(instance){
+	$brick.imagesLoaded(function(instance){
 
-		$flickrBrick.append($flickrPhoto);
+		$brick.append($photo);
 		$packeryContainer.packery();
 	});
 }
@@ -785,7 +782,7 @@ function getFlickrs(topic, sort) {
 								owner: $(this).attr('owner')
 
 							}
-							buildFlickr(thisPhoto);
+							buildFoto(thisPhoto, "flickr");
 							$(this).remove();
 						});
 
@@ -1441,7 +1438,10 @@ function buildWall(){
 			buildSection(this.Topic, this.Parent);
 		}
 		if(this.Type === "flickr"){
-			buildFlickr(this.Topic);
+			buildFoto(this.Topic, "flickr");
+		}
+		if(this.Type === "instagram"){
+			buildFoto(this.Topic, "instagram");
 		}
 		if(this.Type === "youtube"){
 			buildYoutube(this.Topic);
