@@ -45,9 +45,7 @@ $packeryContainer.on("click", ".flickr-icon", function(){
 	$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
 	$flickrSearchBrick.find('.start').addClass('disabled');
 
-	$flickrSearchBrick.find('#sort-info').remove();
-
-	$flickrSearchBrick.find('.start').trigger( "click" );
+	getFlickrs(bounds, "relevance");
 
 });
 
@@ -69,7 +67,7 @@ $packeryContainer.on("click", ".youtube-icon", function(){
 
 });
 
-//create images interconnection and trigger buildFoto()
+//create images interconnection and trigger getFlickrs()
 $packeryContainer.on("click", ".fa-flickr", function(){
 
 	$flickrSearchBrick.removeClass("invisible");
@@ -77,19 +75,17 @@ $packeryContainer.on("click", ".fa-flickr", function(){
 
 	var $thisBrick = $(this).parents(".brick");
 
-	var position = $thisBrick.data("position");
+	var bounds = $thisBrick.data("bounds");
 	
-	$flickrSearchBrick.find('input').val(position);
+	$flickrSearchBrick.find('input').val(bounds);
 	$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
 	$flickrSearchBrick.find('.start').addClass('disabled');
 
-	$flickrSearchBrick.find('#sort-info').remove();
-
-	$flickrSearchBrick.find('.start').trigger( "click" );
+	getFlickrs(bounds, "relevance");
 	
 });
 
-//create images interconnection and trigger buildFoto()
+//create images interconnection and trigger getInstagrams()
 $packeryContainer.on("click", ".fa-instagram", function(){
 
 	$instagramSearchBrick.removeClass("invisible");
@@ -103,9 +99,7 @@ $packeryContainer.on("click", ".fa-instagram", function(){
 	$instagramSearchBrick.find('.searchbox').attr('disabled', 'true');
 	$instagramSearchBrick.find('.start').addClass('disabled');
 
-	$instagramSearchBrick.find('#sort-info').remove();
-
-	$instagramSearchBrick.find('.start').trigger( "click" );
+	getInstagrams(position);
 	
 
 });
@@ -499,8 +493,13 @@ function getGmapsSearch(){
 		//find the location of the marker
 		var positionUrlString = droppedMarker.getPosition().toUrlValue();
 
+		//calculate the bounds - used for flickr foto search
+		var southWest = map.getBounds().getSouthWest().toUrlValue();
+		var northEast = map.getBounds().getNorthEast().toUrlValue();
+
 		//store it into the data container
 		$gmapsSearchBrick.data('position', positionUrlString);
+		$gmapsSearchBrick.data('bounds', southWest + ',' + northEast);
 
         $gmapsSearchBrick.find(".fa-instagram, .fa-flickr").fadeIn("slow");
     });
@@ -807,6 +806,18 @@ function strip(html)
 
 function getFlickrs(topic, sort) {
 
+	var bbox; 
+
+	//if there is a comma, its a coordinate
+	if(topic.indexOf(',') > -1){
+
+		bbox = topic;
+		topic = "";		
+	}
+	else{
+		bbox = "";
+	}
+
 	$.ajax({
 		url: 'https://api.flickr.com/services/rest',
 		data:{
@@ -817,9 +828,12 @@ function getFlickrs(topic, sort) {
 			format: 'json',
 			nojsoncallback: 	1,
 			per_page: 40,
+			bbox: bbox,
 			sort: sort
 		},
 		success: function(data){
+			
+			console.log(this.url);
 
 			data.photos.photo.forEach(function(item, index){
 				
@@ -877,6 +891,7 @@ function getInstagrams(query) {
         client_id: client_id
     };
 
+    //if there is a comma, its a coordinate
 	if(query.indexOf(',') > -1){
 
 		var latitude = query.split(',')[0];

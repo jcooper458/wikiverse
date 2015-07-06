@@ -48,10 +48,10 @@
 
 
 	   	<label class="radio-inline">
-		  <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="interestingness-desc" checked="checked"> Interestingness
+		  <input class="interestingness" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="interestingness-desc" checked="checked"> Interestingness
 		</label>
 		<label class="radio-inline">
-		  <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="relevance"> Relevance
+		  <input class="relevance" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="relevance"> Relevance
 		</label>
 
 	</div> 
