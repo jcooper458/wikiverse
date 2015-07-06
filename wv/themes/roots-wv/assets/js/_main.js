@@ -15,10 +15,8 @@ var ExampleSite = {
   // Singe Wall
   single_wall:{
 	init: function() {
-		
-	
-		buildWall();
-		
+
+		buildWall();	
 		
 	}
   },

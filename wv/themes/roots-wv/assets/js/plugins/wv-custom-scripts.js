@@ -453,6 +453,7 @@ function buildNextTopic($brick, lang){
 	});
 }
 
+var markers = [];
 function getGmapsSearch(){
 
 	$gmapsSearchBrick.removeClass("invisible");
@@ -482,6 +483,28 @@ function getGmapsSearch(){
 		infowindow.open(map, marker);
 	});
 
+   google.maps.event.addListener(map, 'click', function(event) {
+   		
+   		markers.forEach(function(marker){
+   			marker.setMap(null);
+   		});
+
+        var droppedMarker = new google.maps.Marker({
+	        position: event.latLng,
+	        map: map
+	    });
+        
+		markers.push(droppedMarker);	
+
+		//find the location of the marker
+		var positionUrlString = droppedMarker.getPosition().toUrlValue();
+
+		//store it into the data container
+		$gmapsSearchBrick.data('position', positionUrlString);
+
+        $gmapsSearchBrick.find(".fa-instagram, .fa-flickr").fadeIn("slow");
+    });
+
 	google.maps.event.addListener(autocomplete, 'place_changed', function() {
 
 		$gmapsSearchBrick.find(".fa-instagram, .fa-flickr").fadeIn("slow");
@@ -506,9 +529,6 @@ function getGmapsSearch(){
 			location: place.geometry.location
 		});
 		marker.setVisible(true);
-
-		/*var lat = marker.getPosition().lat();
-		var lng = marker.getPosition().lng();*/
 
 		//find the location of the marker
 		var positionUrlString = marker.place.location.toUrlValue();
@@ -759,22 +779,23 @@ function buildStreetMap(streetObj) {
 
 function buildFoto(photoObj, type){
 
-	var $photo = $('<img width="280" owner="' + photoObj.owner + '" src="' + photoObj.mediumURL + '">');
 
 	var $brick = $(defaultBrick);
+	var $photo = $('<img width="280" owner="' + photoObj.owner + '" src="' + photoObj.mediumURL + '">');
 
 	$brick.data('type', type);
 	$brick.data('topic', photoObj);
 
-	$packeryContainer.append($brick).packery( 'appended', $brick);
-
-	$brick.each( makeEachDraggable );
+	$brick.append($photo);
 
 	$brick.imagesLoaded(function(instance){
 
-		$brick.append($photo);
-		$packeryContainer.packery();
+		//$packeryContainer.packery();
+		$packeryContainer.append($brick).packery( 'appended', $brick);
+
+		$brick.each( makeEachDraggable );
 	});
+
 }
 
 function strip(html)
@@ -785,11 +806,6 @@ function strip(html)
 }
 
 function getFlickrs(topic, sort) {
-
-	$('div.flickr').remove();
-
-	$divFlickrResults = $('<div class="flickr results"></div>');
-	$flickrSearchBrick.append($divFlickrResults);
 
 	$.ajax({
 		url: 'https://api.flickr.com/services/rest',
@@ -818,17 +834,15 @@ function getFlickrs(topic, sort) {
 						nojsoncallback: 1
 					},
 					success: function(data){
-
+	
 						var thumbURL = data.sizes.size[1].source;
-						if(data.sizes.size[6]) var mediumURL = data.sizes.size[6].source;
+						var mediumURL = data.sizes.size[6].source;
 
 						//append row to searchbox-table
-						$divFlickrResults.append('<img width="145" owner="' + item.owner + '" large="' + mediumURL + '" thumb="' + thumbURL + '" src="' + thumbURL + '">');
+						
+						$flickrSearchBrick.find('.results').append('<img width="145" owner="' + item.owner + '" large="' + mediumURL + '" thumb="' + thumbURL + '" src="' + thumbURL + '">');
 
-						//relayout packery
-						//$packeryContainer.packery();
-
-						$divFlickrResults.find('img').unbind('click').click(function(e) {
+						$flickrSearchBrick.find('img').unbind('click').click(function(e) {
 
 							var thisPhoto = {
 
@@ -841,14 +855,7 @@ function getFlickrs(topic, sort) {
 							$(this).remove();
 						});
 
-						//if no nav is already in the brick
-						if($flickrSearchBrick.find('.nav').length === 0 ){
-
-							//append a clear button and the wikipedia icon
-							$flickrSearchBrick.append('<div class="search-ui"><ul class="nav nav-pills"><li class="pull-right"><a class="clear"><h6>clear results</h6></a></li></ul></div');
-
-						}
-
+						$flickrSearchBrick.find('.search-ui').show();
 
 						//relayout packery
 						$packeryContainer.packery();
@@ -862,39 +869,83 @@ function getFlickrs(topic, sort) {
 	});
 }
 
-function getInstagrams(coordinates) {
+function getInstagrams(query) {
 
-	$('div.instagram').remove();
+	var client_id = "db522e56e7574ce9bb70fa5cc760d2e7";
 
-	$divInstagramResults = $('<div class="instagram"></div>');
-	$instagramSearchBrick.append($divInstagramResults);
+    var access_parameters = {
+        client_id: client_id
+    };
 
-	var latitude = coordinates.split(',')[0];
-	var longitude = coordinates.split(',')[1];
+	if(query.indexOf(',') > -1){
 
-	$.ajax({
-		url: 'https://api.instagram.com/v1/media/search',
-		data:{
-			lat: latitude,
-			lng: longitude,
-			client_id: 'db522e56e7574ce9bb70fa5cc760d2e7',
-			format: 'json'
-		},
-		dataType:'jsonp',
-		success: function(data){
-			
+		var latitude = query.split(',')[0];
+		var longitude = query.split(',')[1];
+
+		$.ajax({
+			url: 'https://api.instagram.com/v1/media/search',
+			data:{
+				lat: latitude,
+				lng: longitude,
+				client_id: 'db522e56e7574ce9bb70fa5cc760d2e7',
+				format: 'json'
+			},
+			dataType:'jsonp',
+			success: function(data){
+				
+				data.data.forEach(function(photo, index){
+				
+					//append row to searchbox-table
+					$instagramSearchBrick.find('.results').append('<img width="145" src="' + photo.images.low_resolution.url + '">');
+
+					$instagramSearchBrick.find('img').unbind('click').click(function(e) {
+
+						var thisPhoto = {
+							mediumURL: $(this).attr('src')
+						}
+						buildFoto(thisPhoto, "instagram");
+						$(this).remove();
+					});
+
+					$instagramSearchBrick.find('.search-ui').show();
+
+					//relayout packery
+					$packeryContainer.packery();
+
+				});
+			}
+		});			
+	}
+	else{
+
+		var instagramUrl = 'https://api.instagram.com/v1/tags/' + query + '/media/recent?callback=?&count=40';
+		//var instagramUrl = 'https://api.instagram.com/v1/tags/snowy/media/recent?client_id=db522e56e7574ce9bb70fa5cc760d2e7';
+	    
+	    $.getJSON(instagramUrl, access_parameters, function(data){
+
 			data.data.forEach(function(photo, index){
 			
 				//append row to searchbox-table
-				$divInstagramResults.append('<img width="145" src="' + photo.images.low_resolution.url + '">');
+				$instagramSearchBrick.find('.results').append('<img width="145" src="' + photo.images.low_resolution.url + '">');
+							
+				$instagramSearchBrick.find('img').unbind('click').click(function(e) {
+
+					var thisPhoto = {
+						mediumURL: $(this).attr('src')
+					}
+					buildFoto(thisPhoto, "instagram");
+					$(this).remove();
+				});
+
+				$instagramSearchBrick.find('.search-ui').show();
 
 				//relayout packery
 				$packeryContainer.packery();
 
 			});
-
-		}
-	});
+	    });
+	
+	}
 }
 
 function getYoutubes(topic) {
@@ -1656,9 +1707,9 @@ $("#instagram-icon").on("click", function(){
 
 $("#instagram-search .start").on("click", function(){
 
-	var coordinates = $("#instagram-search .searchbox").val();
+	var query = $("#instagram-search .searchbox").val();
 
-	getInstagrams(coordinates);
+	getInstagrams(query);
 
 });
 

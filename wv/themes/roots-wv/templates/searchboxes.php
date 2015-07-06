@@ -18,12 +18,9 @@
 <div id="youtube-search" class="brick invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<div class="container top-buffer-small  bottom-buffer-small">
-		<div class="col-lg-2 col-md-2 col-sm-2">
-			<i class="fa fa-youtube-square"></i>
-		</div>
-	
-	  	<div class="col-lg-10 col-md-10 col-sm-10">
-	  	
+		
+		<i class="fa fa-youtube-square"></i>
+
 	  	<div class="input-group">
 	      <input type="text" id="youtube-searchinput" placeholder="search Youtube" class="form-control searchbox">
 	      <span class="input-group-btn">
@@ -31,7 +28,7 @@
 	      </span>
 	    </div><!-- /input-group -->
 	   
-	   </div> 
+
 	</div> 
 </div>
 
@@ -39,12 +36,9 @@
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<div class="container top-buffer-small  bottom-buffer-small">
 	 
-		<div class="col-lg-2 col-md-2 col-sm-2">
-			<i class="fa fa-flickr"></i>
-		</div>
-	
-	  	<div class="col-lg-10 col-md-10 col-sm-10">
-	  	
+		<i class="fa fa-flickr"></i>
+
+  	
 	  	<div class="input-group">
 	      <input type="text" id="flickr-searchinput" placeholder="search flickr" class="form-control searchbox">
 	      <span class="input-group-btn">
@@ -60,31 +54,43 @@
 		  <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="relevance"> Relevance
 		</label>
 
-
-
-	   </div> 
 	</div> 
+	
+	<div class="flickr results"></div>
+
+	<div class="search-ui">
+		<ul class="nav nav-pills">
+			<li class="pull-right">
+				<a class="clear"><h6>clear results</h6></a>
+			</li>
+		</ul>
+	</div>
 </div>
 
 <div id="instagram-search" class="brick invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
-	<div class="container top-buffer-small  bottom-buffer-small">
-	 
-		<div class="col-lg-2 col-md-2 col-sm-2">
-			<i class="fa fa-instagram"></i>
-		</div>
-	
-	  	<div class="col-lg-10 col-md-10 col-sm-10">
+	<div class="container top-buffer-small  bottom-buffer-small">	 
+
+		<i class="fa fa-instagram"></i>
 	  	
 	  	<div class="input-group">
-	      <input type="text" id="instragram-searchinput" placeholder="insert coordinates" class="form-control searchbox">
+	      <input type="text" id="instragram-searchinput" placeholder="hashtag or coordinates" class="form-control searchbox">
 	      <span class="input-group-btn">
 	        <button class="btn btn-default start" type="button">Search</button>
 	      </span>
 	    </div><!-- /input-group -->
 
-	   </div> 
 	</div> 
+
+	<div class="instagram results"></div>
+
+	<div class="search-ui">
+		<ul class="nav nav-pills">
+			<li class="pull-right">
+				<a class="clear"><h6>clear results</h6></a>
+			</li>
+		</ul>
+	</div>
 </div>
 
 
