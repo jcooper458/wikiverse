@@ -17,6 +17,7 @@
 	      	<i id="wikipedia-icon" class="fa fa-wikipedia"></i>
 	      	<i id="youtube-icon"   class="fa fa-youtube-square"></i>
 	      	<i id="flickr-icon"    class="fa fa-flickr"></i>
+	      	<i id="instagram-icon"    class="fa fa-instagram"></i>
 	      	&nbsp;<i id="gmaps-icon"     class="fa fa-map-marker"></i>
 	    </div>
 	     <div class="col-lg-2 col-md-2 col-sm-2">
