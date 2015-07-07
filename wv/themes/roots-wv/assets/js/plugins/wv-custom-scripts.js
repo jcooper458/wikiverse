@@ -617,9 +617,13 @@ function buildGmaps(mapObj){
 	var $mapbrick = $(defaultBrick);
 
 	$mapbrick.data('type', 'gmaps');
+	$mapbrick.data('position', mapObj.center);
+	$mapbrick.data('bounds', mapObj.bounds.southWest + "," + mapObj.bounds.northEast);
+
 	$mapbrick.addClass('w2');
-	$mapbrick.prepend($('<span class="size-control"><i class="fa fa-expand"></i></span>'));
 	$mapbrick.prepend($mapcanvas);
+	$mapbrick.prepend('<span class="instagram"><i class="fa fa-instagram"></i></span>');
+	$mapbrick.prepend('<span class="flickr-search"><i class="fa fa-flickr"></i></span>');
 
 	$packeryContainer.append($mapbrick).packery( 'appended', $mapbrick);
 
@@ -684,6 +688,33 @@ function buildGmaps(mapObj){
 
 	});
 
+	google.maps.event.addListener(map, 'click', function(event) {
+   		
+   		markers.forEach(function(marker){
+   			marker.setMap(null);
+   		});
+
+        var droppedMarker = new google.maps.Marker({
+	        position: event.latLng,
+	        map: map
+	    });
+        
+		markers.push(droppedMarker);	
+
+		//find the location of the marker
+		var positionUrlString = droppedMarker.getPosition().toUrlValue();
+
+		//calculate the bounds - used for flickr foto search
+		var southWest = map.getBounds().getSouthWest().toUrlValue();
+		var northEast = map.getBounds().getNorthEast().toUrlValue();
+
+		//store it into the data container
+		$gmapsSearchBrick.data('position', positionUrlString);
+		$gmapsSearchBrick.data('bounds', southWest + ',' + northEast);
+
+        $gmapsSearchBrick.find(".fa-instagram, .fa-flickr").fadeIn("slow");
+    });
+
 	var thePanorama = map.getStreetView(); //get the streetview object
 
 	//detect if entering Streetview -> Change the type to streetview
@@ -705,13 +736,13 @@ function buildGmaps(mapObj){
 	});
 
 		//detect if entering Streetview -> Change the type to streetview
-		google.maps.event.addListener(thePanorama, 'pov_changed', function() {
+	google.maps.event.addListener(thePanorama, 'pov_changed', function() {
 
-			if (thePanorama.getVisible()) {
+		if (thePanorama.getVisible()) {
 
-				currentStreetMap = {
-					center: thePanorama.position.toUrlValue(),
-					zoom: thePanorama.pov.zoom,
+			currentStreetMap = {
+				center: thePanorama.position.toUrlValue(),
+				zoom: thePanorama.pov.zoom,
 				//adress: thePanorama.links[0].description,
 				pitch: thePanorama.pov.pitch,
 				heading: thePanorama.pov.heading
@@ -720,6 +751,8 @@ function buildGmaps(mapObj){
 		}
 
 	});
+
+
 
 	}
 
