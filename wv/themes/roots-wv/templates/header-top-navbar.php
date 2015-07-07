@@ -15,9 +15,10 @@
 	    <div class="col-lg-5 col-md-5 col-sm-5 top-buffer-small">
 	    	
 	      	<i id="wikipedia-icon" class="fa fa-wikipedia"></i>
-	      	<i id="youtube-icon"   class="fa fa-youtube-square"></i>
+	      	<i id="youtube-icon"   class="fa fa-youtube"></i>
 	      	<i id="flickr-icon"    class="fa fa-flickr"></i>
 	      	<i id="instagram-icon"    class="fa fa-instagram"></i>
+	      	<i id="soundcloud-icon"    class="fa fa-soundcloud"></i>
 	      	&nbsp;<i id="gmaps-icon"     class="fa fa-map-marker"></i>
 	    </div>
 	     <div class="col-lg-2 col-md-2 col-sm-2">

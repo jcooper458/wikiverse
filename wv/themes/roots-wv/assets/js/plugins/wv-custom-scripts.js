@@ -4,6 +4,7 @@ var $wikiSearchBrick = $("#wikipedia-search");
 var $youtubeSearchBrick = $("#youtube-search");
 var $flickrSearchBrick = $("#flickr-search");
 var $instagramSearchBrick = $("#instagram-search");
+var $soundcloudSearchBrick = $("#soundcloud-search");
 var $gmapsSearchBrick = $("#gmaps-search");
 
 var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
@@ -996,6 +997,72 @@ function getInstagrams(query) {
 	}
 }
 
+function buildSoundcloud(soundcloudObj){
+
+	var $brick = $(defaultBrick);
+	$brick.addClass('w2');
+
+	var $soundcloudIframe = $('<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=' + soundcloudObj.uri + '&color=0066cc"></iframe>');
+
+	$brick.data('type', 'soundcloud');
+	$brick.data('topic', soundcloudObj);
+
+	$brick.append($soundcloudIframe);
+
+	$packeryContainer.append($brick).packery( 'appended', $brick);
+
+	$brick.each( makeEachDraggable );
+	//$packeryContainer.packery();
+}
+
+function getSoundcloud(query, params) {
+
+	SC.initialize({
+	  client_id: '15bc70bcd9762ddca2e82ee99de9e2e7'
+	});
+
+	SC.get('/tracks', { q: query }, function(tracks) {
+				
+		tracks.forEach(function(track, index){
+
+			//append row to searchbox-table
+			$soundcloudSearchBrick.find('.results').append('<tr data-toggle="tooltip" title="' + track.title + '" uri="' + track.uri + '" genre="' + track.genre + '"><td><el class="result">' + track.title + '</el></td></tr>');
+
+			//create the tooltips
+			$('tr').tooltip({animation: true, placement: 'bottom'});
+
+			//bind event to every row
+			$soundcloudSearchBrick.find('tr').unbind('click').click(function(e) {
+
+				var soundcloudObj = {
+					title: $(this).attr('title'),
+					uri: $(this).attr('uri'),
+					genre: $(this).attr('genre')
+				}
+			
+				buildSoundcloud(soundcloudObj);
+
+				$(this).tooltip('destroy');
+				$(this).remove();
+				return false;		
+
+			});
+
+			$soundcloudSearchBrick.find('.search-ui').show();
+			
+			//relayout packery
+			$packeryContainer.packery();
+
+		  	//buildSoundcloud("cdscasddsa");
+
+
+		});
+
+	});
+
+}
+	
+
 function getYoutubes(topic) {
 
 	var $tableYoutubeResults;
@@ -1205,21 +1272,6 @@ function getInterWikiLinks(section, $brick){
 
 function getWikis(topic, lang) {
 
-	var $tableWikiResults;
-
-	//if no table is already in the brick
-	if($wikiSearchBrick.find('table.wiki').length === 0){
-
-		$tableWikiResults = $('<table class="table table-hover wiki"></table>');
-		$wikiSearchBrick.append($tableWikiResults);
-
-	}
-	else{
-
-		$tableWikiResults = $('table.wiki');
-
-	}
-
 	$.ajax({
 		url: 'http://'+lang+'.wikipedia.org/w/api.php',
 		data:{
@@ -1239,12 +1291,12 @@ function getWikis(topic, lang) {
 					var snippet = this.snippet;
 
 					//append row to searchbox-table
-					$tableWikiResults.append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td><el class="result">'+title+'</el></td></tr>');
+					$wikiSearchBrick.find('.results').append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td><el class="result">'+title+'</el></td></tr>');
 
 					//create the tooltips
 					$('tr').tooltip({animation: true, placement: 'bottom'});
 					//bind event to every row -> so you can start the wikiverse
-					$tableWikiResults.find('tr').unbind('click').click(function(e) {
+					$wikiSearchBrick.find('tr').unbind('click').click(function(e) {
 
 						var topic = {
 							title: $(this).find('.result').html(),
@@ -1260,24 +1312,7 @@ function getWikis(topic, lang) {
 
 				});
 
-				//if no nav is already in the brick
-				if($wikiSearchBrick.find('.nav').length === 0 ){
-
-					//append a clear button and the wikipedia icon
-					$wikiSearchBrick.append('<div class="search-ui"><ul class="nav nav-pills"><li class="pull-right"><a class="clear"><h6>clear results</h6></a></li></ul></div');
-
-				}
-
-				//when clear results is clicked
-				$('#clear').on('click', function(){
-
-						//remove all UI elements
-						$tableWikiResults.remove();
-						$(this).parents('.search-ui').remove();
-
-						//empty the wiki-searchbox for new search
-						$('#wiki-searchinput').val('');
-					});
+				$wikiSearchBrick.find('.search-ui').show();
 
 				//relayout packery
 				$packeryContainer.packery();
@@ -1574,9 +1609,8 @@ function buildSection(section, parent){
 			$packeryContainer.packery();
 		}
 	});	
-
-
 }
+
 
 function buildWall(){
 
@@ -1584,32 +1618,43 @@ function buildWall(){
 
 	var wikiverse =	JSON.parse(str);
 
-	$.each(wikiverse, function() {
+	$.each(wikiverse, function(index, brick) {
+		
+		switch (brick.Type) {
+		    case "wiki":
+				buildWikipedia(brick.Topic, brick.Parent);
+		    break;
 
-		if(this.Type === "wiki"){
-			buildWikipedia(this.Topic, this.Language, this.Parent);
-		}
-		if(this.Type === "wikiSection"){
-			buildSection(this.Topic, this.Parent);
-		}
-		if(this.Type === "flickr"){
-			buildFoto(this.Topic, "flickr");
-		}
-		if(this.Type === "instagram"){
-			buildFoto(this.Topic, "instagram");
-		}
-		if(this.Type === "youtube"){
-			buildYoutube(this.Topic);
-		}
-		if(this.Type === "gmaps"){
-			buildGmaps(this.Topic);
-		}
-		if(this.Type === "streetview"){
-			buildStreetMap(this.Topic);
-		}
+		    case "wikiSection":
+				buildSection(brick.Topic, brick.Parent);
+		    break;
+	
+		    case "flickr":
+				buildFoto(brick.Topic, "flickr");
+		    break;
+	
+		    case "instagram":
+				buildFoto(brick.Topic, "instagram");
+		    break;		  
+	
+		    case "youtube":
+				buildYoutube(brick.Topic);
+		    break;
+
+		    case "gmaps":
+				buildGmaps(brick.Topic);
+		    break;
+	
+		    case "streetview":
+				buildStreetMap(brick.Topic);
+		    break;
+
+		    case "soundcloud":
+				buildSoundcloud(brick.Topic);
+		    break;
+		 }
 	});
 }
-
 
 
 function buildYoutube(youtubeID){
@@ -1642,96 +1687,87 @@ function makeEachDraggable( i, itemElem ) {
 
 function getSearchBoxes(){
 
-	var lang = $("#langselect").val();
+var lang = $("#langselect").val();
 
-	$( "#langselect" ).change(function() {
+$( "#langselect" ).change(function() {
 
-		lang = $(this).val();
+	lang = $(this).val();
 
-	});
+});
 
-	//WIKIPEDIA AUTOCOMPLETE
-	$('#wiki-searchinput').typeahead({
-		source: function(query, process) {
-			return $.ajax({
-				url: "http://"+lang+".wikipedia.org/w/api.php",
-				dataType: "jsonp",
-				data: {
-					'action': "opensearch",
-					'format': "json",
-					'search': query
-				},
-				success: function(json) {
-					process(json[1]);
-				}
-
-			});
-		},
-		matcher: function (item) {
-			if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
-				return true;
+//WIKIPEDIA AUTOCOMPLETE
+$('#wiki-searchinput').typeahead({
+	source: function(query, process) {
+		return $.ajax({
+			url: "http://"+lang+".wikipedia.org/w/api.php",
+			dataType: "jsonp",
+			data: {
+				'action': "opensearch",
+				'format': "json",
+				'search': query
+			},
+			success: function(json) {
+				process(json[1]);
 			}
+
+		});
+	},
+	matcher: function (item) {
+		if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
+			return true;
 		}
-	});
+	}
+});
 
-	//YOUTUBE AUTOCOMPLETE
-	$('#youtube-searchinput').typeahead({
+//YOUTUBE AUTOCOMPLETE
+$('#youtube-searchinput').typeahead({
 
-		source: function(query, process) {
-			return $.ajax({
-				url: "http://suggestqueries.google.com/complete/search",
-				dataType: "jsonp",
-				data: {
-					'client': "youtube",
-					'ds': "yt",
-					'q': query
-				},
-				success: function(json) {
+	source: function(query, process) {
+		return $.ajax({
+			url: "http://suggestqueries.google.com/complete/search",
+			dataType: "jsonp",
+			data: {
+				'client': "youtube",
+				'ds': "yt",
+				'q': query
+			},
+			success: function(json) {
 
-					var resultArray = [];
+				var resultArray = [];
 
-					$.each(json[1], function(){
+				$.each(json[1], function(){
 
-						resultArray.push(this[0]);
+					resultArray.push(this[0]);
 
-					});
+				});
 
-					process(resultArray);
-				}
-
-			});
-		},
-		matcher: function (item) {
-			if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
-				return true;
+				process(resultArray);
 			}
+
+		});
+	},
+	matcher: function (item) {
+		if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
+			return true;
 		}
-	});
+	}
+});
 
-	$("#wikipedia-icon").on("click", function(){
+$("#wikipedia-icon").on("click", function(){
 
-		$wikiSearchBrick.removeClass("invisible");
-		$packeryContainer.append($wikiSearchBrick).packery( 'prepended', $wikiSearchBrick);
+	$wikiSearchBrick.removeClass("invisible");
+	$packeryContainer.append($wikiSearchBrick).packery( 'prepended', $wikiSearchBrick);
 
-	});
-
-
-
-	$("#wikipedia-search .start").on("click", function(){
-
-		var topic = $("#wiki-searchinput").val();
-		getWikis( topic, lang );
-
-	});
-
-	/*$("#wiki-searchinput").keyup(function(event){
-		if(event.keyCode === 13){
-			getWikis( topic, lang );
-		}
-	});*/
+});
 
 
 
+$("#wikipedia-search .start").on("click", function(){
+
+	var topic = $("#wiki-searchinput").val();
+	getWikis( topic, lang );
+
+});
 
 $("#youtube-icon").on("click", function(){
 
@@ -1775,6 +1811,23 @@ $("#flickr-search .start").on("click", function(){
 	getFlickrs(query, sort);
 
 });
+
+
+$("#soundcloud-icon").on("click", function(){
+
+	$soundcloudSearchBrick.removeClass("invisible");
+	$packeryContainer.append($soundcloudSearchBrick).packery( 'prepended', $soundcloudSearchBrick);
+});
+
+$("#soundcloud-search .start").on("click", function(){
+
+	var query = $("#soundcloud-search .searchbox").val();
+	var params = $("#soundcloud-search .radio-inline input[type='radio']:checked").val();
+
+	getSoundcloud(query, params);
+
+});
+
 
 $("#gmaps-icon").on("click", function(){
 	getGmapsSearch();

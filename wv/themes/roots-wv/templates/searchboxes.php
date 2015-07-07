@@ -10,9 +10,17 @@
 	        <button class="btn btn-default start"1 type="button">Search</button>
 	      </span>
 	    </div><!-- /input-group -->
-	   
-
 	</div> 
+	
+	<table class="table table-hover wiki results"></table>
+
+	<div class="search-ui">
+		<ul class="nav nav-pills">
+			<li class="pull-right">
+				<a class="clear"><h6>clear results</h6></a>
+			</li>
+		</ul>
+	</div>
 </div>
 
 <div id="youtube-search" class="brick invisible search">
@@ -106,4 +114,37 @@
 	   
 	   </div> 
 	</div> 
+</div>
+
+<div id="soundcloud-search" class="brick invisible search">
+	<span class="cross"><i class="fa fa-close"></i></span>
+	<div class="container top-buffer-small  bottom-buffer-small">
+	 
+		<i class="fa fa-soundcloud"></i>
+
+	  	<div class="input-group">
+	      <input type="text" id="soundcloud-searchinput" placeholder="search soundcloud" class="form-control searchbox">
+	      <span class="input-group-btn">
+	        <button class="btn btn-default start" type="button">Search</button>
+	      </span>
+	    </div><!-- /input-group -->
+
+	   	<label class="radio-inline">
+		  <input class="bpm" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="bpm" checked="checked"> bpm
+		</label>
+		<label class="radio-inline">
+		  <input class="license" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="relevance"> license
+		</label>
+
+	</div> 
+	
+	<table class="table table-hover soundcloud results"></table>
+
+	<div class="search-ui">
+		<ul class="nav nav-pills">
+			<li class="pull-right">
+				<a class="clear"><h6>clear results</h6></a>
+			</li>
+		</ul>
+	</div>
 </div>
