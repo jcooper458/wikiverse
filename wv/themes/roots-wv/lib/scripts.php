@@ -12,7 +12,7 @@
  */
 function roots_scripts() {
 
-  wp_enqueue_style('roots_main', get_template_directory_uri() . '/assets/css/main.min.css', false, '2afec1e8874f03b9e521fcf5118563e8');
+  wp_enqueue_style('roots_main', get_template_directory_uri() . '/assets/css/main.min.css', false, 'cbd019fe3f4008cb24d91e0f52864982');
 
   // jQuery is loaded using the same method from HTML5 Boilerplate:
   // Grab Google CDN's latest jQuery with a protocol relative URL; fallback to local if offline
@@ -28,9 +28,11 @@ function roots_scripts() {
   }
 
   wp_register_script('modernizr', get_template_directory_uri() . '/assets/js/vendor/modernizr-2.6.2.min.js', false, null, false);
-
-  wp_register_script('roots_scripts', get_template_directory_uri() . '/assets/js/scripts.min.js', false, '60ffcb295fa0761a56b3a3e8311ae1f2', true);
-  wp_register_script('gmaps', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&signed_in=true', false, null, false);
+  wp_register_script('roots_scripts', get_template_directory_uri() . '/assets/js/scripts.min.js', false, '8d74bbfc834b08e55fa30338021e4217', true);
+  wp_register_script('gmaps', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&signed_in=true', false, null, false);  
+  wp_register_script('soundcloud', '//connect.soundcloud.com/sdk-2.0.0.js', false, null, false);
+  wp_register_script('soundcloud_player', '//w.soundcloud.com/player/api.js', false, null, false);
+  
   wp_register_style('font_awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', false, null, false);
 
 
@@ -39,6 +41,8 @@ wp_register_script('wv_development', get_template_directory_uri() . '/assets/js/
 
   wp_enqueue_script('modernizr');
   wp_enqueue_script('gmaps');
+  wp_enqueue_script('soundcloud');
+  wp_enqueue_script('soundcloud_player');
   wp_enqueue_script('jquery');
   wp_enqueue_script('roots_scripts');
   wp_enqueue_style('font_awesome');
