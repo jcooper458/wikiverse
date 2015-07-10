@@ -924,7 +924,7 @@ function getFlickrs(topic, sort, type) {
 						var thumbURL = data.sizes.size[1].source;
 						var mediumURL = data.sizes.size[6].source;
 
-						$flickrSearchBrick.find('.results').append('<img width="145" owner="' + item.owner + '" large="' + mediumURL + '" thumb="' + thumbURL + '" src="' + thumbURL + '">');
+						$flickrSearchBrick.find('.results').append('<img width="150" owner="' + item.owner + '" large="' + mediumURL + '" thumb="' + thumbURL + '" src="' + thumbURL + '">');
 									
 						imagesLoaded( '#flickr-search .results', function() {
 							$packeryContainer.packery();
@@ -975,7 +975,8 @@ function getInstagrams(query) {
 				lat: latitude,
 				lng: longitude,
 				client_id: 'db522e56e7574ce9bb70fa5cc760d2e7',
-				format: 'json'
+				format: 'json',
+				limit: 4
 			},
 			dataType:'jsonp',
 			success: function(data){
@@ -983,7 +984,7 @@ function getInstagrams(query) {
 				data.data.forEach(function(photo, index){
 
 				//append row to searchbox-table
-				$instagramSearchBrick.find('.results').append('<img class="img-search" width="145" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
+				$instagramSearchBrick.find('.results').append('<img class="img-search" width="146" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
 				
 				imagesLoaded('#instagram-search .results', function() {
 					$packeryContainer.packery();
@@ -1016,7 +1017,7 @@ function getInstagrams(query) {
 			data.data.forEach(function(photo, index){
 			
 				//append row to searchbox-table
-				$instagramSearchBrick.find('.results').append('<img class="img-search" width="145" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
+				$instagramSearchBrick.find('.results').append('<img class="img-search" width="146" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
 							
 				$instagramSearchBrick.find('img').unbind('click').click(function(e) {
 
@@ -1104,39 +1105,23 @@ function getSoundcloud(query, params) {
 
 }
 	
-
 function getYoutubes(topic) {
 
-	var $tableYoutubeResults;
-
-	//if no table is already in the brick
-	if($youtubeSearchBrick.find('table.youtube').length === 0){
-
-		$tableYoutubeResults = $('<table class="table table-hover youtube"></table>');
-		$youtubeSearchBrick.append($tableYoutubeResults);
-
-	}
-	else{
-
-		$tableYoutubeResults = $('table.youtube');
-
-	}
-
+	$('#youtube-search .results').empty();
 
 	$.ajax({
 		url: 'https://www.googleapis.com/youtube/v3/search',
 		data:{
-
 			q: topic,
 			key: 'AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8',
-			part: 'snippet'
+			part: 'snippet',
+			maxResults: 25
 		},
 		dataType:'jsonp',
 		success: function(data){
 
-
-
 			if(data.items ){
+				console.log(data.items)
 				$.each(data.items, function(){
 
 					//console.log(this);
@@ -1147,13 +1132,13 @@ function getYoutubes(topic) {
 					var thumbnailURL = this.snippet.thumbnails.default.url;
 
 					//append row to searchbox-table
-					$tableYoutubeResults.append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td class="youtubeThumb"><img src="'+thumbnailURL+'"></td><td class="result" youtubeID="'+youtubeID+'">'+title+'</td></tr>');
+					$youtubeSearchBrick.find('.results').append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td class="youtubeThumb"><img src="'+thumbnailURL+'"></td><td class="result" youtubeID="'+youtubeID+'">'+title+'</td></tr>');
 
 					//create the tooltips
 					$('tr').tooltip({animation: true, placement: 'bottom'});
 
 					//bind event to every row -> so you can start the wikiverse
-					$tableYoutubeResults.find('tr').unbind('click').click(function(e) {
+					$youtubeSearchBrick.find('tr').unbind('click').click(function(e) {
 
 						var currentYoutubeID = $(this).find('.result').attr('youtubeID');
 
@@ -1167,54 +1152,14 @@ function getYoutubes(topic) {
 
 				});
 
-				//if no nav is already in the brick
-				if($youtubeSearchBrick.find('.nav').length === 0 ){
-
-					//append a clear button and the wikipedia icon
-					$youtubeSearchBrick.append('<div class="search-ui"><ul class="nav nav-pills"><li class="pull-right"><a class="clear"><h6>clear results</h6></a></li></ul></div');
-
-				}
-
-				//when clear results is clicked
-				$('.clear').on('click', function(){
-
-					//remove all UI elements
-					$tableYoutubeResults.remove();
-					$(this).parents('.search-ui').remove();
-
-					//empty the youtube-searchbox for new search
-					$('#youtube-searchinput').val('');
-				});
-
 				//relayout packery
-				$packeryContainer.packery();
+				//$packeryContainer.packery();
 
-			//nothing has been found on Wikipedia
+			//nothing has been found on youtube
 		}else{
 
 				//append row to searchbox-table: NO RESULTS
-				$tableYoutubeResults.append('<tr class="no-results"><td>No Youtube Videos found for "'+topic+'"</td></tr>');
-
-				//destroy all UI after 2 seconds
-				setTimeout( function(){
-
-					//if only one result is there, delete everything
-					if($('table#youtube.results tr').length ===  1){
-
-						//remove all UI elements
-						$tableYoutubeResults.remove();
-
-						//empty the wiki-searchbox for new search
-						$('#youtube-searchinput').val('');
-
-					}else{
-						//only remove the not-found row
-						$tableYoutubeResults.find('.no-results').remove();
-						$('#youtube-searchinput').val('');
-					}
-
-
-				}, 2000 );
+				$youtubeSearchBrick.find('.results').append('<tr class="no-results"><td>No Youtube Videos found for "'+topic+'"</td></tr>');
 
 			}
 
@@ -1897,6 +1842,8 @@ function createWall(wpnonce) {
 	var searchBricks = jQuery(".search");
 	$packeryContainer.packery( 'remove', searchBricks );
 
+	$packeryContainer.packery();
+
 	var itemElems = $packeryContainer.packery('getItemElements');
 
 	var tabindex = 0;
@@ -1978,6 +1925,8 @@ function editWall(wpnonce) {
 	//remove search bricks:
 	var searchBricks = jQuery(".search");
 	$packeryContainer.packery( 'remove', searchBricks );
+
+	$packeryContainer.packery();
 
 	var itemElems = $packeryContainer.packery('getItemElements');
 

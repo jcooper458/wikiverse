@@ -36,7 +36,15 @@
 	      </span>
 	    </div><!-- /input-group -->
 	   
+	   <table class="table table-hover results youtube"></table>
 
+		<div class="search-ui">
+			<ul class="nav nav-pills">
+				<li class="pull-right">
+					<a class="clear"><h6>clear results</h6></a>
+				</li>
+			</ul>
+		</div>
 	</div> 
 </div>
 
