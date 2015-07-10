@@ -141,6 +141,17 @@ $packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laid
 		
 });
 
+//on layout complete, wait for all images to be done and then trigger a realign
+$packeryContainer.packery( 'on', 'layoutComplete', function(){
+
+	imagesLoaded('#packery', function(instance){
+		$packeryContainer.packery();
+	});
+
+});
+
+
+
 $packeryContainer.packery( 'on', 'layoutComplete', orderItems );
 $packeryContainer.packery( 'on', 'dragItemPositioned', orderItems );
 
@@ -857,10 +868,8 @@ function buildFoto(photoObj, type){
 
 	$brick.append($photo);
 
-	$brick.imagesLoaded(function(instance){
-		$packeryContainer.append($brick).packery( 'appended', $brick);
-		$brick.each( makeEachDraggable );
-	});
+	$packeryContainer.append($brick).packery( 'appended', $brick);
+	$brick.each( makeEachDraggable );
 
 	$packeryContainer.packery();
 }
@@ -1120,7 +1129,7 @@ function getYoutubes(topic) {
 		success: function(data){
 
 			if(data.items ){
-				console.log(data.items)
+
 				$.each(data.items, function(){
 
 					//console.log(this);
@@ -1394,7 +1403,9 @@ function buildWikipedia(topic, parent){
 					if((section.line !== "References") && (section.line !== "Notes") && (section.line !== "External links") && (section.line !== "Citations") && (section.line !== "Bibliography") && (section.line !== "Notes and references")) {
 					 	$tableSectionResults.append('<tr><td><div class="result" title="' + section.anchor + '" index="' + section.index + '">' + section.line + '</div></td></tr>');
 					}
+
 				});			
+				$packeryContainer.packery();
 
 				//create the section object and trigger the creation of a section brick
 				$tableSectionResults.find(".result").on('click', function() {
