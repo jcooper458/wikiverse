@@ -864,7 +864,7 @@ function buildFoto(photoObj, type){
 
 		$brick.each( makeEachDraggable );
 	});
-
+	$packeryContainer.packery();
 }
 
 function strip(html)
@@ -983,14 +983,14 @@ function getInstagrams(query) {
 				
 				data.data.forEach(function(photo, index){
 
-				//append row to searchbox-table
-				$instagramSearchBrick.find('.results').append('<img class="img-search" width="146" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
-				
-				imagesLoaded('#instagram-search .results', function() {
-					$packeryContainer.packery();
-				});
+					//append row to searchbox-table
+					$instagramSearchBrick.find('.results').append('<img class="img-search" width="146" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
+					
+					imagesLoaded('#instagram-search .results', function() {
+						$packeryContainer.packery();
+					});
 
-				$instagramSearchBrick.find('img').unbind('click').click(function(e) {
+					$instagramSearchBrick.find('img').unbind('click').click(function(e) {
 
 					var thisPhoto = {
 						mediumURL: $(this).attr('fullres'),
@@ -1018,7 +1018,11 @@ function getInstagrams(query) {
 			
 				//append row to searchbox-table
 				$instagramSearchBrick.find('.results').append('<img class="img-search" width="146" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
-							
+				
+				imagesLoaded('#instagram-search .results', function() {
+					$packeryContainer.packery();
+				});			
+
 				$instagramSearchBrick.find('img').unbind('click').click(function(e) {
 
 					var thisPhoto = {
@@ -1029,10 +1033,7 @@ function getInstagrams(query) {
 					$(this).remove();
 				});
 
-				$instagramSearchBrick.find('.search-ui').show();
-
-				//relayout packery
-				$packeryContainer.packery();
+				$instagramSearchBrick.find('.search-ui').show();	
 
 			});
 	    });
