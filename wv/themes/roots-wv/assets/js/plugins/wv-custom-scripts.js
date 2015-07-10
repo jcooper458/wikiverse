@@ -1,3 +1,5 @@
+//----------------GENERAL STUFF----------------------------
+
 var $packeryContainer = $('#packery');
 
 var $wikiSearchBrick = $("#wikipedia-search");
@@ -19,9 +21,20 @@ getSearchBoxes();
 // initialize Packery
 $packeryContainer.packery({
 	itemSelector: '.brick',
-	gutter: 10
+//	stamp: '.stamp',
+	gutter: 10,
+	columnWidth: 300,
+//	rowHeight: 60
 });
 
+//make the enter keypress do the search 
+$(".search input:text").keyup(function (e) {
+    if (e.keyCode == 13) {
+       $(e.target).siblings('span').find('button').trigger('click');
+    }
+});
+
+//----------------GENERAL STUFF----------------------------
 
 //----------------EVENTS----------------------------
 
@@ -46,7 +59,7 @@ $packeryContainer.on("click", ".flickr-icon", function(){
 	$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
 	$flickrSearchBrick.find('.start').addClass('disabled');
 
-	getFlickrs(bounds, "relevance");
+	getFlickrs(topic, "relevance");
 
 });
 
@@ -69,7 +82,8 @@ $packeryContainer.on("click", ".youtube-icon", function(){
 });
 
 //create images interconnection and trigger getFlickrs()
-$packeryContainer.on("click", ".fa-flickr", function(){
+//This time for the gmaps brick, in thise case we only want the bounds passed in to getFlickrs
+$packeryContainer.on("click", "#gmaps-search .fa-flickr", function(){
 
 	$flickrSearchBrick.removeClass("invisible");
 	$packeryContainer.append($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
@@ -77,12 +91,12 @@ $packeryContainer.on("click", ".fa-flickr", function(){
 	var $thisBrick = $(this).parents(".brick");
 
 	var bounds = $thisBrick.data("bounds");
-	
+
 	$flickrSearchBrick.find('input').val(bounds);
 	$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
 	$flickrSearchBrick.find('.start').addClass('disabled');
 
-	getFlickrs(bounds, "relevance");
+	getFlickrs(bounds, "relevance", "geoQuery");
 	
 });
 
@@ -115,11 +129,14 @@ $packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laid
 	$('.clear').on('click', function(){
 
 		//remove all UI elements
-		$(this).parents('.brick').find('.results').remove();
-		$(this).parents('.search-ui').remove();
+		$(this).parents('.brick').find('.results').empty();
+		$(this).parents('.search-ui').hide();
 
 		//empty the wiki-searchbox for new search
 		$(this).parents('input').val('');
+
+		//scroll to top
+		window.scrollTo(0, 0);
 	});
 		
 });
@@ -127,7 +144,29 @@ $packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laid
 $packeryContainer.packery( 'on', 'layoutComplete', orderItems );
 $packeryContainer.packery( 'on', 'dragItemPositioned', orderItems );
 
+//Toggle Size of Images on click
+$packeryContainer.on( 'click', 'img', function( event ) {
 
+	var $brick= $( event.target ).parents('.brick');
+  	var tempDataObj = $brick.data('topic');
+
+  	// toggle the size for images
+  	if($( event.target ).is('img.img-result')){
+  		//make it large
+  		$brick.toggleClass('w2');
+
+  		//if it is large, update the dataObj so it saves the state
+  		if($brick.hasClass('w2')){
+  			tempDataObj.size = 'large';
+  		}else{
+  			tempDataObj.size = 'small';
+  		}
+  		//set the dataObj to data topic
+  		$brick.data('topic', tempDataObj);
+  	}
+  	// trigger layout
+  	$packeryContainer.packery();
+});
 
 //----------------EVENTS----------------------------
 
@@ -457,7 +496,8 @@ function getGmapsSearch(){
 
 	var mapOptions = {
 		center: {lat: 35, lng: 0},
-		zoom: 1
+		zoom: 1,
+		scrollwheel: false,
 	};
 
 	var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
@@ -494,13 +534,9 @@ function getGmapsSearch(){
 		//find the location of the marker
 		var positionUrlString = droppedMarker.getPosition().toUrlValue();
 
-		//calculate the bounds - used for flickr foto search
-		var southWest = map.getBounds().getSouthWest().toUrlValue();
-		var northEast = map.getBounds().getNorthEast().toUrlValue();
-
-		//store it into the data container
+		//store position and bounds into the data container (for later use of getFlickrs/Instagrams)
 		$gmapsSearchBrick.data('position', positionUrlString);
-		$gmapsSearchBrick.data('bounds', southWest + ',' + northEast);
+		$gmapsSearchBrick.data('bounds', map.getBounds().toUrlValue());
 
         $gmapsSearchBrick.find(".fa-instagram, .fa-flickr").fadeIn("slow");
     });
@@ -530,11 +566,9 @@ function getGmapsSearch(){
 		});
 		marker.setVisible(true);
 
-		//find the location of the marker
-		var positionUrlString = marker.place.location.toUrlValue();
-
-		//store it into the data container
-		$gmapsSearchBrick.data('position', positionUrlString);
+		//store position and bounds into the data container (for later use of getFlickrs/Instagrams)
+		$gmapsSearchBrick.data('position', marker.place.location.toUrlValue());
+		$gmapsSearchBrick.data('bounds', map.getBounds().toUrlValue());
 
 		infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
 		//	'Place ID: ' + place.place_id + '<br>' +
@@ -812,9 +846,11 @@ function buildStreetMap(streetObj) {
 
 function buildFoto(photoObj, type){
 
-
 	var $brick = $(defaultBrick);
-	var $photo = $('<img width="280" owner="' + photoObj.owner + '" src="' + photoObj.mediumURL + '">');
+
+	if(photoObj.size === "large") $brick.addClass('w2');
+
+	var $photo = $('<img class="img-result" owner="' + photoObj.owner + '" src="' + photoObj.mediumURL + '">');
 
 	$brick.data('type', type);
 	$brick.data('topic', photoObj);
@@ -838,12 +874,16 @@ function strip(html)
 	return tmp.textContent || tmp.innerText || "";
 }
 
-function getFlickrs(topic, sort) {
+function getFlickrs(topic, sort, type) {
 
+	$('#flickr-search .results').empty();
+
+	type  = type || "textQuery";	
+	
 	var bbox; 
 
 	//if there is a comma, its a coordinate
-	if(topic.indexOf(',') > -1){
+	if(type === "geoQuery"){
 
 		bbox = topic;
 		topic = "";		
@@ -867,8 +907,6 @@ function getFlickrs(topic, sort) {
 		},
 		success: function(data){
 			
-			console.log(this.url);
-
 			data.photos.photo.forEach(function(item, index){
 				
 				$.ajax({
@@ -886,16 +924,19 @@ function getFlickrs(topic, sort) {
 						var thumbURL = data.sizes.size[1].source;
 						var mediumURL = data.sizes.size[6].source;
 
-						//append row to searchbox-table
-						
 						$flickrSearchBrick.find('.results').append('<img width="145" owner="' + item.owner + '" large="' + mediumURL + '" thumb="' + thumbURL + '" src="' + thumbURL + '">');
+									
+						imagesLoaded( '#flickr-search .results', function() {
+							$packeryContainer.packery();
+						});
 
 						$flickrSearchBrick.find('img').unbind('click').click(function(e) {
-
+			
 							var thisPhoto = {
 
 								thumbURL: $(this).attr('thumb'),
 								mediumURL: $(this).attr('large'),
+								size: 'small',
 								owner: $(this).attr('owner')
 
 							}
@@ -903,21 +944,18 @@ function getFlickrs(topic, sort) {
 							$(this).remove();
 						});
 
-						$flickrSearchBrick.find('.search-ui').show();
-
-						//relayout packery
-						$packeryContainer.packery();
-
+						$flickrSearchBrick.find('.search-ui').show();	
 					}
 
 				});
 			});
-
 		}
 	});
 }
 
 function getInstagrams(query) {
+
+	$('#instagram-search .results').empty();
 
 	var client_id = "db522e56e7574ce9bb70fa5cc760d2e7";
 
@@ -943,23 +981,26 @@ function getInstagrams(query) {
 			success: function(data){
 				
 				data.data.forEach(function(photo, index){
+
+				//append row to searchbox-table
+				$instagramSearchBrick.find('.results').append('<img class="img-search" width="145" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
 				
-					//append row to searchbox-table
-					$instagramSearchBrick.find('.results').append('<img width="145" src="' + photo.images.low_resolution.url + '">');
+				imagesLoaded('#instagram-search .results', function() {
+					$packeryContainer.packery();
+				});
 
-					$instagramSearchBrick.find('img').unbind('click').click(function(e) {
+				$instagramSearchBrick.find('img').unbind('click').click(function(e) {
 
-						var thisPhoto = {
-							mediumURL: $(this).attr('src')
-						}
+					var thisPhoto = {
+						mediumURL: $(this).attr('fullres'),
+						smallURL: $(this).attr('src'),
+						size: 'small'
+					}
 						buildFoto(thisPhoto, "instagram");
 						$(this).remove();
 					});
 
 					$instagramSearchBrick.find('.search-ui').show();
-
-					//relayout packery
-					$packeryContainer.packery();
 
 				});
 			}
@@ -975,12 +1016,13 @@ function getInstagrams(query) {
 			data.data.forEach(function(photo, index){
 			
 				//append row to searchbox-table
-				$instagramSearchBrick.find('.results').append('<img width="145" src="' + photo.images.low_resolution.url + '">');
+				$instagramSearchBrick.find('.results').append('<img class="img-search" width="145" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
 							
 				$instagramSearchBrick.find('img').unbind('click').click(function(e) {
 
 					var thisPhoto = {
-						mediumURL: $(this).attr('src')
+						mediumURL: $(this).attr('fullres'),
+						smallURL: $(this).attr('src')
 					}
 					buildFoto(thisPhoto, "instagram");
 					$(this).remove();
@@ -1365,6 +1407,8 @@ function buildWikipedia(topic, parent){
 
 	var $brick = $(defaultBrick);
 
+	if(topic.size)
+
 	$brick.data('type', 'wiki');
 	$brick.data('parent', parent);
 	$brick.data('topic', topic);
@@ -1466,7 +1510,7 @@ function buildWikipedia(topic, parent){
 											var image = $('<img width="290" src="' + imageUrl + '">');
 
 											image.insertAfter($brick.find("h2"));
-											//$packeryContainer.packery();
+											$packeryContainer.packery();
 										}
 									});
 									//break the loop if a jpg was found
@@ -1506,21 +1550,19 @@ function buildWikipedia(topic, parent){
 							infobox.find('.reference').remove();
 							infobox.find('.references').remove();
 							infobox.find('.org').remove();
-							infobox.find('*').css('max-width', '290px');
+							//infobox.find('*').css('max-width', '290px');
 							infobox.find('img').unwrap();
 
 							infobox.insertAfter($brick.find("img"));
-
+							$packeryContainer.packery();
 						}
 						//enable to create new bricks out of links
 						buildNextTopic($brick, topic.language);	
 
 						getWikiLanguages(topic.title, topic.language, $brick);
-						$packeryContainer.packery();
+						
 					}
-				});
-
-				
+				});				
 
 				$packeryContainer.packery();
 			}	
@@ -1570,7 +1612,7 @@ function buildSection(section, parent){
 			sectionHTML.find('.notice').remove();
 			sectionHTML.find('.ambox').remove();
 			sectionHTML.find('.org').remove();
-			sectionHTML.find('*').css('max-width', '290px');
+			//sectionHTML.find('*').css('max-width', '290px');
 			sectionHTML.find('img').unwrap();
 
 			sectionHTML.find('a[class*=exter]').remove();
@@ -1800,7 +1842,7 @@ $("#instagram-search .start").on("click", function(){
 $("#flickr-icon").on("click", function(){
 
 	$flickrSearchBrick.removeClass("invisible");
-	$packeryContainer.append($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
+	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
 });
 
 $("#flickr-search .start").on("click", function(){
@@ -1875,8 +1917,6 @@ function createWall(wpnonce) {
 	});
 
 	var JSONwikiverse = JSON.stringify(wikiverse);
-
-
 
 	$("#saveWallModal").modal('show');
 
