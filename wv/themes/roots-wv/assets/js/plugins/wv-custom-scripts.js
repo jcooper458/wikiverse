@@ -858,12 +858,10 @@ function buildFoto(photoObj, type){
 	$brick.append($photo);
 
 	$brick.imagesLoaded(function(instance){
-
-		//$packeryContainer.packery();
 		$packeryContainer.append($brick).packery( 'appended', $brick);
-
 		$brick.each( makeEachDraggable );
 	});
+
 	$packeryContainer.packery();
 }
 
@@ -1135,6 +1133,10 @@ function getYoutubes(topic) {
 					//append row to searchbox-table
 					$youtubeSearchBrick.find('.results').append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td class="youtubeThumb"><img src="'+thumbnailURL+'"></td><td class="result" youtubeID="'+youtubeID+'">'+title+'</td></tr>');
 
+					imagesLoaded( '#youtube-search .results', function() {
+						$packeryContainer.packery();
+					});
+
 					//create the tooltips
 					$('tr').tooltip({animation: true, placement: 'bottom'});
 
@@ -1152,10 +1154,6 @@ function getYoutubes(topic) {
 					});
 
 				});
-
-				//relayout packery
-				//$packeryContainer.packery();
-
 			//nothing has been found on youtube
 		}else{
 
@@ -1353,12 +1351,10 @@ function buildWikipedia(topic, parent){
 
 	var $brick = $(defaultBrick);
 
-	if(topic.size)
-
 	$brick.data('type', 'wiki');
 	$brick.data('parent', parent);
 	$brick.data('topic', topic);
-	
+
 	$brick.prepend('<p><h2>' + topic.title + '</h2></p>');
 	$brick.prepend( wikiverse_nav );
 
@@ -1660,6 +1656,7 @@ function buildYoutube(youtubeID){
 
 	$youtubeBrick.each( makeEachDraggable );
 
+	$packeryContainer.packery();
 }
 
 
@@ -1843,7 +1840,7 @@ function createWall(wpnonce) {
 	var searchBricks = jQuery(".search");
 	$packeryContainer.packery( 'remove', searchBricks );
 
-	$packeryContainer.packery();
+	//$packeryContainer.packery();
 
 	var itemElems = $packeryContainer.packery('getItemElements');
 
@@ -1927,7 +1924,7 @@ function editWall(wpnonce) {
 	var searchBricks = jQuery(".search");
 	$packeryContainer.packery( 'remove', searchBricks );
 
-	$packeryContainer.packery();
+	//$packeryContainer.packery();
 
 	var itemElems = $packeryContainer.packery('getItemElements');
 
