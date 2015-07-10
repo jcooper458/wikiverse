@@ -27,9 +27,6 @@ body { }
   border-radius: 4px;
   outline: 0;
   border-bottom: 4px solid #e7e7e7;
-  cursor: -moz-zoom-in; 
-  cursor: -webkit-zoom-in; 
-  cursor: zoom-in;
 }
 .brick p {overflow: hidden;}
 .brick.w2 { 
@@ -39,9 +36,12 @@ body { }
 .brick p,.brick iframe{ /*padding:0px 5px;*/ margin-top:5px; }
 
 .brick{
-  img{
+  img.img-result{
     max-width:100%;
-    max-height:100%;   
+    max-height:100%;  
+    cursor: -moz-zoom-in; 
+    cursor: -webkit-zoom-in; 
+    cursor: zoom-in; 
   }
   .fa{
       font-size: 20px!important;
@@ -162,11 +162,11 @@ padding: 1px 10px;
    ========================================================================== */
 
 .banner { }
-#saveWall{display: none;}
+#saveWall, .source-menu{display: none;}
 .icon{cursor: pointer;}
 
 nav img {padding-right:5px;}
-#logo{font-size: 24px; font-weight: bold;}
+
 
 .navbar{
 

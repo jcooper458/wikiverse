@@ -12,7 +12,7 @@
 
     <nav class="collapse navbar-collapse" role="navigation">
     <div class="row">
-	    <div class="col-lg-5 col-md-5 col-sm-5 top-buffer-small">
+	    <div class="col-lg-5 col-md-5 col-sm-5 top-buffer-small source-menu">
 	    	
 	      	<i id="wikipedia-icon" class="fa fa-wikipedia"></i>
 	      	<i id="youtube-icon"   class="fa fa-youtube"></i>
@@ -22,7 +22,7 @@
 	      	&nbsp;<i id="gmaps-icon"     class="fa fa-map-marker"></i>
 	    </div>
 	     <div class="col-lg-2 col-md-2 col-sm-2">
-	     	<a class="navbar-brand" id="logo" href="<?php echo home_url(); ?>/"><?php bloginfo('name'); ?></a>
+	     	<h2><?php bloginfo('name'); ?></h2>
 	     </div>
 	  	 <div class="col-lg-5 col-md-5 col-sm-5 top-buffer-small">
 	  	    <?php if ( is_user_logged_in() ) { 

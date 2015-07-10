@@ -5,14 +5,39 @@
 
 
 <?php get_template_part('templates/searchboxes'); ?>
-<!-- 
-<div class="input-group">
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="button">Go!</button>
-      </span>
-      <input type="text" class="form-control" placeholder="Search for...">
-    </div>/input-group -->
-    
+
+<div class="container">
+
+  <div class="input-group">
+    <span class="input-group-btn">
+      <button class="btn btn-default btn-lg" type="button">Go!</button>
+    </span>
+    <input type="text" class="form-control input-lg" placeholder="Insert anything..">
+  </div><!-- /input-group -->
+    <div class="input-group pull-right">
+    <label class="checkbox-inline">
+      <input type="checkbox" id="inlineCheckbox1" value="option1" checked> Wikipedia
+    </label>
+    <label class="checkbox-inline">
+      <input type="checkbox" id="inlineCheckbox2" value="option2" checked> Soundcloud
+    </label>
+    <label class="checkbox-inline">
+      <input type="checkbox" id="inlineCheckbox3" value="option3" checked> Google Maps
+    </label>
+    <label class="checkbox-inline">
+      <input type="checkbox" id="inlineCheckbox1" value="option1" checked> Flickr
+    </label>
+    <label class="checkbox-inline">
+      <input type="checkbox" id="inlineCheckbox2" value="option2" checked> Instagram
+    </label>
+    <label class="checkbox-inline">
+      <input type="checkbox" id="inlineCheckbox3" value="option3" checked> Youtube
+    </label>
+   </div><!-- /input-group -->
+
+</div><!-- /container -->
+
+
 <!-- Modal -->
 <div class="modal fade" id="saveWallModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
