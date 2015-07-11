@@ -217,10 +217,6 @@ function buildNextTopic($brick, lang){
 
 var markers = [];
 function getGmapsSearch(){
-	console.log("cdsklscdajk")
-	$gmapsSearchBrick.removeClass("invisible");
-	$packeryContainer.append($gmapsSearchBrick).packery( 'prepended', $gmapsSearchBrick);
-	$gmapsSearchBrick.each( makeEachDraggable );
 
 	var mapOptions = {
 		center: {lat: 35, lng: 0},
@@ -228,7 +224,7 @@ function getGmapsSearch(){
 		scrollwheel: false,
 	};
 
-	var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+	var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
 	var input = document.getElementById('pac-input');
 
@@ -375,7 +371,7 @@ function buildGmaps(mapObj){
 	var currentMap;
 	var currentStreetMap;
 
-	var $mapcanvas = $('<div id="map-canvas"></div>');
+	var $mapcanvas = $('<div id="map_canvas"></div>');
 
 	var $mapbrick = $(defaultBrick);
 
@@ -389,7 +385,6 @@ function buildGmaps(mapObj){
 	$mapbrick.prepend('<span class="flickr-search"><i class="fa fa-flickr"></i></span>');
 
 	$packeryContainer.append($mapbrick).packery( 'appended', $mapbrick);
-
 	$mapbrick.each( makeEachDraggable );
 
 
@@ -515,16 +510,14 @@ function buildGmaps(mapObj){
 
 	});
 
-
-
-	}
+}
 
 function buildStreetMap(streetObj) {
 
 	var $mapbrick;
 	var currentStreetMap;
 
-	var $mapcanvas = $('<div id="map-canvas"></div>');
+	var $mapcanvas = $('<div id="map_canvas"></div>');
 
 	var $mapbrick = $(defaultBrick);
 
@@ -1551,6 +1544,9 @@ $("#soundcloud-search .start").on("click", function(){
 
 
 $("#gmaps-icon").on("click", function(){
+
+	$gmapsSearchBrick.removeClass("invisible");
+	$packeryContainer.append($gmapsSearchBrick).packery( 'prepended', $gmapsSearchBrick);
 	getGmapsSearch();
 });
 

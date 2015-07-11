@@ -115,12 +115,12 @@
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 	<span class="instagram"><i class="fa fa-instagram"></i></span>
 	<span class="flickr-search"><i class="fa fa-flickr"></i></span>
+
 	<div class="container top-buffer-small  bottom-buffer-small">
 
 		<input id="pac-input" class="controls" type="text" placeholder="Enter a location">
-		<div id="map-canvas"></div> 
-	   
-	   </div> 
+		<div id="map_canvas"></div> 	
+		
 	</div> 
 </div>
 
