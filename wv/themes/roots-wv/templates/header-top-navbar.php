@@ -1,58 +1,57 @@
-<header class="banner navbar navbar-default navbar-static-top" role="banner">
-  <div class="fluid-container">
+<header class="" role="banner">
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      
+      <a class="navbar-brand" href="#"><?php bloginfo('name'); ?></a>
     </div>
 
-    <nav class="collapse navbar-collapse" role="navigation">
-    <div class="row">
-	    <div class="col-lg-5 col-md-5 col-sm-5 top-buffer-small">
-	    	
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Start <span class="caret"></span></a>
+          <ul class="dropdown-menu sources-menu">
+			    <li id="wikipedia-icon" ><a href="#"><i class="fa fa-wikipedia"></i>		Wikipedia	</a></li>
+			    <li id="youtube-icon"   ><a href="#"><i class="fa fa-youtube"></i>		YouTube		</a></li>
+			    <li id="flickr-icon"    ><a href="#"><i class="fa fa-flickr"></i>		Flickr		</a></li>
+			    <li id="instagram-icon" ><a href="#"><i    class="fa fa-instagram"></i>	Instagram	</a></li>
+			    <li id="soundcloud-icon"><a href="#"><i     class="fa fa-soundcloud"></i>&nbsp;Soundcloud	</a></li>
+			    <li id="gmaps-icon"     ><a href="#">&nbsp;<i class="fa fa-map-marker"></i>	Google Maps	</a></li>
+          </ul>
+        </li>
+      </ul>
 
-			<div class="btn-group sources-menu">
-			  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			    Start    <span class="caret"></span>
-			  </button>
-			  <ul class="dropdown-menu">
-			    <li><a href="#"><i id="wikipedia-icon" class="fa fa-wikipedia"></i>		Wikipedia	</a></li>
-			    <li><a href="#"><i id="youtube-icon"   class="fa fa-youtube"></i>		YouTube		</a></li>
-			    <li><a href="#"><i id="flickr-icon"    class="fa fa-flickr"></i>		Flickr		</a></li>
-			    <li><a href="#"><i id="instagram-icon"    class="fa fa-instagram"></i>	Instagram	</a></li>
-			    <li><a href="#"><i id="soundcloud-icon"    class="fa fa-soundcloud"></i>Soundcloud	</a></li>
-			    <li><a href="#"><i id="gmaps-icon"     class="fa fa-map-marker"></i>	Google Maps	</a></li>
-			  </ul>
-			</div>
-
-	      	
-	    </div>
-	     <div class="col-lg-2 col-md-2 col-sm-2">
-	     	<!--<a class="navbar-brand" id="logo" href="<?php echo home_url(); ?>/"><?php bloginfo('name'); ?></a>-->
-	     	<h4 id="logo"><?php bloginfo('name'); ?></h4>
-	     </div>
-	  	 <div class="col-lg-5 col-md-5 col-sm-5 top-buffer-small">
-	  	    <?php if ( is_user_logged_in() ) { 
+      <ul class="nav navbar-nav navbar-right">
+        	
+ 	    <?php if ( is_user_logged_in() ) { 
 	    	$nonce = wp_create_nonce( 'wall' ); ?>
 
 	    	<?php if ( is_front_page() ) { ?>
-				<button class="btn btn-default pull-right"  id="saveWall" onclick="createWall('<?php echo $nonce ?>');" type="button">Save Wall</button>
+	    		<li><a href="#" id="saveWall" onclick="createWall('<?php echo $nonce ?>');" >Save Wall</a></li>
 			<?php }  ?>
 
 			<?php if ( is_singular("wall") ) { ?>
-				<button class="btn btn-default pull-right"  id="editWall" onclick="editWall('<?php echo $nonce ?>');" type="button">Save Changes</button>
+				<li><a href="#" id="editWall" onclick="editWall('<?php echo $nonce ?>');" >Save Changes</a></li>
 			<?php }  ?> 	
 
 			<?php } else {?> 
 				<!--<button class="btn btn-default pull-right" id="editWall" type="button"><a href="/login" >Login</a></button>
 				<button class="btn btn-default pull-right" id="editWall" type="button"><a href="/wp-login.php?action=register" >Register</a></button>-->
 			<?php }  ?> 	
-	     </div>
-    </div>
-    </nav>
-  </div>
+
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+
+
+
 </header>

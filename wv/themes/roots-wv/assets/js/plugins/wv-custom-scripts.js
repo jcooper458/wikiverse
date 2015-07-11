@@ -123,7 +123,7 @@ $packeryContainer.on("click", ".fa-instagram", function(){
 //show save wall button on packery change (needs work)
 $packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laidOutItems ) {
 	
-	$("#saveWall").fadeIn();
+	$("#saveWall").css('display', 'block');
 
 	//when clear results is clicked
 	$('.clear').on('click', function(){
