@@ -119,7 +119,9 @@ $packeryContainer.on("click", ".fa-instagram", function(){
 	$instagramSearchBrick.find('.searchbox').attr('disabled', 'true');
 	$instagramSearchBrick.find('.start').addClass('disabled');
 
-	getInstagrams(position, "coordinate");	
+	$('#instagram-search .results').empty();
+
+	getInstagrams(position, "coordinates");	
 
 });
 
@@ -703,7 +705,28 @@ function createInstagramBrick(photo){
 	$instagramSearchBrick.find('.search-ui').show();
 }
 
+function inrange(min,number,max){
+    if ( !isNaN(number) && (number >= min) && (number <= max) ){
+        return true;
+    } else {
+        return false;
+    };
+}
+
+function valid_coords(number_lat,number_lng) {
+    if (inrange(-90,number_lat,90) && inrange(-180,number_lng,180)) {
+        $("#btnSaveResort").removeAttr("disabled");
+        return true;
+    }
+    else {
+        $("#btnSaveResort").attr("disabled","disabled");
+        return false;
+    }
+}
+
 function getInstagrams(query, type) {
+	
+	$instagramSearchBrick.addClass("w2");
 
 	type = type || "hashtag";
 
@@ -718,29 +741,41 @@ function getInstagrams(query, type) {
     var instagramUrl;
 
     // if coordinate
-	if(type === "coordinate"){
+	if(type === "coordinates"){
 
 		var latitude = query.split(',')[0];
 		var longitude = query.split(',')[1];
 
-		$.ajax({
-			url: 'https://api.instagram.com/v1/media/search',
-			data:{
-				lat: latitude,
-				lng: longitude,
-				client_id: 'db522e56e7574ce9bb70fa5cc760d2e7',
-				format: 'json'
-			},
-			dataType:'jsonp',
-			success: function(data){
+		if(valid_coords(latitude, longitude)){
 
-				data.data.forEach(function(photo, index){
-					
-					createInstagramBrick(photo);
+			$.ajax({
+				url: 'https://api.instagram.com/v1/media/search',
+				data:{
+					lat: latitude,
+					lng: longitude,
+					client_id: 'db522e56e7574ce9bb70fa5cc760d2e7',
+					format: 'json'
+				},
+				dataType:'jsonp',
+				success: function(data){
+					console.log(data)
+					if (typeof data.data !== 'undefined' && data.data.length > 0) {
+						data.data.forEach(function(photo, index){
+							
+							createInstagramBrick(photo);
 
-				});
-			}
-		});			
+						});
+					}
+					else{				
+						//append row to searchbox-table: NO RESULTS
+						$instagramSearchBrick.find('.results').append('<div class="no-results">No pictures found at this location:  "' + query + '"</div>');
+					}
+				}
+			});	
+		}
+		else{
+			$instagramSearchBrick.find('.results').append('<div class="no-results">"' + query + '" is not a coordinate .. :( </div>');			
+		}		
 	}
 	else if(type === "hashtag"){
 
@@ -748,12 +783,15 @@ function getInstagrams(query, type) {
 		//var instagramUrl = 'https://api.instagram.com/v1/tags/' + query + '/media/recent?client_id=db522e56e7574ce9bb70fa5cc760d2e7';
 	    
 	    $.getJSON(instagramUrl, access_parameters, function(data){
-
-			data.data.forEach(function(photo, index){
-				
-				createInstagramBrick(photo);
-
-			});
+	    	if (typeof data.data !== 'undefined' && data.data.length > 0) {
+				data.data.forEach(function(photo, index){					
+					createInstagramBrick(photo);
+				});
+			}
+			else{				
+				//append row to searchbox-table: NO RESULTS
+				$instagramSearchBrick.find('.results').append('<div class="no-results">No pictures found for "' + query + '"</div>');
+			}
 	    });
 	
 	}
@@ -768,18 +806,20 @@ function getInstagrams(query, type) {
 			},
 			dataType:'jsonp',
 			success: function(data){
+				if (typeof data.data !== 'undefined' && data.data.length > 0) {
+					var userID = data.data[0].id
+					var getUserUrl = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?callback=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
 
-				var userID = data.data[0].id
-				var getUserUrl = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?callback=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
-
-			    $.getJSON(getUserUrl, access_parameters, function(data){
-
-					data.data.forEach(function(photo, index){
-	
-						createInstagramBrick(photo);
-
-					});				
-			    });
+				    $.getJSON(getUserUrl, access_parameters, function(data){			    	
+						data.data.forEach(function(photo, index){		
+							createInstagramBrick(photo);
+						});							
+				    });
+				}
+				else{				
+					//append row to searchbox-table: NO RESULTS
+					$instagramSearchBrick.find('.results').append('<div class="no-results">No user found with this query: "' + query + '"</div>');
+				}	
 			}
 		});
 	}
@@ -841,9 +881,6 @@ function getSoundcloud(query, params) {
 			//relayout packery
 			$packeryContainer.packery();
 
-		  	//buildSoundcloud("cdscasddsa");
-
-
 		});
 
 	});
@@ -865,7 +902,7 @@ function getYoutubes(topic) {
 		dataType:'jsonp',
 		success: function(data){
 
-			if(data.items ){
+			if (typeof data.items !== 'undefined' && data.items.length > 0) {
 
 				$.each(data.items, function(){
 
@@ -902,10 +939,8 @@ function getYoutubes(topic) {
 				});
 			//nothing has been found on youtube
 		}else{
-
 				//append row to searchbox-table: NO RESULTS
 				$youtubeSearchBrick.find('.results').append('<tr class="no-results"><td>No Youtube Videos found for "'+topic+'"</td></tr>');
-
 			}
 
 		}
@@ -1552,6 +1587,7 @@ $("#soundcloud-icon").on("click", function(){
 
 	$soundcloudSearchBrick.removeClass("invisible");
 	$packeryContainer.append($soundcloudSearchBrick).packery( 'prepended', $soundcloudSearchBrick);
+	//$gmapsSearchBrick.each( makeEachDraggable );
 });
 
 $("#soundcloud-search .start").on("click", function(){
@@ -1568,6 +1604,7 @@ $("#gmaps-icon").on("click", function(){
 
 	$gmapsSearchBrick.removeClass("invisible");
 	$packeryContainer.append($gmapsSearchBrick).packery( 'prepended', $gmapsSearchBrick);
+	//$gmapsSearchBrick.each( makeEachDraggable );
 	getGmapsSearch();
 });
 
@@ -1706,12 +1743,20 @@ function editWall(wpnonce) {
 			$(id).html('');
 			$(id).append(data);
 
+			new PNotify({
+			    text: 'wall saved',
+			    type: 'success',
+			    icon: 'fa fa-floppy-o',
+			    styling: 'fontawesome',
+			    shadow: false
+			});
 		},
 		error: function(MLHttpRequest, textStatus, errorThrown) {
 			alert("cdascsacsa");
 		}
 	});
 }
+
 
 function getLanguage(langCode){
 

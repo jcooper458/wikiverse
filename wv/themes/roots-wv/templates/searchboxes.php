@@ -83,14 +83,14 @@
 	</div>
 </div>
 
-<div id="instagram-search" class="brick w2 invisible search">
+<div id="instagram-search" class="brick invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<div class="container top-buffer-small  bottom-buffer-small">	 
 
 		<i class="fa fa-instagram"></i>
 
 
-	   <div class="input-group">
+	   <div class="input-group-btn">
 			<div class="input-group-btn">
 				<select id="instagramType" name="input" class="selectpicker show-menu-arrow">
 					<option value="hashtag"		>hashtag</option>
@@ -99,7 +99,7 @@
 				</select>
 			</div><!-- /btn-group -->
 		  	<div class="input-group">
-		      <input type="text" id="instragram-searchinput" placeholder="" class="form-control searchbox">
+		      <input type="text" id="instragram-searchinput" placeholder="" class="form-control form-inline searchbox">
 		      <span class="input-group-btn">
 		        <button class="btn btn-default start" type="button">Search</button>
 		      </span>
