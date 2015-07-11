@@ -12,7 +12,7 @@
  */
 function roots_scripts() {
 
-  wp_enqueue_style('roots_main', get_template_directory_uri() . '/assets/css/main.min.css', false, '9035cf1ca80da5ca8282337dceff3197');
+  wp_enqueue_style('roots_main', get_template_directory_uri() . '/assets/css/main.min.css', false, '52b3fa2a9c9df0c1025c10b425fb668e');
 
   // jQuery is loaded using the same method from HTML5 Boilerplate:
   // Grab Google CDN's latest jQuery with a protocol relative URL; fallback to local if offline
@@ -28,7 +28,7 @@ function roots_scripts() {
   }
 
   wp_register_script('modernizr', get_template_directory_uri() . '/assets/js/vendor/modernizr-2.6.2.min.js', false, null, false);
-  wp_register_script('roots_scripts', get_template_directory_uri() . '/assets/js/scripts.min.js', false, 'c3c68e6af1933b98a2b8afb2a0eec83f', true);
+  wp_register_script('roots_scripts', get_template_directory_uri() . '/assets/js/scripts.min.js', false, 'daffa59ab55cb1049462bf72de0cb363', true);
   wp_register_script('gmaps', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&signed_in=true', false, null, false);  
   wp_register_script('soundcloud', '//connect.soundcloud.com/sdk-2.0.0.js', false, null, false);
   wp_register_script('soundcloud_player', '//w.soundcloud.com/player/api.js', false, null, false);

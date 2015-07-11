@@ -14,15 +14,26 @@
     <div class="row">
 	    <div class="col-lg-5 col-md-5 col-sm-5 top-buffer-small">
 	    	
-	      	<i id="wikipedia-icon" class="fa fa-wikipedia"></i>
-	      	<i id="youtube-icon"   class="fa fa-youtube"></i>
-	      	<i id="flickr-icon"    class="fa fa-flickr"></i>
-	      	<i id="instagram-icon"    class="fa fa-instagram"></i>
-	      	<i id="soundcloud-icon"    class="fa fa-soundcloud"></i>
-	      	&nbsp;<i id="gmaps-icon"     class="fa fa-map-marker"></i>
+
+			<div class="btn-group sources-menu">
+			  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			    Start    <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu">
+			    <li><a href="#"><i id="wikipedia-icon" class="fa fa-wikipedia"></i>		Wikipedia	</a></li>
+			    <li><a href="#"><i id="youtube-icon"   class="fa fa-youtube"></i>		YouTube		</a></li>
+			    <li><a href="#"><i id="flickr-icon"    class="fa fa-flickr"></i>		Flickr		</a></li>
+			    <li><a href="#"><i id="instagram-icon"    class="fa fa-instagram"></i>	Instagram	</a></li>
+			    <li><a href="#"><i id="soundcloud-icon"    class="fa fa-soundcloud"></i>Soundcloud	</a></li>
+			    <li><a href="#"><i id="gmaps-icon"     class="fa fa-map-marker"></i>	Google Maps	</a></li>
+			  </ul>
+			</div>
+
+	      	
 	    </div>
 	     <div class="col-lg-2 col-md-2 col-sm-2">
-	     	<a class="navbar-brand" id="logo" href="<?php echo home_url(); ?>/"><?php bloginfo('name'); ?></a>
+	     	<!--<a class="navbar-brand" id="logo" href="<?php echo home_url(); ?>/"><?php bloginfo('name'); ?></a>-->
+	     	<h4 id="logo"><?php bloginfo('name'); ?></h4>
 	     </div>
 	  	 <div class="col-lg-5 col-md-5 col-sm-5 top-buffer-small">
 	  	    <?php if ( is_user_logged_in() ) { 
