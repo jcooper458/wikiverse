@@ -611,8 +611,8 @@ function getFlickrs(topic, sort, type) {
 	type  = type || "textQuery";	
 	
 	var bbox; 
-
-	//if there is a comma, its a coordinate
+	
+	//if query is coordinates (bounds)
 	if(type === "geoQuery"){
 
 		bbox = topic;
@@ -636,49 +636,53 @@ function getFlickrs(topic, sort, type) {
 			sort: sort
 		},
 		success: function(data){
-			
-			data.photos.photo.forEach(function(item, index){
+			if (typeof data.photos.photo !== 'undefined' && data.photos.photo.length > 0) {
+				data.photos.photo.forEach(function(item, index){
+					
+					$.ajax({
+						url: 'https://api.flickr.com/services/rest',
+						data:{
+
+							method: 'flickr.photos.getSizes',
+							api_key: '1a7d3826d58da8a6285ef7062f670d30',
+							photo_id: item.id,
+							format: 'json',
+							nojsoncallback: 1
+						},
+						success: function(data){
+
+							var thumbURL = data.sizes.size[1].source;
+							var mediumURL = data.sizes.size[6].source;
+
+							$flickrSearchBrick.find('.results').append('<img width="150" owner="' + item.owner + '" large="' + mediumURL + '" thumb="' + thumbURL + '" src="' + thumbURL + '">');
+										
+							imagesLoaded( '#flickr-search .results', function() {
+								$packeryContainer.packery();
+							});
+
+							$flickrSearchBrick.find('img').unbind('click').click(function(e) {
 				
-				$.ajax({
-					url: 'https://api.flickr.com/services/rest',
-					data:{
+								var thisPhoto = {
 
-						method: 'flickr.photos.getSizes',
-						api_key: '1a7d3826d58da8a6285ef7062f670d30',
-						photo_id: item.id,
-						format: 'json',
-						nojsoncallback: 1
-					},
-					success: function(data){
-	
-						var thumbURL = data.sizes.size[1].source;
-						var mediumURL = data.sizes.size[6].source;
+									thumbURL: $(this).attr('thumb'),
+									mediumURL: $(this).attr('large'),
+									size: 'small',
+									owner: $(this).attr('owner')
 
-						$flickrSearchBrick.find('.results').append('<img width="150" owner="' + item.owner + '" large="' + mediumURL + '" thumb="' + thumbURL + '" src="' + thumbURL + '">');
-									
-						imagesLoaded( '#flickr-search .results', function() {
-							$packeryContainer.packery();
-						});
+								}
+								buildFoto(thisPhoto, "flickr");
+								$(this).remove();
+							});
 
-						$flickrSearchBrick.find('img').unbind('click').click(function(e) {
-			
-							var thisPhoto = {
+							$flickrSearchBrick.find('.search-ui').show();	
+						}
 
-								thumbURL: $(this).attr('thumb'),
-								mediumURL: $(this).attr('large'),
-								size: 'small',
-								owner: $(this).attr('owner')
-
-							}
-							buildFoto(thisPhoto, "flickr");
-							$(this).remove();
-						});
-
-						$flickrSearchBrick.find('.search-ui').show();	
-					}
-
+					});
 				});
-			});
+			}
+			else{
+				$flickrSearchBrick.find('.results').append('<div class="no-results">No pictures found for "' + topic + '"</div>');
+			}
 		}
 	});
 }
@@ -760,14 +764,11 @@ function getInstagrams(query, type) {
 				success: function(data){
 					console.log(data)
 					if (typeof data.data !== 'undefined' && data.data.length > 0) {
-						data.data.forEach(function(photo, index){
-							
+						data.data.forEach(function(photo, index){							
 							createInstagramBrick(photo);
-
 						});
 					}
 					else{				
-						//append row to searchbox-table: NO RESULTS
 						$instagramSearchBrick.find('.results').append('<div class="no-results">No pictures found at this location:  "' + query + '"</div>');
 					}
 				}
@@ -789,7 +790,6 @@ function getInstagrams(query, type) {
 				});
 			}
 			else{				
-				//append row to searchbox-table: NO RESULTS
 				$instagramSearchBrick.find('.results').append('<div class="no-results">No pictures found for "' + query + '"</div>');
 			}
 	    });
@@ -817,7 +817,6 @@ function getInstagrams(query, type) {
 				    });
 				}
 				else{				
-					//append row to searchbox-table: NO RESULTS
 					$instagramSearchBrick.find('.results').append('<div class="no-results">No user found with this query: "' + query + '"</div>');
 				}	
 			}
