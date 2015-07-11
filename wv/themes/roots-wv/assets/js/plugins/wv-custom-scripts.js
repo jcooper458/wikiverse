@@ -938,7 +938,7 @@ function getInterWikiLinks(section, $brick){
 
 			var interWikiArray = data.parse.links;
 
-			var interWikiDropDown = $('<select class="selectpicker pull-right show-menu-arrow" data-size="20" data-live-search="true"></select>');
+			var interWikiDropDown = $('<select class="pull-right show-menu-arrow" data-size="20"></select>');
 
 			interWikiArray.forEach(function(link, index){
 		
