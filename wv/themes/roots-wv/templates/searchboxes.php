@@ -88,14 +88,27 @@
 	<div class="container top-buffer-small  bottom-buffer-small">	 
 
 		<i class="fa fa-instagram"></i>
-	  	
-	  	<div class="input-group">
-	      <input type="text" id="instragram-searchinput" placeholder="hashtag or coordinates" class="form-control searchbox">
-	      <span class="input-group-btn">
-	        <button class="btn btn-default start" type="button">Search</button>
-	      </span>
+
+
+	   <div class="input-group">
+			<div class="input-group-btn">
+				<select id="instagramType" name="input" class="selectpicker show-menu-arrow">
+					<option value="hashtag"		>hashtag</option>
+					<option value="username"	>username</option>
+					<option value="coordinates"	>coordinates</option>
+				</select>
+			</div><!-- /btn-group -->
+		  	<div class="input-group">
+		      <input type="text" id="instragram-searchinput" placeholder="" class="form-control searchbox">
+		      <span class="input-group-btn">
+		        <button class="btn btn-default start" type="button">Search</button>
+		      </span>
+		    </div><!-- /input-group -->
 	    </div><!-- /input-group -->
 
+
+
+	  
 	</div> 
 
 	<div class="instagram results"></div>
@@ -120,7 +133,7 @@
 
 		<input id="pac-input" class="controls" type="text" placeholder="Enter a location">
 		<div id="map_canvas"></div> 	
-		
+
 	</div> 
 </div>
 

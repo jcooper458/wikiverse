@@ -112,11 +112,14 @@ $packeryContainer.on("click", ".fa-instagram", function(){
 	var position = $thisBrick.data("position");
 	
 	$instagramSearchBrick.find('input').val(position);
+
+    $instagramSearchBrick.find("input[name='coordinates']").prop('checked', true);
+ 	$instagramSearchBrick.find("input[name='coordinates']").prop('disabled',true);
+
 	$instagramSearchBrick.find('.searchbox').attr('disabled', 'true');
 	$instagramSearchBrick.find('.start').addClass('disabled');
 
-	getInstagrams(position);
-	
+	getInstagrams(position, "coordinate");	
 
 });
 
@@ -678,7 +681,31 @@ function getFlickrs(topic, sort, type) {
 	});
 }
 
-function getInstagrams(query) {
+function createInstagramBrick(photo){
+
+	$instagramSearchBrick.find('.results').append('<img class="img-search" width="146" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
+	
+	imagesLoaded('#instagram-search .results', function() {
+		$packeryContainer.packery();
+	});
+
+	$instagramSearchBrick.find('img').unbind('click').click(function(e) {
+
+		var thisPhoto = {
+			mediumURL: $(this).attr('fullres'),
+			smallURL: $(this).attr('src'),
+			size: 'small'
+		}
+		buildFoto(thisPhoto, "instagram");
+		$(this).remove();
+	});
+
+	$instagramSearchBrick.find('.search-ui').show();
+}
+
+function getInstagrams(query, type) {
+
+	type = type || "hashtag";
 
 	$('#instagram-search .results').empty();
 
@@ -687,9 +714,11 @@ function getInstagrams(query) {
     var access_parameters = {
         client_id: client_id
     };
+    
+    var instagramUrl;
 
-    //if there is a comma, its a coordinate
-	if(query.indexOf(',') > -1){
+    // if coordinate
+	if(type === "coordinate"){
 
 		var latitude = query.split(',')[0];
 		var longitude = query.split(',')[1];
@@ -700,69 +729,59 @@ function getInstagrams(query) {
 				lat: latitude,
 				lng: longitude,
 				client_id: 'db522e56e7574ce9bb70fa5cc760d2e7',
-				format: 'json',
-				limit: 4
+				format: 'json'
 			},
 			dataType:'jsonp',
 			success: function(data){
-				
+
 				data.data.forEach(function(photo, index){
-			console.log(photo)
-					//append row to searchbox-table
-					$instagramSearchBrick.find('.results').append('<img class="img-search" width="146" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
 					
-					imagesLoaded('#instagram-search .results', function() {
-						$packeryContainer.packery();
-					});
-
-					$instagramSearchBrick.find('img').unbind('click').click(function(e) {
-
-					var thisPhoto = {
-						mediumURL: $(this).attr('fullres'),
-						smallURL: $(this).attr('src'),
-						size: 'small'
-					}
-						buildFoto(thisPhoto, "instagram");
-						$(this).remove();
-					});
-
-					$instagramSearchBrick.find('.search-ui').show();
+					createInstagramBrick(photo);
 
 				});
 			}
 		});			
 	}
-	else{
+	else if(type === "hashtag"){
 
-		var instagramUrl = 'https://api.instagram.com/v1/tags/' + query + '/media/recent?callback=?&count=40';
-		//var instagramUrl = 'https://api.instagram.com/v1/tags/snowy/media/recent?client_id=db522e56e7574ce9bb70fa5cc760d2e7';
+		instagramUrl = 'https://api.instagram.com/v1/tags/' + query + '/media/recent?callback=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
+		//var instagramUrl = 'https://api.instagram.com/v1/tags/' + query + '/media/recent?client_id=db522e56e7574ce9bb70fa5cc760d2e7';
 	    
 	    $.getJSON(instagramUrl, access_parameters, function(data){
 
 			data.data.forEach(function(photo, index){
-				console.log(photo)
-				//append row to searchbox-table
-				$instagramSearchBrick.find('.results').append('<img class="img-search" width="146" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
 				
-				imagesLoaded('#instagram-search .results', function() {
-					$packeryContainer.packery();
-				});			
-
-				$instagramSearchBrick.find('img').unbind('click').click(function(e) {
-
-					var thisPhoto = {
-						mediumURL: $(this).attr('fullres'),
-						smallURL: $(this).attr('src')
-					}
-					buildFoto(thisPhoto, "instagram");
-					$(this).remove();
-				});
-
-				$instagramSearchBrick.find('.search-ui').show();	
+				createInstagramBrick(photo);
 
 			});
 	    });
 	
+	}
+	else if(type === "username"){
+
+		$.ajax({
+			url: 'https://api.instagram.com/v1/users/search',
+			data:{
+				q: query,
+				client_id: 'db522e56e7574ce9bb70fa5cc760d2e7',
+				format: 'json'
+			},
+			dataType:'jsonp',
+			success: function(data){
+
+				var userID = data.data[0].id
+				var getUserUrl = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?callback=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
+
+			    $.getJSON(getUserUrl, access_parameters, function(data){
+
+					data.data.forEach(function(photo, index){
+	
+						createInstagramBrick(photo);
+
+					});				
+			    });
+			}
+		});
 	}
 }
 
@@ -1402,11 +1421,14 @@ function makeEachDraggable( i, itemElem ) {
 function getSearchBoxes(){
 
 var lang = $("#langselect").val();
+var instagramType = $("#instagramType").val();
 
 $( "#langselect" ).change(function() {
-
 	lang = $(this).val();
+});
 
+$( "#instagramType" ).change(function() {
+	instagramType = $(this).val();
 });
 
 //WIKIPEDIA AUTOCOMPLETE
@@ -1500,15 +1522,14 @@ $("#youtube-search .start").on("click", function(){
 $("#instagram-icon").on("click", function(){
 
 	$instagramSearchBrick.removeClass("invisible");
+	 $instagramSearchBrick.find("input[name='hashtag']").prop('checked', true);
 	$packeryContainer.append($instagramSearchBrick).packery( 'prepended', $instagramSearchBrick);
 });
 
 $("#instagram-search .start").on("click", function(){
-
 	var query = $("#instagram-search .searchbox").val();
 
-	getInstagrams(query);
-
+	getInstagrams(query, instagramType);
 });
 
 $("#flickr-icon").on("click", function(){
