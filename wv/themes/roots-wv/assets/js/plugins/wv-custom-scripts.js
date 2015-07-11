@@ -23,9 +23,9 @@ $packeryContainer.packery({
 	itemSelector: '.brick',
 //	stamp: '.stamp',
 	gutter: 10,
-	columnWidth: 300,
+	columnWidth: 300
 //	rowHeight: 60,
-	isInitLayout: false
+//	isInitLayout: false
 });
 
 //make the enter keypress do the search 
@@ -143,18 +143,30 @@ $packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laid
 });
 
 //on layout complete, wait for all images to be done and then trigger a realign
-$packeryContainer.packery( 'on', 'layoutComplete', function(){
-
-	imagesLoaded('#packery', function(instance){
+/*$packeryContainer.packery( 'on', 'layoutComplete', function(packery, items){
+	
+	imagesLoaded('.foto', function(instance){
 		$packeryContainer.packery();
 	});
 
 });
-
+*/
 
 
 $packeryContainer.packery( 'on', 'layoutComplete', orderItems );
 $packeryContainer.packery( 'on', 'dragItemPositioned', orderItems );
+
+
+
+function orderItems(packery, items) {
+
+	var itemElems = $packeryContainer.packery('getItemElements');
+	for ( var i=0, len = itemElems.length; i < len; i++ ) {
+		var elem = itemElems[i];
+
+		$(elem).attr( "tabindex", i );
+	}
+}
 
 //Toggle Size of Images on click
 $packeryContainer.on( 'click', 'img', function( event ) {
@@ -563,6 +575,7 @@ function buildStreetMap(streetObj) {
 function buildFoto(photoObj, type){
 
 	var $brick = $(defaultBrick);
+	$brick.addClass('foto');
 
 	if(photoObj.size === "large") $brick.addClass('w2');
 
@@ -576,7 +589,14 @@ function buildFoto(photoObj, type){
 	$packeryContainer.append($brick).packery( 'appended', $brick);
 	$brick.each( makeEachDraggable );
 
-	$packeryContainer.packery();
+	var imgLoad = imagesLoaded( $brick );
+
+	imgLoad.on( 'progress', function( imgLoad, image ) {
+		if ( !image.isLoaded ) {
+		  	return;
+		}
+		$packeryContainer.packery();
+	});
 }
 
 function strip(html)
@@ -694,7 +714,7 @@ function getInstagrams(query) {
 			success: function(data){
 				
 				data.data.forEach(function(photo, index){
-
+			console.log(photo)
 					//append row to searchbox-table
 					$instagramSearchBrick.find('.results').append('<img class="img-search" width="146" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
 					
@@ -727,7 +747,7 @@ function getInstagrams(query) {
 	    $.getJSON(instagramUrl, access_parameters, function(data){
 
 			data.data.forEach(function(photo, index){
-			
+				console.log(photo)
 				//append row to searchbox-table
 				$instagramSearchBrick.find('.results').append('<img class="img-search" width="146" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
 				
@@ -1535,16 +1555,6 @@ $("#gmaps-icon").on("click", function(){
 });
 
 
-}
-
-
-function orderItems() {
-	var itemElems = $packeryContainer.packery('getItemElements');
-	for ( var i=0, len = itemElems.length; i < len; i++ ) {
-		var elem = itemElems[i];
-
-		$(elem).attr( "tabindex", i );
-	}
 }
 
 
