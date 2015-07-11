@@ -24,7 +24,8 @@ $packeryContainer.packery({
 //	stamp: '.stamp',
 	gutter: 10,
 	columnWidth: 300,
-//	rowHeight: 60
+//	rowHeight: 60,
+	isInitLayout: false
 });
 
 //make the enter keypress do the search 
@@ -204,7 +205,7 @@ function buildNextTopic($brick, lang){
 
 var markers = [];
 function getGmapsSearch(){
-
+	console.log("cdsklscdajk")
 	$gmapsSearchBrick.removeClass("invisible");
 	$packeryContainer.append($gmapsSearchBrick).packery( 'prepended', $gmapsSearchBrick);
 	$gmapsSearchBrick.each( makeEachDraggable );

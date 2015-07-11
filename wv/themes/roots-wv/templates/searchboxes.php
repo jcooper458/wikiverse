@@ -1,4 +1,4 @@
-<div id="wikipedia-search" class="brick stamp invisible search">
+<div id="wikipedia-search" class="brick invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<div class="container">
 
@@ -23,7 +23,7 @@
 	</div>
 </div>
 
-<div id="youtube-search" class="brick stamp invisible search">
+<div id="youtube-search" class="brick invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<div class="container top-buffer-small  bottom-buffer-small">
 		
@@ -48,7 +48,7 @@
 	</div> 
 </div>
 
-<div id="flickr-search" class="brick w2 stamp invisible search">
+<div id="flickr-search" class="brick w2 invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<div class="container top-buffer-small  bottom-buffer-small">
 	 
@@ -83,7 +83,7 @@
 	</div>
 </div>
 
-<div id="instagram-search" class="brick w2 stamp invisible search">
+<div id="instagram-search" class="brick w2 invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<div class="container top-buffer-small  bottom-buffer-small">	 
 
@@ -110,7 +110,7 @@
 </div>
 
 
-<div id="gmaps-search" data-type="gmaps" data-topic="" class="brick stamp invisible w2">
+<div id="gmaps-search" data-type="gmaps" data-topic="" class="brick invisible w2">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 	<span class="instagram"><i class="fa fa-instagram"></i></span>

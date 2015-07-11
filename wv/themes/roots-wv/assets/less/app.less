@@ -2,6 +2,11 @@
  * Roots 6.5.0
  */
 
+#map_canvas img {
+    max-width: none!important; 
+}
+
+
 @import "bootstrap/bootstrap.less";
 
 /* ==========================================================================
@@ -16,6 +21,13 @@ body {}
   margin-left: auto;
   margin-right: auto;
 }
+
+/*this is to not squash gmaps controls */
+
+#map-canvas img {
+    max-width: none!important; 
+}
+
 
 
 .brick { 
@@ -68,6 +80,7 @@ body {}
   .fa{font-size: 15px!important;}
 
 }
+
 
 #wikiverse, #postID{display: none;}
 
