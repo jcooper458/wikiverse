@@ -75,12 +75,12 @@
 
 		<h5>Sort by: </h5>
 
-		<!--<div class="radio-inline">
+		<div class="radio-inline">
 		  <label><input class="interestingness" type="radio" name="sort" value="relevance" checked>Relevance</label>
 		</div>
 		<div class="radio-inline">
 		  <label><input class="relevance" type="radio" name="sort" value="interestingness-desc">Interestingness</label>
-		</div>-->
+		</div>
 
 	</div>
 
@@ -166,12 +166,12 @@
 	      </span>
 	    </div><!-- /input-group -->
 
-	   	<label class="radio-inline">
+	   	<!--<label class="radio-inline">
 		  <input class="bpm" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="bpm" checked="checked"> bpm
 		</label>
 		<label class="radio-inline">
 		  <input class="license" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="relevance"> license
-		</label>
+		</label>-->
 
 	</div>
 
