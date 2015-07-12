@@ -11,7 +11,7 @@ var $gmapsSearchBrick = $("#gmaps-search");
 
 var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
 var youtube_icon = '<i class="fa fa-youtube-square"></i>';
-var wikiverse_nav = '<div class="wikiverse-nav pull-left"><i class="fa fa-youtube-square youtube-icon icon"></i>&nbsp;<i class="fa fa-flickr flickr-icon icon"></i></div>';
+var wikiverse_nav = '<div class="wikiverse-nav pull-left"><i class="fa fa-youtube-square youtube-icon icon"></i>&nbsp;<i class="fa fa-flickr flickr-icon icon"></i>&nbsp;<i class="fa fa-instagram instagram-icon icon"></i></div>';
 var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle"> <i class="fa fa-arrows"></i></span></div>';
 
 $('.selectpicker').selectpicker();
@@ -78,36 +78,33 @@ $packeryContainer.on("click", ".flickr-icon", function(){
 	$flickrSearchBrick.find('input').val(topic.title);
 
 
-	$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
-	$flickrSearchBrick.find('.start').addClass('disabled');
+	//$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
+	//$flickrSearchBrick.find('.start').addClass('disabled');
 
-	getFlickrs(topic, "relevance", "textQuery");
+	getFlickrs(topic.title, "relevance", "textQuery");
 
 });
 
-//create images interconnection and trigger getInstagrams()
-$packeryContainer.on("click", ".fa-instagram", function(){
+//create flickr interconnection button and trigger flickr search
+$packeryContainer.on("click", ".instagram-icon", function(){
 
 	$instagramSearchBrick.removeClass("invisible");
-	$packeryContainer.append($instagramSearchBrick).packery( 'prepended', $instagramSearchBrick);
+	$packeryContainer.append($flickrSearchBrick).packery( 'prepended', $instagramSearchBrick);
 
 	var $thisBrick = $(this).parents(".brick");
 
-	var position = $thisBrick.data("position");
+	var topic = $thisBrick.data("topic");
 
-	$instagramSearchBrick.find('input').val(position);
+	$instagramSearchBrick.find('input').val(topic.title);
 
-    $instagramSearchBrick.find("input[name='coordinates']").prop('checked', true);
- 	$instagramSearchBrick.find("input[name='coordinates']").prop('disabled',true);
+	//$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
+	//$flickrSearchBrick.find('.start').addClass('disabled');
 
-	$instagramSearchBrick.find('.searchbox').attr('disabled', 'true');
-	$instagramSearchBrick.find('.start').addClass('disabled');
-
-	$('#instagram-search .results').empty();
-
-	getInstagrams(position, "coordinates");
+	getInstagrams(topic.title, "hashtag");
 
 });
+
+
 
 
 //show save wall button on packery change (needs work)
@@ -158,6 +155,30 @@ $packeryContainer.on("click", "#gmaps-search .fa-flickr", function(){
 
 
 	getFlickrs(position, sort, "geoQuery");
+
+});
+
+//create images interconnection and trigger getInstagrams()
+$packeryContainer.on("click", "#gmaps-search .fa-instagram", function(){
+
+	$instagramSearchBrick.removeClass("invisible");
+	$packeryContainer.append($instagramSearchBrick).packery( 'prepended', $instagramSearchBrick);
+
+	var $thisBrick = $(this).parents(".brick");
+
+	var position = $thisBrick.data("position");
+
+	$instagramSearchBrick.find('input').val(position);
+
+    $instagramSearchBrick.find("input[name='coordinates']").prop('checked', true);
+ 	$instagramSearchBrick.find("input[name='coordinates']").prop('disabled',true);
+
+	$instagramSearchBrick.find('.searchbox').attr('disabled', 'true');
+	$instagramSearchBrick.find('.start').addClass('disabled');
+
+	$('#instagram-search .results').empty();
+
+	getInstagrams(position, "coordinates");
 
 });
 
