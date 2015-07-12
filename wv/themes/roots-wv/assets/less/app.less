@@ -27,13 +27,19 @@ body {}
 
 .brick { 
   width: 300px; 
-  background: #F7F7F7;
+  //background: #F7F7F7;
   /*background: #95A5A6; */
   padding:5px; 
  /* border-radius: 4px;*/
   outline: 0;
   /*border-bottom: 4px solid #e7e7e7;*/
+
 }
+
+.brick:hover{
+    background: #F7F7F7; 
+}
+
 .brick p {overflow: hidden;}
 .brick.w2 { 
   width: 610px; 
@@ -41,36 +47,40 @@ body {}
 
 .brick p,.brick iframe{ /*padding:0px 5px;*/ margin-top:5px; }
 
+.borderBottom{border-bottom: 1px solid #ccc;}
+
 .brick{
-  img{
-    max-width:100%;
-    max-height:100%;  
+    img{
+      max-width:100%;
+      max-height:100%;  
+    }
+    .fa{
+        font-size: 20px!important;
+      }
+    .handle{
+      .fa{
+        cursor: move;
+        margin: 8px 0px 0px 8px;
+        font-size: 25px!important;
+      }
+    }
+
+    #map_canvas {
+      height: 400px;
+      margin: 0px;
+      padding: 0px;
+      img {
+          max-width: none!important; 
+          max-height: none!important;
+      }
+    }
+
+}
+
+.foto img{
     cursor: -moz-zoom-in; 
     cursor: -webkit-zoom-in; 
     cursor: zoom-in; 
-  }
-  .fa{
-      font-size: 20px!important;
-    }
-  .handle{
-    .fa{
-      cursor: move;
-      margin: 8px 0px 0px 8px;
-      font-size: 25px!important;
-    }
-  }
-
-  
-  #map_canvas {
-    height: 400px;
-    margin: 0px;
-    padding: 0px;
-    img {
-        max-width: none!important; 
-        max-height: none!important;
-    }
-  }
-
 }
 
 .sources-menu {
@@ -103,7 +113,7 @@ body {}
     top: -20px;
     width:40px;
     height:40px;
-    background:#F8F8F8;
+   /* background:#F8F8F8;*/
     /*border-radius: 20px;*/
     z-index: 2;
 }

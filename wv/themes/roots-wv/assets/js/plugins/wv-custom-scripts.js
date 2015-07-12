@@ -19,14 +19,14 @@ $('.selectpicker').selectpicker();
 getSearchBoxes();
 
 // initialize Packery
-$packeryContainer.packery({
+var packery = $packeryContainer.packery({
 	itemSelector: '.brick',
 //	stamp: '.stamp',
 	gutter: 10,
 	columnWidth: 300
 //	rowHeight: 60,
 //	isInitLayout: false
-});
+});	
 
 //make the enter keypress do the search
 $(".search input:text").keyup(function (e) {
@@ -43,13 +43,15 @@ $(".search input:text").keyup(function (e) {
 $packeryContainer.on( "click", ".cross", function() {
 	var $thisBrick = jQuery(this).parent(".brick");
 	$packeryContainer.packery( 'remove', $thisBrick );
+	$packeryContainer.packery();
 });
 
 //create youtube interconnection button and trigger search
 $packeryContainer.on("click", ".youtube-icon", function(){
 
 	$youtubeSearchBrick.removeClass("invisible");
-	$packeryContainer.append($youtubeSearchBrick).packery( 'prepended', $youtubeSearchBrick);
+	$packeryContainer.prepend($youtubeSearchBrick).packery( 'prepended', $youtubeSearchBrick);
+	$packeryContainer.packery();
 
 	var $thisBrick = $(this).parents(".brick");
 
@@ -69,7 +71,8 @@ $packeryContainer.on("click", ".youtube-icon", function(){
 $packeryContainer.on("click", ".flickr-icon", function(){
 
 	$flickrSearchBrick.removeClass("invisible");
-	$packeryContainer.append($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
+	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
+	$packeryContainer.packery();
 
 	var $thisBrick = $(this).parents(".brick");
 
@@ -89,7 +92,8 @@ $packeryContainer.on("click", ".flickr-icon", function(){
 $packeryContainer.on("click", ".instagram-icon", function(){
 
 	$instagramSearchBrick.removeClass("invisible");
-	$packeryContainer.append($flickrSearchBrick).packery( 'prepended', $instagramSearchBrick);
+	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $instagramSearchBrick);
+	$packeryContainer.packery();
 
 	var $thisBrick = $(this).parents(".brick");
 
@@ -118,7 +122,7 @@ $packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laid
 		var $thisBrick = $(this).parents('.brick');
 		//remove all UI elements
 		$thisBrick.find('.results').empty();
-		$(this).parents('.search-ui').hide();
+		$thisBrick.find('.search-ui').hide();
 
 		//empty the wiki-searchbox for new search
 		$thisBrick.find('select').removeAttr('disabled');
@@ -128,17 +132,18 @@ $packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laid
 		$thisBrick.find('.selectpicker').selectpicker('refresh');
 
 		//scroll to top
-		window.scrollTo(0, 0);
+		//window.scrollTo(0, 0);
 	});
 
 });
 
 //create images interconnection and trigger getFlickrs()
 //This time for the gmaps brick, in thise case we only want the bounds passed in to getFlickrs
-$packeryContainer.on("click", "#gmaps-search .fa-flickr", function(){
+$packeryContainer.on("click", ".gmaps .fa-flickr", function(){
 
 	$flickrSearchBrick.removeClass("invisible");
-	$packeryContainer.append($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
+	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
+	$packeryContainer.packery();
 
 	var $thisBrick = $(this).parents(".brick");
 
@@ -159,10 +164,11 @@ $packeryContainer.on("click", "#gmaps-search .fa-flickr", function(){
 });
 
 //create images interconnection and trigger getInstagrams()
-$packeryContainer.on("click", "#gmaps-search .fa-instagram", function(){
+$packeryContainer.on("click", ".gmaps .fa-instagram", function(){
 
 	$instagramSearchBrick.removeClass("invisible");
-	$packeryContainer.append($instagramSearchBrick).packery( 'prepended', $instagramSearchBrick);
+	$packeryContainer.prepend($instagramSearchBrick).packery( 'prepended', $instagramSearchBrick);
+	$packeryContainer.packery();
 
 	var $thisBrick = $(this).parents(".brick");
 
@@ -255,7 +261,7 @@ $("#wikipedia-icon").on("click", function(){
 
 	$wikiSearchBrick.removeClass("invisible");
 	$packeryContainer.append($wikiSearchBrick).packery( 'prepended', $wikiSearchBrick);
-
+	$packeryContainer.packery();
 });
 
 
@@ -271,6 +277,7 @@ $("#youtube-icon").on("click", function(){
 
 	$youtubeSearchBrick.removeClass("invisible");
 	$packeryContainer.append($youtubeSearchBrick).packery( 'prepended', $youtubeSearchBrick);
+	$packeryContainer.packery();
 });
 
 $("#youtube-search .start").on("click", function(){
@@ -284,8 +291,8 @@ $("#youtube-search .start").on("click", function(){
 $("#instagram-icon").on("click", function(){
 
 	$instagramSearchBrick.removeClass("invisible");
-	$instagramSearchBrick.find("input[name='hashtag']").prop('checked', true);
 	$packeryContainer.append($instagramSearchBrick).packery( 'prepended', $instagramSearchBrick);
+	$packeryContainer.packery();
 });
 
 $("#instagram-search .start").on("click", function(){
@@ -300,6 +307,7 @@ $("#flickr-icon").on("click", function(){
 
 	$flickrSearchBrick.removeClass("invisible");
 	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
+	$packeryContainer.packery();
 });
 
 
@@ -320,6 +328,7 @@ $("#soundcloud-icon").on("click", function(){
 	$soundcloudSearchBrick.removeClass("invisible");
 	$packeryContainer.append($soundcloudSearchBrick).packery( 'prepended', $soundcloudSearchBrick);
 	//$gmapsSearchBrick.each( makeEachDraggable );
+	$packeryContainer.packery();
 });
 
 $("#soundcloud-search .start").on("click", function(){
@@ -338,6 +347,7 @@ $("#gmaps-icon").on("click", function(){
 	$packeryContainer.append($gmapsSearchBrick).packery( 'prepended', $gmapsSearchBrick);
 	//$gmapsSearchBrick.each( makeEachDraggable );
 	getGmapsSearch();
+	$packeryContainer.packery();
 });
 
 
@@ -565,9 +575,11 @@ function buildGmaps(mapObj){
 	$mapbrick.data('bounds', mapObj.bounds.southWest + "," + mapObj.bounds.northEast);
 
 	$mapbrick.addClass('w2');
+	$mapbrick.addClass('gmaps');
+
 	$mapbrick.prepend($mapcanvas);
-	$mapbrick.prepend('<span class="instagram"><i class="fa fa-instagram"></i></span>');
-	$mapbrick.prepend('<span class="flickr-search"><i class="fa fa-flickr"></i></span>');
+	$mapbrick.prepend('<span class="instagram"><i class="fa fa-instagram instagram-icon"></i></span>');
+	$mapbrick.prepend('<span class="flickr-search"><i class="fa fa-flickr flickr-icon"></i></span>');
 
 	$packeryContainer.append($mapbrick).packery( 'appended', $mapbrick);
 	$mapbrick.each( makeEachDraggable );
@@ -1436,6 +1448,8 @@ function buildWikipedia(topic, parent){
 
 	var $brick = $(defaultBrick);
 
+	$brick.addClass('borderBottom');
+
 	$brick.data('type', 'wiki');
 	$brick.data('parent', parent);
 	$brick.data('topic', topic);
@@ -1443,10 +1457,12 @@ function buildWikipedia(topic, parent){
 	$brick.prepend('<p><h2>' + topic.title + '</h2></p>');
 	$brick.prepend( wikiverse_nav );
 
+	/*var items = $packeryContainer.packery('getItemElements');
+	console.log(items);*/
+	
 	$packeryContainer.append($brick).packery( 'appended', $brick);
-
 	$brick.each( makeEachDraggable );
-
+   // $packeryContainer.packery();
 
 	$.ajax({
 		url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
@@ -1539,7 +1555,10 @@ function buildWikipedia(topic, parent){
 											var image = $('<img width="290" src="' + imageUrl + '">');
 
 											image.insertAfter($brick.find("h2"));
-											$packeryContainer.packery();
+
+											imagesLoaded( $brick, function() {
+												$packeryContainer.packery();
+											});			
 										}
 									});
 									//break the loop if a jpg was found
@@ -1609,6 +1628,8 @@ function buildSection(section, parent){
 
 	$brick.prepend('<p><h2>' + section.title + '</h2></p>');
 	$brick.prepend( wikiverse_nav );
+
+	$brick.addClass('borderBottom');
 
 	$packeryContainer.append($brick).packery( 'appended', $brick);
 
@@ -1895,6 +1916,7 @@ function editWall(wpnonce) {
 			    styling: 'fontawesome',
 			    shadow: false
 			});
+			$packeryContainer.packery();
 		},
 		error: function(MLHttpRequest, textStatus, errorThrown) {
 			alert("cdascsacsa");
