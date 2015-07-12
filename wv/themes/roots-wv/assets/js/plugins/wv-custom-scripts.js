@@ -28,7 +28,7 @@ $packeryContainer.packery({
 //	isInitLayout: false
 });
 
-//make the enter keypress do the search 
+//make the enter keypress do the search
 $(".search input:text").keyup(function (e) {
     if (e.keyCode == 13) {
        $(e.target).siblings('span').find('button').trigger('click');
@@ -45,6 +45,25 @@ $packeryContainer.on( "click", ".cross", function() {
 	$packeryContainer.packery( 'remove', $thisBrick );
 });
 
+//create youtube interconnection button and trigger search
+$packeryContainer.on("click", ".youtube-icon", function(){
+
+	$youtubeSearchBrick.removeClass("invisible");
+	$packeryContainer.append($youtubeSearchBrick).packery( 'prepended', $youtubeSearchBrick);
+
+	var $thisBrick = $(this).parents(".brick");
+
+	var topic = $thisBrick.data("topic");
+
+	$youtubeSearchBrick.find('input').val(topic.title);
+	$youtubeSearchBrick.find('.searchbox').attr('disabled', 'true');
+	$youtubeSearchBrick.find('.start').addClass('disabled');
+
+	$youtubeSearchBrick.find('.start').trigger( "click" );
+
+});
+
+
 
 //create flickr interconnection button and trigger flickr search
 $packeryContainer.on("click", ".flickr-icon", function(){
@@ -55,30 +74,65 @@ $packeryContainer.on("click", ".flickr-icon", function(){
 	var $thisBrick = $(this).parents(".brick");
 
 	var topic = $thisBrick.data("topic");
-	
+
 	$flickrSearchBrick.find('input').val(topic.title);
+
+
 	$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
 	$flickrSearchBrick.find('.start').addClass('disabled');
 
-	getFlickrs(topic, "relevance");
+	getFlickrs(topic, "relevance", "textQuery");
 
 });
 
-//create youtube interconnection button and trigger search
-$packeryContainer.on("click", ".youtube-icon", function(){
+//create images interconnection and trigger getInstagrams()
+$packeryContainer.on("click", ".fa-instagram", function(){
 
-	$youtubeSearchBrick.removeClass("invisible");
-	$packeryContainer.append($youtubeSearchBrick).packery( 'prepended', $youtubeSearchBrick);
+	$instagramSearchBrick.removeClass("invisible");
+	$packeryContainer.append($instagramSearchBrick).packery( 'prepended', $instagramSearchBrick);
 
 	var $thisBrick = $(this).parents(".brick");
 
-	var topic = $thisBrick.data("topic");
-	
-	$youtubeSearchBrick.find('input').val(topic.title);
-	$youtubeSearchBrick.find('.searchbox').attr('disabled', 'true');
-	$youtubeSearchBrick.find('.start').addClass('disabled');
+	var position = $thisBrick.data("position");
 
-	$youtubeSearchBrick.find('.start').trigger( "click" );
+	$instagramSearchBrick.find('input').val(position);
+
+    $instagramSearchBrick.find("input[name='coordinates']").prop('checked', true);
+ 	$instagramSearchBrick.find("input[name='coordinates']").prop('disabled',true);
+
+	$instagramSearchBrick.find('.searchbox').attr('disabled', 'true');
+	$instagramSearchBrick.find('.start').addClass('disabled');
+
+	$('#instagram-search .results').empty();
+
+	getInstagrams(position, "coordinates");
+
+});
+
+
+//show save wall button on packery change (needs work)
+$packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laidOutItems ) {
+
+	$("#saveWall").css('display', 'block');
+
+	//when clear results is clicked
+	$('.clear').on('click', function(){
+
+		var $thisBrick = $(this).parents('.brick');
+		//remove all UI elements
+		$thisBrick.find('.results').empty();
+		$(this).parents('.search-ui').hide();
+
+		//empty the wiki-searchbox for new search
+		$thisBrick.find('select').removeAttr('disabled');
+		$thisBrick.find('input').removeAttr('disabled');
+		$thisBrick.find('input[type=text]').val('');
+
+		$thisBrick.find('.selectpicker').selectpicker('refresh');
+
+		//scroll to top
+		window.scrollTo(0, 0);
+	});
 
 });
 
@@ -91,77 +145,182 @@ $packeryContainer.on("click", "#gmaps-search .fa-flickr", function(){
 
 	var $thisBrick = $(this).parents(".brick");
 
-	var bounds = $thisBrick.data("bounds");
-
-	$flickrSearchBrick.find('input').val(bounds);
-	$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
-	$flickrSearchBrick.find('.start').addClass('disabled');
-
-	getFlickrs(bounds, "relevance", "geoQuery");
-	
-});
-
-//create images interconnection and trigger getInstagrams()
-$packeryContainer.on("click", ".fa-instagram", function(){
-
-	$instagramSearchBrick.removeClass("invisible");
-	$packeryContainer.append($instagramSearchBrick).packery( 'prepended', $instagramSearchBrick);
-
-	var $thisBrick = $(this).parents(".brick");
-
 	var position = $thisBrick.data("position");
-	
-	$instagramSearchBrick.find('input').val(position);
+	var sort = $flickrSearchBrick.find(".radio-inline input[type='radio']:checked").val();
 
-    $instagramSearchBrick.find("input[name='coordinates']").prop('checked', true);
- 	$instagramSearchBrick.find("input[name='coordinates']").prop('disabled',true);
+	$flickrSearchBrick.find('select[name=flickrType]').val('geoQuery');
+	$flickrSearchBrick.find('#flickrType').attr("disabled", "true");
+	$('.selectpicker').selectpicker('refresh');
 
-	$instagramSearchBrick.find('.searchbox').attr('disabled', 'true');
-	$instagramSearchBrick.find('.start').addClass('disabled');
-
-	$('#instagram-search .results').empty();
-
-	getInstagrams(position, "coordinates");	
-
-});
+	$flickrSearchBrick.find('input#flickr-searchinput').val(position);
+	$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
+	//$flickrSearchBrick.find('.start').addClass('disabled');
 
 
-//show save wall button on packery change (needs work)
-$packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laidOutItems ) {
-	
-	$("#saveWall").css('display', 'block');
-
-	//when clear results is clicked
-	$('.clear').on('click', function(){
-
-		//remove all UI elements
-		$(this).parents('.brick').find('.results').empty();
-		$(this).parents('.search-ui').hide();
-
-		//empty the wiki-searchbox for new search
-		$(this).parents('input').val('');
-
-		//scroll to top
-		window.scrollTo(0, 0);
-	});
-		
-});
-
-//on layout complete, wait for all images to be done and then trigger a realign
-/*$packeryContainer.packery( 'on', 'layoutComplete', function(packery, items){
-	
-	imagesLoaded('.foto', function(instance){
-		$packeryContainer.packery();
-	});
+	getFlickrs(position, sort, "geoQuery");
 
 });
-*/
-
 
 $packeryContainer.packery( 'on', 'layoutComplete', orderItems );
 $packeryContainer.packery( 'on', 'dragItemPositioned', orderItems );
 
+function getSearchBoxes(){
 
+var lang = $("#langselect").val();
+
+$( "#langselect" ).change(function() {
+	lang = $(this).val();
+});
+
+//WIKIPEDIA AUTOCOMPLETE
+$('#wiki-searchinput').typeahead({
+	source: function(query, process) {
+		return $.ajax({
+			url: "http://"+lang+".wikipedia.org/w/api.php",
+			dataType: "jsonp",
+			data: {
+				'action': "opensearch",
+				'format': "json",
+				'search': query
+			},
+			success: function(json) {
+				process(json[1]);
+			}
+
+		});
+	},
+	matcher: function (item) {
+		if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
+			return true;
+		}
+	}
+});
+
+//YOUTUBE AUTOCOMPLETE
+$('#youtube-searchinput').typeahead({
+
+	source: function(query, process) {
+		return $.ajax({
+			url: "http://suggestqueries.google.com/complete/search",
+			dataType: "jsonp",
+			data: {
+				'client': "youtube",
+				'ds': "yt",
+				'q': query
+			},
+			success: function(json) {
+
+				var resultArray = [];
+
+				$.each(json[1], function(){
+
+					resultArray.push(this[0]);
+
+				});
+
+				process(resultArray);
+			}
+
+		});
+	},
+	matcher: function (item) {
+		if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
+			return true;
+		}
+	}
+});
+
+$("#wikipedia-icon").on("click", function(){
+
+	$wikiSearchBrick.removeClass("invisible");
+	$packeryContainer.append($wikiSearchBrick).packery( 'prepended', $wikiSearchBrick);
+
+});
+
+
+
+$("#wikipedia-search .start").on("click", function(){
+
+	var topic = $("#wiki-searchinput").val();
+	getWikis( topic, lang );
+
+});
+
+$("#youtube-icon").on("click", function(){
+
+	$youtubeSearchBrick.removeClass("invisible");
+	$packeryContainer.append($youtubeSearchBrick).packery( 'prepended', $youtubeSearchBrick);
+});
+
+$("#youtube-search .start").on("click", function(){
+
+	var topic = $("#youtube-search .searchbox").val();
+	getYoutubes( topic );
+
+});
+
+
+$("#instagram-icon").on("click", function(){
+
+	$instagramSearchBrick.removeClass("invisible");
+	$instagramSearchBrick.find("input[name='hashtag']").prop('checked', true);
+	$packeryContainer.append($instagramSearchBrick).packery( 'prepended', $instagramSearchBrick);
+});
+
+$("#instagram-search .start").on("click", function(){
+
+	var query = $("#instagram-search .searchbox").val();
+	var instagramType = $("#instagramType").val();
+
+	getInstagrams(query, instagramType);
+});
+
+$("#flickr-icon").on("click", function(){
+
+	$flickrSearchBrick.removeClass("invisible");
+	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
+});
+
+
+
+$("#flickr-search .start").on("click", function(){
+
+	var flickrType = $("#flickrType").val();
+	var query = $("#flickr-search .searchbox").val();
+	var sort = $("#flickr-search .radio-inline input[type='radio']:checked").val();
+
+	getFlickrs(query, sort, flickrType);
+
+});
+
+
+$("#soundcloud-icon").on("click", function(){
+
+	$soundcloudSearchBrick.removeClass("invisible");
+	$packeryContainer.append($soundcloudSearchBrick).packery( 'prepended', $soundcloudSearchBrick);
+	//$gmapsSearchBrick.each( makeEachDraggable );
+});
+
+$("#soundcloud-search .start").on("click", function(){
+
+	var query = $("#soundcloud-search .searchbox").val();
+	var params = $("#soundcloud-search .radio-inline input[type='radio']:checked").val();
+
+	getSoundcloud(query, params);
+
+});
+
+
+$("#gmaps-icon").on("click", function(){
+
+	$gmapsSearchBrick.removeClass("invisible");
+	$packeryContainer.append($gmapsSearchBrick).packery( 'prepended', $gmapsSearchBrick);
+	//$gmapsSearchBrick.each( makeEachDraggable );
+	getGmapsSearch();
+});
+
+
+}
 
 function orderItems(packery, items) {
 
@@ -208,7 +367,7 @@ function buildNextTopic($brick, lang){
 
 		var topic = $(this).attr("title");
 		$(this).contents().unwrap();
-		
+
 		var brickData = {
 			title: topic,
 			language: lang
@@ -248,7 +407,7 @@ function getGmapsSearch(){
 	});
 
    google.maps.event.addListener(map, 'click', function(event) {
-   		
+
    		markers.forEach(function(marker){
    			marker.setMap(null);
    		});
@@ -257,8 +416,8 @@ function getGmapsSearch(){
 	        position: event.latLng,
 	        map: map
 	    });
-        
-		markers.push(droppedMarker);	
+
+		markers.push(droppedMarker);
 
 		//find the location of the marker
 		var positionUrlString = droppedMarker.getPosition().toUrlValue();
@@ -452,7 +611,7 @@ function buildGmaps(mapObj){
 	});
 
 	google.maps.event.addListener(map, 'click', function(event) {
-   		
+
    		markers.forEach(function(marker){
    			marker.setMap(null);
    		});
@@ -461,8 +620,8 @@ function buildGmaps(mapObj){
 	        position: event.latLng,
 	        map: map
 	    });
-        
-		markers.push(droppedMarker);	
+
+		markers.push(droppedMarker);
 
 		//find the location of the marker
 		var positionUrlString = droppedMarker.getPosition().toUrlValue();
@@ -608,89 +767,208 @@ function getFlickrs(topic, sort, type) {
 
 	$('#flickr-search .results').empty();
 
-	type  = type || "textQuery";	
-	
-	var bbox; 
-	
+	if(!$flickrSearchBrick.hasClass("w2")) $flickrSearchBrick.addClass("w2");
+
+	type  = type || "textQuery";
+
 	//if query is coordinates (bounds)
 	if(type === "geoQuery"){
 
-		bbox = topic;
-		topic = "";		
-	}
-	else{
-		bbox = "";
-	}
+		var latitude = topic.split(',')[0];
+		var longitude = topic.split(',')[1];
 
-	$.ajax({
-		url: 'https://api.flickr.com/services/rest',
-		data:{
+		$.ajax({
+			url: 'https://api.flickr.com/services/rest',
+			data:{
 
-			method: 'flickr.photos.search',
-			api_key: '1a7d3826d58da8a6285ef7062f670d30',
-			text: topic,
-			format: 'json',
-			nojsoncallback: 	1,
-			per_page: 40,
-			bbox: bbox,
-			sort: sort
-		},
-		success: function(data){
-			if (typeof data.photos.photo !== 'undefined' && data.photos.photo.length > 0) {
-				data.photos.photo.forEach(function(item, index){
+				method: 'flickr.places.findByLatLon',
+				api_key: '1a7d3826d58da8a6285ef7062f670d30',
+				lat: latitude,
+				lon: longitude,
+				format: 'json',
+				nojsoncallback: 1
+			},
+			success: function(data){
+
+				if (typeof data.places.place !== 'undefined' && data.places.place.length > 0) {
+					$.ajax({
+						url: 'https://api.flickr.com/services/rest',
+						data:{
+
+							method: 'flickr.photos.search',
+							api_key: '1a7d3826d58da8a6285ef7062f670d30',
+							place_id: data.places.place[0].woeid,
+							format: 'json',
+							nojsoncallback: 1,
+							per_page: 40,
+							sort: sort
+						},
+						success: function(data){
+							if (typeof data.photos.photo !== 'undefined' && data.photos.photo.length > 0) {
+								data.photos.photo.forEach(function(photoObj, index){
+
+									$.ajax({
+										url: 'https://api.flickr.com/services/rest',
+										data:{
+
+											method: 'flickr.photos.getSizes',
+											api_key: '1a7d3826d58da8a6285ef7062f670d30',
+											photo_id: photoObj.id,
+											format: 'json',
+											nojsoncallback: 1
+										},
+										success: function(data){
+											createFlickrBrick(data, photoObj);
+										}
+									});
+								});
+							}
+							else{
+								$flickrSearchBrick.find('.results').append('<div class="no-results">No pictures found for "' + data.places.place[0].name + '"</div>');
+							}
+						}
+					});
+				}
+				else{
+					$flickrSearchBrick.find('.results').append('<div class="no-results">No places found for these coordinates: "' + topic + '"</div>');
+				}
+			}
+		});
+	}
+	else if(type === "textQuery"){ // is textQuery
+
+		$.ajax({
+			url: 'https://api.flickr.com/services/rest',
+			data:{
+
+				method: 'flickr.photos.search',
+				api_key: '1a7d3826d58da8a6285ef7062f670d30',
+				text: topic,
+				format: 'json',
+				nojsoncallback: 	1,
+				per_page: 40,
+				sort: sort
+			},
+			success: function(data){
+				if (typeof data.photos.photo !== 'undefined' && data.photos.photo.length > 0) {
+					data.photos.photo.forEach(function(photoObj, index){
+
+						$.ajax({
+							url: 'https://api.flickr.com/services/rest',
+							data:{
+								method: 'flickr.photos.getSizes',
+								api_key: '1a7d3826d58da8a6285ef7062f670d30',
+								photo_id: photoObj.id,
+								format: 'json',
+								nojsoncallback: 1
+							},
+							success: function(data){
+								createFlickrBrick(data, photoObj);
+							}
+
+						});
+					});
+				}
+				else{
+					$flickrSearchBrick.find('.results').append('<div class="no-results">No pictures found for "' + topic + '"</div>');
+				}
+			}
+		});
+	}
+	else if(type === "userQuery"){
+
+		$.ajax({
+			url: 'https://api.flickr.com/services/rest',
+			data:{
+
+				method: 'flickr.people.findByUsername',
+				api_key: '1a7d3826d58da8a6285ef7062f670d30',
+				username: topic,
+				format: 'json',
+				nojsoncallback: 1
+			},
+			success: function(data){
+				
+				if (data.user.id) {
 					
 					$.ajax({
 						url: 'https://api.flickr.com/services/rest',
 						data:{
 
-							method: 'flickr.photos.getSizes',
+							method: 'flickr.photos.search',
 							api_key: '1a7d3826d58da8a6285ef7062f670d30',
-							photo_id: item.id,
+							user_id: data.user.id,
 							format: 'json',
-							nojsoncallback: 1
+							nojsoncallback: 1,
+							per_page: 40,
+							sort: sort
 						},
 						success: function(data){
+							if (typeof data.photos.photo !== 'undefined' && data.photos.photo.length > 0) {
+								data.photos.photo.forEach(function(photoObj, index){
 
-							var thumbURL = data.sizes.size[1].source;
-							var mediumURL = data.sizes.size[6].source;
+									$.ajax({
+										url: 'https://api.flickr.com/services/rest',
+										data:{
 
-							$flickrSearchBrick.find('.results').append('<img width="150" owner="' + item.owner + '" large="' + mediumURL + '" thumb="' + thumbURL + '" src="' + thumbURL + '">');
-										
-							imagesLoaded( '#flickr-search .results', function() {
-								$packeryContainer.packery();
-							});
-
-							$flickrSearchBrick.find('img').unbind('click').click(function(e) {
-				
-								var thisPhoto = {
-
-									thumbURL: $(this).attr('thumb'),
-									mediumURL: $(this).attr('large'),
-									size: 'small',
-									owner: $(this).attr('owner')
-
-								}
-								buildFoto(thisPhoto, "flickr");
-								$(this).remove();
-							});
-
-							$flickrSearchBrick.find('.search-ui').show();	
+											method: 'flickr.photos.getSizes',
+											api_key: '1a7d3826d58da8a6285ef7062f670d30',
+											photo_id: photoObj.id,
+											format: 'json',
+											nojsoncallback: 1
+										},
+										success: function(data){
+											createFlickrBrick(data, photoObj);
+										}
+									});
+								});
+							}
+							else{
+								$flickrSearchBrick.find('.results').append('<div class="no-results">No pictures found for "' + data.places.place[0].name + '"</div>');
+							}
 						}
-
 					});
-				});
+				}
+				else{
+					$flickrSearchBrick.find('.results').append('<div class="no-results">No User found with username: "' + topic + '"</div>');
+				}
 			}
-			else{
-				$flickrSearchBrick.find('.results').append('<div class="no-results">No pictures found for "' + topic + '"</div>');
-			}
-		}
+		});
+	}
+}
+
+function createFlickrBrick(apiData, photoObj){
+
+	var thumbURL = apiData.sizes.size[1].source;
+	var mediumURL = apiData.sizes.size[6].source;
+
+	$flickrSearchBrick.find('.results').append('<img width="150" owner="' + photoObj.owner + '" large="' + mediumURL + '" thumb="' + thumbURL + '" src="' + thumbURL + '">');
+
+	imagesLoaded( '#flickr-search .results', function() {
+		$packeryContainer.packery();
 	});
+
+	$flickrSearchBrick.find('img').unbind('click').click(function(e) {
+
+		var thisPhoto = {
+
+			thumbURL: $(this).attr('thumb'),
+			mediumURL: $(this).attr('large'),
+			size: 'small',
+			owner: $(this).attr('owner')
+
+		}
+		buildFoto(thisPhoto, "flickr");
+		$(this).remove();
+	});
+
+	$flickrSearchBrick.find('.search-ui').show();
 }
 
 function createInstagramBrick(photo){
 
 	$instagramSearchBrick.find('.results').append('<img class="img-search" width="146" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
-	
+
 	imagesLoaded('#instagram-search .results', function() {
 		$packeryContainer.packery();
 	});
@@ -729,7 +1007,7 @@ function valid_coords(number_lat,number_lng) {
 }
 
 function getInstagrams(query, type) {
-	
+
 	$instagramSearchBrick.addClass("w2");
 
 	type = type || "hashtag";
@@ -741,7 +1019,7 @@ function getInstagrams(query, type) {
     var access_parameters = {
         client_id: client_id
     };
-    
+
     var instagramUrl;
 
     // if coordinate
@@ -764,36 +1042,36 @@ function getInstagrams(query, type) {
 				success: function(data){
 					console.log(data)
 					if (typeof data.data !== 'undefined' && data.data.length > 0) {
-						data.data.forEach(function(photo, index){							
+						data.data.forEach(function(photo, index){
 							createInstagramBrick(photo);
 						});
 					}
-					else{				
+					else{
 						$instagramSearchBrick.find('.results').append('<div class="no-results">No pictures found at this location:  "' + query + '"</div>');
 					}
 				}
-			});	
+			});
 		}
 		else{
-			$instagramSearchBrick.find('.results').append('<div class="no-results">"' + query + '" is not a coordinate .. :( </div>');			
-		}		
+			$instagramSearchBrick.find('.results').append('<div class="no-results">"' + query + '" is not a coordinate .. :( </div>');
+		}
 	}
 	else if(type === "hashtag"){
 
 		instagramUrl = 'https://api.instagram.com/v1/tags/' + query + '/media/recent?callback=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
 		//var instagramUrl = 'https://api.instagram.com/v1/tags/' + query + '/media/recent?client_id=db522e56e7574ce9bb70fa5cc760d2e7';
-	    
+
 	    $.getJSON(instagramUrl, access_parameters, function(data){
 	    	if (typeof data.data !== 'undefined' && data.data.length > 0) {
-				data.data.forEach(function(photo, index){					
+				data.data.forEach(function(photo, index){
 					createInstagramBrick(photo);
 				});
 			}
-			else{				
+			else{
 				$instagramSearchBrick.find('.results').append('<div class="no-results">No pictures found for "' + query + '"</div>');
 			}
 	    });
-	
+
 	}
 	else if(type === "username"){
 
@@ -810,15 +1088,15 @@ function getInstagrams(query, type) {
 					var userID = data.data[0].id
 					var getUserUrl = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?callback=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
 
-				    $.getJSON(getUserUrl, access_parameters, function(data){			    	
-						data.data.forEach(function(photo, index){		
+				    $.getJSON(getUserUrl, access_parameters, function(data){
+						data.data.forEach(function(photo, index){
 							createInstagramBrick(photo);
-						});							
+						});
 				    });
 				}
-				else{				
+				else{
 					$instagramSearchBrick.find('.results').append('<div class="no-results">No user found with this query: "' + query + '"</div>');
-				}	
+				}
 			}
 		});
 	}
@@ -849,7 +1127,7 @@ function getSoundcloud(query, params) {
 	});
 
 	SC.get('/tracks', { q: query }, function(tracks) {
-				
+
 		tracks.forEach(function(track, index){
 
 			//append row to searchbox-table
@@ -866,17 +1144,17 @@ function getSoundcloud(query, params) {
 					uri: $(this).attr('uri'),
 					genre: $(this).attr('genre')
 				}
-			
+
 				buildSoundcloud(soundcloudObj);
 
 				$(this).tooltip('destroy');
 				$(this).remove();
-				return false;		
+				return false;
 
 			});
 
 			$soundcloudSearchBrick.find('.search-ui').show();
-			
+
 			//relayout packery
 			$packeryContainer.packery();
 
@@ -885,7 +1163,7 @@ function getSoundcloud(query, params) {
 	});
 
 }
-	
+
 function getYoutubes(topic) {
 
 	$('#youtube-search .results').empty();
@@ -1008,7 +1286,7 @@ function getInterWikiLinks(section, $brick){
 			var interWikiDropDown = $('<select class="pull-right show-menu-arrow" data-size="20"></select>');
 
 			interWikiArray.forEach(function(link, index){
-		
+
 				interWikiDropDown.append('<option index="' + link.ns + '" topic="' + link['*'] + '">' + link['*'] + '</option>');
 
 			});
@@ -1169,13 +1447,13 @@ function buildWikipedia(topic, parent){
 				$brick.append($tableSectionResults);
 
 				data.parse.sections.forEach(function(section){
-					
-					//remove unwanted sections: 
+
+					//remove unwanted sections:
 					if((section.line !== "References") && (section.line !== "Notes") && (section.line !== "External links") && (section.line !== "Citations") && (section.line !== "Bibliography") && (section.line !== "Notes and references")) {
 					 	$tableSectionResults.append('<tr><td><div class="result" title="' + section.anchor + '" index="' + section.index + '">' + section.line + '</div></td></tr>');
 					}
 
-				});			
+				});
 				$packeryContainer.packery();
 
 				//create the section object and trigger the creation of a section brick
@@ -1187,14 +1465,14 @@ function buildWikipedia(topic, parent){
 						language: topic.language,
 						index: $(this).attr("index")
 					}
-				
+
 					$(this).parents('tr').remove();
 
 					buildSection(section, $brick.attr("tabindex"));
-		
+
 				});
 
-				//Go get the Main Image - 2 API Calls necessairy.. :( 
+				//Go get the Main Image - 2 API Calls necessairy.. :(
 				$.ajax({
 					url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
 					data:{
@@ -1224,12 +1502,12 @@ function buildWikipedia(topic, parent){
 
 										},
 										dataType:'jsonp',
-										success: function(data){							
-																	
+										success: function(data){
+
 											//get the first key in obj
 											//for (first in data.query.pages) break;
-											//now done better like this: 
-											
+											//now done better like this:
+
 											var imageUrl = data.query.pages[Object.keys(data.query.pages)[0]].imageinfo[0].url;
 											var image = $('<img width="290" src="' + imageUrl + '">');
 
@@ -1246,7 +1524,7 @@ function buildWikipedia(topic, parent){
 						}
 					}
 				});
-				
+
 				//Go get the first Paragraph of the article
 				$.ajax({
 					url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
@@ -1281,15 +1559,15 @@ function buildWikipedia(topic, parent){
 							$packeryContainer.packery();
 						}
 						//enable to create new bricks out of links
-						buildNextTopic($brick, topic.language);	
+						buildNextTopic($brick, topic.language);
 
 						getWikiLanguages(topic.title, topic.language, $brick);
-						
+
 					}
-				});				
+				});
 
 				$packeryContainer.packery();
-			}	
+			}
 		}
 	});
 }
@@ -1301,7 +1579,7 @@ function buildSection(section, parent){
 	$brick.data('type', 'wikiSection');
 	$brick.data('parent', parent);
 	$brick.data('topic', section);
-	
+
 	$brick.prepend('<p><h2>' + section.title + '</h2></p>');
 	$brick.prepend( wikiverse_nav );
 
@@ -1327,8 +1605,8 @@ function buildSection(section, parent){
 		},
 		dataType:'jsonp',
 		success: function(data){
-		
-			var sectionHTML = $(data.parse.text['*']); 
+
+			var sectionHTML = $(data.parse.text['*']);
 
 			sectionHTML.find('.error').remove();
 			sectionHTML.find('.reference').remove();
@@ -1342,7 +1620,7 @@ function buildSection(section, parent){
 			sectionHTML.find('a[class*=exter]').remove();
 
 			$brick.append(sectionHTML);
-		
+
 			//check if there is Geolocations
 
 			if($brick.find('.geo-dms').length){
@@ -1355,7 +1633,7 @@ function buildSection(section, parent){
 				$brick.find(".wikiverse-nav .gmaps-icon").on("click", function(){
 
 					getGmapsSearch();
-					
+
 
 					/*$('#pac-input').val(topic);
 					e = jQuery.Event("keypress");
@@ -1366,7 +1644,7 @@ function buildSection(section, parent){
 					$("#pac-input").trigger(d);
 					$("#pac-input").trigger(e);*/
 				});
-			}// end if geo 
+			}// end if geo
 
 			//enable to create new bricks out of links
 			buildNextTopic($brick, section.language);
@@ -1374,7 +1652,7 @@ function buildSection(section, parent){
 
 			$packeryContainer.packery();
 		}
-	});	
+	});
 }
 
 
@@ -1385,7 +1663,7 @@ function buildWall(){
 	var wikiverse =	JSON.parse(str);
 
 	$.each(wikiverse, function(index, brick) {
-		
+
 		switch (brick.Type) {
 		    case "wiki":
 				buildWikipedia(brick.Topic, brick.Parent);
@@ -1394,15 +1672,15 @@ function buildWall(){
 		    case "wikiSection":
 				buildSection(brick.Topic, brick.Parent);
 		    break;
-	
+
 		    case "flickr":
 				buildFoto(brick.Topic, "flickr");
 		    break;
-	
+
 		    case "instagram":
 				buildFoto(brick.Topic, "instagram");
-		    break;		  
-	
+		    break;
+
 		    case "youtube":
 				buildYoutube(brick.Topic);
 		    break;
@@ -1410,7 +1688,7 @@ function buildWall(){
 		    case "gmaps":
 				buildGmaps(brick.Topic);
 		    break;
-	
+
 		    case "streetview":
 				buildStreetMap(brick.Topic);
 		    break;
@@ -1449,165 +1727,6 @@ function makeEachDraggable( i, itemElem ) {
     } );
     // bind Draggabilly events to Packery
     $packeryContainer.packery( 'bindDraggabillyEvents', draggie );
-}
-
-
-function getSearchBoxes(){
-
-var lang = $("#langselect").val();
-var instagramType = $("#instagramType").val();
-
-$( "#langselect" ).change(function() {
-	lang = $(this).val();
-});
-
-$( "#instagramType" ).change(function() {
-	instagramType = $(this).val();
-});
-
-//WIKIPEDIA AUTOCOMPLETE
-$('#wiki-searchinput').typeahead({
-	source: function(query, process) {
-		return $.ajax({
-			url: "http://"+lang+".wikipedia.org/w/api.php",
-			dataType: "jsonp",
-			data: {
-				'action': "opensearch",
-				'format': "json",
-				'search': query
-			},
-			success: function(json) {
-				process(json[1]);
-			}
-
-		});
-	},
-	matcher: function (item) {
-		if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
-			return true;
-		}
-	}
-});
-
-//YOUTUBE AUTOCOMPLETE
-$('#youtube-searchinput').typeahead({
-
-	source: function(query, process) {
-		return $.ajax({
-			url: "http://suggestqueries.google.com/complete/search",
-			dataType: "jsonp",
-			data: {
-				'client': "youtube",
-				'ds': "yt",
-				'q': query
-			},
-			success: function(json) {
-
-				var resultArray = [];
-
-				$.each(json[1], function(){
-
-					resultArray.push(this[0]);
-
-				});
-
-				process(resultArray);
-			}
-
-		});
-	},
-	matcher: function (item) {
-		if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
-			return true;
-		}
-	}
-});
-
-$("#wikipedia-icon").on("click", function(){
-
-	$wikiSearchBrick.removeClass("invisible");
-	$packeryContainer.append($wikiSearchBrick).packery( 'prepended', $wikiSearchBrick);
-
-});
-
-
-
-$("#wikipedia-search .start").on("click", function(){
-
-	var topic = $("#wiki-searchinput").val();
-	getWikis( topic, lang );
-
-});
-
-$("#youtube-icon").on("click", function(){
-
-	$youtubeSearchBrick.removeClass("invisible");
-	$packeryContainer.append($youtubeSearchBrick).packery( 'prepended', $youtubeSearchBrick);
-});
-
-$("#youtube-search .start").on("click", function(){
-
-	var topic = $("#youtube-search .searchbox").val();
-	getYoutubes( topic );
-
-});
-
-
-$("#instagram-icon").on("click", function(){
-
-	$instagramSearchBrick.removeClass("invisible");
-	 $instagramSearchBrick.find("input[name='hashtag']").prop('checked', true);
-	$packeryContainer.append($instagramSearchBrick).packery( 'prepended', $instagramSearchBrick);
-});
-
-$("#instagram-search .start").on("click", function(){
-	var query = $("#instagram-search .searchbox").val();
-
-	getInstagrams(query, instagramType);
-});
-
-$("#flickr-icon").on("click", function(){
-
-	$flickrSearchBrick.removeClass("invisible");
-	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
-});
-
-$("#flickr-search .start").on("click", function(){
-
-	var query = $("#flickr-search .searchbox").val();
-	var sort = $("#flickr-search .radio-inline input[type='radio']:checked").val();
-
-	getFlickrs(query, sort);
-
-});
-
-
-$("#soundcloud-icon").on("click", function(){
-
-	$soundcloudSearchBrick.removeClass("invisible");
-	$packeryContainer.append($soundcloudSearchBrick).packery( 'prepended', $soundcloudSearchBrick);
-	//$gmapsSearchBrick.each( makeEachDraggable );
-});
-
-$("#soundcloud-search .start").on("click", function(){
-
-	var query = $("#soundcloud-search .searchbox").val();
-	var params = $("#soundcloud-search .radio-inline input[type='radio']:checked").val();
-
-	getSoundcloud(query, params);
-
-});
-
-
-$("#gmaps-icon").on("click", function(){
-
-	$gmapsSearchBrick.removeClass("invisible");
-	$packeryContainer.append($gmapsSearchBrick).packery( 'prepended', $gmapsSearchBrick);
-	//$gmapsSearchBrick.each( makeEachDraggable );
-	getGmapsSearch();
-});
-
-
 }
 
 
