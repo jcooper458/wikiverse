@@ -1105,14 +1105,20 @@ function getInstagrams(query, type) {
 			},
 			dataType:'jsonp',
 			success: function(data){
+			
 				if (typeof data.data !== 'undefined' && data.data.length > 0) {
 					var userID = data.data[0].id
 					var getUserUrl = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?callback=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
 
 				    $.getJSON(getUserUrl, access_parameters, function(data){
-						data.data.forEach(function(photo, index){
-							createInstagramBrick(photo);
-						});
+				    	if (data.meta.code !== 400) {
+							data.data.forEach(function(photo, index){
+								createInstagramBrick(photo);
+							});
+						}
+						else{
+							$instagramSearchBrick.find('.results').append('<div class="no-results">Search failed with error message: ' + data.meta.error_message + '</div>');
+						}
 				    });
 				}
 				else{

@@ -7,7 +7,7 @@
 	  	<?php get_template_part('templates/languages'); ?>
 
 	  	<div class="input-group">
-	      <input type="text" id="wiki-searchinput" placeholder="search Wikipedia" class="form-control">
+	      <input type="text" id="wiki-searchinput" placeholder="" class="form-control">
 	      <span class="input-group-btn">
 	        <button class="btn btn-default start"1 type="button">Search</button>
 	      </span>
@@ -32,7 +32,7 @@
 		<i class="fa fa-youtube-square">&nbsp;Youtube Search</i>
 
 	  	<div class="input-group">
-	      <input type="text" id="youtube-searchinput" placeholder="search Youtube" class="form-control searchbox">
+	      <input type="text" id="youtube-searchinput" placeholder="" class="form-control searchbox">
 	      <span class="input-group-btn">
 	        <button class="btn btn-default start" type="button">Search</button>
 	      </span>
@@ -75,12 +75,12 @@
 
 		<h5>Sort by: </h5>
 
-		<div class="radio-inline">
+		<!--<div class="radio-inline">
 		  <label><input class="interestingness" type="radio" name="sort" value="relevance" checked>Relevance</label>
 		</div>
 		<div class="radio-inline">
 		  <label><input class="relevance" type="radio" name="sort" value="interestingness-desc">Interestingness</label>
-		</div>
+		</div>-->
 
 	</div>
 
@@ -160,7 +160,7 @@
 		<i class="fa fa-soundcloud">&nbsp;Soundcloud Search</i>
 
 	  	<div class="input-group">
-	      <input type="text" id="soundcloud-searchinput" placeholder="search soundcloud" class="form-control searchbox">
+	      <input type="text" id="soundcloud-searchinput" placeholder="" class="form-control searchbox">
 	      <span class="input-group-btn">
 	        <button class="btn btn-default start" type="button">Search</button>
 	      </span>
