@@ -43,7 +43,7 @@ $(".search input:text").keyup(function (e) {
 $packeryContainer.on( "click", ".cross", function() {
 	var $thisBrick = jQuery(this).parent(".brick");
 	$packeryContainer.packery( 'remove', $thisBrick );
-	$packeryContainer.packery();
+	//$packeryContainer.packery();
 });
 
 //create youtube interconnection button and trigger search
@@ -404,8 +404,18 @@ function buildNextTopic($brick, lang){
 			language: lang
 		}
 
+		var y = parseInt($brick.css('top'));
+		var x = parseInt($brick.css('left'));
+
 		//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
-		buildWikipedia(brickData, $brick.attr("tabindex") - 1);
+		var $newBrick = buildWikipedia(brickData, $brick.attr("tabindex") - 1);
+
+		setTimeout(function(){ 
+			//console.log(x + " + " + y)
+			$packeryContainer.packery('fit', $newBrick, x, y); 
+		}, 3000);
+		
+
 		return false;
 	});
 }
@@ -1277,30 +1287,33 @@ function getWikiLanguages(topic, lang, $brick){
 		dataType:'jsonp',
 		success: function(data){
 
-			var languageObj = data.query.pages[Object.keys(data.query.pages)[0]].langlinks;
+			if (typeof data.query.pages !== 'undefined' && data.query.pages.length > 0) {
 
-			var langDropDown = $('<select class="selectpicker pull-right show-menu-arrow" data-size="20" data-live-search="true"></select>');
+				var languageObj = data.query.pages[Object.keys(data.query.pages)[0]].langlinks;
 
-			$.each(languageObj, function(){
+				var langDropDown = $('<select class="selectpicker pull-right show-menu-arrow" data-size="20" data-live-search="true"></select>');
 
-				langDropDown.append('<option value="'+this.lang+'" data-topic="'+this['*']+'">'+getLanguage(this.lang)+'</option>');
+				$.each(languageObj, function(){
 
-			});
+					langDropDown.append('<option value="'+this.lang+'" data-topic="'+this['*']+'">'+getLanguage(this.lang)+'</option>');
 
-			langDropDown.prepend('<option selected>Read in..</option>');
+				});
 
-			$brick.prepend(langDropDown);
+				langDropDown.prepend('<option selected>Read in..</option>');
 
-			//make it a beautiful dropdown with selectpicker
-			langDropDown.selectpicker();
+				$brick.prepend(langDropDown);
 
-			langDropDown.change(function(){
+				//make it a beautiful dropdown with selectpicker
+				langDropDown.selectpicker();
 
-				var lang = $(this).children(":selected").attr('value');
-				var topic = $(this).children(":selected").data('topic');
+				langDropDown.change(function(){
 
-				buildWikipedia(topic, $brick.attr("tabindex"));
-			});
+					var lang = $(this).children(":selected").attr('value');
+					var topic = $(this).children(":selected").data('topic');
+
+					buildWikipedia(topic, $brick.attr("tabindex"));
+				});
+			}
 		}
 	});
 
@@ -1320,34 +1333,36 @@ function getInterWikiLinks(section, $brick){
 		dataType:'jsonp',
 		success: function(data){
 
-			var interWikiArray = data.parse.links;
+			if (typeof data.parse.links !== 'undefined' && data.parse.links.length > 0) {
 
-			var interWikiDropDown = $('<select class="pull-right show-menu-arrow" data-size="20"></select>');
+				var interWikiArray = data.parse.links;
 
-			interWikiArray.forEach(function(link, index){
+				var interWikiDropDown = $('<select class="pull-right show-menu-arrow" data-size="20"></select>');
 
-				interWikiDropDown.append('<option index="' + link.ns + '" topic="' + link['*'] + '">' + link['*'] + '</option>');
+				interWikiArray.forEach(function(link, index){
 
-			});
+					interWikiDropDown.append('<option index="' + link.ns + '" topic="' + link['*'] + '">' + link['*'] + '</option>');
 
-			interWikiDropDown.prepend('<option selected>Points to..</option>');
+				});
 
-			$brick.prepend(interWikiDropDown);
+				interWikiDropDown.prepend('<option selected>Points to..</option>');
 
-			//make it a beautiful dropdown with selectpicker
-			interWikiDropDown.selectpicker();
+				$brick.prepend(interWikiDropDown);
 
-			interWikiDropDown.change(function(){
+				//make it a beautiful dropdown with selectpicker
+				interWikiDropDown.selectpicker();
 
-				var topic = {
+				interWikiDropDown.change(function(){
 
-					title: $(this).children(":selected").attr('topic'),
-					language: section.language
-				};
+					var topic = {
 
-				buildWikipedia(topic, $brick.attr("tabindex"));
-			});
+						title: $(this).children(":selected").attr('topic'),
+						language: section.language
+					};
 
+					buildWikipedia(topic, $brick.attr("tabindex"));
+				});
+			}
 		}
 	});
 
@@ -1460,6 +1475,9 @@ function buildWikipedia(topic, parent){
 	/*var items = $packeryContainer.packery('getItemElements');
 	console.log(items);*/
 	
+	/*$brick.insertAfter("#wikipedia-search");
+	$packeryContainer.packery();*/
+
 	$packeryContainer.append($brick).packery( 'appended', $brick);
 	$brick.each( makeEachDraggable );
    // $packeryContainer.packery();
@@ -1481,10 +1499,8 @@ function buildWikipedia(topic, parent){
 		},
 		dataType:'jsonp',
 		success: function(data){
-
-			//console.log(data);
-
-			if(data.parse.sections.length){
+			//if there is sections, append them
+			if (typeof data.parse.sections !== 'undefined' && data.parse.sections.length > 0) {
 
 				$tableSectionResults = $('<table class="table table-hover wiki"></table>');
 				$brick.append($tableSectionResults);
@@ -1514,85 +1530,91 @@ function buildWikipedia(topic, parent){
 					buildSection(section, $brick.attr("tabindex"));
 
 				});
+			}
 
-				//Go get the Main Image - 2 API Calls necessairy.. :(
-				$.ajax({
-					url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
-					data:{
-						action:'parse',
-						page: topic.title,
-						format:'json',
-						prop:'images'
+			//Go get the Main Image - 2 API Calls necessairy.. :(
+			$.ajax({
+				url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
+				data:{
+					action:'parse',
+					page: topic.title,
+					format:'json',
+					prop:'images'
+				},
+				dataType:'jsonp',
+				success: function(data){
+					//if there is images, grab the first and append it
+					if (typeof data.parse.images !== 'undefined' && data.parse.images.length > 0) {
 
-					},
-					dataType:'jsonp',
-					success: function(data){
-						if(data.parse.images.length){
+						data.parse.images.every(function(image){
 
-							data.parse.images.every(function(image){
+							//only look for jpgs
+							if(image.indexOf("jpg") > -1){
+								//Go grab the URL
+								$.ajax({
+									url: 'http://en.wikipedia.org/w/api.php',
+									data:{
+										action:'query',
+										titles: 'Image:' + image,
+										prop:'imageinfo',
+										iiprop: 'url',
+										format: 'json'
 
-								//only look for jpgs
-								if(image.indexOf("jpg") > -1){
-									//Go grab the URL
-									$.ajax({
-										url: 'http://en.wikipedia.org/w/api.php',
-										data:{
-											action:'query',
-											titles: 'Image:' + image,
-											prop:'imageinfo',
-											iiprop: 'url',
-											format: 'json'
+									},
+									dataType:'jsonp',
+									success: function(data){
 
-										},
-										dataType:'jsonp',
-										success: function(data){
+										//get the first key in obj
+										//for (first in data.query.pages) break;
+										//now done better like this:
 
-											//get the first key in obj
-											//for (first in data.query.pages) break;
-											//now done better like this:
+										var imageUrl = data.query.pages[Object.keys(data.query.pages)[0]].imageinfo[0].url;
+										var image = $('<img width="290" src="' + imageUrl + '">');
 
-											var imageUrl = data.query.pages[Object.keys(data.query.pages)[0]].imageinfo[0].url;
-											var image = $('<img width="290" src="' + imageUrl + '">');
+										image.insertAfter($brick.find("h2"));
 
-											image.insertAfter($brick.find("h2"));
-
-											imagesLoaded( $brick, function() {
-												$packeryContainer.packery();
-											});			
-										}
-									});
-									//break the loop if a jpg was found
-									return false;
-								}else{
-									return true;
-								}
-							});
-						}
+										imagesLoaded( $brick, function() {
+											$packeryContainer.packery();
+											
+										});			
+									}
+								});
+								//break the loop if a jpg was found
+								return false;
+							}else{
+								return true;
+							}
+						});
 					}
-				});
+				}
+			});
 
-				//Go get the first Paragraph of the article
-				$.ajax({
-					url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
-					data:{
-						action:'parse',
-						page: topic.title,
-						format:'json',
-						prop:'text',
-						disableeditsection: true,
-						disablepp: true,
-						//preview: true,
-						sectionprevue: true,
-						section:0,
-						disabletoc: true,
-						mobileformat:true
-					},
-					dataType:'jsonp',
-					success: function(data){
+			//Go get the first Paragraph of the article
+			$.ajax({
+				url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
+				data:{
+					action:'parse',
+					page: topic.title,
+					format:'json',
+					prop:'text',
+					section:0,
+					preview: true,
+					mobileformat:true,
+					redirects: true
+					/*disableeditsection: true,
+					disablepp: true,
+					
+					sectionprevue: true,						
+					disabletoc: true,
+					mobileformat:true*/
+				},
+				dataType:'jsonp',
+				success: function(data){
 
-						var infobox = $(data.parse.text['*']).children('p').slice(0,1).show();
+					if (data.parse.text['*'].length > 0) {
+						var infobox = $(data.parse.text['*']).find('p:first');
 
-						if (infobox.length){
+						//if (infobox.length){
 
 							infobox.find('.error').remove();
 							infobox.find('.reference').remove();
@@ -1601,21 +1623,29 @@ function buildWikipedia(topic, parent){
 							//infobox.find('*').css('max-width', '290px');
 							infobox.find('img').unwrap();
 
-							infobox.insertAfter($brick.find("img"));
+							if($brick.find("img").length){
+								infobox.insertAfter($brick.find("img"));
+							}
+							else{
+								infobox.insertAfter($brick.find("h2"));
+							}
+
 							$packeryContainer.packery();
-						}
+						//}
 						//enable to create new bricks out of links
 						buildNextTopic($brick, topic.language);
 
 						getWikiLanguages(topic.title, topic.language, $brick);
-
 					}
-				});
+				}
+			});
 
-				$packeryContainer.packery();
-			}
+			$packeryContainer.packery();
+			
 		}
 	});
+	
+	return $brick;
 }
 
 function buildSection(section, parent){
