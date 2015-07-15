@@ -43,7 +43,7 @@ $(".search input:text").keyup(function (e) {
 $packeryContainer.on( "click", ".cross", function() {
 	var $thisBrick = jQuery(this).parent(".brick");
 	$packeryContainer.packery( 'remove', $thisBrick );
-	//$packeryContainer.packery();
+	$packeryContainer.packery();
 });
 
 //create youtube interconnection button and trigger search
@@ -261,6 +261,7 @@ $("#wikipedia-icon").on("click", function(){
 
 	$wikiSearchBrick.removeClass("invisible");
 	$packeryContainer.append($wikiSearchBrick).packery( 'prepended', $wikiSearchBrick);
+	$wikiSearchBrick.each( makeEachDraggable );	
 	$packeryContainer.packery();
 });
 
@@ -277,6 +278,7 @@ $("#youtube-icon").on("click", function(){
 
 	$youtubeSearchBrick.removeClass("invisible");
 	$packeryContainer.append($youtubeSearchBrick).packery( 'prepended', $youtubeSearchBrick);
+	$youtubeSearchBrick.each( makeEachDraggable );
 	$packeryContainer.packery();
 });
 
@@ -292,6 +294,7 @@ $("#instagram-icon").on("click", function(){
 
 	$instagramSearchBrick.removeClass("invisible");
 	$packeryContainer.append($instagramSearchBrick).packery( 'prepended', $instagramSearchBrick);
+	$instagramSearchBrick.each( makeEachDraggable );
 	$packeryContainer.packery();
 });
 
@@ -307,6 +310,7 @@ $("#flickr-icon").on("click", function(){
 
 	$flickrSearchBrick.removeClass("invisible");
 	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
+	$flickrSearchBrick.each( makeEachDraggable );
 	$packeryContainer.packery();
 });
 
@@ -327,7 +331,7 @@ $("#soundcloud-icon").on("click", function(){
 
 	$soundcloudSearchBrick.removeClass("invisible");
 	$packeryContainer.append($soundcloudSearchBrick).packery( 'prepended', $soundcloudSearchBrick);
-	//$gmapsSearchBrick.each( makeEachDraggable );
+	$soundcloudSearchBrick.each( makeEachDraggable );
 	$packeryContainer.packery();
 });
 
@@ -345,7 +349,7 @@ $("#gmaps-icon").on("click", function(){
 
 	$gmapsSearchBrick.removeClass("invisible");
 	$packeryContainer.append($gmapsSearchBrick).packery( 'prepended', $gmapsSearchBrick);
-	//$gmapsSearchBrick.each( makeEachDraggable );
+	$gmapsSearchBrick.each( makeEachDraggable );
 	getGmapsSearch();
 	$packeryContainer.packery();
 });
@@ -414,9 +418,7 @@ function buildNextTopic($brick, lang){
 			//console.log(x + " + " + y)
 			$packeryContainer.packery('fit', $newBrick, x, y); 
 		}, 3000);
-		
 
-		return false;
 	});
 }
 
@@ -1287,7 +1289,7 @@ function getWikiLanguages(topic, lang, $brick){
 		dataType:'jsonp',
 		success: function(data){
 
-			if (typeof data.query.pages !== 'undefined' && data.query.pages.length > 0) {
+			if (!$.isEmptyObject(data.query.pages)) {
 
 				var languageObj = data.query.pages[Object.keys(data.query.pages)[0]].langlinks;
 
@@ -1305,13 +1307,17 @@ function getWikiLanguages(topic, lang, $brick){
 
 				//make it a beautiful dropdown with selectpicker
 				langDropDown.selectpicker();
+				
+				var thisTopic = $brick.data('topic');
 
 				langDropDown.change(function(){
 
-					var lang = $(this).children(":selected").attr('value');
-					var topic = $(this).children(":selected").data('topic');
+					thisTopic = {
+						title: $(this).children(":selected").data('topic'),
+						language: $(this).children(":selected").attr('value')
+					}
 
-					buildWikipedia(topic, $brick.attr("tabindex"));
+					buildWikipedia(thisTopic, $brick.attr("tabindex"));
 				});
 			}
 		}
@@ -1381,7 +1387,7 @@ function getWikis(topic, lang) {
 		dataType:'jsonp',
 		success: function(data){
 
-			if(data.query.search.length !== 0 ){
+			if(data.query.search.length > 0 ){
 
 				$.each(data.query.search, function(){
 
@@ -1417,31 +1423,8 @@ function getWikis(topic, lang) {
 
 			//nothing has been found on Wikipedia
 		}else{
-
 				//append row to searchbox-table: NO RESULTS
-				$tableWikiResults.append('<tr class="no-results"><td>No Wikipedia articles found for "'+topic+'"</td></tr>');
-
-				//destroy all UI after 2 seconds
-				setTimeout( function(){
-
-					//if only one result is there, delete everything
-					if($('table#wiki.results tr').length ===  1){
-
-						//remove all UI elements
-						$tableWikiResults.remove();
-
-						//empty the wiki-searchbox for new search
-						$('#wiki-searchinput').val('');
-
-					}else{
-						//only remove the not-found row
-						$tableWikiResults.find('.no-results').remove();
-						$('#wiki-searchinput').val('');
-					}
-
-
-				}, 2000 );
-
+				$wikiSearchBrick.find('.results').append('<tr class="no-results"><td>No Wikipedia articles found for "'+topic+'"</td></tr>');
 			}
 		},
 		error: function (data){

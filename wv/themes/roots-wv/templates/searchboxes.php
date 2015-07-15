@@ -1,5 +1,6 @@
 <div id="wikipedia-search" class="brick invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
+	<span class="handle"> <i class="fa fa-arrows"></i></span>
 	<div class="container">
 
 		<i class="fa fa-wikipedia">&nbsp;Wikipedia Search</i>
@@ -27,6 +28,7 @@
 
 <div id="youtube-search" class="brick invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
+	<span class="handle"> <i class="fa fa-arrows"></i></span>
 	<div class="container top-buffer-small  bottom-buffer-small">
 
 		<i class="fa fa-youtube-square">&nbsp;Youtube Search</i>
@@ -52,6 +54,7 @@
 
 <div id="flickr-search" class="brick invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
+	<span class="handle"> <i class="fa fa-arrows"></i></span>
 	<div class="container top-buffer-small  bottom-buffer-small">
 
 		<i class="fa fa-flickr">&nbsp;Flickr Search</i>
@@ -97,6 +100,7 @@
 
 <div id="instagram-search" class="brick invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
+	<span class="handle"> <i class="fa fa-arrows"></i></span>
 	<div class="container top-buffer-small  bottom-buffer-small">
 
 		<i class="fa fa-instagram">&nbsp;Instagram Search</i>
@@ -155,6 +159,7 @@
 
 <div id="soundcloud-search" class="brick stamp invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
+	<span class="handle"> <i class="fa fa-arrows"></i></span>
 	<div class="container top-buffer-small  bottom-buffer-small">
 
 		<i class="fa fa-soundcloud">&nbsp;Soundcloud Search</i>
