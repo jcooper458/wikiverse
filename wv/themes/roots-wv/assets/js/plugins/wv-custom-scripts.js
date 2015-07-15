@@ -412,12 +412,7 @@ function buildNextTopic($brick, lang){
 		var x = parseInt($brick.css('left'));
 
 		//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
-		var $newBrick = buildWikipedia(brickData, $brick.attr("tabindex") - 1);
-
-		setTimeout(function(){ 
-			//console.log(x + " + " + y)
-			$packeryContainer.packery('fit', $newBrick, x, y); 
-		}, 3000);
+		buildWikipedia(brickData, $brick.attr("tabindex") - 1, x, y);
 
 	});
 }
@@ -1085,7 +1080,7 @@ function getInstagrams(query, type) {
 				},
 				dataType:'jsonp',
 				success: function(data){
-					console.log(data)
+					//console.log(data)
 					if (typeof data.data !== 'undefined' && data.data.length > 0) {
 						data.data.forEach(function(photo, index){
 							createInstagramBrick(photo);
@@ -1306,7 +1301,7 @@ function getWikiLanguages(topic, lang, $brick){
 								
 				//make it a beautiful dropdown with selectpicker
 				langDropDown.selectpicker();
-				
+
 				var thisTopic = $brick.data('topic');
 
 				langDropDown.change(function(){
@@ -1350,9 +1345,10 @@ function getInterWikiLinks(section, $brick){
 
 				});
 
-				interWikiDropDown.prepend('<option selected>Points to..</option>');
+				interWikiDropDown.prepend('<option selected>Points to..</option>');				
 
 				$brick.prepend(interWikiDropDown);
+				interWikiDropDown.selectpicker();
 
 				interWikiDropDown.change(function(){
 
@@ -1403,7 +1399,7 @@ function getWikis(topic, lang) {
 							language: lang
 						}
 
-						buildWikipedia(topic, -1);
+						buildWikipedia(topic, -1, 200, 0);
 
 						$(this).tooltip('destroy');
 						$(this).remove();
@@ -1438,7 +1434,7 @@ function getWikis(topic, lang) {
 	});
 }
 
-function buildWikipedia(topic, parent){
+function buildWikipedia(topic, parent, x, y){
 
 	var $brick = $(defaultBrick);
 
@@ -1459,7 +1455,8 @@ function buildWikipedia(topic, parent){
 
 	$packeryContainer.append($brick).packery( 'appended', $brick);
 	$brick.each( makeEachDraggable );
-   // $packeryContainer.packery();
+
+   	$packeryContainer.packery('fit', $brick[0], x, y);
 
 	$.ajax({
 		url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
@@ -1506,7 +1503,10 @@ function buildWikipedia(topic, parent){
 
 					$(this).parents('tr').remove();
 
-					buildSection(section, $brick.attr("tabindex"));
+					var newY = parseInt($brick.css('top'));
+					var newX = parseInt($brick.css('left'));
+
+					buildSection(section, $brick.attr("tabindex"), newX, newY);
 
 				});
 			}
@@ -1615,6 +1615,7 @@ function buildWikipedia(topic, parent){
 						buildNextTopic($brick, topic.language);
 
 						getWikiLanguages(topic.title, topic.language, $brick);
+						//return $brick;
 					}
 				}
 			});
@@ -1622,12 +1623,10 @@ function buildWikipedia(topic, parent){
 			$packeryContainer.packery();
 			
 		}
-	});
-	
-	return $brick;
+	});	
 }
 
-function buildSection(section, parent){
+function buildSection(section, parent, x, y){
 
 	var $brick = $(defaultBrick);
 
@@ -1641,9 +1640,9 @@ function buildSection(section, parent){
 	$brick.addClass('borderBottom');
 
 	$packeryContainer.append($brick).packery( 'appended', $brick);
-
 	$brick.each( makeEachDraggable );
-		//$packeryContainer.packery( 'bindDraggabillyEvents', $brick );
+	console.log(x + " - " + y)
+	$packeryContainer.packery('fit', $brick[0], x, y);
 
 	$.ajax({
 		url: 'http://' + section.language + '.wikipedia.org/w/api.php',
