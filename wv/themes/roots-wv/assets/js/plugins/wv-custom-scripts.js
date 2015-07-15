@@ -12,7 +12,7 @@ var $gmapsSearchBrick = $("#gmaps-search");
 var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
 var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 var wikiverse_nav = '<div class="wikiverse-nav pull-left"><i class="fa fa-youtube-square youtube-icon icon"></i>&nbsp;<i class="fa fa-flickr flickr-icon icon"></i>&nbsp;<i class="fa fa-instagram instagram-icon icon"></i></div>';
-var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle"> <i class="fa fa-arrows"></i></span></div>';
+var defaultBrick = '<div class="brick thumbnail">' + close_icon + '<span class="handle"> <i class="fa fa-arrows"></i></span></div>';
 
 $('.selectpicker').selectpicker();
 
@@ -1510,7 +1510,6 @@ function buildWikipedia(topic, parent, x, y){
 
 				});
 			}
-
 			//Go get the Main Image - 2 API Calls necessairy.. :(
 			$.ajax({
 				url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
@@ -1537,12 +1536,12 @@ function buildWikipedia(topic, parent, x, y){
 										titles: 'Image:' + image,
 										prop:'imageinfo',
 										iiprop: 'url',
-										format: 'json'
-
+										format: 'json',
+										iiurlwidth: 290
 									},
 									dataType:'jsonp',
 									success: function(data){
-
+										console.log(data)
 										//get the first key in obj
 										//for (first in data.query.pages) break;
 										//now done better like this:
