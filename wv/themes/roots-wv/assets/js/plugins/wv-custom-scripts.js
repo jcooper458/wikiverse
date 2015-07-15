@@ -1287,12 +1287,11 @@ function getWikiLanguages(topic, lang, $brick){
 			lllimit: 500
 		},
 		dataType:'jsonp',
-		success: function(data){
+		success: function(data){			
 
-			if (!$.isEmptyObject(data.query.pages)) {
+			var languageObj = data.query.pages[Object.keys(data.query.pages)[0]].langlinks;
 
-				var languageObj = data.query.pages[Object.keys(data.query.pages)[0]].langlinks;
-
+			if (!$.isEmptyObject(languageObj)) {
 				var langDropDown = $('<select class="selectpicker pull-right show-menu-arrow" data-size="20" data-live-search="true"></select>');
 
 				$.each(languageObj, function(){
@@ -1304,7 +1303,7 @@ function getWikiLanguages(topic, lang, $brick){
 				langDropDown.prepend('<option selected>Read in..</option>');
 
 				$brick.prepend(langDropDown);
-
+								
 				//make it a beautiful dropdown with selectpicker
 				langDropDown.selectpicker();
 				
@@ -1354,9 +1353,6 @@ function getInterWikiLinks(section, $brick){
 				interWikiDropDown.prepend('<option selected>Points to..</option>');
 
 				$brick.prepend(interWikiDropDown);
-
-				//make it a beautiful dropdown with selectpicker
-				interWikiDropDown.selectpicker();
 
 				interWikiDropDown.change(function(){
 
