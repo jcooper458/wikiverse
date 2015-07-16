@@ -1303,6 +1303,8 @@ function getWikiLanguages(topic, lang, $brick){
 				langDropDown.selectpicker();
 
 				var thisTopic = $brick.data('topic');
+				var thisY = parseInt($brick.css('top'));
+				var thisX = parseInt($brick.css('left'));
 
 				langDropDown.change(function(){
 
@@ -1311,7 +1313,8 @@ function getWikiLanguages(topic, lang, $brick){
 						language: $(this).children(":selected").attr('value')
 					}
 
-					buildWikipedia(thisTopic, $brick.attr("tabindex"));
+					//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
+					buildWikipedia(thisTopic, $brick.attr("tabindex"), thisX, thisY);
 				});
 			}
 		}
@@ -1350,15 +1353,18 @@ function getInterWikiLinks(section, $brick){
 				$brick.prepend(interWikiDropDown);
 				interWikiDropDown.selectpicker();
 
+				var thisY = parseInt($brick.css('top'));
+				var thisX = parseInt($brick.css('left'));
+
 				interWikiDropDown.change(function(){
 
-					var topic = {
+					var thisTopic = {
 
 						title: $(this).children(":selected").attr('topic'),
 						language: section.language
 					};
 
-					buildWikipedia(topic, $brick.attr("tabindex"));
+					buildWikipedia(thisTopic, $brick.attr("tabindex"), thisX, thisY);
 				});
 			}
 		}
@@ -1640,7 +1646,7 @@ function buildSection(section, parent, x, y){
 
 	$packeryContainer.append($brick).packery( 'appended', $brick);
 	$brick.each( makeEachDraggable );
-	console.log(x + " - " + y)
+
 	$packeryContainer.packery('fit', $brick[0], x, y);
 
 	$.ajax({
@@ -1764,7 +1770,7 @@ function buildYoutube(youtubeID){
 
 	$youtubeBrick.addClass('embed-responsive');
 	$youtubeBrick.addClass('embed-responsive-16by9');
-	
+
 	$youtubeBrick.data('type', 'youtube');
 	$youtubeBrick.data('topic', youtubeID);
 
