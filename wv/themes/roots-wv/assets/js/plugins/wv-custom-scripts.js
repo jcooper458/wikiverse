@@ -51,7 +51,7 @@ $packeryContainer.on( "click", ".cross", function() {
 document.addEventListener("keydown", function(e) {
   if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
     e.preventDefault();
-    $('#editWall').trigger('click');
+    $('#editboard').trigger('click');
   }
 }, false);
 
@@ -169,10 +169,10 @@ $packeryContainer.on("click", ".instagram-icon", function(){
 
 
 
-//show save wall button on packery change (needs work)
+//show save board button on packery change (needs work)
 $packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laidOutItems ) {
 
-	$("#saveWall").css('display', 'block');
+	$("#saveboard").css('display', 'block');
 
 	//when clear results is clicked
 	$('.clear').on('click', function(){
@@ -1789,7 +1789,7 @@ function buildSection(section, parent, x, y){
 }
 
 
-function buildWall(){
+function buildboard(){
 
 	var str = $("#wikiverse").html();
 
@@ -1867,7 +1867,7 @@ function makeEachDraggable( i, itemElem ) {
 }
 
 
-function createWall(wpnonce) {
+function createboard(wpnonce) {
 
 	var wikiverse = {};
 
@@ -1898,37 +1898,37 @@ function createWall(wpnonce) {
 
 	var JSONwikiverse = JSON.stringify(wikiverse);
 
-	$("#saveWallModal").modal('show');
-	$("#wallTitle").focus();	
+	$("#saveboardModal").modal('show');
+	$("#boardTitle").focus();	
 
 	
-	$('#wallTitle').keyup(function (e) {
+	$('#boardTitle').keyup(function (e) {
 		e.preventDefault();
-		//enable the save wall button
-		$("#wallSubmitButton").prop('disabled', false);
+		//enable the save board button
+		$("#boardSubmitButton").prop('disabled', false);
 
-		//make enter save the wall
+		//make enter save the board
 		if (e.keyCode == 13) {
-	       $("#wallSubmitButton").trigger('click');
+	       $("#boardSubmitButton").trigger('click');
 	    }
 	});
 
-	$("#wallSubmitButton").on("click", function(){
+	$("#boardSubmitButton").on("click", function(){
 
-		var value=$.trim($("#wallTitle").val());
+		var value=$.trim($("#boardTitle").val());
 
 		if(value.length>0)
 		{
 
-			var title = $('#wallTitle').val();
+			var title = $('#boardTitle').val();
 
 			$.ajax({
 				type: 'POST',
 				url: "/wp-admin/admin-ajax.php",
 				data: {
 					action: 'apf_addpost',
-					walltitle: title,
-					wallmeta: JSONwikiverse,
+					boardtitle: title,
+					boardmeta: JSONwikiverse,
 					nonce: wpnonce
 				},
 				success: function(data, textStatus, XMLHttpRequest) {
@@ -1942,13 +1942,13 @@ function createWall(wpnonce) {
 				}
 			});
 
-			$("#saveWallModal").modal('hide');
+			$("#saveboardModal").modal('hide');
 
 
 		}
 		else{
 
-			$('#wallTitle').parent(".form-group").addClass("has-error");
+			$('#boardTitle').parent(".form-group").addClass("has-error");
 
 		}
 
@@ -1956,7 +1956,7 @@ function createWall(wpnonce) {
 
 }
 
-function editWall(wpnonce) {
+function editboard(wpnonce) {
 
 	var postid = $('#postID').html();
 
@@ -1996,8 +1996,8 @@ function editWall(wpnonce) {
 		url: "/wp-admin/admin-ajax.php",
 		data: {
 			action: 'apf_editpost',
-			wallID: postid,
-			wallmeta: JSONwikiverse,
+			boardID: postid,
+			boardmeta: JSONwikiverse,
 			nonce: wpnonce
 		},
 		success: function(data, textStatus, XMLHttpRequest) {
@@ -2006,7 +2006,7 @@ function editWall(wpnonce) {
 			$(id).append(data);
 
 			new PNotify({
-			    text: 'wall saved',
+			    text: 'board saved',
 			    type: 'success',
 			    icon: 'fa fa-floppy-o',
 			    styling: 'fontawesome',

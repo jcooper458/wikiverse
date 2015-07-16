@@ -14,5 +14,5 @@
   "strict": false,
   "trailing": true,
   "undef": true,
-  "predef" : ["Modernizr", "buildWikipedia", "Packery", "Draggabilly", "makeEachDraggable", "apfaddpost", "buildWall", "buildYoutube", "getVimeoId", "buildVimeo", "getSearchBoxes", "expandWiki", "getWikis", "strip", "getYoutubes", "getFlickrs", "buildFlickrPhoto", "imagesLoaded", "buildGmaps", "google", "alert", "apfajax", "orderItems"]
+  "predef" : ["Modernizr", "buildWikipedia", "Packery", "Draggabilly", "makeEachDraggable", "apfaddpost", "buildboard", "buildYoutube", "getVimeoId", "buildVimeo", "getSearchBoxes", "expandWiki", "getWikis", "strip", "getYoutubes", "getFlickrs", "buildFlickrPhoto", "imagesLoaded", "buildGmaps", "google", "alert", "apfajax", "orderItems"]
 }

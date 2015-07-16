@@ -31,19 +31,19 @@
       <ul class="nav navbar-nav navbar-right">
         	
  	    <?php if ( is_user_logged_in() ) { 
-	    	$nonce = wp_create_nonce( 'wall' ); ?>
+	    	$nonce = wp_create_nonce( 'board' ); ?>
 
 	    	<?php if ( is_front_page() ) { ?>
-	    		<li><a href="#" id="saveWall" onclick="createWall('<?php echo $nonce ?>');" >Save Wall</a></li>
+	    		<li><a href="#" id="saveboard" onclick="createboard('<?php echo $nonce ?>');" >Save board</a></li>
 			<?php }  ?>
 
-			<?php if ( is_singular("wall") ) { ?>
-				<li><a href="#" id="editWall" onclick="editWall('<?php echo $nonce ?>');" >Save Changes</a></li>
+			<?php if ( is_singular("board") ) { ?>
+				<li><a href="#" id="editboard" onclick="editboard('<?php echo $nonce ?>');" >Save Changes</a></li>
 			<?php }  ?> 	
 
 			<?php } else {?> 
-				<!--<button class="btn btn-default pull-right" id="editWall" type="button"><a href="/login" >Login</a></button>
-				<button class="btn btn-default pull-right" id="editWall" type="button"><a href="/wp-login.php?action=register" >Register</a></button>-->
+				<!--<button class="btn btn-default pull-right" id="editboard" type="button"><a href="/login" >Login</a></button>
+				<button class="btn btn-default pull-right" id="editboard" type="button"><a href="/wp-login.php?action=register" >Register</a></button>-->
 			<?php }  ?> 	
 
       </ul>

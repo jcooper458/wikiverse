@@ -12,11 +12,11 @@ var ExampleSite = {
 	
     }
   },
-  // Singe Wall
-  single_wall:{
+  // Singe board
+  single_board:{
 	init: function() {
 
-		buildWall();
+		buildboard();
 		
 	}
   },

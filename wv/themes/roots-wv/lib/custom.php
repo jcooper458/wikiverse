@@ -5,24 +5,24 @@
 /*------------- DISABLE ADMIN BAR -----------------*/
 add_filter('show_admin_bar', '__return_false');
 
-/*-------------CREATE CPT WALL-----------------*/
+/*-------------CREATE CPT board-----------------*/
 
-add_action( 'init', 'register_cpt_wall' );
+add_action( 'init', 'register_cpt_board' );
 
-function register_cpt_wall() {
+function register_cpt_board() {
 
     $labels = array( 
-        'name' => _x( 'Wall', 'wall' ),
-        'singular_name' => _x( 'wall', 'wall' ),
-        'add_new' => _x( 'New wall', 'wall' ),
-        'add_new_item' => _x( 'Add New wall', 'wall' ),
-        'edit_item' => _x( 'Edit wall', 'wall' ),
-        'new_item' => _x( 'New wall', 'wall' ),
-        'view_item' => _x( 'View wall', 'wall' ),
-        'search_items' => _x( 'Search for walls ', 'wall' ),
-        'not_found' => _x( 'No walls found', 'wall' ),
-        'not_found_in_trash' => _x( 'No wall members found in trash', 'wall' ),
-        'menu_name' => _x( 'Walls', 'wall' ),
+        'name' => _x( 'board', 'board' ),
+        'singular_name' => _x( 'board', 'board' ),
+        'add_new' => _x( 'New board', 'board' ),
+        'add_new_item' => _x( 'Add New board', 'board' ),
+        'edit_item' => _x( 'Edit board', 'board' ),
+        'new_item' => _x( 'New board', 'board' ),
+        'view_item' => _x( 'View board', 'board' ),
+        'search_items' => _x( 'Search for boards ', 'board' ),
+        'not_found' => _x( 'No boards found', 'board' ),
+        'not_found_in_trash' => _x( 'No board members found in trash', 'board' ),
+        'menu_name' => _x( 'boards', 'board' ),
     );
 
     $args = array( 
@@ -45,7 +45,7 @@ function register_cpt_wall() {
         'capability_type' => 'post'
     );
 
-    register_post_type( 'wall', $args );
+    register_post_type( 'board', $args );
 }
 
 

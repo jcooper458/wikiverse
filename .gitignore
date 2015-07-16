@@ -9,8 +9,6 @@ wv/themes/*
 wv/themes/roots-*/scripts.php
 !wv/themes/roots-*
 !wv/plugins/
-wv/plugins/*
-!wv/plugins/wall*
 *~
 .DS_Store
 .svn
