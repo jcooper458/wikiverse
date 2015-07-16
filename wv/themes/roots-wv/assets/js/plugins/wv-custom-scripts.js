@@ -12,7 +12,7 @@ var $gmapsSearchBrick = $("#gmaps-search");
 var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
 var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 var wikiverse_nav = '<div class="wikiverse-nav pull-left"><i class="fa fa-youtube-square youtube-icon icon"></i>&nbsp;<i class="fa fa-flickr flickr-icon icon"></i>&nbsp;<i class="fa fa-instagram instagram-icon icon"></i></div>';
-var defaultBrick = '<div class="brick thumbnail">' + close_icon + '<span class="handle"> <i class="fa fa-arrows"></i></span></div>';
+var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle"> <i class="fa fa-arrows"></i></span></div>';
 
 $('.selectpicker').selectpicker();
 
@@ -1758,10 +1758,13 @@ function buildWall(){
 
 function buildYoutube(youtubeID){
 
-	var $iframe = '<iframe id="ytplayer" type="text/html" width="290" height="190" src="http://www.youtube.com/embed/'+youtubeID+'" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0"/>';
+	var $iframe = '<iframe class="embed-responsive-item" id="ytplayer" type="text/html" width="290" height="190" src="http://www.youtube.com/embed/'+youtubeID+'" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0"/>';
 
 	var $youtubeBrick = $(defaultBrick);
 
+	$youtubeBrick.addClass('embed-responsive');
+	$youtubeBrick.addClass('embed-responsive-16by9');
+	
 	$youtubeBrick.data('type', 'youtube');
 	$youtubeBrick.data('topic', youtubeID);
 
