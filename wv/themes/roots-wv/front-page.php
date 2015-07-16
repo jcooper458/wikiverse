@@ -5,13 +5,7 @@
 
 
 <?php get_template_part('templates/searchboxes'); ?>
-<!-- 
-<div class="input-group">
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="button">Go!</button>
-      </span>
-      <input type="text" class="form-control" placeholder="Search for...">
-    </div>/input-group -->
+
     
 <!-- Modal -->
 <div class="modal fade" id="saveboardModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

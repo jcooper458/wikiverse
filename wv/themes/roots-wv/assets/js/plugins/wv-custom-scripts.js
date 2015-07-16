@@ -16,7 +16,7 @@ var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle"> <
 
 $('.selectpicker').selectpicker();
 
-getSearchBoxes();
+getSearchBricks();
 
 // initialize Packery
 var packery = $packeryContainer.packery({
@@ -58,47 +58,47 @@ document.addEventListener("keydown", function(e) {
 document.addEventListener("keydown", function(e) {
   if (!($("input").is(":focus")) && e.keyCode == 87) {
     e.preventDefault();
-    $('#wikipedia-icon').trigger('click');
+    $('li#wikipedia').trigger('click');
   }
 }, false);
 
 document.addEventListener("keydown", function(e) {
   if (!($("input").is(":focus")) && e.keyCode == 89) {
     e.preventDefault();
-    $('#youtube-icon').trigger('click');
+    $('li#youtube').trigger('click');
   }
 }, false);
 
 document.addEventListener("keydown", function(e) {
   if (!($("input").is(":focus")) && e.keyCode == 71) {
     e.preventDefault();
-    $('#gmaps-icon').trigger('click');
+    $('li#gmaps').trigger('click');
   }
 }, false);
 
 document.addEventListener("keydown", function(e) {
   if (!($("input").is(":focus")) && e.keyCode == 70) {
     e.preventDefault();
-    $('#flickr-icon').trigger('click');
+    $('li#flickr').trigger('click');
   }
 }, false);
 
 document.addEventListener("keydown", function(e) {
   if (!($("input").is(":focus")) && e.keyCode == 73) {
     e.preventDefault();
-    $('#instagram-icon').trigger('click');
+    $('li#instagram').trigger('click');
   }
 }, false);
 
 document.addEventListener("keydown", function(e) {
   if (!($("input").is(":focus")) && e.keyCode == 65) {
     e.preventDefault();
-    $('#instagram-icon').trigger('click');
-    $('#gmaps-icon').trigger('click');
-    $('#flickr-icon').trigger('click');		
-    $('#soundcloud-icon').trigger('click');
-    $('#wikipedia-icon').trigger('click');
-    $('#youtube-icon').trigger('click');
+    $('li#instagram').trigger('click');
+    $('li#gmaps').trigger('click');
+    $('li#flickr').trigger('click');		
+    $('li#soundcloud').trigger('click');
+    $('li#wikipedia').trigger('click');
+    $('li#youtube').trigger('click');
   }
 }, false);
 
@@ -249,7 +249,8 @@ $packeryContainer.on("click", ".gmaps .fa-instagram", function(){
 $packeryContainer.packery( 'on', 'layoutComplete', orderItems );
 $packeryContainer.packery( 'on', 'dragItemPositioned', orderItems );
 
-function getSearchBoxes(){
+function getSearchBricks(){
+
 
 var lang = $("#langselect").val();
 
@@ -315,103 +316,75 @@ $('#youtube-searchinput').typeahead({
 	}
 });
 
-$("#wikipedia-icon").on("click", function(){
 
-	$wikiSearchBrick.removeClass("invisible");
-	$packeryContainer.append($wikiSearchBrick).packery( 'prepended', $wikiSearchBrick);
-	$wikiSearchBrick.each( makeEachDraggable );	
-	$packeryContainer.packery();
+//Global get SearchBoxes
+$(".sources-menu li").on("click", function(event){
 
-	$wikiSearchBrick.find('input[type=text]').focus();
+	//what are we searching for? wikipedia, soundcloud, etc
+	var source = $(this).attr('id');
+
+	//if searchbrick is not inside packery
+	if(!($('#' + source + '-search','#packery').length == 1)) {
+
+		$('#' + source + '-search').removeClass("invisible");
+		$packeryContainer.prepend($('#' + source + '-search')).packery( 'prepended', $('#' + source + '-search'));
+		$('#' + source + '-search').each( makeEachDraggable );	
+
+		$packeryContainer.packery('fit', $('#' + source + '-search')[0], 0, 0);
+		$packeryContainer.packery();
+
+		//if its gmaps do the exception of running that func
+		if(source === "gmaps")getGmapsSearch();
+
+		$('#' + source + '-search').find('input[type=text]').focus();
+
+	}
+	else{
+		 $('html, body').animate({
+	        scrollTop: 0
+	    }, 1000);
+	}
 });
 
 
+$(".search .start").on("click", function(){
 
-$("#wikipedia-search .start").on("click", function(){
+	switch ($(this).parents('.brick').attr('id')) {
 
-	var topic = $("#wiki-searchinput").val();
-	getWikis( topic, lang );
+	    case "wikipedia-search":
+			
+			var topic = $("#wiki-searchinput").val();
+			getWikis( topic, lang );
 
-});
+	    break;
 
-$("#youtube-icon").on("click", function(){
+	    case "flickr-search":
+			var flickrType = $("#flickrType").val();
+			var query = $("#flickr-search .searchbox").val();
+			var sort = $("#flickr-search .radio-inline input[type='radio']:checked").val();
 
-	$youtubeSearchBrick.removeClass("invisible");
-	$packeryContainer.append($youtubeSearchBrick).packery( 'prepended', $youtubeSearchBrick);
-	$youtubeSearchBrick.each( makeEachDraggable );
-	$packeryContainer.packery();
-});
+			getFlickrs(query, sort, flickrType);
+	    break;
 
-$("#youtube-search .start").on("click", function(){
+	    case "instagram-search":
+			var query = $("#instagram-search .searchbox").val();
+			var instagramType = $("#instagramType").val();
 
-	var topic = $("#youtube-search .searchbox").val();
-	getYoutubes( topic );
+			getInstagrams(query, instagramType);
+	    break;
 
-});
+	    case "youtube-search":
+			var topic = $("#youtube-search .searchbox").val();
+			getYoutubes( topic );
+	    break;
 
+	    case "soundcloud-search":			
+			var query = $("#soundcloud-search .searchbox").val();
+			var params = $("#soundcloud-search .radio-inline input[type='radio']:checked").val();
 
-$("#instagram-icon").on("click", function(){
-
-	$instagramSearchBrick.removeClass("invisible");
-	$packeryContainer.append($instagramSearchBrick).packery( 'prepended', $instagramSearchBrick);
-	$instagramSearchBrick.each( makeEachDraggable );
-	$packeryContainer.packery();
-});
-
-$("#instagram-search .start").on("click", function(){
-
-	var query = $("#instagram-search .searchbox").val();
-	var instagramType = $("#instagramType").val();
-
-	getInstagrams(query, instagramType);
-});
-
-$("#flickr-icon").on("click", function(){
-
-	$flickrSearchBrick.removeClass("invisible");
-	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
-	$flickrSearchBrick.each( makeEachDraggable );
-	$packeryContainer.packery();
-});
-
-
-
-$("#flickr-search .start").on("click", function(){
-
-	var flickrType = $("#flickrType").val();
-	var query = $("#flickr-search .searchbox").val();
-	var sort = $("#flickr-search .radio-inline input[type='radio']:checked").val();
-
-	getFlickrs(query, sort, flickrType);
-
-});
-
-
-$("#soundcloud-icon").on("click", function(){
-
-	$soundcloudSearchBrick.removeClass("invisible");
-	$packeryContainer.append($soundcloudSearchBrick).packery( 'prepended', $soundcloudSearchBrick);
-	$soundcloudSearchBrick.each( makeEachDraggable );
-	$packeryContainer.packery();
-});
-
-$("#soundcloud-search .start").on("click", function(){
-
-	var query = $("#soundcloud-search .searchbox").val();
-	var params = $("#soundcloud-search .radio-inline input[type='radio']:checked").val();
-
-	getSoundcloud(query, params);
-
-});
-
-
-$("#gmaps-icon").on("click", function(){
-
-	$gmapsSearchBrick.removeClass("invisible");
-	$packeryContainer.append($gmapsSearchBrick).packery( 'prepended', $gmapsSearchBrick);
-	$gmapsSearchBrick.each( makeEachDraggable );
-	getGmapsSearch();
-	$packeryContainer.packery();
+			getSoundcloud(query, params);
+	    break;
+	 }
 });
 
 
@@ -829,7 +802,7 @@ function buildStreetMap(streetObj) {
 	$mapbrick.data( "topic", streetObj );
 }
 
-function buildFoto(photoObj, type){
+function buildFoto(photoObj, type, x, y){
 
 	var $brick = $(defaultBrick);
 	$brick.addClass('foto');
@@ -845,6 +818,8 @@ function buildFoto(photoObj, type){
 
 	$packeryContainer.append($brick).packery( 'appended', $brick);
 	$brick.each( makeEachDraggable );
+
+	$packeryContainer.packery('fit', $brick[0], x, y);
 
 	var imgLoad = imagesLoaded( $brick );
 
@@ -1042,7 +1017,7 @@ function createFlickrBrick(apiData, photoObj){
 	var thumbURL = apiData.sizes.size[1].source;
 	var mediumURL = apiData.sizes.size[6].source;
 
-	$flickrSearchBrick.find('.results').append('<img width="150" owner="' + photoObj.owner + '" large="' + mediumURL + '" thumb="' + thumbURL + '" src="' + thumbURL + '">');
+	$flickrSearchBrick.find('.results').append('<img width="149" owner="' + photoObj.owner + '" large="' + mediumURL + '" thumb="' + thumbURL + '" src="' + thumbURL + '">');
 
 	imagesLoaded( '#flickr-search .results', function() {
 		$packeryContainer.packery();
@@ -1058,7 +1033,7 @@ function createFlickrBrick(apiData, photoObj){
 			owner: $(this).attr('owner')
 
 		}
-		buildFoto(thisPhoto, "flickr");
+		buildFoto(thisPhoto, "flickr", 500, 0);
 		$(this).remove();
 	});
 
@@ -1067,7 +1042,7 @@ function createFlickrBrick(apiData, photoObj){
 
 function createInstagramBrick(photo){
 
-	$instagramSearchBrick.find('.results').append('<img class="img-search" width="146" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
+	$instagramSearchBrick.find('.results').append('<img class="img-search" width="149" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
 
 	imagesLoaded('#instagram-search .results', function() {
 		$packeryContainer.packery();
@@ -1080,7 +1055,7 @@ function createInstagramBrick(photo){
 			smallURL: $(this).attr('src'),
 			size: 'small'
 		}
-		buildFoto(thisPhoto, "instagram");
+		buildFoto(thisPhoto, "instagram", 400, 0);
 		$(this).remove();
 	});
 

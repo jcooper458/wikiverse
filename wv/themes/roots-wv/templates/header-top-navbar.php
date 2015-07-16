@@ -1,5 +1,5 @@
 <header class="" role="banner">
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -18,12 +18,12 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Start <span class="caret"></span></a>
           <ul class="dropdown-menu sources-menu">
-			    <li id="wikipedia-icon" ><a href="#"><i class="fa fa-wikipedia"></i>		Wikipedia	</a></li>
-			    <li id="youtube-icon"   ><a href="#"><i class="fa fa-youtube"></i>		YouTube		</a></li>
-			    <li id="flickr-icon"    ><a href="#"><i class="fa fa-flickr"></i>		Flickr		</a></li>
-			    <li id="instagram-icon" ><a href="#"><i    class="fa fa-instagram"></i>	Instagram	</a></li>
-			    <li id="soundcloud-icon"><a href="#"><i     class="fa fa-soundcloud"></i>&nbsp;Soundcloud	</a></li>
-			    <li id="gmaps-icon"     ><a href="#">&nbsp;<i class="fa fa-map-marker"></i>	Google Maps	</a></li>
+			    <li id="wikipedia" ><a href="#"><i class="fa fa-wikipedia"></i>		Wikipedia	</a></li>
+			    <li id="youtube"   ><a href="#"><i class="fa fa-youtube"></i>		YouTube		</a></li>
+			    <li id="flickr"    ><a href="#"><i class="fa fa-flickr"></i>		Flickr		</a></li>
+			    <li id="instagram" ><a href="#"><i    class="fa fa-instagram"></i>	Instagram	</a></li>
+			    <li id="soundcloud"><a href="#"><i     class="fa fa-soundcloud"></i>&nbsp;Soundcloud	</a></li>
+			    <li id="gmaps"     ><a href="#">&nbsp;<i class="fa fa-map-marker"></i>	Google Maps	</a></li>
           </ul>
         </li>
       </ul>
