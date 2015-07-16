@@ -22,7 +22,7 @@
 
 			<div class="entry-content">
 
-				<?php 
+				<?php /*
 				$args = array( 'post_type' => 'boards', 'posts_per_page' => -1 );
 				$loop = new WP_Query( $args );
 				while ( $loop->have_posts() ) : $loop->the_post();
@@ -36,7 +36,7 @@
 
 				  wp_link_pages(array('before' => '<nav class="pagination">', 'after' => '</nav>'));
 
-				endwhile;
+				endwhile;*/
 				?>
 
 				<hr>

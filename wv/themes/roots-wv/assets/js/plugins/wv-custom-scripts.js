@@ -842,7 +842,10 @@ function getFlickrs(topic, sort, type) {
 
 	$('#flickr-search .results').empty();
 
-	if(!$flickrSearchBrick.hasClass("w2")) $flickrSearchBrick.addClass("w2");
+	if(!$flickrSearchBrick.hasClass("w2")){
+		$flickrSearchBrick.addClass("w2");
+		$packeryContainer.packery();
+	} 
 
 	type  = type || "textQuery";
 
@@ -1058,7 +1061,7 @@ function createInstagramBrick(photo){
 			smallURL: $(this).attr('src'),
 			size: 'small'
 		}
-		buildFoto(thisPhoto, "instagram", 400, 0);
+		buildFoto(thisPhoto, "instagram", 500, 0);
 		$(this).remove();
 	});
 
@@ -1086,7 +1089,12 @@ function valid_coords(number_lat,number_lng) {
 
 function getInstagrams(query, type) {
 
-	$instagramSearchBrick.addClass("w2");
+	$('#instagram-search .results').empty();
+	
+	if(!$instagramSearchBrick.hasClass("w2")){
+		$instagramSearchBrick.addClass("w2");
+		$packeryContainer.packery();
+	} 
 
 	type = type || "hashtag";
 
@@ -1205,6 +1213,8 @@ function buildSoundcloud(soundcloudObj){
 }
 
 function getSoundcloud(query, params) {
+
+	$('#soundcloud-search .results').empty();
 
 	SC.initialize({
 	  client_id: '15bc70bcd9762ddca2e82ee99de9e2e7'
