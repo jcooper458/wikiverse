@@ -46,6 +46,71 @@ $packeryContainer.on( "click", ".cross", function() {
 	$packeryContainer.packery();
 });
 
+//----------------keyboard shortcuts----------------------------
+
+document.addEventListener("keydown", function(e) {
+  if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+    e.preventDefault();
+    $('#editWall').trigger('click');
+  }
+}, false);
+
+document.addEventListener("keydown", function(e) {
+  if (e.keyCode == 87) {
+    e.preventDefault();
+    $('#wikipedia-icon').trigger('click');
+  }
+}, false);
+
+document.addEventListener("keydown", function(e) {
+  if (e.keyCode == 83) {
+    e.preventDefault();
+    $('#soundcloud-icon').trigger('click');
+  }
+}, false);
+
+document.addEventListener("keydown", function(e) {
+  if (e.keyCode == 89) {
+    e.preventDefault();
+    $('#youtube-icon').trigger('click');
+  }
+}, false);
+
+document.addEventListener("keydown", function(e) {
+  if (e.keyCode == 71) {
+    e.preventDefault();
+    $('#gmaps-icon').trigger('click');
+  }
+}, false);
+
+document.addEventListener("keydown", function(e) {
+  if (e.keyCode == 70) {
+    e.preventDefault();
+    $('#flickr-icon').trigger('click');
+  }
+}, false);
+
+document.addEventListener("keydown", function(e) {
+  if (e.keyCode == 73) {
+    e.preventDefault();
+    $('#instagram-icon').trigger('click');
+  }
+}, false);
+
+document.addEventListener("keydown", function(e) {
+  if (e.keyCode == 65) {
+    e.preventDefault();
+    $('#instagram-icon').trigger('click');
+    $('#gmaps-icon').trigger('click');
+    $('#flickr-icon').trigger('click');
+    $('#soundcloud-icon').trigger('click');
+    $('#wikipedia-icon').trigger('click');
+    $('#youtube-icon').trigger('click');
+  }
+}, false);
+
+//----------------keyboard shortcuts----------------------------
+//
 //create youtube interconnection button and trigger search
 $packeryContainer.on("click", ".youtube-icon", function(){
 
@@ -1254,7 +1319,7 @@ function getYoutubes(topic) {
 						$(this).tooltip('destroy');
 						$(this).remove();
 
-						buildYoutube(currentYoutubeID);
+						buildYoutube(currentYoutubeID, 200, 0);
 
 						return false;
 					});
@@ -1377,13 +1442,16 @@ function getInterWikiLinks(section, $brick){
 
 function getWikis(topic, lang) {
 
+	$('#wikipedia-search .results').empty();
+
 	$.ajax({
 		url: 'http://'+lang+'.wikipedia.org/w/api.php',
 		data:{
 			action:'query',
 			list:'search',
 			srsearch:topic,
-			format:'json'
+			format:'json',
+			srlimit: 40
 		},
 		dataType:'jsonp',
 		success: function(data){
@@ -1550,7 +1618,7 @@ function buildWikipedia(topic, parent, x, y){
 									},
 									dataType:'jsonp',
 									success: function(data){
-										console.log(data)
+					
 										//get the first key in obj
 										//for (first in data.query.pages) break;
 										//now done better like this:
@@ -1767,7 +1835,7 @@ function buildWall(){
 }
 
 
-function buildYoutube(youtubeID){
+function buildYoutube(youtubeID, x, y){
 
 	var $iframe = '<iframe class="embed-responsive-item" id="ytplayer" type="text/html" width="290" height="190" src="http://www.youtube.com/embed/'+youtubeID+'" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0"/>';
 
@@ -1782,8 +1850,9 @@ function buildYoutube(youtubeID){
     $youtubeBrick.append($iframe);
 
 	$packeryContainer.append($youtubeBrick).packery( 'appended', $youtubeBrick);
-
 	$youtubeBrick.each( makeEachDraggable );
+
+	$packeryContainer.packery('fit', $youtubeBrick[0], x, y);
 
 	$packeryContainer.packery();
 }
