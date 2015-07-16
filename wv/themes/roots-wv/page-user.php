@@ -21,23 +21,23 @@
 			</header>
 
 			<div class="entry-content">
-				<p>Pretty empty over here. Don’t worry it will fill up over time.</p>
-<?php 
-$args = array( 'post_type' => 'wall', 'posts_per_page' => -1 );
-$loop = new WP_Query( $args );
-while ( $loop->have_posts() ) : $loop->the_post();
 
-  $the_title = get_the_title();
-  $the_permalink = get_the_permalink();
+				<?php 
+				$args = array( 'post_type' => 'wall', 'posts_per_page' => -1 );
+				$loop = new WP_Query( $args );
+				while ( $loop->have_posts() ) : $loop->the_post();
 
-  echo '<div class="entry-content">';
-  echo '<a href="'. $the_permalink . '">' . $the_title . '</a>';
-  echo '</div>';
+				  $the_title = get_the_title();
+				  $the_permalink = get_the_permalink();
 
-  wp_link_pages(array('before' => '<nav class="pagination">', 'after' => '</nav>'));
+				  echo '<div class="entry-content">';
+				  echo '<a href="'. $the_permalink . '">' . $the_title . '</a>';
+				  echo '</div>';
 
-endwhile;
-?>
+				  wp_link_pages(array('before' => '<nav class="pagination">', 'after' => '</nav>'));
+
+				endwhile;
+				?>
 
 				<hr>
 			</div><!-- .entry-content -->

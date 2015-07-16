@@ -56,53 +56,46 @@ document.addEventListener("keydown", function(e) {
 }, false);
 
 document.addEventListener("keydown", function(e) {
-  if (e.keyCode == 87) {
+  if (!($("input").is(":focus")) && e.keyCode == 87) {
     e.preventDefault();
     $('#wikipedia-icon').trigger('click');
   }
 }, false);
 
 document.addEventListener("keydown", function(e) {
-  if (e.keyCode == 83) {
-    e.preventDefault();
-    $('#soundcloud-icon').trigger('click');
-  }
-}, false);
-
-document.addEventListener("keydown", function(e) {
-  if (e.keyCode == 89) {
+  if (!($("input").is(":focus")) && e.keyCode == 89) {
     e.preventDefault();
     $('#youtube-icon').trigger('click');
   }
 }, false);
 
 document.addEventListener("keydown", function(e) {
-  if (e.keyCode == 71) {
+  if (!($("input").is(":focus")) && e.keyCode == 71) {
     e.preventDefault();
     $('#gmaps-icon').trigger('click');
   }
 }, false);
 
 document.addEventListener("keydown", function(e) {
-  if (e.keyCode == 70) {
+  if (!($("input").is(":focus")) && e.keyCode == 70) {
     e.preventDefault();
     $('#flickr-icon').trigger('click');
   }
 }, false);
 
 document.addEventListener("keydown", function(e) {
-  if (e.keyCode == 73) {
+  if (!($("input").is(":focus")) && e.keyCode == 73) {
     e.preventDefault();
     $('#instagram-icon').trigger('click');
   }
 }, false);
 
 document.addEventListener("keydown", function(e) {
-  if (e.keyCode == 65) {
+  if (!($("input").is(":focus")) && e.keyCode == 65) {
     e.preventDefault();
     $('#instagram-icon').trigger('click');
     $('#gmaps-icon').trigger('click');
-    $('#flickr-icon').trigger('click');
+    $('#flickr-icon').trigger('click');		
     $('#soundcloud-icon').trigger('click');
     $('#wikipedia-icon').trigger('click');
     $('#youtube-icon').trigger('click');
@@ -328,6 +321,8 @@ $("#wikipedia-icon").on("click", function(){
 	$packeryContainer.append($wikiSearchBrick).packery( 'prepended', $wikiSearchBrick);
 	$wikiSearchBrick.each( makeEachDraggable );	
 	$packeryContainer.packery();
+
+	$wikiSearchBrick.find('input[type=text]').focus();
 });
 
 
@@ -1748,9 +1743,13 @@ function buildSection(section, parent, x, y){
 			sectionHTML.find('.org').remove();
 			//sectionHTML.find('*').css('max-width', '290px');
 			sectionHTML.find('img').unwrap();
-			sectionHTML.find('img').attr('width', 290);
-			sectionHTML.find('img').removeAttr('height');
 
+			//if image is bigger than 290, shrink it
+			if(sectionHTML.find('img').width() > 290 || sectionHTML.find('img').attr("width") > 290){
+
+				sectionHTML.find('img').attr('width', 290);
+				sectionHTML.find('img').removeAttr('height');
+			}
 			sectionHTML.find('a[class*=exter]').remove();
 
 			$brick.append(sectionHTML);
@@ -1900,14 +1899,21 @@ function createWall(wpnonce) {
 	var JSONwikiverse = JSON.stringify(wikiverse);
 
 	$("#saveWallModal").modal('show');
+	$("#wallTitle").focus();	
 
-	$('#wallTitle').keyup(function () {
-
+	
+	$('#wallTitle').keyup(function (e) {
+		e.preventDefault();
+		//enable the save wall button
 		$("#wallSubmitButton").prop('disabled', false);
+
+		//make enter save the wall
+		if (e.keyCode == 13) {
+	       $("#wallSubmitButton").trigger('click');
+	    }
 	});
 
 	$("#wallSubmitButton").on("click", function(){
-
 
 		var value=$.trim($("#wallTitle").val());
 
