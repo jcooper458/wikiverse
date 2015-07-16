@@ -334,7 +334,7 @@ $(".sources-menu li").on("click", function(event){
 		$packeryContainer.packery();
 
 		//if its gmaps do the exception of running that func
-		if(source === "gmaps")getGmapsSearch();
+		if(source === "gmaps") getGmapsSearch();
 
 		$('#' + source + '-search').find('input[type=text]').focus();
 
@@ -1014,30 +1014,33 @@ function getFlickrs(topic, sort, type) {
 
 function createFlickrBrick(apiData, photoObj){
 
-	var thumbURL = apiData.sizes.size[1].source;
-	var mediumURL = apiData.sizes.size[6].source;
+	if (typeof apiData.sizes.size !== 'undefined' && apiData.sizes.size.length > 0 && typeof apiData.sizes.size[6] !== 'undefined') {										
+											
+		var thumbURL = apiData.sizes.size[1].source;
+		var mediumURL = apiData.sizes.size[6].source;
 
-	$flickrSearchBrick.find('.results').append('<img width="149" owner="' + photoObj.owner + '" large="' + mediumURL + '" thumb="' + thumbURL + '" src="' + thumbURL + '">');
+		$flickrSearchBrick.find('.results').append('<img width="149" owner="' + photoObj.owner + '" large="' + mediumURL + '" thumb="' + thumbURL + '" src="' + thumbURL + '">');
 
-	imagesLoaded( '#flickr-search .results', function() {
-		$packeryContainer.packery();
-	});
+		imagesLoaded( '#flickr-search .results', function() {
+			$packeryContainer.packery();
+		});
 
-	$flickrSearchBrick.find('img').unbind('click').click(function(e) {
+		$flickrSearchBrick.find('img').unbind('click').click(function(e) {
 
-		var thisPhoto = {
+			var thisPhoto = {
 
-			thumbURL: $(this).attr('thumb'),
-			mediumURL: $(this).attr('large'),
-			size: 'small',
-			owner: $(this).attr('owner')
+				thumbURL: $(this).attr('thumb'),
+				mediumURL: $(this).attr('large'),
+				size: 'small',
+				owner: $(this).attr('owner')
 
-		}
-		buildFoto(thisPhoto, "flickr", 500, 0);
-		$(this).remove();
-	});
+			}
+			buildFoto(thisPhoto, "flickr", 500, 0);
+			$(this).remove();
+		});
 
-	$flickrSearchBrick.find('.search-ui').show();
+		$flickrSearchBrick.find('.search-ui').show();
+	}
 }
 
 function createInstagramBrick(photo){
