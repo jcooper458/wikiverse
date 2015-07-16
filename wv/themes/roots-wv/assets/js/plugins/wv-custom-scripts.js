@@ -1316,6 +1316,7 @@ function getWikiLanguages(topic, lang, $brick){
 					//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
 					buildWikipedia(thisTopic, $brick.attr("tabindex"), thisX, thisY);
 				});
+				$packeryContainer.packery();
 			}
 		}
 	});
@@ -1366,6 +1367,8 @@ function getInterWikiLinks(section, $brick){
 
 					buildWikipedia(thisTopic, $brick.attr("tabindex"), thisX, thisY);
 				});
+
+				$packeryContainer.packery();
 			}
 		}
 	});
@@ -1677,6 +1680,8 @@ function buildSection(section, parent, x, y){
 			sectionHTML.find('.org').remove();
 			//sectionHTML.find('*').css('max-width', '290px');
 			sectionHTML.find('img').unwrap();
+			sectionHTML.find('img').attr('width', 290);
+			sectionHTML.find('img').removeAttr('height');
 
 			sectionHTML.find('a[class*=exter]').remove();
 

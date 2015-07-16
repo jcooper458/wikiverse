@@ -3,7 +3,7 @@
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 	<div class="container">
 
-		<i class="fa fa-wikipedia">&nbsp;Wikipedia Search</i>
+		<i class="fa fa-wikipedia"></i>&nbsp;Wikipedia
 
 	  	<?php get_template_part('templates/languages'); ?>
 
@@ -31,7 +31,7 @@
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 	<div class="container top-buffer-small  bottom-buffer-small">
 
-		<i class="fa fa-youtube-square">&nbsp;Youtube Search</i>
+		<i class="fa fa-youtube"></i>&nbsp;Youtube Search
 
 	  	<div class="input-group">
 	      <input type="text" id="youtube-searchinput" placeholder="" class="form-control searchbox">
@@ -57,7 +57,7 @@
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 	<div class="container top-buffer-small  bottom-buffer-small">
 
-		<i class="fa fa-flickr">&nbsp;Flickr Search</i>
+		<i class="fa fa-flickr"></i>&nbsp;Flickr Search
 
   	   <div class="input-group-btn">
   	   		<h5>Search by:  </h5>
@@ -103,7 +103,7 @@
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 	<div class="container top-buffer-small  bottom-buffer-small">
 
-		<i class="fa fa-instagram">&nbsp;Instagram Search</i>
+		<i class="fa fa-instagram"></i>&nbsp;Instagram Search
 
 		<h5>Search by:  </h5>
 	   <div class="input-group-btn">
@@ -145,7 +145,7 @@
 	<span class="instagram"><i class="fa fa-instagram"></i></span>
 	<span class="flickr-search"><i class="fa fa-flickr"></i></span>
 
-	<i class="fa fa-map-marker">&nbsp;Google Maps Search</i>
+	<i class="fa fa-map-marker"></i>&nbsp;Google Maps Search
 
 	<div class="container top-buffer-small  bottom-buffer-small">
 
@@ -162,7 +162,7 @@
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 	<div class="container top-buffer-small  bottom-buffer-small">
 
-		<i class="fa fa-soundcloud">&nbsp;Soundcloud Search</i>
+		<i class="fa fa-soundcloud"></i>&nbsp;Soundcloud Search
 
 	  	<div class="input-group">
 	      <input type="text" id="soundcloud-searchinput" placeholder="" class="form-control searchbox">
