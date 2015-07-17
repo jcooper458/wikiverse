@@ -10,25 +10,17 @@ $failed = !empty( $_GET['failed'] ) ? $_GET['failed'] : false;
 
 <div id="page-login" class="container page-login">
 	<div class="row">
-	<div class="col-md-4 col-md-offset-5">
-
-		<?php if ( !$success && $action != 'resetpass' ): ?>
-			<ul class="tabs cf" id="login-tabs">
-				<li class="<?php if ($action == 'login') echo 'active-tab'; ?>"><a href="#tab-login">Login</a></li>
-				<li class="<?php if ($action == 'register') echo 'active-tab'; ?>"><a href="#tab-register">Register</a></li>
-				<li class="<?php if ($action == 'forgot') echo 'active-tab'; ?>"><a href="#tab-forgot">Forgot?</a></li>
-			</ul>
-		<?php endif; ?>
+	<div class="col-md-4 col-md-offset-4">
 
 		<?php if ( $action == 'register' && $success ): ?>
 
 			<header class="entry-header">
-				<h1>Success!</h1>
+				<h1>welcome to wikiverse</h1>
 			</header>
 
 			<div class="message-box message-success">
 				<span class="icon-thumbs-up"></span>
-				Check your email for the password and then return to log in.
+				Check your email for the password and come back to log in.
 			</div>
 
 		<?php elseif ( $action == 'forgot' && $success ): ?>
@@ -73,6 +65,12 @@ $failed = !empty( $_GET['failed'] ) ? $_GET['failed'] : false;
 				<?php do_action( 'wordpress_social_login' ); ?>
 				<?php wp_login_form(); ?>
 
+				<?php if ( !$success && $action != 'resetpass' ): ?>
+					<ul class="tabs cf" id="login-tabs">
+						<li class="<?php if ($action == 'forgot') echo 'active-tab'; ?>"><a href="#tab-forgot">forgot password?</a></li>
+					</ul>
+				<?php endif; ?>
+
 			</div>
 
 			<div id="tab-register" class="tab-content" style="<?php if ( $action != 'register' ) echo 'display:none' ?>">
@@ -115,7 +113,7 @@ $failed = !empty( $_GET['failed'] ) ? $_GET['failed'] : false;
 					<p id="reg_passmail">A password will be e-mailed to you.</p>
 
 					<input type="hidden" name="redirect_to" value="/login/?action=register&amp;success=1" />
-					<p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="Register" /></p>
+					<p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="Sign Up" /></p>
 				</form>
 
 			</div>
