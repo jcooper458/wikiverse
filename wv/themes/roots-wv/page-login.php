@@ -70,7 +70,7 @@ $failed = !empty( $_GET['failed'] ) ? $_GET['failed'] : false;
 				<div class="entry-content">
 					<p>Don't have an account? <a href="/login/?action=register">Sign up now</a>!</p>
 				</div>
-
+				<?php do_action( 'wordpress_social_login' ); ?>
 				<?php wp_login_form(); ?>
 
 			</div>
