@@ -1028,6 +1028,9 @@ function createFlickrBrick(apiData, photoObj){
 			$packeryContainer.packery();
 		});
 
+		var y = parseInt($flickrSearchBrick.css('top'));
+		var x = parseInt($flickrSearchBrick.css('left'));
+
 		$flickrSearchBrick.find('img').unbind('click').click(function(e) {
 
 			var thisPhoto = {
@@ -1038,7 +1041,7 @@ function createFlickrBrick(apiData, photoObj){
 				owner: $(this).attr('owner')
 
 			}
-			buildFoto(thisPhoto, "flickr", 500, 0);
+			buildFoto(thisPhoto, "flickr", x + 100, y + 100);
 			$(this).remove();
 		});
 
@@ -1923,7 +1926,13 @@ function createboard(wpnonce) {
 					var id = '#apf-response';
 					$(id).html('');
 					$(id).append(data);
-					history.pushState('', 'wikiverse', data);
+
+					var url = data.split('-')[0];
+					var ID = data.split('-')[1];
+
+					//update the browser history and the new url
+					history.pushState('', 'wikiverse', url);
+					$('#postID').html(ID);
 				},
 				error: function(MLHttpRequest, textStatus, errorThrown) {
 					alert("cdascsacsa");
@@ -1932,6 +1941,11 @@ function createboard(wpnonce) {
 
 			$("#saveboardModal").modal('hide');
 
+			var nonce = $('#nonce').html()
+
+			$('#saveboard').attr('onclick', 'editboard("' + nonce + '")');
+			$('#saveboard').attr('id', $('#editboard').attr('id'));
+			$('#saveboard').html('Save Changes');
 
 		}
 		else{
@@ -1968,13 +1982,10 @@ function editboard(wpnonce) {
 		var tabindex = $(this).attr('tabindex');
 
 		wikiverse[tabindex] = {
-
 			Type: type,
 			Topic: topic,
 			Parent: parent
-
 		};
-
 	});
 
 	var JSONwikiverse = JSON.stringify(wikiverse);

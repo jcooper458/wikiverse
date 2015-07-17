@@ -23,7 +23,7 @@ function register_cpt_board() {
         'not_found' => _x( 'No boards found', 'board' ),
         'not_found_in_trash' => _x( 'No board members found in trash', 'board' ),
         'menu_name' => _x( 'boards', 'board' ),
-    );
+        );
 
     $args = array( 
         'labels' => $labels,
@@ -43,7 +43,7 @@ function register_cpt_board() {
         'can_export' => true,
         'rewrite' => array('slug'=>''),
         'capability_type' => 'post'
-    );
+        );
 
     register_post_type( 'board', $args );
 }
@@ -54,6 +54,21 @@ add_action( 'login_head', 'theme_hide_login_logo_login_head' );
 function theme_hide_login_logo_login_head() {
     echo '<style> #login h1 { display: none; } </style>';
 }
+
+add_filter('posts_where', 'include_for_author');
+function include_for_author($where){
+    if(is_author())
+        $where = str_replace(".post_type = 'post'", ".post_type in ('post', 'board')", $where);
+
+    return $where;
+}
+
+function add_subscriber_delete_cap() {
+    $role = get_role( 'subscriber' );
+    $role->add_cap( 'delete_posts' );
+    $role->add_cap( 'delete_published_posts' );
+}
+add_action( 'admin_init', 'add_subscriber_delete_cap');
 
 /**
  * Redirect to the custom login page
@@ -90,12 +105,12 @@ function wv_login_init () {
         $action == 'post-data'      ||          // don't mess with POST requests
         $action == 'reauth'         ||          // need to reauthorize
         $action == 'logout'                     // user is logging out
-    ) {
+        ) {
         return;
-    }
+}
 
-    wp_redirect( home_url( '/login/' ) );
-    exit;
+wp_redirect( home_url( '/login/' ) );
+exit;
 }
 add_action('login_init', 'wv_login_init');
 
@@ -104,8 +119,11 @@ add_action('login_init', 'wv_login_init');
  * Redirect logged in users to the right page
  */
 function wv_template_redirect () {
+
+    $current_user = wp_get_current_user();
+
     if ( is_page( 'login' ) && is_user_logged_in() ) {
-        wp_redirect( home_url( '/user/' ) );
+        wp_redirect( home_url( '/user/' . $current_user->user_login ) );
         exit();
     }
 
@@ -128,7 +146,7 @@ function wv_admin_init () {
     }
 
 }
-add_action( 'admin_init', 'wv_admin_init' );
+//add_action( 'admin_init', 'wv_admin_init' );
 
 
 /**
@@ -158,8 +176,8 @@ function wv_registration_redirect ($errors, $sanitized_user_login, $user_email) 
             wp_redirect( home_url('/login/') . '?action=register&failed=invalid_username' );
             
         } else if ( isset( $errors->errors['invalid_email'] ) ) {
-+
-+           wp_redirect( home_url('/login/') . '?action=register&failed=invalid_email' );
+            +
+            +           wp_redirect( home_url('/login/') . '?action=register&failed=invalid_email' );
 
         } else if ( isset( $errors->errors['empty_username'] ) || isset( $errors->errors['empty_email'] ) ) {
 

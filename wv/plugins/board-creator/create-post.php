@@ -53,7 +53,8 @@ function apf_addpost() {
 	$permalink = get_permalink( $post_id );
     //$results = $title . " - " . $permalink;  
 	
-	die($permalink); 
+  die($permalink . "-" . $post_id); 
+	//die($permalink); 
 
 } 
 
