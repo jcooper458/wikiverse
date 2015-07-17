@@ -1316,7 +1316,6 @@ function getYoutubes(topic) {
 				//append row to searchbox-table: NO RESULTS
 				$youtubeSearchBrick.find('.results').append('<tr class="no-results"><td>No Youtube Videos found for "'+topic+'"</td></tr>');
 			}
-
 		}
 	});
 }
@@ -1827,12 +1826,12 @@ function buildboard(){
 
 function buildYoutube(youtubeID, x, y){
 
-	var $iframe = '<iframe class="embed-responsive-item" id="ytplayer" type="text/html" width="290" height="190" src="http://www.youtube.com/embed/'+youtubeID+'" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0"/>';
+	var $iframe = '<iframe class="" id="ytplayer" type="text/html" width="290" height="190" src="http://www.youtube.com/embed/'+youtubeID+'" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0"/>';
 
 	var $youtubeBrick = $(defaultBrick);
 
-	$youtubeBrick.addClass('embed-responsive');
-	$youtubeBrick.addClass('embed-responsive-16by9');
+	/*$youtubeBrick.addClass('embed-responsive');
+	$youtubeBrick.addClass('embed-responsive-16by9');*/
 
 	$youtubeBrick.data('type', 'youtube');
 	$youtubeBrick.data('topic', youtubeID);

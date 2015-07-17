@@ -6,20 +6,21 @@ $failed = !empty( $_GET['failed'] ) ? $_GET['failed'] : false;
 
 ?>
 
-	<?php while ( have_posts() ) : the_post(); ?>
 
-<?php if ( !$success && $action != 'resetpass' ): ?>
-	<ul class="tabs cf" id="login-tabs">
-		<li class="<?php if ($action == 'login') echo 'active-tab'; ?>"><a href="#tab-login">Login</a></li>
-		<li class="<?php if ($action == 'register') echo 'active-tab'; ?>"><a href="#tab-register">Register</a></li>
-		<li class="<?php if ($action == 'forgot') echo 'active-tab'; ?>"><a href="#tab-forgot">Forgot?</a></li>
-	</ul>
-<?php endif; ?>
 
-	<article id="page-<?php the_ID(); ?>" class="meta-box hentry">
-		<div id="page-login" class="post-content page-login cf">
+<div id="page-login" class="container page-login">
+	<div class="row">
+	<div class="col-md-4 col-md-offset-5">
 
-<?php if ( $action == 'register' && $success ): ?>
+		<?php if ( !$success && $action != 'resetpass' ): ?>
+			<ul class="tabs cf" id="login-tabs">
+				<li class="<?php if ($action == 'login') echo 'active-tab'; ?>"><a href="#tab-login">Login</a></li>
+				<li class="<?php if ($action == 'register') echo 'active-tab'; ?>"><a href="#tab-register">Register</a></li>
+				<li class="<?php if ($action == 'forgot') echo 'active-tab'; ?>"><a href="#tab-forgot">Forgot?</a></li>
+			</ul>
+		<?php endif; ?>
+
+		<?php if ( $action == 'register' && $success ): ?>
 
 			<header class="entry-header">
 				<h1>Success!</h1>
@@ -30,7 +31,7 @@ $failed = !empty( $_GET['failed'] ) ? $_GET['failed'] : false;
 				Check your email for the password and then return to log in.
 			</div>
 
-<?php elseif ( $action == 'forgot' && $success ): ?>
+		<?php elseif ( $action == 'forgot' && $success ): ?>
 
 			<header class="entry-header">
 				<h1>Password recovery</h1>
@@ -41,7 +42,7 @@ $failed = !empty( $_GET['failed'] ) ? $_GET['failed'] : false;
 				Check your email for the instructions to get a new password.
 			</div>
 
-<?php elseif ( $action == 'resetpass' && $success ): ?>
+		<?php elseif ( $action == 'resetpass' && $success ): ?>
 
 			<header class="entry-header">
 				<h1>Password reset</h1>
@@ -52,22 +53,19 @@ $failed = !empty( $_GET['failed'] ) ? $_GET['failed'] : false;
 				Your password has been updated. <a href="/login/">Proceed to login</a>.
 			</div>
 
-<?php else: ?>
+		<?php else: ?>
 
 			<div id="tab-login" class="tab-content" style="<?php if ( $action != 'login' ) echo 'display:none' ?>">
 
-<?php if ( $action == 'login' && $failed ): ?>
-			<div class="message-box message-error">
-				<span class="icon-attention"></span>
-				<?php if ( $failed ): ?>
-					Invalid username or password. Please try again.
+				<?php if ( $action == 'login' && $failed ): ?>
+					<div class="message-box message-error">
+						<span class="icon-attention"></span>
+						<?php if ( $failed ): ?>
+							Invalid username or password. Please try again.
+						<?php endif; ?>
+					</div>
 				<?php endif; ?>
-			</div>
-<?php endif; ?>
 
-				<header class="entry-header">
-					<h1 class="entry-title">Login</h1>
-				</header>
 
 				<div class="entry-content">
 					<p>Don't have an account? <a href="/login/?action=register">Sign up now</a>!</p>
@@ -79,30 +77,26 @@ $failed = !empty( $_GET['failed'] ) ? $_GET['failed'] : false;
 
 			<div id="tab-register" class="tab-content" style="<?php if ( $action != 'register' ) echo 'display:none' ?>">
 
-<?php if ( $action == 'register' && $failed ): ?>
-			<div class="message-box message-error">
-				<span class="icon-attention"></span>
-				<?php if ( $failed == 'invalid_character' ): ?>
-					Username can only contain alphanumerical characters, "_" and "-". Please choose another username.
-				<?php elseif ( $failed == 'username_exists' ): ?>
-					Username already in use.
-				<?php elseif ( $failed == 'email_exists' ): ?>
-					E-mail already in use. Maybe you are already registered?
-				<?php elseif ( $failed == 'empty' ): ?>
-					All fields are required.
-				<?php else: ?>
-					An error occurred while registering the new user. Please try again.
+				<?php if ( $action == 'register' && $failed ): ?>
+					<div class="message-box message-error">
+						<span class="icon-attention"></span>
+						<?php if ( $failed == 'invalid_character' ): ?>
+							Username can only contain alphanumerical characters, "_" and "-". Please choose another username.
+						<?php elseif ( $failed == 'username_exists' ): ?>
+							Username already in use.
+						<?php elseif ( $failed == 'email_exists' ): ?>
+							E-mail already in use. Maybe you are already registered?
+						<?php elseif ( $failed == 'empty' ): ?>
+							All fields are required.
+						<?php else: ?>
+							An error occurred while registering the new user. Please try again.
+						<?php endif; ?>
+					</div>
 				<?php endif; ?>
-			</div>
-<?php endif; ?>
 
-				<header class="entry-header">
-					<h1 class="entry-title">Register</h1>
-				</header>
+	
+				<h2 class="entry-title">Sign Up</h2>
 
-				<div class="entry-content">
-					<p>Sign up for the cool stuff!</p>
-				</div>
 
 				<form name="registerform" id="registerform" action="<?php echo site_url('wp-login.php?action=register', 'login_post') ?>" method="post">
 					<p>
@@ -128,16 +122,16 @@ $failed = !empty( $_GET['failed'] ) ? $_GET['failed'] : false;
 
 			<div id="tab-forgot" class="tab-content" style="<?php if ( $action != 'forgot' ) echo 'display:none' ?>">
 
-<?php if ( $action == 'forgot' && $failed ): ?>
-			<div class="message-box message-error">
-				<span class="icon-attention"></span>
-				<?php if ( $failed == 'wrongkey' ): ?>
-					The reset key is wrong or expired. Please check that you used the right reset link or request a new one.
-				<?php else: ?>
-					Sorry, we couldn't find any user with that username or email.
+				<?php if ( $action == 'forgot' && $failed ): ?>
+					<div class="message-box message-error">
+						<span class="icon-attention"></span>
+						<?php if ( $failed == 'wrongkey' ): ?>
+							The reset key is wrong or expired. Please check that you used the right reset link or request a new one.
+						<?php else: ?>
+							Sorry, we couldn't find any user with that username or email.
+						<?php endif; ?>
+					</div>
 				<?php endif; ?>
-			</div>
-<?php endif; ?>
 				<header class="entry-header">
 					<h1 class="entry-title">Password recovery</h1>
 				</header>
@@ -159,58 +153,55 @@ $failed = !empty( $_GET['failed'] ) ? $_GET['failed'] : false;
 			</div>
 
 
-<?php if ( $action == 'resetpass' ): ?>
+			<?php if ( $action == 'resetpass' ): ?>
 
-	<div id="tab-resetpass" class="tab-content">
+				<div id="tab-resetpass" class="tab-content">
 
-	<?php if ( $failed ): ?>
-			<div class="message-box message-error">
-				<span class="icon-attention"></span>
-				The passwords don't match. Please try again.
-			</div>
+					<?php if ( $failed ): ?>
+						<div class="message-box message-error">
+							<span class="icon-attention"></span>
+							The passwords don't match. Please try again.
+						</div>
 
-	<?php endif; ?>
+					<?php endif; ?>
 
-				<header class="entry-header">
-					<h1 class="entry-title">Reset password</h1>
-				</header>
+					<header class="entry-header">
+						<h1 class="entry-title">Reset password</h1>
+					</header>
 
-				<div class="entry-content">
-					<p>Create a new password for your account.</p>
+					<div class="entry-content">
+						<p>Create a new password for your account.</p>
+					</div>
+
+					<form name="resetpasswordform" id="resetpasswordform" action="<?php echo site_url('wp-login.php?action=resetpass', 'login_post') ?>" method="post">
+						<p class="form-password">
+							<label for="pass1">New Password</label>
+							<input class="text-input" name="pass1" type="password" id="pass1">
+						</p>
+
+						<p class="form-password">
+							<label for="pass2">Confirm Password</label>
+							<input class="text-input" name="pass2" type="password" id="pass2">
+						</p>
+
+						<input type="hidden" name="redirect_to" value="/login/?action=resetpass&amp;success=1">
+						<?php
+						$rp_key = '';
+						$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
+						if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
+							list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
+						}
+						?>
+						<input type="hidden" name="rp_key" value="<?php echo esc_attr( $rp_key ); ?>">
+						<p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="Get New Password" /></p>
+					</form>
 				</div>
+			<?php endif; ?>
 
-				<form name="resetpasswordform" id="resetpasswordform" action="<?php echo site_url('wp-login.php?action=resetpass', 'login_post') ?>" method="post">
-					<p class="form-password">
-						<label for="pass1">New Password</label>
-						<input class="text-input" name="pass1" type="password" id="pass1">
-					</p>
-
-					<p class="form-password">
-						<label for="pass2">Confirm Password</label>
-						<input class="text-input" name="pass2" type="password" id="pass2">
-					</p>
-
-					<input type="hidden" name="redirect_to" value="/login/?action=resetpass&amp;success=1">
-					<?php
-					$rp_key = '';
-					$rp_cookie = 'wp-resetpass-' . COOKIEHASH;
-					if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
-						list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
-					}
-					?>
-					<input type="hidden" name="rp_key" value="<?php echo esc_attr( $rp_key ); ?>">
-					<p class="submit"><input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="Get New Password" /></p>
-				</form>
-			</div>
-<?php endif; ?>
-
-
-<?php endif; ?>
-
-		</div>
-	</article>
-
-	<?php endwhile; ?>
+		<?php endif; ?>
+	</div>
+</div>
+</div>
 
 
 <script>

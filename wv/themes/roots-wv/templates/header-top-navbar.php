@@ -84,7 +84,7 @@ get_currentuserinfo();
         </li>
         <?php } else { ?>
             <li><a href="/login">Login</a></li>
-            <li><a href="/login?action=register">Register</a></li>
+            <li><a href="/login?action=register">Sign Up</a></li>
          <?php } ?> 
       </ul>
 
