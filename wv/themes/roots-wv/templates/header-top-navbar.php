@@ -77,8 +77,8 @@ get_currentuserinfo();
           <ul class="dropdown-menu">
             <li><a href="/start">Create Board</a></li>
             <li><a href="/user/<?php echo esc_html($current_user->display_name); ?>">My boards</a></li>
-            <li><a href="/user">Change Password</a></li>
             <li role="separator" class="divider"></li>
+            <li><a href="/user">Change Password</a></li>            
             <li><a href="<?php echo wp_logout_url( home_url() ); ?>">Logout</a></li>
           </ul>
         </li>

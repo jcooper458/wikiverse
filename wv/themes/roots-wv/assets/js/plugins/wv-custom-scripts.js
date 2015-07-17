@@ -1041,7 +1041,7 @@ function createFlickrBrick(apiData, photoObj){
 				owner: $(this).attr('owner')
 
 			}
-			buildFoto(thisPhoto, "flickr", x + 100, y + 100);
+			buildFoto(thisPhoto, "flickr", x + 200, y + 200);
 			$(this).remove();
 		});
 
@@ -1057,6 +1057,9 @@ function createInstagramBrick(photo){
 		$packeryContainer.packery();
 	});
 
+	var y = parseInt($instagramSearchBrick.css('top'));
+	var x = parseInt($instagramSearchBrick.css('left'));
+		
 	$instagramSearchBrick.find('img').unbind('click').click(function(e) {
 
 		var thisPhoto = {
@@ -1064,7 +1067,7 @@ function createInstagramBrick(photo){
 			smallURL: $(this).attr('src'),
 			size: 'small'
 		}
-		buildFoto(thisPhoto, "instagram", 500, 0);
+		buildFoto(thisPhoto, "instagram", x + 200, y + 200);
 		$(this).remove();
 	});
 
