@@ -1028,8 +1028,8 @@ function createFlickrBrick(apiData, photoObj){
 			$packeryContainer.packery();
 		});
 
-		//var y = parseInt($flickrSearchBrick.css('top'));
-		//var x = parseInt($flickrSearchBrick.css('left'));
+		var y = parseInt($flickrSearchBrick.css('top'));
+		var x = parseInt($flickrSearchBrick.css('left'));
 
 		$flickrSearchBrick.find('img').unbind('click').click(function(e) {
 
@@ -1041,7 +1041,7 @@ function createFlickrBrick(apiData, photoObj){
 				owner: $(this).attr('owner')
 
 			}
-			buildFoto(thisPhoto, "flickr");
+			buildFoto(thisPhoto, "flickr", x + 100, y + 100);
 			$(this).remove();
 		});
 
@@ -1057,9 +1057,6 @@ function createInstagramBrick(photo){
 		$packeryContainer.packery();
 	});
 
-	//var y = parseInt($instagramSearchBrick.css('top'));
-	//var x = parseInt($instagramSearchBrick.css('left'));
-
 	$instagramSearchBrick.find('img').unbind('click').click(function(e) {
 
 		var thisPhoto = {
@@ -1067,7 +1064,7 @@ function createInstagramBrick(photo){
 			smallURL: $(this).attr('src'),
 			size: 'small'
 		}
-		buildFoto(thisPhoto, "instagram");
+		buildFoto(thisPhoto, "instagram", 500, 0);
 		$(this).remove();
 	});
 
