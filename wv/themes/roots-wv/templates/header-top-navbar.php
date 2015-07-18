@@ -31,7 +31,7 @@ get_currentuserinfo();
 
       <ul class="nav navbar-nav">
 
-         <?php if ( is_page('start') ) { ?>
+         <?php if ( is_page('start') || is_singular("board")) { ?>
 
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">start <span class="caret"></span></a>
@@ -59,12 +59,15 @@ get_currentuserinfo();
  	    <?php if ( is_user_logged_in() ) { 
 	    	$nonce = wp_create_nonce( 'board' ); ?>
         <div id="nonce"><?php echo $nonce ?></div>
+          
 	    	<?php if ( is_page('start') ) { ?>
-	    		<li><a href="#" id="saveboard" onclick="createboard('<?php echo $nonce ?>');" >Save board</a></li>
+          <li><a href="#" class="board-pilot" id="clearboard" onclick="clearboard('<?php echo $nonce ?>');" >clear board</a></li> 
+	    		<li><a href="#" class="board-pilot" id="saveboard" onclick="createboard('<?php echo $nonce ?>');" >save board</a></li>
 			<?php }  ?>
-
+    
 			<?php if ( is_singular("board") ) { ?>
-				<li><a href="#" id="editboard" onclick="editboard('<?php echo $nonce ?>');" >Save Changes</a></li>
+        <li><a href="#" class="board-pilot" id="clearboard" onclick="clearboard('<?php echo $nonce ?>');" >clear board</a></li> 
+				<li><a href="#" class="board-pilot" id="editboard" onclick="saveboard('<?php echo $nonce ?>');" >save changes</a></li>
 			<?php }  ?> 	
 
 			<?php } else {?> 
@@ -75,11 +78,11 @@ get_currentuserinfo();
           <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo esc_html($current_user->display_name); ?> <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="/start">Create Board</a></li>
-            <li><a href="/user/<?php echo esc_html($current_user->display_name); ?>">My boards</a></li>
+            <li><a href="/start">create board</a></li>
+            <li><a href="/user/<?php echo esc_html($current_user->display_name); ?>">my boards</a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="/user">Change Password</a></li>            
-            <li><a href="<?php echo wp_logout_url( home_url() ); ?>">Logout</a></li>
+            <li><a href="/user">change password</a></li>            
+            <li><a href="<?php echo wp_logout_url( home_url() ); ?>">logout</a></li>
           </ul>
         </li>
         <?php } else { ?>

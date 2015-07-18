@@ -130,7 +130,7 @@
 </div>
 
 
-<div id="gmaps-search" data-type="gmaps" data-topic="" class="brick invisible w2 gmaps">
+<div id="gmaps-search" data-type="gmaps" data-topic="" class="brick invisible w2-map gmaps">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 	<span class="instagram"><i class="fa fa-instagram"></i></span>

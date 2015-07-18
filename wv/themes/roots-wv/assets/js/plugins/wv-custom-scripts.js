@@ -51,7 +51,7 @@ $packeryContainer.on( "click", ".cross", function() {
 document.addEventListener("keydown", function(e) {
   if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
     e.preventDefault();
-    $('#editboard').trigger('click');
+    $('#saveboard').trigger('click');
   }
 }, false);
 
@@ -172,7 +172,8 @@ $packeryContainer.on("click", ".instagram-icon", function(){
 //show save board button on packery change (needs work)
 $packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laidOutItems ) {
 
-	$("#saveboard").css('display', 'block');
+	//cant use show() or fadeIn() coz it messes up the bootstrap nav
+	$(".board-pilot").css('display', 'block');
 
 	//when clear results is clicked
 	$('.clear').on('click', function(){
@@ -405,24 +406,39 @@ $packeryContainer.on( 'click', 'img', function( event ) {
 
 	var $brick= $( event.target ).parents('.brick');
   	var tempDataObj = $brick.data('topic');
+  	var widthClass; 
 
   	// toggle the size for images
   	if($( event.target ).is('img.img-result')){
+
   		//make it large
-  		$brick.toggleClass('w2');
+  		$brick.toggleClass("w2");
 
   		//if it is large, update the dataObj so it saves the state
-  		if($brick.hasClass('w2')){
+  		if($brick.hasClass("w2")){
   			tempDataObj.size = 'large';
+  			$packeryContainer.packery();
   		}else{
   			tempDataObj.size = 'small';
+  			$container.packery( 'fit', event.target );
   		}
   		//set the dataObj to data topic
   		$brick.data('topic', tempDataObj);
   	}
   	// trigger layout
-  	$packeryContainer.packery();
+
 });
+
+function isPortrait(imgObj){
+
+	if(imgObj.width() < imgObj.height())
+	{
+	   return true;
+	}else
+	{
+	   return false;
+	}
+}
 
 //----------------EVENTS----------------------------
 
@@ -614,7 +630,7 @@ function buildGmaps(mapObj){
 	$mapbrick.data('position', mapObj.center);
 	$mapbrick.data('bounds', mapObj.bounds.southWest + "," + mapObj.bounds.northEast);
 
-	$mapbrick.addClass('w2');
+	$mapbrick.addClass('w2-map');
 	$mapbrick.addClass('gmaps');
 
 	$mapbrick.prepend($mapcanvas);
@@ -1895,7 +1911,8 @@ function createboard(wpnonce) {
 
 	$("#saveboardModal").modal('show');
 	$("#boardTitle").focus();	
-
+	
+	$packeryContainer.packery();
 	
 	$('#boardTitle').keyup(function (e) {
 		e.preventDefault();
@@ -1947,8 +1964,8 @@ function createboard(wpnonce) {
 
 			var nonce = $('#nonce').html()
 
-			$('#saveboard').attr('onclick', 'editboard("' + nonce + '")');
-			$('#saveboard').attr('id', $('#editboard').attr('id'));
+			$('#saveboard').attr('onclick', 'saveboard("' + nonce + '")');
+			$('#saveboard').attr('id', $('#saveboard').attr('id'));
 			$('#saveboard').html('Save Changes');
 
 		}
@@ -1962,7 +1979,15 @@ function createboard(wpnonce) {
 
 }
 
-function editboard(wpnonce) {
+function clearboard(wpnonce){
+	if (confirm('Are you sure you want to clear this board?')) {
+	   	$packeryContainer.empty();
+		$packeryContainer.packery();
+		saveboard(wpnonce);
+	} 
+}
+
+function saveboard(wpnonce) {
 
 	var postid = $('#postID').html();
 
