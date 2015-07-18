@@ -126,9 +126,6 @@
 <div id="gmaps-search" data-type="gmaps" data-topic="" class="search brick invisible w2-fix gmaps">
 	<span class="cross"><i class="fa fa-close"></i></span>
 
-	<span class="instagram"><i class="fa fa-instagram"></i></span>
-	<span class="flickr-search"><i class="fa fa-flickr"></i></span>
-
 	<i class="fa fa-map-marker"></i>&nbsp;Google Maps Search
 
 	<input id="pac-input" class="controls" type="text" placeholder="Enter a location">

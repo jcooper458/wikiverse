@@ -237,6 +237,8 @@ $packeryContainer.on("click", ".gmaps .fa-flickr", function(){
 
 	var $thisBrick = $(this).parents(".brick");
 
+	$packeryContainer.packery('fit', $thisBrick[0], 300, 0);
+
 	var position = $thisBrick.data("position");
 	var sort = $flickrSearchBrick.find(".radio-inline input[type='radio']:checked").val();
 
@@ -247,7 +249,6 @@ $packeryContainer.on("click", ".gmaps .fa-flickr", function(){
 	$flickrSearchBrick.find('input#flickr-searchinput').val(position);
 	$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
 	//$flickrSearchBrick.find('.start').addClass('disabled');
-
 
 	getFlickrs(position, sort, "geoQuery");
 
@@ -264,6 +265,8 @@ $packeryContainer.on("click", ".gmaps .fa-instagram", function(){
 	var $thisBrick = $(this).parents(".brick");
 
 	var position = $thisBrick.data("position");
+
+	$packeryContainer.packery('fit', $thisBrick[0], 300, 0);
 
 	$instagramSearchBrick.find('input').val(position);
 
@@ -495,7 +498,7 @@ function getGmapsSearch(){
 	var mapOptions = {
 		center: {lat: 35, lng: 0},
 		zoom: 1,
-		scrollwheel: false,
+		//scrollwheel: false,
 	};
 
 	var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
@@ -516,7 +519,7 @@ function getGmapsSearch(){
 		infowindow.open(map, marker);
 	});
 
-   google.maps.event.addListener(map, 'click', function(event) {
+   google.maps.event.addListener(map, 'rightclick', function(event) {
 
    		markers.forEach(function(marker){
    			marker.setMap(null);
@@ -536,12 +539,10 @@ function getGmapsSearch(){
 		$gmapsSearchBrick.data('position', positionUrlString);
 		$gmapsSearchBrick.data('bounds', map.getBounds().toUrlValue());
 
-        $gmapsSearchBrick.find(".fa-instagram, .fa-flickr").fadeIn("slow");
+        //$gmapsSearchBrick.find(".fa-instagram, .fa-flickr").fadeIn("slow");
     });
 
 	google.maps.event.addListener(autocomplete, 'place_changed', function() {
-
-		$gmapsSearchBrick.find(".fa-instagram, .fa-flickr").fadeIn("slow");
 
 		infowindow.close();
 
@@ -568,9 +569,10 @@ function getGmapsSearch(){
 		$gmapsSearchBrick.data('position', marker.place.location.toUrlValue());
 		$gmapsSearchBrick.data('bounds', map.getBounds().toUrlValue());
 
-		infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-		//	'Place ID: ' + place.place_id + '<br>' +
-		place.formatted_address);
+		infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + place.formatted_address + 
+			'<br><br>get photos from: ' +
+			'<span class="instagram"><i class="fa fa-instagram"></i></span>' + 
+			'<span class="flickr-search"><i class="fa fa-flickr"></i></span>');
 
 		infowindow.open(map, marker);
 	});
