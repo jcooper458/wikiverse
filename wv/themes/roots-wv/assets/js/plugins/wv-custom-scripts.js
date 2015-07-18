@@ -230,6 +230,8 @@ $packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laid
 //This time for the gmaps brick, in thise case we only want the bounds passed in to getFlickrs
 $packeryContainer.on("click", ".gmaps .fa-flickr", function(){
 
+	$packeryContainer.find('.search').addClass("invisible");
+
 	$flickrSearchBrick.removeClass("invisible");
 	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
 
@@ -256,6 +258,8 @@ $packeryContainer.on("click", ".gmaps .fa-flickr", function(){
 
 //create images interconnection and trigger getInstagrams()
 $packeryContainer.on("click", ".gmaps .fa-instagram", function(){
+
+	$packeryContainer.find('.search').addClass("invisible");
 
 	$instagramSearchBrick.removeClass("invisible");
 	$packeryContainer.prepend($instagramSearchBrick).packery( 'prepended', $instagramSearchBrick);
@@ -325,6 +329,7 @@ $(".sources-menu li").on("click", function(event){
 
 	var $thisSearchBrick =	$('#' + source + '-search');
 		$thisSearchBrick.removeClass("invisible");
+		$thisSearchBrick.fadeIn('slow');
 
 	$packeryContainer.packery( 'stamp', $thisSearchBrick );
 	$packeryContainer.packery();
@@ -521,6 +526,9 @@ function getGmapsSearch(){
 
    google.maps.event.addListener(map, 'rightclick', function(event) {
 
+   		marker.setVisible(false);
+   		infowindow.close();
+
    		markers.forEach(function(marker){
    			marker.setMap(null);
    		});
@@ -530,6 +538,11 @@ function getGmapsSearch(){
 	        map: map
 	    });
 
+		infowindow.setContent('get photos from: <br><br>' +
+			'<span class="instagram"><i class="fa fa-instagram"></i></span>' + 
+			'<span class="flickr-search"><i class="fa fa-flickr"></i></span>');
+
+        infowindow.open(map, droppedMarker);
 		markers.push(droppedMarker);
 
 		//find the location of the marker
