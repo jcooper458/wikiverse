@@ -109,6 +109,7 @@ $packeryContainer.on("click", ".youtube-icon", function(){
 
 	$youtubeSearchBrick.removeClass("invisible");
 	$packeryContainer.prepend($youtubeSearchBrick).packery( 'prepended', $youtubeSearchBrick);
+	$youtubeSearchBrick.each( makeEachDraggable );
 	$packeryContainer.packery();
 
 	var $thisBrick = $(this).parents(".brick");
@@ -130,6 +131,7 @@ $packeryContainer.on("click", ".flickr-icon", function(){
 
 	$flickrSearchBrick.removeClass("invisible");
 	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
+	$flickrSearchBrick.each( makeEachDraggable );
 	$packeryContainer.packery();
 
 	var $thisBrick = $(this).parents(".brick");
@@ -151,6 +153,7 @@ $packeryContainer.on("click", ".instagram-icon", function(){
 
 	$instagramSearchBrick.removeClass("invisible");
 	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $instagramSearchBrick);
+	$instagramSearchBrick.each( makeEachDraggable );
 	$packeryContainer.packery();
 
 	var $thisBrick = $(this).parents(".brick");
@@ -202,6 +205,7 @@ $packeryContainer.on("click", ".gmaps .fa-flickr", function(){
 
 	$flickrSearchBrick.removeClass("invisible");
 	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
+	$flickrSearchBrick.each( makeEachDraggable );
 	$packeryContainer.packery();
 
 	var $thisBrick = $(this).parents(".brick");
@@ -227,6 +231,7 @@ $packeryContainer.on("click", ".gmaps .fa-instagram", function(){
 
 	$instagramSearchBrick.removeClass("invisible");
 	$packeryContainer.prepend($instagramSearchBrick).packery( 'prepended', $instagramSearchBrick);
+	$instagramSearchBrick.each( makeEachDraggable );
 	$packeryContainer.packery();
 
 	var $thisBrick = $(this).parents(".brick");
@@ -343,7 +348,7 @@ $(".sources-menu li").on("click", function(event){
 	else{
 		 $('html, body').animate({
 	        scrollTop: 0
-	    }, 1000);
+	    }, 500);
 	}
 });
 
@@ -416,16 +421,16 @@ $packeryContainer.on( 'click', 'img', function( event ) {
 
   		//if it is large, update the dataObj so it saves the state
   		if($brick.hasClass("w2")){
-  			tempDataObj.size = 'large';
-  			$packeryContainer.packery();
+  			tempDataObj.size = 'large'; 			
   		}else{
   			tempDataObj.size = 'small';
-  			$container.packery( 'fit', event.target );
   		}
   		//set the dataObj to data topic
   		$brick.data('topic', tempDataObj);
+  		
+  		// trigger layout
+  		$packeryContainer.packery();
   	}
-  	// trigger layout
 
 });
 
@@ -1057,7 +1062,7 @@ function createFlickrBrick(apiData, photoObj){
 				owner: $(this).attr('owner')
 
 			}
-			buildFoto(thisPhoto, "flickr", x + 100, y);
+			buildFoto(thisPhoto, "flickr", x + 200, 0);
 			$(this).remove();
 		});
 
@@ -1083,7 +1088,7 @@ function createInstagramBrick(photo){
 			smallURL: $(this).attr('src'),
 			size: 'small'
 		}
-		buildFoto(thisPhoto, "instagram", x + 500, y + 400);
+		buildFoto(thisPhoto, "instagram", x + 300, 0);
 		$(this).remove();
 	});
 
