@@ -21,7 +21,7 @@ getSearchBricks();
 // initialize Packery
 var packery = $packeryContainer.packery({
 	itemSelector: '.brick',
-//	stamp: '.search',
+	stamp: '.search',
 	gutter: 10,
 	columnWidth: 300
 //	rowHeight: 60,
@@ -653,7 +653,7 @@ function buildGmaps(mapObj){
 	$mapbrick.data('position', mapObj.center);
 	$mapbrick.data('bounds', mapObj.bounds.southWest + "," + mapObj.bounds.northEast);
 
-	$mapbrick.addClass('w2-map');
+	$mapbrick.addClass('w2-fix');
 	$mapbrick.addClass('gmaps');
 
 	$mapbrick.prepend($mapcanvas);
@@ -1242,7 +1242,7 @@ function getInstagrams(query, type) {
 function buildSoundcloud(soundcloudObj, x, y){
 
 	var $brick = $(defaultBrick);
-	$brick.addClass('w2');
+	$brick.addClass('w2-fix');
 
 	var $soundcloudIframe = $('<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=' + soundcloudObj.uri + '&color=0066cc"></iframe>');
 
@@ -2006,7 +2006,6 @@ function clearboard(wpnonce){
 	if (confirm('Are you sure you want to clear this board?')) {
 	   	$packeryContainer.empty();
 		$packeryContainer.packery();
-		saveboard(wpnonce);
 	} 
 }
 

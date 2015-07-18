@@ -34,14 +34,14 @@ get_currentuserinfo();
          <?php if ( is_page('start') || is_singular("board")) { ?>
 
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">start <span class="caret"></span></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">add content<span class="caret"></span></a>
           <ul class="dropdown-menu sources-menu">
-			    <li id="wikipedia" ><a href="#"><i class="fa fa-wikipedia"></i>		Wikipedia	</a></li>
-			    <li id="youtube"   ><a href="#"><i class="fa fa-youtube"></i>		YouTube		</a></li>
-			    <li id="flickr"    ><a href="#"><i class="fa fa-flickr"></i>		Flickr		</a></li>
-			    <li id="instagram" ><a href="#"><i    class="fa fa-instagram"></i>	Instagram	</a></li>
-			    <li id="soundcloud"><a href="#"><i     class="fa fa-soundcloud"></i>&nbsp;Soundcloud	</a></li>
-			    <li id="gmaps"     ><a href="#">&nbsp;<i class="fa fa-map-marker"></i>	Google Maps	</a></li>
+			    <li id="wikipedia" ><a href="#"><i class="fa fa-wikipedia"></i>		wikipedia	</a></li>
+			    <li id="youtube"   ><a href="#"><i class="fa fa-youtube"></i>		youTube		</a></li>
+			    <li id="flickr"    ><a href="#"><i class="fa fa-flickr"></i>		flickr		</a></li>
+			    <li id="instagram" ><a href="#"><i    class="fa fa-instagram"></i>	instagram	</a></li>
+			    <li id="soundcloud"><a href="#"><i     class="fa fa-soundcloud"></i>&nbsp;soundcloud	</a></li>
+			    <li id="gmaps"     ><a href="#">&nbsp;<i class="fa fa-map-marker"></i>	google maps	</a></li>
           </ul>
         </li>
 
