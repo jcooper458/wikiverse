@@ -819,7 +819,7 @@ function buildFoto(photoObj, type, x, y){
 	$packeryContainer.append($brick).packery( 'appended', $brick);
 	$brick.each( makeEachDraggable );
 
-	$packeryContainer.packery('fit', $brick[0], x, y);
+	$packeryContainer.packery('fit', $brick[0], x + 400, y + 400);
 
 	var imgLoad = imagesLoaded( $brick );
 
@@ -1041,7 +1041,7 @@ function createFlickrBrick(apiData, photoObj){
 				owner: $(this).attr('owner')
 
 			}
-			buildFoto(thisPhoto, "flickr", x + 100, y + 100);
+			buildFoto(thisPhoto, "flickr", x + 100, y);
 			$(this).remove();
 		});
 
@@ -1057,6 +1057,9 @@ function createInstagramBrick(photo){
 		$packeryContainer.packery();
 	});
 
+	var y = parseInt($instagramSearchBrick.css('top'));
+	var x = parseInt($instagramSearchBrick.css('left'));
+
 	$instagramSearchBrick.find('img').unbind('click').click(function(e) {
 
 		var thisPhoto = {
@@ -1064,7 +1067,7 @@ function createInstagramBrick(photo){
 			smallURL: $(this).attr('src'),
 			size: 'small'
 		}
-		buildFoto(thisPhoto, "instagram", 500, 0);
+		buildFoto(thisPhoto, "instagram", x + 500, y + 400);
 		$(this).remove();
 	});
 
@@ -1197,7 +1200,7 @@ function getInstagrams(query, type) {
 	}
 }
 
-function buildSoundcloud(soundcloudObj){
+function buildSoundcloud(soundcloudObj, x, y){
 
 	var $brick = $(defaultBrick);
 	$brick.addClass('w2');
@@ -1209,10 +1212,11 @@ function buildSoundcloud(soundcloudObj){
 
 	$brick.append($soundcloudIframe);
 
-	$packeryContainer.append($brick).packery( 'appended', $brick);
+	$packeryContainer.append($brick).packery( 'prepended', $brick);
 
 	$brick.each( makeEachDraggable );
-	//$packeryContainer.packery();
+
+	$packeryContainer.packery('fit', $brick[0], x, y);
 }
 
 function getSoundcloud(query, params) {
@@ -1231,7 +1235,11 @@ function getSoundcloud(query, params) {
 			$soundcloudSearchBrick.find('.results').append('<tr data-toggle="tooltip" title="' + track.title + '" uri="' + track.uri + '" genre="' + track.genre + '"><td><el class="result">' + track.title + '</el></td></tr>');
 
 			//create the tooltips
-			$('tr').tooltip({animation: true, placement: 'bottom'});
+			$('tr').tooltip({animation: true, placement: 'right'});
+
+
+			var y = parseInt($soundcloudSearchBrick.css('top'));
+			var x = parseInt($soundcloudSearchBrick.css('left'));
 
 			//bind event to every row
 			$soundcloudSearchBrick.find('tr').unbind('click').click(function(e) {
@@ -1242,7 +1250,7 @@ function getSoundcloud(query, params) {
 					genre: $(this).attr('genre')
 				}
 
-				buildSoundcloud(soundcloudObj);
+				buildSoundcloud(soundcloudObj, x + 200, y);
 
 				$(this).tooltip('destroy');
 				$(this).remove();
@@ -1295,7 +1303,7 @@ function getYoutubes(topic) {
 					});
 
 					//create the tooltips
-					$('tr').tooltip({animation: true, placement: 'bottom'});
+					$('tr').tooltip({animation: true, placement: 'right'});
 
 					//bind event to every row -> so you can start the wikiverse
 					$youtubeSearchBrick.find('tr').unbind('click').click(function(e) {
@@ -1452,7 +1460,7 @@ function getWikis(topic, lang) {
 					$wikiSearchBrick.find('.results').append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td><el class="result">'+title+'</el></td></tr>');
 
 					//create the tooltips
-					$('tr').tooltip({animation: true, placement: 'bottom'});
+					$('tr').tooltip({animation: false, placement: 'right'});
 					//bind event to every row -> so you can start the wikiverse
 					$wikiSearchBrick.find('tr').unbind('click').click(function(e) {
 
@@ -1585,9 +1593,7 @@ function buildWikipedia(topic, parent, x, y){
 				success: function(data){
 					//if there is images, grab the first and append it
 					if (typeof data.parse.images !== 'undefined' && data.parse.images.length > 0) {
-
 						data.parse.images.every(function(image){
-
 							//only look for jpgs
 							if(image.indexOf("jpg") > -1){
 								//Go grab the URL
@@ -1614,8 +1620,7 @@ function buildWikipedia(topic, parent, x, y){
 										image.insertAfter($brick.find("h2"));
 
 										imagesLoaded( $brick, function() {
-											$packeryContainer.packery();
-											
+											$packeryContainer.packery();											
 										});			
 									}
 								});

@@ -34,7 +34,7 @@ get_currentuserinfo();
          <?php if ( is_page('start') ) { ?>
 
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Start <span class="caret"></span></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">start <span class="caret"></span></a>
           <ul class="dropdown-menu sources-menu">
 			    <li id="wikipedia" ><a href="#"><i class="fa fa-wikipedia"></i>		Wikipedia	</a></li>
 			    <li id="youtube"   ><a href="#"><i class="fa fa-youtube"></i>		YouTube		</a></li>
@@ -47,7 +47,7 @@ get_currentuserinfo();
 
       <?php } else if (is_page('home')) { ?>
 
-          <li><a href="/start">Create Board</a></li>
+          <li><a href="/start">create board</a></li>
 
       <?php }  ?>
 
@@ -83,8 +83,8 @@ get_currentuserinfo();
           </ul>
         </li>
         <?php } else { ?>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/login?action=register">Sign Up</a></li>
+            <li><a href="/login">login</a></li>
+            <li><a href="/login?action=register">sign up</a></li>
          <?php } ?> 
       </ul>
 
