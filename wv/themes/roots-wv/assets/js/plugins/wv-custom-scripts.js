@@ -21,7 +21,7 @@ getSearchBricks();
 // initialize Packery
 var packery = $packeryContainer.packery({
 	itemSelector: '.brick',
-//	stamp: '.stamp',
+//	stamp: '.search',
 	gutter: 10,
 	columnWidth: 300
 //	rowHeight: 60,
@@ -47,7 +47,7 @@ $packeryContainer.on( "click", ".cross", function() {
 });
 
 //----------------keyboard shortcuts----------------------------
-
+/*
 document.addEventListener("keydown", function(e) {
   if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
     e.preventDefault();
@@ -101,7 +101,7 @@ document.addEventListener("keydown", function(e) {
     $('li#youtube').trigger('click');
   }
 }, false);
-
+*/
 //----------------keyboard shortcuts----------------------------
 //
 //create youtube interconnection button and trigger search
@@ -252,11 +252,101 @@ $packeryContainer.on("click", ".gmaps .fa-instagram", function(){
 
 });
 
+//Toggle Size of Images on click
+$packeryContainer.on( 'click', 'img', function( event ) {
+
+	var $brick= $( event.target ).parents('.brick');
+  	var tempDataObj = $brick.data('topic');
+  	var widthClass; 
+
+  	// toggle the size for images
+  	if($( event.target ).is('img.img-result')){
+
+  		//make it large
+  		$brick.toggleClass("w2");
+
+  		//if it is large, update the dataObj so it saves the state
+  		if($brick.hasClass("w2")){
+  			tempDataObj.size = 'large'; 			
+  		}else{
+  			tempDataObj.size = 'small';
+  		}
+  		//set the dataObj to data topic
+  		$brick.data('topic', tempDataObj);
+  		
+  		// trigger layout
+  		$packeryContainer.packery();
+  	}
+
+});
+
 $packeryContainer.packery( 'on', 'layoutComplete', orderItems );
 $packeryContainer.packery( 'on', 'dragItemPositioned', orderItems );
 
 function getSearchBricks(){
 
+//Global get SearchBoxes
+$(".sources-menu li").on("click", function(event){
+	//invisible all 
+	$packeryContainer.find('.search').addClass("invisible");
+
+	//what are we searching for? wikipedia, soundcloud, etc
+	var source = $(this).attr('id');
+
+	var $thisSearchBrick =	$('#' + source + '-search');
+		$thisSearchBrick.removeClass("invisible");
+
+	$packeryContainer.packery( 'stamp', $thisSearchBrick );
+	$packeryContainer.packery();
+
+	if(source === "gmaps") getGmapsSearch();
+	$('#' + source + '-search').find('input[type=text]').focus();
+
+	 $('html, body').animate({
+        scrollTop: 0
+    }, 500);
+});
+
+
+$(".search .start").on("click", function(){
+
+	switch ($(this).parents('.search').attr('id')) {
+
+	    case "wikipedia-search":
+			
+			var topic = $("#wiki-searchinput").val();
+			getWikis( topic, lang );
+
+	    break;
+
+	    case "flickr-search":
+			var flickrType = $("#flickrType").val();
+			var query = $("#flickr-search .searchbox").val();
+			var sort = $("#flickr-search .radio-inline input[type='radio']:checked").val();
+
+			getFlickrs(query, sort, flickrType);
+	    break;
+
+	    case "instagram-search":
+			var query = $("#instagram-search .searchbox").val();
+			var instagramType = $("#instagramType").val();
+
+			getInstagrams(query, instagramType);
+	    break;
+
+	    case "youtube-search":
+			var topic = $("#youtube-search .searchbox").val();
+			getYoutubes( topic );
+	    break;
+
+	    case "soundcloud-search":			
+			var query = $("#soundcloud-search .searchbox").val();
+			var params = $("#soundcloud-search .radio-inline input[type='radio']:checked").val();
+
+			getSoundcloud(query, params);
+	    break;
+	 }
+});
 
 var lang = $("#langselect").val();
 
@@ -322,78 +412,6 @@ $('#youtube-searchinput').typeahead({
 	}
 });
 
-
-//Global get SearchBoxes
-$(".sources-menu li").on("click", function(event){
-
-	//what are we searching for? wikipedia, soundcloud, etc
-	var source = $(this).attr('id');
-
-	//if searchbrick is not inside packery
-	if(!($('#' + source + '-search','#packery').length == 1)) {
-
-		$('#' + source + '-search').removeClass("invisible");
-		$packeryContainer.prepend($('#' + source + '-search')).packery( 'prepended', $('#' + source + '-search'));
-		$('#' + source + '-search').each( makeEachDraggable );	
-
-		$packeryContainer.packery('fit', $('#' + source + '-search')[0], 0, 0);
-		$packeryContainer.packery();
-
-		//if its gmaps do the exception of running that func
-		if(source === "gmaps") getGmapsSearch();
-
-		$('#' + source + '-search').find('input[type=text]').focus();
-
-	}
-	else{
-		 $('html, body').animate({
-	        scrollTop: 0
-	    }, 500);
-	}
-});
-
-
-$(".search .start").on("click", function(){
-
-	switch ($(this).parents('.brick').attr('id')) {
-
-	    case "wikipedia-search":
-			
-			var topic = $("#wiki-searchinput").val();
-			getWikis( topic, lang );
-
-	    break;
-
-	    case "flickr-search":
-			var flickrType = $("#flickrType").val();
-			var query = $("#flickr-search .searchbox").val();
-			var sort = $("#flickr-search .radio-inline input[type='radio']:checked").val();
-
-			getFlickrs(query, sort, flickrType);
-	    break;
-
-	    case "instagram-search":
-			var query = $("#instagram-search .searchbox").val();
-			var instagramType = $("#instagramType").val();
-
-			getInstagrams(query, instagramType);
-	    break;
-
-	    case "youtube-search":
-			var topic = $("#youtube-search .searchbox").val();
-			getYoutubes( topic );
-	    break;
-
-	    case "soundcloud-search":			
-			var query = $("#soundcloud-search .searchbox").val();
-			var params = $("#soundcloud-search .radio-inline input[type='radio']:checked").val();
-
-			getSoundcloud(query, params);
-	    break;
-	 }
-});
-
-
 }
 
 function orderItems(packery, items) {
@@ -406,33 +424,6 @@ function orderItems(packery, items) {
 	}
 }
 
-//Toggle Size of Images on click
-$packeryContainer.on( 'click', 'img', function( event ) {
-
-	var $brick= $( event.target ).parents('.brick');
-  	var tempDataObj = $brick.data('topic');
-  	var widthClass; 
-
-  	// toggle the size for images
-  	if($( event.target ).is('img.img-result')){
-
-  		//make it large
-  		$brick.toggleClass("w2");
-
-  		//if it is large, update the dataObj so it saves the state
-  		if($brick.hasClass("w2")){
-  			tempDataObj.size = 'large'; 			
-  		}else{
-  			tempDataObj.size = 'small';
-  		}
-  		//set the dataObj to data topic
-  		$brick.data('topic', tempDataObj);
-  		
-  		// trigger layout
-  		$packeryContainer.packery();
-  	}
-
-});
 
 function isPortrait(imgObj){
 
@@ -840,7 +831,7 @@ function buildFoto(photoObj, type, x, y){
 	$packeryContainer.append($brick).packery( 'appended', $brick);
 	$brick.each( makeEachDraggable );
 
-	$packeryContainer.packery('fit', $brick[0], x + 400, y + 400);
+	$packeryContainer.packery('fit', $brick[0], x + 400, 0);
 
 	var imgLoad = imagesLoaded( $brick );
 

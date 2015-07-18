@@ -1,9 +1,10 @@
 <div id="postID"></div>
 
 <div id="packery">
+<?php get_template_part('templates/searchboxes'); ?>
 </div>
 
-<?php get_template_part('templates/searchboxes'); ?>
+
 
 <!-- Modal -->
 <div class="modal fade" id="saveboardModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
