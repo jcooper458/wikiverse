@@ -1,7 +1,6 @@
 <div id="wikipedia-search" class="invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
-	<span class="handle"> <i class="fa fa-arrows"></i></span>
-	
+
 	<i class="fa fa-wikipedia"></i>&nbsp;Wikipedia
 
 	<?php get_template_part('templates/languages'); ?>
@@ -26,9 +25,7 @@
 
 <div id="youtube-search" class="invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
-	<span class="handle"> <i class="fa fa-arrows"></i></span>
 	
-
 	<i class="fa fa-youtube"></i>&nbsp;Youtube Search
 
 	<div class="input-group">
@@ -52,8 +49,6 @@
 
 <div id="flickr-search" class="invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
-	<span class="handle"> <i class="fa fa-arrows"></i></span>
-	
 
 	<i class="fa fa-flickr"></i>&nbsp;Flickr Search
 
@@ -96,9 +91,7 @@
 
 <div id="instagram-search" class="invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
-	<span class="handle"> <i class="fa fa-arrows"></i></span>
 	
-
 	<i class="fa fa-instagram"></i>&nbsp;Instagram Search
 
 	<h5>Search by:  </h5>
@@ -132,7 +125,7 @@
 
 <div id="gmaps-search" data-type="gmaps" data-topic="" class="search brick invisible w2-map gmaps">
 	<span class="cross"><i class="fa fa-close"></i></span>
-	<span class="handle"> <i class="fa fa-arrows"></i></span>
+
 	<span class="instagram"><i class="fa fa-instagram"></i></span>
 	<span class="flickr-search"><i class="fa fa-flickr"></i></span>
 
@@ -145,7 +138,6 @@
 
 <div id="soundcloud-search" class="invisible search">
 	<span class="cross"><i class="fa fa-close"></i></span>
-	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
 	<i class="fa fa-soundcloud"></i>&nbsp;Soundcloud Search
 

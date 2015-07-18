@@ -40,9 +40,16 @@ $(".search input:text").keyup(function (e) {
 //----------------EVENTS----------------------------
 
 // REMOVE ITEM
-$packeryContainer.on( "click", ".cross", function() {
+$packeryContainer.on( "click", ".brick .cross", function() {
 	var $thisBrick = jQuery(this).parent(".brick");
 	$packeryContainer.packery( 'remove', $thisBrick );
+	$packeryContainer.packery();
+});
+
+// REMOVE ITEM
+$packeryContainer.on( "click", ".search .cross", function() {
+	var $thisBrick = jQuery(this).parent(".search");
+	$thisBrick.addClass('invisible');
 	$packeryContainer.packery();
 });
 
@@ -107,10 +114,18 @@ document.addEventListener("keydown", function(e) {
 //create youtube interconnection button and trigger search
 $packeryContainer.on("click", ".youtube-icon", function(){
 
+	$packeryContainer.find('.search').addClass("invisible");
+
 	$youtubeSearchBrick.removeClass("invisible");
-	$packeryContainer.prepend($youtubeSearchBrick).packery( 'prepended', $youtubeSearchBrick);
-	$youtubeSearchBrick.each( makeEachDraggable );
-	$packeryContainer.packery();
+	$packeryContainer.packery( 'stamp', $youtubeSearchBrick );
+
+	var $thisBrick = $(this).parents(".brick");
+	var topic = $thisBrick.data("topic");
+
+	$youtubeSearchBrick.find('input').val(topic.title);
+
+	//$youtubeSearchBrick.find('.searchbox').attr('disabled', 'true');
+	//$youtubeSearchBrick.find('.start').addClass('disabled');
 
 	var $thisBrick = $(this).parents(".brick");
 
@@ -122,6 +137,12 @@ $packeryContainer.on("click", ".youtube-icon", function(){
 
 	$youtubeSearchBrick.find('.start').trigger( "click" );
 
+	$('html, body').animate({
+        scrollTop: 0
+    }, 500);
+
+    $packeryContainer.packery();
+
 });
 
 
@@ -129,43 +150,49 @@ $packeryContainer.on("click", ".youtube-icon", function(){
 //create flickr interconnection button and trigger flickr search
 $packeryContainer.on("click", ".flickr-icon", function(){
 
+	$packeryContainer.find('.search').addClass("invisible");
+
 	$flickrSearchBrick.removeClass("invisible");
-	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
-	$flickrSearchBrick.each( makeEachDraggable );
-	$packeryContainer.packery();
+	$packeryContainer.packery( 'stamp', $flickrSearchBrick );
 
 	var $thisBrick = $(this).parents(".brick");
-
 	var topic = $thisBrick.data("topic");
 
 	$flickrSearchBrick.find('input').val(topic.title);
-
 
 	//$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
 	//$flickrSearchBrick.find('.start').addClass('disabled');
 
 	getFlickrs(topic.title, "relevance", "textQuery");
+	$packeryContainer.packery();
 
+	$('html, body').animate({
+        scrollTop: 0
+    }, 500);
 });
 
 //create flickr interconnection button and trigger flickr search
 $packeryContainer.on("click", ".instagram-icon", function(){
 
+	$packeryContainer.find('.search').addClass("invisible");
+
 	$instagramSearchBrick.removeClass("invisible");
-	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $instagramSearchBrick);
-	$instagramSearchBrick.each( makeEachDraggable );
-	$packeryContainer.packery();
+	$packeryContainer.packery( 'stamp', $instagramSearchBrick );
 
 	var $thisBrick = $(this).parents(".brick");
-
 	var topic = $thisBrick.data("topic");
 
 	$instagramSearchBrick.find('input').val(topic.title);
 
-	//$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
-	//$flickrSearchBrick.find('.start').addClass('disabled');
+	//$instagramSearchBrick.find('.searchbox').attr('disabled', 'true');
+	//$instagramSearchBrick.find('.start').addClass('disabled');
 
 	getInstagrams(topic.title, "hashtag");
+	$packeryContainer.packery();
+
+	$('html, body').animate({
+        scrollTop: 0
+    }, 500);
 
 });
 
@@ -205,7 +232,7 @@ $packeryContainer.on("click", ".gmaps .fa-flickr", function(){
 
 	$flickrSearchBrick.removeClass("invisible");
 	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
-	$flickrSearchBrick.each( makeEachDraggable );
+
 	$packeryContainer.packery();
 
 	var $thisBrick = $(this).parents(".brick");
@@ -231,7 +258,7 @@ $packeryContainer.on("click", ".gmaps .fa-instagram", function(){
 
 	$instagramSearchBrick.removeClass("invisible");
 	$packeryContainer.prepend($instagramSearchBrick).packery( 'prepended', $instagramSearchBrick);
-	$instagramSearchBrick.each( makeEachDraggable );
+
 	$packeryContainer.packery();
 
 	var $thisBrick = $(this).parents(".brick");
