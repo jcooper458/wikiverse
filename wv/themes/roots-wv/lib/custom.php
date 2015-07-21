@@ -112,7 +112,7 @@ function wv_login_init () {
 wp_redirect( home_url( '/login/' ) );
 exit;
 }
-//add_action('login_init', 'wv_login_init');
+add_action('login_init', 'wv_login_init');
 
 
 /**
@@ -132,7 +132,7 @@ function wv_template_redirect () {
         exit();
     }
 }
-//add_action( 'template_redirect', 'wv_template_redirect' );
+add_action( 'template_redirect', 'wv_template_redirect' );
 
 
 /**
@@ -195,7 +195,7 @@ function wv_registration_redirect ($errors, $sanitized_user_login, $user_email) 
     return $errors;
 
 }
-//add_filter('registration_errors', 'wv_registration_redirect', 10, 3);
+add_filter('registration_errors', 'wv_registration_redirect', 10, 3);
 
 
 /**
@@ -211,7 +211,7 @@ function wv_login_redirect ($redirect_to, $url, $user) {
     exit;
 
 }
-//add_filter('login_redirect', 'wv_login_redirect', 10, 3);
+add_filter('login_redirect', 'wv_login_redirect', 10, 3);
 
 
 /**
