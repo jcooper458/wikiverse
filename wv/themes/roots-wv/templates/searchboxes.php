@@ -123,7 +123,7 @@
 </div>
 
 
-<div id="gmaps-search" data-type="gmaps" data-topic="" class="brick invisible w2-fix gmaps">
+<div id="gmaps-search" data-type="gmaps" data-topic="" class="search invisible w2-fix gmaps">
 	<span class="cross"><i class="fa fa-close"></i></span>
 
 	<i class="fa fa-map-marker"></i>&nbsp;Google Maps Search

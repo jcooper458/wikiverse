@@ -1562,8 +1562,6 @@ function buildWikipedia(topic, parent, x, y){
 
 	var $brick = $(defaultBrick);
 
-	$brick.addClass('borderBottom');
-
 	$brick.data('type', 'wiki');
 	$brick.data('parent', parent);
 	$brick.data('topic', topic);
