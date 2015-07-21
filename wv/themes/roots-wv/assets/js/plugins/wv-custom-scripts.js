@@ -478,6 +478,8 @@ function buildNextTopic($brick, lang){
 
 	$brick.find("a").unbind('click').click(function(e) {
 
+		$packeryContainer.packery( 'stamp', $brick );
+
 		e.preventDefault();
 
 		var topic = $(this).attr("title");
@@ -493,7 +495,7 @@ function buildNextTopic($brick, lang){
 
 		//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
 		buildWikipedia(brickData, $brick.attr("tabindex") - 1, x, y);
-
+		$packeryContainer.packery( 'unstamp', $brick );
 	});
 }
 

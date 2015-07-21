@@ -34,7 +34,7 @@ body {}
 
 .main {margin-top:60px;}
 
-.brick { 
+.brick, .search{ 
   width: 300px; 
   //background: #F7F7F7;
   /*background: #95A5A6; */
@@ -52,12 +52,22 @@ body {}
 .search {
   position: absolute;
   width: 300px;
-  height:400px;
+  height:auto;
   top: 0;
   left: 0;
   border: 1px solid #ddd;
   border-radius: 1px;
   padding:5px; 
+
+  #map_canvas {
+    height: 400px;
+    margin: 0px;
+    padding: 0px;
+    img {
+        max-width: none!important; 
+        max-height: none!important;
+    }
+  }
 
   .fa{
       font-size: 20px!important;
@@ -96,17 +106,6 @@ body {}
         font-size: 25px!important;
       }
     }
-
-    #map_canvas {
-      height: 400px;
-      margin: 0px;
-      padding: 0px;
-      img {
-          max-width: none!important; 
-          max-height: none!important;
-      }
-    }
-
 }
 
 .foto img{
