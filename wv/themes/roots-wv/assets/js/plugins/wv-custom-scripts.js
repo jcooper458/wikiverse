@@ -1618,6 +1618,8 @@ function buildWikipedia(topic, parent, x, y){
 				//create the section object and trigger the creation of a section brick
 				$tableSectionResults.find(".result").on('click', function() {
 
+					$packeryContainer.packery( 'stamp', $brick );
+
 					var section = {
 
 						title: topic.title,
@@ -1631,7 +1633,8 @@ function buildWikipedia(topic, parent, x, y){
 					var newX = parseInt($brick.css('left'));
 
 					buildSection(section, $brick.attr("tabindex"), newX, newY);
-
+					
+					$packeryContainer.packery( 'unstamp', $brick );
 				});
 			}
 			//Go get the Main Image - 2 API Calls necessairy.. :(
