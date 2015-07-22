@@ -62,11 +62,16 @@ get_currentuserinfo();
 
 
 	    	<?php if ( is_page('start') || is_singular("board")) { ?>
-          <li><a href="#" class="zoom-control" id="zoom_in" onclick="zoomIn();" >+</a></li> 
-          <li><a href="#" class="zoom-control" id="zoom_out" onclick="zoomOut();" >-</a></li>
+          <li><a href="#" class="zoom-control" id="zoom_in" onclick="zoomIn();" ><i class="fa fa-search-plus"></i></a></li> 
+          <li><a href="#" class="zoom-control" id="zoom_out" onclick="zoomOut();" ><i class="fa fa-search-minus"></i></a></li>
           <li><a href="#" class="board-pilot" id="clearboard" onclick="clearboard('<?php echo $nonce ?>');" >clear board</a></li> 
-	    		<li><a href="#" class="board-pilot" id="saveboard" onclick="createboard('<?php echo $nonce ?>');" >save board</a></li>
-			  <?php }  ?>
+          <?php if ( is_page('start') ) { ?>
+	    		   <li><a href="#" class="board-pilot" id="saveboard" onclick="createboard('<?php echo $nonce ?>');" >create board</a></li>
+			   <?php }  ?>
+          <?php if ( is_singular("board")) { ?>
+             <li><a href="#" class="board-pilot" id="saveboard" onclick="saveboard('<?php echo $nonce ?>');" >save board</a></li>
+         <?php }  ?>
+        <?php }  ?>
 
 			<?php } else {?> 
 				<!--<button class="btn btn-default pull-right" id="editboard" type="button"><a href="/login" >Login</a></button>

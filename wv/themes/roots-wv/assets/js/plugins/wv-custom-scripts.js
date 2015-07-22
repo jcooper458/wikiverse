@@ -1863,8 +1863,10 @@ function buildboard(){
 	var str = $("#wikiverse").html();
 
 	var wikiverse =	JSON.parse(str);
+	
+	$packeryContainer.css('zoom', wikiverse.zoom);
 
-	$.each(wikiverse, function(index, brick) {
+	$.each(wikiverse.bricks, function(index, brick) {
 
 		switch (brick.Type) {
 		    case "wiki":
@@ -1927,8 +1929,9 @@ function buildYoutube(youtubeID, x, y){
 
 function zoomIn(){
 
-	var zoomLevel = parseFloat($packeryContainer.css("zoom"));
-	if(zoomLevel <= 1.5){
+	var zoomLevel = Math.round(parseFloat($packeryContainer.css("zoom")) * 10) / 10;
+
+	if(zoomLevel < 1.4){
 		$("#zoom_in").prop('disabled', false);
 		zoomLevel += 0.1;
 	}
@@ -1942,7 +1945,8 @@ function zoomIn(){
 
 function zoomOut(){
 
-	var zoomLevel = parseFloat($packeryContainer.css("zoom"));
+	var zoomLevel = Math.round(parseFloat($packeryContainer.css("zoom")) * 10) / 10;
+
 	if(zoomLevel >= 0.5){
 		$("#zoom_out").prop('disabled', false);
 		zoomLevel -= 0.1;
@@ -1969,7 +1973,7 @@ function createboard(wpnonce) {
 	var wikiverse = {};
 
 	var board = {
-		"zoom": parseFloat($packeryContainer.css('zoom')),
+		"zoom": Math.round(parseFloat($packeryContainer.css('zoom')) * 10) / 10,
 		"bricks": wikiverse
 	};
 
@@ -2084,7 +2088,7 @@ function saveboard(wpnonce) {
 	var wikiverse = {};
 
 	var board = {
-		"zoom": parseFloat($packeryContainer.css('zoom')),
+		"zoom": Math.round(parseFloat($packeryContainer.css('zoom')) * 10) / 10,
 		"bricks": wikiverse
 	};
 
@@ -2133,8 +2137,14 @@ function saveboard(wpnonce) {
 			    type: 'success',
 			    icon: 'fa fa-floppy-o',
 			    styling: 'fontawesome',
-			    shadow: false
+			    shadow: false,
+			    animation: 'fade',
+			    nonblock: {
+			        nonblock: true,
+			        nonblock_opacity: .2
+			    }
 			});
+
 			$packeryContainer.packery();
 		},
 		error: function(MLHttpRequest, textStatus, errorThrown) {
