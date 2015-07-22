@@ -230,16 +230,12 @@ $packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laid
 //This time for the gmaps brick, in thise case we only want the bounds passed in to getFlickrs
 $packeryContainer.on("click", ".gmaps .fa-flickr", function(){
 
-	$packeryContainer.find('.search').addClass("invisible");
-
 	$flickrSearchBrick.removeClass("invisible");
 	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
-
+	$flickrSearchBrick.each( makeEachDraggable );
 	$packeryContainer.packery();
 
 	var $thisBrick = $(this).parents(".brick");
-
-	$packeryContainer.packery('fit', $thisBrick[0], 300, 0);
 
 	var position = $thisBrick.data("position");
 	var sort = $flickrSearchBrick.find(".radio-inline input[type='radio']:checked").val();
@@ -252,6 +248,7 @@ $packeryContainer.on("click", ".gmaps .fa-flickr", function(){
 	$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
 	//$flickrSearchBrick.find('.start').addClass('disabled');
 
+
 	getFlickrs(position, sort, "geoQuery");
 
 });
@@ -259,18 +256,14 @@ $packeryContainer.on("click", ".gmaps .fa-flickr", function(){
 //create images interconnection and trigger getInstagrams()
 $packeryContainer.on("click", ".gmaps .fa-instagram", function(){
 
-	$packeryContainer.find('.search').addClass("invisible");
-
 	$instagramSearchBrick.removeClass("invisible");
 	$packeryContainer.prepend($instagramSearchBrick).packery( 'prepended', $instagramSearchBrick);
-
+	$instagramSearchBrick.each( makeEachDraggable );
 	$packeryContainer.packery();
 
 	var $thisBrick = $(this).parents(".brick");
 
 	var position = $thisBrick.data("position");
-
-	$packeryContainer.packery('fit', $thisBrick[0], 300, 0);
 
 	$instagramSearchBrick.find('input').val(position);
 
