@@ -23,7 +23,7 @@ var packery = $packeryContainer.packery({
 	itemSelector: '.brick',
 	stamp: '.search',
 	gutter: 10,
-	columnWidth: 300
+//	columnWidth: 300
 //	rowHeight: 60,
 //	isInitLayout: false
 });	
@@ -321,31 +321,39 @@ function getSearchBricks(){
 
 //Global get SearchBoxes
 $(".sources-menu li").on("click", function(event){
-	//invisible all 
-	$packeryContainer.find('.search').addClass("invisible");
 
 	//what are we searching for? wikipedia, soundcloud, etc
 	var source = $(this).attr('id');
 
-	var $thisSearchBrick =	$('#' + source + '-search');
-		$thisSearchBrick.removeClass("invisible");
-		$thisSearchBrick.fadeIn('slow');
+	//if searchbrick is not inside packery
+	if(!($('#' + source + '-search','#packery').length == 1)) {
 
-	$packeryContainer.packery( 'stamp', $thisSearchBrick );
-	$packeryContainer.packery();
+		$('#' + source + '-search').removeClass("invisible");
+		$packeryContainer.prepend($('#' + source + '-search')).packery( 'prepended', $('#' + source + '-search'));
+		$('#' + source + '-search').each( makeEachDraggable );	
 
-	if(source === "gmaps") getGmapsSearch();
-	$('#' + source + '-search').find('input[type=text]').focus();
+		$packeryContainer.packery('fit', $('#' + source + '-search')[0], 0, 0);
+		$packeryContainer.packery();
 
-	 $('html, body').animate({
-        scrollTop: 0
-    }, 500);
+		//if its gmaps do the exception of running that func
+		if(source === "gmaps") getGmapsSearch();
+
+		$('#' + source + '-search').find('input[type=text]').focus();
+
+	}
+	else{
+		 $('html, body').animate({
+	        scrollTop: 0
+	    }, 1000);
+	}
 });
 
 
 $(".search .start").on("click", function(){
+	
+	var $searchBrick = $(this).parents('.search'); 
 
-	switch ($(this).parents('.search').attr('id')) {
+	switch ($searchBrick.attr('id')) {
 
 	    case "wikipedia-search":
 			
@@ -381,6 +389,7 @@ $(".search .start").on("click", function(){
 			getSoundcloud(query, params);
 	    break;
 	 }
+
 });
 
 var lang = $("#langselect").val();
@@ -1089,6 +1098,9 @@ function createFlickrBrick(apiData, photoObj){
 
 		$flickrSearchBrick.find('img').unbind('click').click(function(e) {
 
+			//stamp for better clicking
+			$packeryContainer.packery( 'unstamp', $flickrSearchBrick );
+
 			var thisPhoto = {
 
 				thumbURL: $(this).attr('thumb'),
@@ -1097,8 +1109,12 @@ function createFlickrBrick(apiData, photoObj){
 				owner: $(this).attr('owner')
 
 			}
-			buildFoto(thisPhoto, "flickr", x + 200, 0);
+			buildFoto(thisPhoto, "flickr", parseInt($flickrSearchBrick.css('left')) + 150, parseInt($flickrSearchBrick.css('top')) + 10);
 			$(this).remove();
+
+			//unstamp the searchbrick so you can move it again around
+			$packeryContainer.packery( 'unstamp', $flickrSearchBrick );
+
 		});
 
 		$flickrSearchBrick.find('.search-ui').show();
@@ -1118,13 +1134,20 @@ function createInstagramBrick(photo){
 
 	$instagramSearchBrick.find('img').unbind('click').click(function(e) {
 
+		//stamp for better clicking
+		$packeryContainer.packery( 'unstamp', $instagramSearchBrick );
+
 		var thisPhoto = {
 			mediumURL: $(this).attr('fullres'),
 			smallURL: $(this).attr('src'),
 			size: 'small'
 		}
-		buildFoto(thisPhoto, "instagram", x + 300, 0);
+		buildFoto(thisPhoto, "instagram", parseInt($instagramSearchBrick.css('left')) + 150, parseInt($instagramSearchBrick.css('top')) + 10);
 		$(this).remove();
+
+		//unstamp the searchbrick so you can move it again around
+		$packeryContainer.packery( 'unstamp', $instagramSearchBrick );
+
 	});
 
 	$instagramSearchBrick.find('.search-ui').show();
@@ -1300,16 +1323,26 @@ function getSoundcloud(query, params) {
 			//bind event to every row
 			$soundcloudSearchBrick.find('tr').unbind('click').click(function(e) {
 
+				//stamp it for better clicking
+				$packeryContainer.packery( 'stamp', $soundcloudSearchBrick );
+
 				var soundcloudObj = {
 					title: $(this).attr('title'),
 					uri: $(this).attr('uri'),
 					genre: $(this).attr('genre')
 				}
 
-				buildSoundcloud(soundcloudObj, x + 200, y);
+				buildSoundcloud(soundcloudObj, parseInt($soundcloudSearchBrick.css('left')) + 50, parseInt($instagramSearchBrick.css('top')) + 10);
 
 				$(this).tooltip('destroy');
 				$(this).remove();
+
+				//unstamp the searchbrick so you can move it again around
+				$packeryContainer.packery( 'unstamp', $soundcloudSearchBrick );
+
+				//relayout packery
+				$packeryContainer.packery();
+
 				return false;
 
 			});
@@ -1318,7 +1351,6 @@ function getSoundcloud(query, params) {
 
 			//relayout packery
 			$packeryContainer.packery();
-
 		});
 
 	});
@@ -1364,12 +1396,18 @@ function getYoutubes(topic) {
 					//bind event to every row -> so you can start the wikiverse
 					$youtubeSearchBrick.find('tr').unbind('click').click(function(e) {
 
+						//stamp for better clicking
+						$packeryContainer.packery( 'stamp', $youtubeSearchBrick );
+
 						var currentYoutubeID = $(this).find('.result').attr('youtubeID');
 
 						$(this).tooltip('destroy');
 						$(this).remove();
 
-						buildYoutube(currentYoutubeID, 200, 0);
+						buildYoutube(currentYoutubeID, parseInt($youtubeSearchBrick.css('left')) + 50, parseInt($youtubeSearchBrick.css('top')) + 10);
+
+						//unstamp the searchbrick so you can move it again around
+						$packeryContainer.packery( 'unstamp', $youtubeSearchBrick );
 
 						return false;
 					});
@@ -1520,15 +1558,22 @@ function getWikis(topic, lang) {
 					//bind event to every row -> so you can start the wikiverse
 					$wikiSearchBrick.find('tr').unbind('click').click(function(e) {
 
+						//stamp the searchbrick for better clicking
+						$packeryContainer.packery( 'stamp', $wikiSearchBrick );
+
 						var topic = {
 							title: $(this).find('.result').html(),
 							language: lang
 						}
-
-						buildWikipedia(topic, -1, 200, 0);
+						//build the wikis next to the search brick
+						buildWikipedia(topic, -1, parseInt($wikiSearchBrick.css('left')) + 50, parseInt($wikiSearchBrick.css('top')) + 10);
 
 						$(this).tooltip('destroy');
 						$(this).remove();
+
+						//unstamp the searchbrick so you can move it again around
+						$packeryContainer.packery( 'unstamp', $wikiSearchBrick );
+
 						return false;
 					});
 

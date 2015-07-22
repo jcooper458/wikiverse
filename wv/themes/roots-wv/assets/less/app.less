@@ -34,7 +34,7 @@ body {}
 
 .main {margin-top:60px;}
 
-.brick, .search{ 
+.brick{ 
   width: 300px; 
   //background: #F7F7F7;
   /*background: #95A5A6; */
@@ -43,21 +43,6 @@ body {}
   /*border-bottom: 4px solid #e7e7e7;*/
   border: 1px solid #ddd;
   border-radius: 1px;
-}
-
-.brick:hover, .search:hover{
-    background: #F7F7F7; 
-}
-
-.search {
-  position: absolute;
-  width: 300px;
-  height:auto;
-  top: 0;
-  left: 0;
-  border: 1px solid #ddd;
-  border-radius: 1px;
-  padding:5px; 
 
   #map_canvas {
     height: 400px;
@@ -68,11 +53,14 @@ body {}
         max-height: none!important;
     }
   }
-
-  .fa{
-      font-size: 20px!important;
-    }
+  
 }
+
+.brick:hover, .search:hover{
+    background: #F7F7F7; 
+}
+
+
 
 .brick p {overflow: hidden;}
 

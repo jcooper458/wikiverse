@@ -1,5 +1,6 @@
-<div id="wikipedia-search" class="invisible search">
+<div id="wikipedia-search" class="invisible brick search">
 	<span class="cross"><i class="fa fa-close"></i></span>
+	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
 	<i class="fa fa-wikipedia"></i>&nbsp;Wikipedia
 
@@ -23,9 +24,10 @@
 	</div>
 </div>
 
-<div id="youtube-search" class="invisible search">
+<div id="youtube-search" class="invisible brick search">
 	<span class="cross"><i class="fa fa-close"></i></span>
-	
+	<span class="handle"> <i class="fa fa-arrows"></i></span>
+
 	<i class="fa fa-youtube"></i>&nbsp;Youtube Search
 
 	<div class="input-group">
@@ -47,8 +49,9 @@
 
 </div>
 
-<div id="flickr-search" class="invisible search">
+<div id="flickr-search" class="invisible brick search">
 	<span class="cross"><i class="fa fa-close"></i></span>
+	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
 	<i class="fa fa-flickr"></i>&nbsp;Flickr Search
 
@@ -89,9 +92,10 @@
 	</div>
 </div>
 
-<div id="instagram-search" class="invisible search">
+<div id="instagram-search" class="invisible brick search">
 	<span class="cross"><i class="fa fa-close"></i></span>
-	
+	<span class="handle"> <i class="fa fa-arrows"></i></span>
+
 	<i class="fa fa-instagram"></i>&nbsp;Instagram Search
 
 	<h5>Search by:  </h5>
@@ -123,8 +127,9 @@
 </div>
 
 
-<div id="gmaps-search" data-type="gmaps" data-topic="" class="search invisible w2-fix gmaps">
+<div id="gmaps-search" data-type="gmaps" data-topic="" class="search brick invisible w2-fix gmaps">
 	<span class="cross"><i class="fa fa-close"></i></span>
+	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
 	<i class="fa fa-map-marker"></i>&nbsp;Google Maps Search
 
@@ -133,8 +138,9 @@
 	
 </div>
 
-<div id="soundcloud-search" class="invisible search">
+<div id="soundcloud-search" class="invisible brick search">
 	<span class="cross"><i class="fa fa-close"></i></span>
+	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
 	<i class="fa fa-soundcloud"></i>&nbsp;Soundcloud Search
 
