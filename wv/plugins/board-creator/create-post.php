@@ -44,11 +44,11 @@ function apf_addpost() {
         'post_status'       => 'publish', 
         'post_type'         => 'board', 
         'post_author'       => $user_id,
-        //'tags_input'    	=> $tags
+        'post_content'    	=> $meta
         
     ) );  
     
-	add_post_meta($post_id, "wikiverse", $meta);//add the iter to a custom field   
+	//add_post_meta($post_id, "wikiverse", $meta);//add the iter to a custom field   
     
 	$permalink = get_permalink( $post_id );
     //$results = $title . " - " . $permalink;  
@@ -66,8 +66,16 @@ function apf_editpost() {
 	$meta = $_POST['boardmeta']; 
 	$postID = $_POST['boardID']; 
 
+  // Update post 37
+  $thisPost = array(
+      'ID'           => $postID,
+      'post_content' => $meta
+  );
+
+  // Update the post into the database
+  wp_update_post( $thisPost );
     
-  update_post_meta($postID, "wikiverse", $meta);
+ // update_post_meta($postID, "wikiverse", $meta);
     
   die($meta." ".$postID);  
 } 
