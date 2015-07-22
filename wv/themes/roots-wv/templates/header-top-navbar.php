@@ -58,17 +58,15 @@ get_currentuserinfo();
         	
  	    <?php if ( is_user_logged_in() ) { 
 	    	$nonce = wp_create_nonce( 'board' ); ?>
-        <div id="nonce"><?php echo $nonce ?></div>
-          
-	    	<?php if ( is_page('start') ) { ?>
+        <div id="nonce"><?php echo $nonce ?></div>      
+
+
+	    	<?php if ( is_page('start') || is_singular("board")) { ?>
+          <li><a href="#" class="zoom-control" id="zoom_in" onclick="zoomIn();" >+</a></li> 
+          <li><a href="#" class="zoom-control" id="zoom_out" onclick="zoomOut();" >-</a></li>
           <li><a href="#" class="board-pilot" id="clearboard" onclick="clearboard('<?php echo $nonce ?>');" >clear board</a></li> 
 	    		<li><a href="#" class="board-pilot" id="saveboard" onclick="createboard('<?php echo $nonce ?>');" >save board</a></li>
-			<?php }  ?>
-    
-			<?php if ( is_singular("board") ) { ?>
-        <li><a href="#" class="board-pilot" id="clearboard" onclick="clearboard('<?php echo $nonce ?>');" >clear board</a></li> 
-				<li><a href="#" class="board-pilot" id="editboard" onclick="saveboard('<?php echo $nonce ?>');" >save changes</a></li>
-			<?php }  ?> 	
+			  <?php }  ?>
 
 			<?php } else {?> 
 				<!--<button class="btn btn-default pull-right" id="editboard" type="button"><a href="/login" >Login</a></button>

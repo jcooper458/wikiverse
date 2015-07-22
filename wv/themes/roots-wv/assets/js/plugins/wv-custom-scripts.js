@@ -1925,6 +1925,35 @@ function buildYoutube(youtubeID, x, y){
 	$packeryContainer.packery();
 }
 
+function zoomIn(){
+
+	var zoomLevel = parseFloat($packeryContainer.css("zoom"));
+	if(zoomLevel <= 1.5){
+		$("#zoom_in").prop('disabled', false);
+		zoomLevel += 0.1;
+	}
+	else{
+		$("#zoom_in").prop('disabled', true);
+		zoomLevel -= 0.1;
+	}
+	$packeryContainer.css("zoom", zoomLevel);
+	$packeryContainer.packery();
+}
+
+function zoomOut(){
+
+	var zoomLevel = parseFloat($packeryContainer.css("zoom"));
+	if(zoomLevel >= 0.5){
+		$("#zoom_out").prop('disabled', false);
+		zoomLevel -= 0.1;
+	}
+	else{
+		$("#zoom_out").prop('disabled', true);
+		zoomLevel += 0.1;
+	}
+	$packeryContainer.css("zoom", zoomLevel);
+	$packeryContainer.packery();
+}
 
 function makeEachDraggable( i, itemElem ) {
     // make element draggable with Draggabilly
@@ -1937,8 +1966,12 @@ function makeEachDraggable( i, itemElem ) {
 
 
 function createboard(wpnonce) {
-
 	var wikiverse = {};
+
+	var board = {
+		"zoom": parseFloat($packeryContainer.css('zoom')),
+		"bricks": wikiverse
+	};
 
 	//remove search bricks:
 	var searchBricks = jQuery(".search");
@@ -1965,7 +1998,7 @@ function createboard(wpnonce) {
 		tabindex++;
 	});
 
-	var JSONwikiverse = JSON.stringify(wikiverse);
+	var JSONwikiverse = JSON.stringify(board);
 
 	$("#saveboardModal").modal('show');
 	$("#boardTitle").focus();	
@@ -2050,6 +2083,11 @@ function saveboard(wpnonce) {
 
 	var wikiverse = {};
 
+	var board = {
+		"zoom": parseFloat($packeryContainer.css('zoom')),
+		"bricks": wikiverse
+	};
+
 	//remove search bricks:
 	var searchBricks = jQuery(".search");
 	$packeryContainer.packery( 'remove', searchBricks );
@@ -2074,7 +2112,7 @@ function saveboard(wpnonce) {
 		};
 	});
 
-	var JSONwikiverse = JSON.stringify(wikiverse);
+	var JSONwikiverse = JSON.stringify(board);
 
 	$.ajax({
 		type: 'POST',
