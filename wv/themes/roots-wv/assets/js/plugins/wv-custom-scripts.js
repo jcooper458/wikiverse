@@ -114,18 +114,10 @@ document.addEventListener("keydown", function(e) {
 //create youtube interconnection button and trigger search
 $packeryContainer.on("click", ".youtube-icon", function(){
 
-	$packeryContainer.find('.search').addClass("invisible");
-
 	$youtubeSearchBrick.removeClass("invisible");
-	$packeryContainer.packery( 'stamp', $youtubeSearchBrick );
-
-	var $thisBrick = $(this).parents(".brick");
-	var topic = $thisBrick.data("topic");
-
-	$youtubeSearchBrick.find('input').val(topic.title);
-
-	//$youtubeSearchBrick.find('.searchbox').attr('disabled', 'true');
-	//$youtubeSearchBrick.find('.start').addClass('disabled');
+	$packeryContainer.prepend($youtubeSearchBrick).packery( 'prepended', $youtubeSearchBrick);
+	$youtubeSearchBrick.each( makeEachDraggable );
+	$packeryContainer.packery();
 
 	var $thisBrick = $(this).parents(".brick");
 
@@ -137,12 +129,6 @@ $packeryContainer.on("click", ".youtube-icon", function(){
 
 	$youtubeSearchBrick.find('.start').trigger( "click" );
 
-	$('html, body').animate({
-        scrollTop: 0
-    }, 500);
-
-    $packeryContainer.packery();
-
 });
 
 
@@ -150,52 +136,45 @@ $packeryContainer.on("click", ".youtube-icon", function(){
 //create flickr interconnection button and trigger flickr search
 $packeryContainer.on("click", ".flickr-icon", function(){
 
-	$packeryContainer.find('.search').addClass("invisible");
-
 	$flickrSearchBrick.removeClass("invisible");
-	$packeryContainer.packery( 'stamp', $flickrSearchBrick );
+	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
+	$flickrSearchBrick.each( makeEachDraggable );
+	$packeryContainer.packery();
 
 	var $thisBrick = $(this).parents(".brick");
+
 	var topic = $thisBrick.data("topic");
 
 	$flickrSearchBrick.find('input').val(topic.title);
+
 
 	//$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
 	//$flickrSearchBrick.find('.start').addClass('disabled');
 
 	getFlickrs(topic.title, "relevance", "textQuery");
-	$packeryContainer.packery();
 
-	$('html, body').animate({
-        scrollTop: 0
-    }, 500);
 });
 
 //create flickr interconnection button and trigger flickr search
 $packeryContainer.on("click", ".instagram-icon", function(){
 
-	$packeryContainer.find('.search').addClass("invisible");
-
 	$instagramSearchBrick.removeClass("invisible");
-	$packeryContainer.packery( 'stamp', $instagramSearchBrick );
+	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $instagramSearchBrick);
+	$instagramSearchBrick.each( makeEachDraggable );
+	$packeryContainer.packery();
 
 	var $thisBrick = $(this).parents(".brick");
+
 	var topic = $thisBrick.data("topic");
 
 	$instagramSearchBrick.find('input').val(topic.title);
 
-	//$instagramSearchBrick.find('.searchbox').attr('disabled', 'true');
-	//$instagramSearchBrick.find('.start').addClass('disabled');
+	//$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
+	//$flickrSearchBrick.find('.start').addClass('disabled');
 
 	getInstagrams(topic.title, "hashtag");
-	$packeryContainer.packery();
-
-	$('html, body').animate({
-        scrollTop: 0
-    }, 500);
 
 });
-
 
 
 
