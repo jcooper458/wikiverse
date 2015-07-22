@@ -54,7 +54,7 @@ $packeryContainer.on( "click", ".search .cross", function() {
 });
 
 //----------------keyboard shortcuts----------------------------
-/*
+
 document.addEventListener("keydown", function(e) {
   if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
     e.preventDefault();
@@ -108,7 +108,7 @@ document.addEventListener("keydown", function(e) {
     $('li#youtube').trigger('click');
   }
 }, false);
-*/
+
 //----------------keyboard shortcuts----------------------------
 //
 //create youtube interconnection button and trigger search
