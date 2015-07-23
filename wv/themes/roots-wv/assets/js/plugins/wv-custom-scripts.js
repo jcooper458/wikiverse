@@ -1,3 +1,18 @@
+docReady( function() {
+  var container = document.querySelector('.fibonacci');
+  var pckry = new Packery( container, {
+
+  });
+  var itemElems = pckry.getItemElements();
+  // for each item element
+  for ( var i=0, len = itemElems.length; i < len; i++ ) {
+    var elem = itemElems[i];
+    // make element draggable with Draggabilly
+    var draggie = new Draggabilly( elem );
+    // bind Draggabilly events to Packery
+    pckry.bindDraggabillyEvents( draggie );
+  }
+});
 //----------------GENERAL STUFF----------------------------
 
 var $packeryContainer = $('#packery');
@@ -28,6 +43,8 @@ var packery = $packeryContainer.packery({
 //	rowHeight: 60,
 //	isInitLayout: false
 });	
+
+$('div.brick').each( makeEachDraggable );
 
 //make the enter keypress do the search
 $(".search input:text").keyup(function (e) {
@@ -491,7 +508,7 @@ function buildNextTopic($brick, lang){
 		var x = parseInt($brick.css('left'));
 
 		//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
-		buildWikipedia(brickData, $brick.attr("tabindex") - 1, x, y);
+		buildWikipedia(brickData, $brick.attr("tabindex") - 1, x + 100, y);
 		//$packeryContainer.packery( 'unstamp', $brick );
 	});
 }
@@ -1827,6 +1844,7 @@ function buildSection(section, parent, x, y){
 			sectionHTML.find('.notice').remove();
 			sectionHTML.find('.ambox').remove();
 			sectionHTML.find('.org').remove();
+			sectionHTML.find('table').remove();
 			//sectionHTML.find('*').css('max-width', '290px');
 			sectionHTML.find('img').unwrap();
 
@@ -1984,7 +2002,6 @@ function makeEachDraggable( i, itemElem ) {
     // bind Draggabilly events to Packery
     $packeryContainer.packery( 'bindDraggabillyEvents', draggie );
 }
-
 
 function createboard(wpnonce) {
 	var wikiverse = {};

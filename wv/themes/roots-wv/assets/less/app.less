@@ -13,7 +13,10 @@
    Base
    ========================================================================== */
 
+.abs-center {
 
+
+}
 
 .fluid-container {
   padding-left: 10px;
@@ -69,9 +72,76 @@
     background: #F7F7F7; 
 }
 
+.brick-home{  
+    
+  width: 225px;
+  height:50px;
+  background: #F7F7F7;
+  border: 1px solid #ccc; 
 
+}
 
 .brick p {overflow: hidden;}
+
+.fibonacci {
+  background: #FDD;
+  background: hsla(45, 100%, 40%, 0.2);
+  max-width: 802px;
+  margin: auto;
+}
+
+/* clearfix */
+.fibonacci:after {
+  content: ' ';
+  display: block;
+  clear: both;
+}
+
+.item {
+  width: 40px;
+  height: 40px;
+  float: left;
+
+
+  background: #F7F7F7;
+  -webkit-box-shadow: 0 1px 4px 
+  rgba(0, 0, 0, 0.3), 0 0 40px 
+  rgba(0, 0, 0, 0.1) inset!important;
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset!important;
+  box-shadow: 0 1px 4px 
+  rgba(0, 0, 0, 0.3), 0 0 40px 
+  rgba(0, 0, 0, 0.1) inset!important;
+}
+
+
+.item:hover {
+  border-color: white;
+  cursor: move;
+
+}
+.item.zero { width:   800px; height:  100px;  }
+.item.one { width:   500px; height:  400px;  }
+.item.two { width:   300px; height:  247px;  }
+.item.three { width:  185px; height:  153px; }
+.item.four { width:   115px; height:  95px;  }
+.item.six { width:   71px; height:  58px;    }
+.item.five { width:   44px; height:  58px;   }
+
+/*
+background: #2549AE;
+background: #1D8C1E;
+background: #DDC839;
+background: #AD1A2D;
+background: #E158C0;
+background: #F7F7F7;
+ */
+
+.item.is-dragging,
+.item.is-positioning-post-drag {
+  border-color: white;
+  background: #09F;
+  z-index: 2;
+}
 
 .w2 { 
   width: auto;

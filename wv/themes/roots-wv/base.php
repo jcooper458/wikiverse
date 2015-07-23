@@ -13,8 +13,11 @@
     }
   ?>
 
-  <div class="fluid-container" role="document">
-  
+<?php if ( is_page('home')) { ?> 
+  <div class="container" role="document">
+<?php } else{ ?>
+   <div class="fluid-container" role="document">
+<?php }  ?>
       <div class="main <?php echo roots_main_class(); ?>" role="main">
         <?php include roots_template_path(); ?>
       </div><!-- /.main -->
@@ -23,8 +26,11 @@
           <?php include roots_sidebar_path(); ?>
         </aside><!-- /.sidebar -->
       <?php endif; ?>
-    
+ 
   </div><!-- /.wrap -->
+
+
+
 
   <?php get_template_part('templates/footer'); ?>
 

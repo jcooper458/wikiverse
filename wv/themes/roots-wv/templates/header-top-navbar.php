@@ -6,7 +6,7 @@ get_currentuserinfo();
 ?>
 
 
-
+<?php if ( !is_page('home')) { ?>
 <header class="" role="banner">
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
@@ -100,3 +100,4 @@ get_currentuserinfo();
 </nav>
 
 </header>
+<?php }  ?>

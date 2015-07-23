@@ -23,9 +23,7 @@ var ExampleSite = {
   // Home page
   home: {
     init: function() {
-    
-	
-	
+
 	}
  },
   // About page
