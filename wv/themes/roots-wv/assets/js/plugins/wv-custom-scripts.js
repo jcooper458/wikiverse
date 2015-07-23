@@ -492,7 +492,7 @@ function buildNextTopic($brick, lang){
 
 		//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
 		buildWikipedia(brickData, $brick.attr("tabindex") - 1, x, y);
-		$packeryContainer.packery( 'unstamp', $brick );
+		//$packeryContainer.packery( 'unstamp', $brick );
 	});
 }
 
@@ -1088,7 +1088,7 @@ function createFlickrBrick(apiData, photoObj){
 		$flickrSearchBrick.find('img').unbind('click').click(function(e) {
 
 			//stamp for better clicking
-			$packeryContainer.packery( 'unstamp', $flickrSearchBrick );
+			$packeryContainer.packery( 'stamp', $flickrSearchBrick );
 
 			var thisPhoto = {
 
@@ -1102,7 +1102,7 @@ function createFlickrBrick(apiData, photoObj){
 			$(this).remove();
 
 			//unstamp the searchbrick so you can move it again around
-			$packeryContainer.packery( 'unstamp', $flickrSearchBrick );
+			//$packeryContainer.packery( 'unstamp', $flickrSearchBrick );
 
 		});
 
@@ -1124,7 +1124,7 @@ function createInstagramBrick(photo){
 	$instagramSearchBrick.find('img').unbind('click').click(function(e) {
 
 		//stamp for better clicking
-		$packeryContainer.packery( 'unstamp', $instagramSearchBrick );
+		$packeryContainer.packery( 'stamp', $instagramSearchBrick );
 
 		var thisPhoto = {
 			mediumURL: $(this).attr('fullres'),
@@ -1135,7 +1135,7 @@ function createInstagramBrick(photo){
 		$(this).remove();
 
 		//unstamp the searchbrick so you can move it again around
-		$packeryContainer.packery( 'unstamp', $instagramSearchBrick );
+		//$packeryContainer.packery( 'unstamp', $instagramSearchBrick );
 
 	});
 
@@ -1327,7 +1327,7 @@ function getSoundcloud(query, params) {
 				$(this).remove();
 
 				//unstamp the searchbrick so you can move it again around
-				$packeryContainer.packery( 'unstamp', $soundcloudSearchBrick );
+				//$packeryContainer.packery( 'unstamp', $soundcloudSearchBrick );
 
 				//relayout packery
 				$packeryContainer.packery();
@@ -1396,7 +1396,7 @@ function getYoutubes(topic) {
 						buildYoutube(currentYoutubeID, parseInt($youtubeSearchBrick.css('left')) + 50, parseInt($youtubeSearchBrick.css('top')) + 10);
 
 						//unstamp the searchbrick so you can move it again around
-						$packeryContainer.packery( 'unstamp', $youtubeSearchBrick );
+						//$packeryContainer.packery( 'unstamp', $youtubeSearchBrick );
 
 						return false;
 					});
@@ -1561,7 +1561,7 @@ function getWikis(topic, lang) {
 						$(this).remove();
 
 						//unstamp the searchbrick so you can move it again around
-						$packeryContainer.packery( 'unstamp', $wikiSearchBrick );
+						//$packeryContainer.packery( 'unstamp', $wikiSearchBrick );
 
 						return false;
 					});
@@ -1668,7 +1668,7 @@ function buildWikipedia(topic, parent, x, y){
 
 					buildSection(section, $brick.attr("tabindex"), newX, newY);
 					
-					$packeryContainer.packery( 'unstamp', $brick );
+					//$packeryContainer.packery( 'unstamp', $brick );
 				});
 			}
 			//Go get the Main Image - 2 API Calls necessairy.. :(
@@ -1810,7 +1810,7 @@ function buildSection(section, parent, x, y){
 			prop:'text',
 			disableeditsection: true,
 			disablepp: true,
-			//preview: true,
+			//preview: true,		
 			//sectionprevue: true,
 			section: section.index,
 			disabletoc: true,
