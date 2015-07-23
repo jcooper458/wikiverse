@@ -24,6 +24,7 @@ var packery = $packeryContainer.packery({
 	stamp: '.search',
 	gutter: 10,
 //	columnWidth: 300
+//	columnWidth: '.brick',
 //	rowHeight: 60,
 //	isInitLayout: false
 });	
@@ -61,6 +62,21 @@ document.addEventListener("keydown", function(e) {
     $('#saveboard').trigger('click');
   }
 }, false);
+
+document.addEventListener("keydown", function(e) {
+  if (e.keyCode == 107) {
+    e.preventDefault();
+    $('#zoom_in').trigger('click');
+  }
+}, false);
+
+document.addEventListener("keydown", function(e) {
+  if (e.keyCode == 109) {
+    e.preventDefault();
+    $('#zoom_out').trigger('click');
+  }
+}, false);
+
 
 document.addEventListener("keydown", function(e) {
   if (!($("input").is(":focus")) && e.keyCode == 87) {
@@ -844,7 +860,7 @@ function buildFoto(photoObj, type, x, y){
 	var $brick = $(defaultBrick);
 	$brick.addClass('foto');
 
-	if(photoObj.size === "large") $brick.addClass('w2');
+	
 
 	var $photo = $('<img class="img-result" owner="' + photoObj.owner + '" src="' + photoObj.mediumURL + '">');
 
@@ -864,6 +880,7 @@ function buildFoto(photoObj, type, x, y){
 		if ( !image.isLoaded ) {
 		  	return;
 		}
+		if(photoObj.size === "large") $brick.addClass('w2');
 		$packeryContainer.packery();
 	});
 }
@@ -1081,7 +1098,7 @@ function createFlickrBrick(apiData, photoObj){
 				owner: $(this).attr('owner')
 
 			}
-			buildFoto(thisPhoto, "flickr", parseInt($flickrSearchBrick.css('left')) + 150, parseInt($flickrSearchBrick.css('top')) + 10);
+			buildFoto(thisPhoto, "flickr", parseInt($flickrSearchBrick.css('left')) + 450, parseInt($flickrSearchBrick.css('top')) + 100);
 			$(this).remove();
 
 			//unstamp the searchbrick so you can move it again around
@@ -1114,7 +1131,7 @@ function createInstagramBrick(photo){
 			smallURL: $(this).attr('src'),
 			size: 'small'
 		}
-		buildFoto(thisPhoto, "instagram", parseInt($instagramSearchBrick.css('left')) + 150, parseInt($instagramSearchBrick.css('top')) + 10);
+		buildFoto(thisPhoto, "instagram", parseInt($instagramSearchBrick.css('left')) + 450, parseInt($instagramSearchBrick.css('top')) + 10);
 		$(this).remove();
 
 		//unstamp the searchbrick so you can move it again around
