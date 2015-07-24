@@ -1,18 +1,3 @@
-docReady( function() {
-  var container = document.querySelector('.fibonacci');
-  var pckry = new Packery( container, {
-
-  });
-  var itemElems = pckry.getItemElements();
-  // for each item element
-  for ( var i=0, len = itemElems.length; i < len; i++ ) {
-    var elem = itemElems[i];
-    // make element draggable with Draggabilly
-    var draggie = new Draggabilly( elem );
-    // bind Draggabilly events to Packery
-    pckry.bindDraggabillyEvents( draggie );
-  }
-});
 //----------------GENERAL STUFF----------------------------
 
 var $packeryContainer = $('#packery');
@@ -45,14 +30,54 @@ var packery = $packeryContainer.packery({
 //	isInitLayout: false
 });	
 
-$('div.brick').each( makeEachDraggable );
+var $homeryContainer = $('.homeGrid');
 
-//make the enter keypress do the search
-$(".search input:text").keyup(function (e) {
-    if (e.keyCode == 13) {
-       $(e.target).siblings('span').find('button').trigger('click');
-    }
+$homeryContainer.packery({
+	itemSelector: '.item',
+	//gutter: 5,
+	transitionDuration: 0,
+	columnWidth: 50,
+	rowHeight: 50
+}); 
+
+// for each item element
+$homeryContainer.find('div.item').each( HomeryMakeEachDraggable );
+
+
+var bricksArray = [];
+
+var container = document.querySelector('.homeGrid');
+var pckry = Packery.data( container );
+
+var shufflers = [];
+var nonShufflers = [];
+for ( var i=0, len = pckry.items.length; i < len; i++ ) {
+  var item = pckry.items[i];
+  var collection = classie.has( item.element, 'ignore-shuffle' ) ?
+    nonShufflers : shufflers;
+  collection.push( item );
+}
+
+shufflers.sort( function() {
+  return Math.random() > 0.5;
 });
+pckry.items = nonShufflers.concat( shufflers );
+pckry.layout();
+
+
+/*
+var bricks = $homeryContainer.packery('getItemElements');
+//console.log(bricks)
+
+$.each(bricks, function(index, item){
+
+	bricksArray.push(item);
+});
+
+console.log(bricksArray);
+$homeryContainer.packery( 'layoutItems', bricksArray, true );*/
+//console.log(bricks)
+
 
 //----------------GENERAL STUFF----------------------------
 
@@ -73,6 +98,15 @@ $packeryContainer.on( "click", ".search .cross", function() {
 });
 
 //----------------keyboard shortcuts----------------------------
+
+
+//make the enter keypress do the search
+$(".search input:text").keyup(function (e) {
+    if (e.keyCode == 13) {
+       $(e.target).siblings('span').find('button').trigger('click');
+    }
+});
+
 
 document.addEventListener("keydown", function(e) {
   if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
@@ -2002,6 +2036,13 @@ function makeEachDraggable( i, itemElem ) {
     } );
     // bind Draggabilly events to Packery
     $packeryContainer.packery( 'bindDraggabillyEvents', draggie );
+}
+
+function HomeryMakeEachDraggable( i, itemElem ) {
+  // make element draggable with Draggabilly
+  var draggie = new Draggabilly( itemElem );
+  // bind Draggabilly events to Packery
+  $homeryContainer.packery( 'bindDraggabillyEvents', draggie );
 }
 
 function createboard(wpnonce) {
