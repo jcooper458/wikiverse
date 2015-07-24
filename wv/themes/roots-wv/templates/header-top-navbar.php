@@ -66,10 +66,10 @@ get_currentuserinfo();
           <li><a href="#" class="zoom-control" id="zoom_out" onclick="zoomOut();" ><i class="fa fa-search-minus"></i></a></li>
           <li><a href="#" class="board-pilot" id="clearboard" onclick="clearboard('<?php echo $nonce ?>');" >clear board</a></li> 
           <?php if ( is_page('start') ) { ?>
-	    		   <li><a href="#" class="board-pilot" id="saveboard" onclick="createboard('<?php echo $nonce ?>');" >create board</a></li>
+	    		   <li><a href="#" class="board-pilot" id="saveboard" onclick="createboard('<?php echo $nonce ?>');" >save board</a></li>
 			   <?php }  ?>
           <?php if ( is_singular("board")) { ?>
-             <li><a href="#" class="board-pilot" id="saveboard" onclick="saveboard('<?php echo $nonce ?>');" >save board</a></li>
+             <li><a href="#" class="board-pilot" id="saveboard" onclick="saveboard('<?php echo $nonce ?>');" >save changes</a></li>
          <?php }  ?>
         <?php }  ?>
 
