@@ -2015,7 +2015,7 @@ function createboard(wpnonce) {
 	var searchBricks = jQuery(".search");
 	$packeryContainer.packery( 'remove', searchBricks );
 
-	//$packeryContainer.packery();
+	$packeryContainer.packery();
 
 	var itemElems = $packeryContainer.packery('getItemElements');
 
@@ -2130,7 +2130,7 @@ function saveboard(wpnonce) {
 	var searchBricks = jQuery(".search");
 	$packeryContainer.packery( 'remove', searchBricks );
 
-	//$packeryContainer.packery();
+	$packeryContainer.packery();
 
 	var itemElems = $packeryContainer.packery('getItemElements');
 
