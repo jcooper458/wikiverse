@@ -24,6 +24,47 @@ var ExampleSite = {
   home: {
     init: function() {
 
+      function HomeryMakeEachDraggable( i, itemElem ) {
+        // make element draggable with Draggabilly
+        var draggie = new Draggabilly( itemElem );
+        // bind Draggabilly events to Packery
+        $homeryContainer.packery( 'bindDraggabillyEvents', draggie );
+      }
+
+      var $homeryContainer = $('.homeGrid');
+
+      $homeryContainer.packery({
+        itemSelector: '.item',
+        //gutter: 5,
+        transitionDuration: 0,
+        columnWidth: 50,
+        rowHeight: 50
+      }); 
+
+      // for each item element
+      $homeryContainer.find('div.item').each( HomeryMakeEachDraggable );
+
+
+      var bricksArray = [];
+
+      var container = document.querySelector('.homeGrid');
+      var pckry = Packery.data( container );
+
+      var shufflers = [];
+      var nonShufflers = [];
+      for ( var i=0, len = pckry.items.length; i < len; i++ ) {
+        var item = pckry.items[i];
+        var collection = classie.has( item.element, 'ignore-shuffle' ) ?
+          nonShufflers : shufflers;
+        collection.push( item );
+      }
+
+      shufflers.sort( function() {
+        return Math.random() > 0.5;
+      });
+      pckry.items = nonShufflers.concat( shufflers );
+      pckry.layout();
+
 	}
  },
   // About page

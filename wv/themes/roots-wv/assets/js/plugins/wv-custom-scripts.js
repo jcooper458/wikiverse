@@ -30,54 +30,8 @@ var packery = $packeryContainer.packery({
 //	isInitLayout: false
 });	
 
-var $homeryContainer = $('.homeGrid');
-
-$homeryContainer.packery({
-	itemSelector: '.item',
-	//gutter: 5,
-	transitionDuration: 0,
-	columnWidth: 50,
-	rowHeight: 50
-}); 
-
-// for each item element
-$homeryContainer.find('div.item').each( HomeryMakeEachDraggable );
-
-
-var bricksArray = [];
-
-var container = document.querySelector('.homeGrid');
+var container = document.querySelector('#packery');
 var pckry = Packery.data( container );
-
-var shufflers = [];
-var nonShufflers = [];
-for ( var i=0, len = pckry.items.length; i < len; i++ ) {
-  var item = pckry.items[i];
-  var collection = classie.has( item.element, 'ignore-shuffle' ) ?
-    nonShufflers : shufflers;
-  collection.push( item );
-}
-
-shufflers.sort( function() {
-  return Math.random() > 0.5;
-});
-pckry.items = nonShufflers.concat( shufflers );
-pckry.layout();
-
-
-/*
-var bricks = $homeryContainer.packery('getItemElements');
-//console.log(bricks)
-
-$.each(bricks, function(index, item){
-
-	bricksArray.push(item);
-});
-
-console.log(bricksArray);
-$homeryContainer.packery( 'layoutItems', bricksArray, true );*/
-//console.log(bricks)
-
 
 //----------------GENERAL STUFF----------------------------
 
@@ -910,9 +864,7 @@ function buildStreetMap(streetObj) {
 function buildFoto(photoObj, type, x, y){
 
 	var $brick = $(defaultBrick);
-	$brick.addClass('foto');
-
-	
+	$brick.addClass('foto');	
 
 	var $photo = $('<img class="img-result" owner="' + photoObj.owner + '" src="' + photoObj.mediumURL + '">');
 
@@ -1653,10 +1605,12 @@ function buildWikipedia(topic, parent, x, y){
 	$brick.data('type', 'wiki');
 	$brick.data('parent', parent);
 	$brick.data('topic', topic);
+	
+	$brick.addClass('wiki');
 
 	$brick.prepend('<p><h2>' + topic.title + '</h2></p>');
 	$brick.prepend( wikiverse_nav );
-
+	
 	/*var items = $packeryContainer.packery('getItemElements');
 	console.log(items);*/
 	
@@ -1843,6 +1797,8 @@ function buildSection(section, parent, x, y){
 	$brick.data('parent', parent);
 	$brick.data('topic', section);
 
+	$brick.addClass('wiki');
+
 	$brick.prepend('<p><h2>' + section.title + '</h2></p>');
 	$brick.prepend( wikiverse_nav );
 
@@ -2000,6 +1956,7 @@ function buildYoutube(youtubeID, x, y){
 function zoomIn(){
 
 	var zoomLevel = Math.round(parseFloat($packeryContainer.css("zoom")) * 10) / 10;
+	//var fontSize = Math.round(parseFloat($('.brick .fa').css("zoom")) * 10) / 10;
 
 	if(zoomLevel < 1.4){
 		$("#zoom_in").prop('disabled', false);
@@ -2036,13 +1993,6 @@ function makeEachDraggable( i, itemElem ) {
     } );
     // bind Draggabilly events to Packery
     $packeryContainer.packery( 'bindDraggabillyEvents', draggie );
-}
-
-function HomeryMakeEachDraggable( i, itemElem ) {
-  // make element draggable with Draggabilly
-  var draggie = new Draggabilly( itemElem );
-  // bind Draggabilly events to Packery
-  $homeryContainer.packery( 'bindDraggabillyEvents', draggie );
 }
 
 function createboard(wpnonce) {
