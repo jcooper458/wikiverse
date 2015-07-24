@@ -38,6 +38,7 @@ var packery = $packeryContainer.packery({
 	itemSelector: '.brick',
 	stamp: '.search',
 	gutter: 10,
+	transitionDuration: 0
 //	columnWidth: 300
 //	columnWidth: '.brick',
 //	rowHeight: 60,
