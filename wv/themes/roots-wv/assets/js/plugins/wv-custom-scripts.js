@@ -1393,7 +1393,7 @@ function getYoutubes(topic) {
 						$packeryContainer.packery( 'stamp', $youtubeSearchBrick );
 
 						var currentYoutubeID = $(this).find('.result').attr('youtubeID');
-
+						console.log(currentYoutubeID)
 						$(this).tooltip('destroy');
 						$(this).remove();
 
@@ -1467,6 +1467,73 @@ function getWikiLanguages(topic, lang, $brick){
 	});
 
 }
+
+function getRelatedYoutubes(videoID) {
+
+	$('#youtube-search .results').empty();
+
+	$.ajax({
+		url: 'https://www.googleapis.com/youtube/v3/search',
+		data:{
+			relatedToVideoId: videoID,
+			key: 'AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8',
+			part: 'snippet',
+			type: 'video',
+			maxResults: 25
+		},
+		dataType:'jsonp',
+		success: function(data){
+			console.log(data);
+			if (typeof data.items !== 'undefined' && data.items.length > 0) {
+
+				$.each(data.items, function(){
+
+					
+
+					var title = this.snippet.channelTitle;
+					var snippet = this.snippet.description;
+					var youtubeID = this.id.videoId;
+					var thumbnailURL = this.snippet.thumbnails.default.url;
+
+					//append row to searchbox-table
+					$youtubeSearchBrick.find('.results').append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td class="youtubeThumb"><img src="'+thumbnailURL+'"></td><td class="result" youtubeID="'+youtubeID+'">'+title+'</td></tr>');
+
+					imagesLoaded( '#youtube-search .results', function() {
+						$packeryContainer.packery();
+					});
+
+					//create the tooltips
+					$('tr').tooltip({animation: true, placement: 'right'});
+
+					//bind event to every row -> so you can start the wikiverse
+					$youtubeSearchBrick.find('tr').unbind('click').click(function(e) {
+
+						//stamp for better clicking
+						$packeryContainer.packery( 'stamp', $youtubeSearchBrick );
+
+						var currentYoutubeID = $(this).find('.result').attr('youtubeID');
+
+						$(this).tooltip('destroy');
+						$(this).remove();
+
+						buildYoutube(currentYoutubeID, parseInt($youtubeSearchBrick.css('left')) + 50, parseInt($youtubeSearchBrick.css('top')) + 10);
+
+						//unstamp the searchbrick so you can move it again around
+						//$packeryContainer.packery( 'unstamp', $youtubeSearchBrick );
+
+						return false;
+					});
+
+				});
+			//nothing has been found on youtube
+		}else{
+				//append row to searchbox-table: NO RESULTS
+				$youtubeSearchBrick.find('.results').append('<tr class="no-results"><td>No Youtube Videos found for "'+topic+'"</td></tr>');
+			}
+		}
+	});
+}
+
 
 function getInterWikiLinks(section, $brick){
 
@@ -1611,12 +1678,6 @@ function buildWikipedia(topic, parent, x, y){
 	$brick.prepend('<p><h2>' + topic.title + '</h2></p>');
 	$brick.prepend( wikiverse_nav );
 	
-	/*var items = $packeryContainer.packery('getItemElements');
-	console.log(items);*/
-	
-	/*$brick.insertAfter("#wikipedia-search");
-	$packeryContainer.packery();*/
-
 	$packeryContainer.append($brick).packery( 'appended', $brick);
 	$brick.each( makeEachDraggable );
 
@@ -1933,7 +1994,9 @@ function buildboard(){
 
 function buildYoutube(youtubeID, x, y){
 
-	var $iframe = '<iframe class="" id="ytplayer" type="text/html" width="290" height="190" src="http://www.youtube.com/embed/'+youtubeID+'" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0"/>';
+	console.log(youtubeID)
+	var relatedButton = '<button class="btn btn-default" onclick="getRelatedYoutubes(\'' + youtubeID + '\');" type="button">Related Videos</button>';
+	var iframe = '<iframe class="" id="ytplayer" type="text/html" width="290" height="190" src="http://www.youtube.com/embed/'+youtubeID+'" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0"/>';
 
 	var $youtubeBrick = $(defaultBrick);
 
@@ -1943,7 +2006,8 @@ function buildYoutube(youtubeID, x, y){
 	$youtubeBrick.data('type', 'youtube');
 	$youtubeBrick.data('topic', youtubeID);
 
-    $youtubeBrick.append($iframe);
+    $youtubeBrick.append(relatedButton);
+    $youtubeBrick.append(iframe);
 
 	$packeryContainer.append($youtubeBrick).packery( 'appended', $youtubeBrick);
 	$youtubeBrick.each( makeEachDraggable );
