@@ -23,15 +23,17 @@ var ExampleSite = {
   // Home page
   home: {
     init: function() {
+      
+      buildboard();
 
-      function HomeryMakeEachDraggable( i, itemElem ) {
+       /*function HomeryMakeEachDraggable( i, itemElem ) {
         // make element draggable with Draggabilly
         var draggie = new Draggabilly( itemElem );
         // bind Draggabilly events to Packery
         $homeryContainer.packery( 'bindDraggabillyEvents', draggie );
       }
 
-      var $homeryContainer = $('.homeGrid');
+      var $homeryContainer = $('#packery');
 
       $homeryContainer.packery({
         itemSelector: '.item',
@@ -47,7 +49,7 @@ var ExampleSite = {
 
       var bricksArray = [];
 
-      var container = document.querySelector('.homeGrid');
+      var container = $('#packery'); 
       var pckry = Packery.data( container );
 
       var shufflers = [];
@@ -63,10 +65,9 @@ var ExampleSite = {
         return Math.random() > 0.5;
       });
       pckry.items = nonShufflers.concat( shufflers );
-      pckry.layout();
+      pckry.layout();*/
 
-      buildHomeBoard();
-
+      //buildHomeBoard();
 	}
  },
   // About page

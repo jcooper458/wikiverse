@@ -1,64 +1,27 @@
-<div class="homeGrid">
 
-  	<div class="item wi2 hi3 transparent"></div>
-  	<div class="item wi1 hi2 transparent ignore-shuffle"></div>
-    <div class="item wi2 hi1 transparent"></div>
-  	<div class="item wi4 hi2 transparent ignore-shuffle"></div>
-  	<div class="item wi3 hi1 transparent"></div>
-  	<div class="item wi1 hi3 transparent ignore-shuffle"></div>
-  	<div class="item wi2 hi2 transparent"></div>
-    <div class="item wi2 hi4 transparent"></div>  	
-    <div class="item wi4 hi1 transparent ignore-shuffle"></div>
-  	<div class="item wi1 hi2 transparent ignore-shuffle"></div>
-    <div class="item wi2 hi1 transparent"></div>
-  	<div class="item wi4 hi2 transparent ignore-shuffle"></div>
-  	<div class="item wi3 hi3 transparent"></div>
-  	<div class="item wi4 hi1 transparent"></div>
-  	<div class="item wi1 hi1 transparent"></div>
-    <div class="item wi1 hi1 transparent"></div> 	
-    <div class="item wi2 hi3 transparent-3"></div>
-  	<div class="item wi1 hi1 ignore-shuffle"></div>
-    <div class="item wi2 hi1"></div>
-  	<div class="item wi4 hi4 transparent-8"></div>
-  	<div class="item wi1 hi1"></div>
-  	<div class="item wiHi hi1"></div>
-  	<div class="item wi4 hi4 transparent-8"></div>
-    <div class="item wi3 hi1"></div>  	
-    <div class="item wi2 hi3 transparent-3"></div>
-  	<div class="item wi1 hi1"></div>
-    <div class="item wi2 hi1 transparent-3"></div>
-  	<div class="item wi4 hi4"></div>
-  	<div class="item wi3 hi3 transparent-8"></div>
-  	<div class="item wi1 hi3"></div>
-  	<div class="item wi2 hi2 transparent-8"></div>
-  	<div class="item wi1 hi1"></div>
-    <div class="item wi2 hi1"></div>
-  	<div class="item wi4 hi4 transparent-3"></div>
-  	<div class="item wi1 hi1"></div>
-  	<div class="item wiHi hi1"></div>
-  	<div class="item wi2 hi2 transparent-8"></div>
-    <div class="item wi3 hi1"></div>  	
-    <div class="item wi2 hi3 transparent-8"></div>
-  	<div class="item wi1 hi1"></div>  	
-  	<div class="item wi4 hi4 transparent-8"></div>
-  	<div class="item wi1 hi1"></div>
-  	<div class="item wiHi hi1"></div>
-  	<div class="item wi4 hi4 transparent-8"></div>
-    <div class="item wi3 hi1"></div>  	
-    <div class="item wi2 hi3 transparent-3"></div>
-  	<div class="item wi1 hi1"></div>
-    <div class="item wi2 hi1 transparent-3"></div>
-  	<div class="item wi4 hi4"></div>
-  	<div class="item wi3 hi3 transparent-3"></div>
-  	<div class="item wi1 hi3"></div>
-  	<div class="item wi2 hi2 transparent-8"></div>
-  	<div class="item wi1 hi1"></div>
-    <div class="item wi2 hi1"></div>
-  	<div class="item wi4 hi4 transparent-3"></div>
-  	<div class="item wi1 hi1"></div>
-  	<div class="item wiHi hi1"></div>
-  	<div class="item wi2 hi2 transparent-8"></div>
-    <div class="item wi3 hi1"></div>  	
+<?php $homePost = get_post( 379 ) ?>
 
+<div id="wikiverse"><?php echo $homePost->post_content; ?></div>
+
+<div id="packery" class="packery">
+
+    <div class="brick wi2 hi1 transparent"></div>
+    <div class="brick wi2 hi1 transparent"></div>
+    <div class="brick wi2 hi1 transparent"></div>
+    <div class="brick wi2 hi1 transparent"></div>
+    <div class="brick wi2 hi1 transparent"></div>
+    <div class="brick wi2 hi1 transparent"></div>
+    <div class="brick wi2 hi1 transparent"></div>
+  	<div class="brick wi4 hi4 ignore-shuffle">	<span class="handle"> <i class="fa fa-arrows"></i></span></div>
+  	<div class="brick wi3 hi3 transparent-8">	<span class="handle"> <i class="fa fa-arrows"></i></span></div>
+    <div class="brick wi2 hi1 transparent-3">	<span class="handle"> <i class="fa fa-arrows"></i></span></div>
+  	<div class="brick wi4 hi4 ignore-shuffle">	<span class="handle"> <i class="fa fa-arrows"></i></span></div>
+  	<div class="brick wi3 hi3 transparent-8">	<span class="handle"> <i class="fa fa-arrows"></i></span></div>
+    <div class="brick wi2 hi1 transparent-3">	<span class="handle"> <i class="fa fa-arrows"></i></span></div>
+  	<div class="brick wi4 hi4 ignore-shuffle">	<span class="handle"> <i class="fa fa-arrows"></i></span></div>
+  	<div class="brick wi3 hi3 transparent-8">	<span class="handle"> <i class="fa fa-arrows"></i></span></div>
+    <div class="brick wi2 hi1 transparent-3">	<span class="handle"> <i class="fa fa-arrows"></i></span></div>
+  	<div class="brick wi4 hi4 ignore-shuffle">	<span class="handle"> <i class="fa fa-arrows"></i></span></div>
+  	<div class="brick wi3 hi3 transparent-8">	<span class="handle"> <i class="fa fa-arrows"></i></span></div>
 </div>
 	

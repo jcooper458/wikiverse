@@ -1,5 +1,3 @@
-(function(){
-
 //----------------GENERAL STUFF----------------------------
 
 var $packeryContainer = $('#packery');
@@ -15,6 +13,8 @@ var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
 var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 var wikiverse_nav = '<div class="wikiverse-nav pull-left"><i class="fa fa-youtube-square youtube-icon icon"></i>&nbsp;<i class="fa fa-flickr flickr-icon icon"></i>&nbsp;<i class="fa fa-instagram instagram-icon icon"></i></div>';
 var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle"> <i class="fa fa-arrows"></i></span></div>';
+
+var is_root = location.pathname == "/";
 
 $('.selectpicker').selectpicker();
 
@@ -32,7 +32,9 @@ var packery = $packeryContainer.packery({
 //	isInitLayout: false
 });	
 
-//var container = document.querySelector('#packery');
+$packeryContainer.find('div.brick').each( makeEachDraggable );
+
+//var container = document.querySelector('.packery');
 //var pckry = Packery.data( container );
 
 //----------------GENERAL STUFF----------------------------
@@ -313,12 +315,6 @@ $packeryContainer.on( 'click', 'img', function( event ) {
 $packeryContainer.packery( 'on', 'layoutComplete', orderItems );
 $packeryContainer.packery( 'on', 'dragItemPositioned', orderItems );
 
-
-})(); // end self calling anonymous function
-
-
-//Function definitions: 
-
 function getSearchBricks(){
 
 //Global get SearchBoxes
@@ -484,11 +480,6 @@ function isPortrait(imgObj){
 
 //----------------EVENTS----------------------------
 
-
-function buildHomeBoard(){
-
-	console.log("cdsjkljcdskls");
-}
 
 
 function buildNextTopic($brick, lang){
@@ -1635,9 +1626,19 @@ function getWikis(topic, lang) {
 	});
 }
 
-function buildWikipedia(topic, parent, x, y){
+function buildBrick(x, y){
 
 	var $brick = $(defaultBrick);
+
+	$packeryContainer.append($brick).packery( 'appended', $brick);
+	$brick.each( makeEachDraggable );
+
+   	$packeryContainer.packery('fit', $brick[0], x, y);
+
+	return $brick;
+}
+
+function buildWikipedia($brick, topic, parent, x, y){
 
 	$brick.data('type', 'wiki');
 	$brick.data('parent', parent);
@@ -1646,179 +1647,178 @@ function buildWikipedia(topic, parent, x, y){
 	$brick.addClass('wiki');
 
 	$brick.prepend('<p><h2>' + topic.title + '</h2></p>');
-	$brick.prepend( wikiverse_nav );
-	
-	$packeryContainer.append($brick).packery( 'appended', $brick);
-	$brick.each( makeEachDraggable );
 
-   	$packeryContainer.packery('fit', $brick[0], x, y);
+	if(!is_root) $brick.prepend( wikiverse_nav );
 
+   	if(!is_root){
+		$.ajax({
+			url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
+			data:{
+				action:'parse',
+				page: topic.title,
+				format:'json',
+				prop:'sections',
+				/*disableeditsection: true,
+				disablepp: true,
+				//preview: true,
+				sectionprevue: true,
+				section:0,
+				disabletoc: true,
+				mobileformat:true*/
+			},
+			dataType:'jsonp',
+			success: function(data){
+				//if there is sections, append them
+				if (typeof data.parse.sections !== 'undefined' && data.parse.sections.length > 0) {
+
+					$tableSectionResults = $('<table class="table table-hover wiki"></table>');
+					$brick.append($tableSectionResults);
+
+					data.parse.sections.forEach(function(section){
+
+						//remove unwanted sections:
+						if((section.line !== "References") && (section.line !== "Notes") && (section.line !== "External links") && (section.line !== "Citations") && (section.line !== "Bibliography") && (section.line !== "Notes and references")) {
+						 	$tableSectionResults.append('<tr><td><div class="result" title="' + section.anchor + '" index="' + section.index + '">' + section.line + '</div></td></tr>');
+						}
+
+					});
+					$packeryContainer.packery();
+
+					//create the section object and trigger the creation of a section brick
+					$tableSectionResults.find(".result").on('click', function() {
+
+						$packeryContainer.packery( 'stamp', $brick );
+
+						var section = {
+
+							title: topic.title,
+							language: topic.language,
+							index: $(this).attr("index")
+						}
+
+						$(this).parents('tr').remove();
+
+						var newY = parseInt($brick.css('top'));
+						var newX = parseInt($brick.css('left'));
+
+						buildSection(section, $brick.attr("tabindex"), newX, newY);
+						
+						//$packeryContainer.packery( 'unstamp', $brick );
+					});
+				}		
+
+				$packeryContainer.packery();
+				
+			}
+		});	
+	}
+	//Go get the Main Image - 2 API Calls necessairy.. :(
 	$.ajax({
 		url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
 		data:{
 			action:'parse',
 			page: topic.title,
 			format:'json',
-			prop:'sections',
+			prop:'images'
+		},
+		dataType:'jsonp',
+		success: function(data){
+			//if there is images, grab the first and append it
+			if (typeof data.parse.images !== 'undefined' && data.parse.images.length > 0) {
+				data.parse.images.every(function(image){
+					//only look for jpgs
+					if(image.indexOf("jpg") > -1){
+						//Go grab the URL
+						$.ajax({
+							url: 'http://en.wikipedia.org/w/api.php',
+							data:{
+								action:'query',
+								titles: 'Image:' + image,
+								prop:'imageinfo',
+								iiprop: 'url',
+								format: 'json',
+								iiurlwidth: 300
+							},
+							dataType:'jsonp',
+							success: function(data){
+			
+								//get the first key in obj
+								//for (first in data.query.pages) break;
+								//now done better like this:
+
+								var imageUrl = data.query.pages[Object.keys(data.query.pages)[0]].imageinfo[0].url;
+								var image = $('<img src="' + imageUrl + '">');
+
+								image.insertAfter($brick.find("h2"));
+
+								imagesLoaded( $brick, function() {
+									$packeryContainer.packery();											
+								});			
+							}
+						});
+						//break the loop if a jpg was found
+						return false;
+					}else{
+						return true;
+					}
+				});
+			}
+		}
+	});
+
+	//Go get the first Paragraph of the article
+	$.ajax({
+		url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
+		data:{
+			action:'parse',
+			page: topic.title,
+			format:'json',
+			prop:'text',
+			section:0,
+			preview: true,
+			mobileformat:true,
+			redirects: true
 			/*disableeditsection: true,
 			disablepp: true,
-			//preview: true,
-			sectionprevue: true,
-			section:0,
+			
+			sectionprevue: true,						
 			disabletoc: true,
 			mobileformat:true*/
 		},
 		dataType:'jsonp',
 		success: function(data){
-			//if there is sections, append them
-			if (typeof data.parse.sections !== 'undefined' && data.parse.sections.length > 0) {
 
-				$tableSectionResults = $('<table class="table table-hover wiki"></table>');
-				$brick.append($tableSectionResults);
+			if (data.parse.text['*'].length > 0) {
+				var infobox = $(data.parse.text['*']).find('p:first');
 
-				data.parse.sections.forEach(function(section){
+				//if (infobox.length){
 
-					//remove unwanted sections:
-					if((section.line !== "References") && (section.line !== "Notes") && (section.line !== "External links") && (section.line !== "Citations") && (section.line !== "Bibliography") && (section.line !== "Notes and references")) {
-					 	$tableSectionResults.append('<tr><td><div class="result" title="' + section.anchor + '" index="' + section.index + '">' + section.line + '</div></td></tr>');
+					infobox.find('.error').remove();
+					infobox.find('.reference').remove();
+					infobox.find('.references').remove();
+					infobox.find('.org').remove();
+					//infobox.find('*').css('max-width', '290px');
+					infobox.find('img').unwrap();
+
+					if($brick.find("img").length){
+						infobox.insertAfter($brick.find("img"));
+					}
+					else{
+						infobox.insertAfter($brick.find("h2"));
 					}
 
-				});
-				$packeryContainer.packery();
+					$packeryContainer.packery();
+				//}
+				//enable to create new bricks out of links
+				buildNextTopic($brick, topic.language);
 
-				//create the section object and trigger the creation of a section brick
-				$tableSectionResults.find(".result").on('click', function() {
-
-					$packeryContainer.packery( 'stamp', $brick );
-
-					var section = {
-
-						title: topic.title,
-						language: topic.language,
-						index: $(this).attr("index")
-					}
-
-					$(this).parents('tr').remove();
-
-					var newY = parseInt($brick.css('top'));
-					var newX = parseInt($brick.css('left'));
-
-					buildSection(section, $brick.attr("tabindex"), newX, newY);
-					
-					//$packeryContainer.packery( 'unstamp', $brick );
-				});
+				if(!is_root) getWikiLanguages(topic.title, topic.language, $brick);
+	
 			}
-			//Go get the Main Image - 2 API Calls necessairy.. :(
-			$.ajax({
-				url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
-				data:{
-					action:'parse',
-					page: topic.title,
-					format:'json',
-					prop:'images'
-				},
-				dataType:'jsonp',
-				success: function(data){
-					//if there is images, grab the first and append it
-					if (typeof data.parse.images !== 'undefined' && data.parse.images.length > 0) {
-						data.parse.images.every(function(image){
-							//only look for jpgs
-							if(image.indexOf("jpg") > -1){
-								//Go grab the URL
-								$.ajax({
-									url: 'http://en.wikipedia.org/w/api.php',
-									data:{
-										action:'query',
-										titles: 'Image:' + image,
-										prop:'imageinfo',
-										iiprop: 'url',
-										format: 'json',
-										iiurlwidth: 290
-									},
-									dataType:'jsonp',
-									success: function(data){
-					
-										//get the first key in obj
-										//for (first in data.query.pages) break;
-										//now done better like this:
-
-										var imageUrl = data.query.pages[Object.keys(data.query.pages)[0]].imageinfo[0].url;
-										var image = $('<img width="290" src="' + imageUrl + '">');
-
-										image.insertAfter($brick.find("h2"));
-
-										imagesLoaded( $brick, function() {
-											$packeryContainer.packery();											
-										});			
-									}
-								});
-								//break the loop if a jpg was found
-								return false;
-							}else{
-								return true;
-							}
-						});
-					}
-				}
-			});
-
-			//Go get the first Paragraph of the article
-			$.ajax({
-				url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
-				data:{
-					action:'parse',
-					page: topic.title,
-					format:'json',
-					prop:'text',
-					section:0,
-					preview: true,
-					mobileformat:true,
-					redirects: true
-					/*disableeditsection: true,
-					disablepp: true,
-					
-					sectionprevue: true,						
-					disabletoc: true,
-					mobileformat:true*/
-				},
-				dataType:'jsonp',
-				success: function(data){
-
-					if (data.parse.text['*'].length > 0) {
-						var infobox = $(data.parse.text['*']).find('p:first');
-
-						//if (infobox.length){
-
-							infobox.find('.error').remove();
-							infobox.find('.reference').remove();
-							infobox.find('.references').remove();
-							infobox.find('.org').remove();
-							//infobox.find('*').css('max-width', '290px');
-							infobox.find('img').unwrap();
-
-							if($brick.find("img").length){
-								infobox.insertAfter($brick.find("img"));
-							}
-							else{
-								infobox.insertAfter($brick.find("h2"));
-							}
-
-							$packeryContainer.packery();
-						//}
-						//enable to create new bricks out of links
-						buildNextTopic($brick, topic.language);
-
-						getWikiLanguages(topic.title, topic.language, $brick);
-						//return $brick;
-					}
-				}
-			});
-
-			$packeryContainer.packery();
-			
 		}
-	});	
+	});
 }
+
 
 function buildSection(section, parent, x, y){
 
@@ -1914,7 +1914,6 @@ function buildSection(section, parent, x, y){
 	});
 }
 
-
 function buildboard(){
 
 	var str = $("#wikiverse").html();
@@ -1924,6 +1923,10 @@ function buildboard(){
 	$packeryContainer.css('zoom', wikiverse.zoom);
 
 	$.each(wikiverse.bricks, function(index, brick) {
+
+		/*if(is_root && index % 3 === 0){
+			$packeryContainer.append($('<div class="brick wiHi hi2 transparent-3"></div>')).packery( 'appended', $('<div class="brick wi4 hi2 transparent-3"></div>'));
+		}*/
 
 		switch (brick.Type) {
 		    case "wiki":
@@ -1964,7 +1967,6 @@ function buildboard(){
 
 function buildYoutube(youtubeID, x, y){
 
-	console.log(youtubeID)
 	var relatedButton = '<button class="btn btn-default" onclick="getRelatedYoutubes(\'' + youtubeID + '\');" type="button">Related Videos</button>';
 	var iframe = '<iframe class="" id="ytplayer" type="text/html" width="290" height="190" src="http://www.youtube.com/embed/'+youtubeID+'" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0"/>';
 
@@ -1976,7 +1978,7 @@ function buildYoutube(youtubeID, x, y){
 	$youtubeBrick.data('type', 'youtube');
 	$youtubeBrick.data('topic', youtubeID);
 
-    $youtubeBrick.append(relatedButton);
+    if(!is_root) $youtubeBrick.append(relatedButton);
     $youtubeBrick.append(iframe);
 
 	$packeryContainer.append($youtubeBrick).packery( 'appended', $youtubeBrick);
