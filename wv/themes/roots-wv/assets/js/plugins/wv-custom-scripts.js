@@ -1,3 +1,5 @@
+(function(){
+
 //----------------GENERAL STUFF----------------------------
 
 var $packeryContainer = $('#packery');
@@ -311,6 +313,12 @@ $packeryContainer.on( 'click', 'img', function( event ) {
 $packeryContainer.packery( 'on', 'layoutComplete', orderItems );
 $packeryContainer.packery( 'on', 'dragItemPositioned', orderItems );
 
+
+})(); // end self calling anonymous function
+
+
+//Function definitions: 
+
 function getSearchBricks(){
 
 //Global get SearchBoxes
@@ -475,6 +483,12 @@ function isPortrait(imgObj){
 }
 
 //----------------EVENTS----------------------------
+
+
+function buildHomeBoard(){
+
+	console.log("cdsjkljcdskls");
+}
 
 
 function buildNextTopic($brick, lang){

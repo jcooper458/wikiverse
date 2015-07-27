@@ -39,7 +39,7 @@ var ExampleSite = {
         transitionDuration: 0,
         columnWidth: 50,
         rowHeight: 50
-      }); 
+      });
 
       // for each item element
       $homeryContainer.find('div.item').each( HomeryMakeEachDraggable );
@@ -64,6 +64,8 @@ var ExampleSite = {
       });
       pckry.items = nonShufflers.concat( shufflers );
       pckry.layout();
+
+      buildHomeBoard();
 
 	}
  },
