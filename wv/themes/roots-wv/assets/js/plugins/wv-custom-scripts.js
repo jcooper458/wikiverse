@@ -30,8 +30,8 @@ var packery = $packeryContainer.packery({
 //	isInitLayout: false
 });	
 
-var container = document.querySelector('#packery');
-var pckry = Packery.data( container );
+//var container = document.querySelector('#packery');
+//var pckry = Packery.data( container );
 
 //----------------GENERAL STUFF----------------------------
 
