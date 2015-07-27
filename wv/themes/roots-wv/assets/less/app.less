@@ -38,7 +38,8 @@
 .main {margin-top:60px;}
 
 .brick{ 
-  width: 300px; 
+  opacity: .1;
+  width: 250px; 
   background: #F7F7F7;
   /*background: #95A5A6; */
   outline: 0;
@@ -67,11 +68,6 @@
   
 }
 
-.brick:hover, .search:hover{
-    background: #F7F7F7; 
-}
-
-
 .brick p {overflow: hidden;}
 
 .wiki p{ padding:5px;}
@@ -87,37 +83,26 @@
   clear: both;
 }
 
-.item {
-
-  float: left;
-  background: #F7F7F7;
-  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-  padding: 5px;
-  font-size: 12px;
-}
-
 .transparent {
 
   opacity:0;
 }
 
-.transparent-3 {
+.transparent-1 {
 
   opacity:.3;
 }
 
-.transparent-8 {
+.transparent-2 {
+
+  opacity:.5;
+}
+
+.transparent-3 {
 
   opacity:.8;
 }
 
-.item:hover {
-  border-color: white;
-  cursor: move;
-
-}
 
 .wi1{
   width: 50px;
@@ -155,8 +140,8 @@
   height: 200px;
 }
 
-.item.is-dragging,
-.item.is-positioning-post-drag {
+.brick.is-dragging,
+.brick.is-positioning-post-drag {
 
   opacity: .6;
   z-index: 2;
@@ -172,6 +157,11 @@
   width: 610px;
 }
 
+.gigante{
+  font-weight: bold;
+  font-size: 90px;
+}
+
 #packery{zoom:.8;}
 
 .brick p,.brick iframe{ /*padding:0px 5px;*/ margin-top:5px; }
@@ -184,13 +174,13 @@
       max-height:100%;  
     }
     .fa{
-        font-size: 20px!important;
+        font-size: 20px;
       }
     .handle{
       .fa{
         cursor: move;
         margin: 8px 0px 0px 8px;
-        font-size: 25px!important;
+        font-size: 25px;
       }
     }
 }
@@ -198,7 +188,7 @@
 nav {
 
   .fa{
-    font-size: 17px!important;
+    font-size: 17px;
   }
 }
 
@@ -215,7 +205,7 @@ nav {
 .sources-menu {
 
   p{margin:0px 0px 0px 0px!important;}
-  .fa{font-size: 15px!important;}
+  .fa{font-size: 15px;}
 
 }
 
@@ -249,7 +239,7 @@ nav {
 .fa{
 
   cursor: pointer;
-  font-size: 40px!important;
+  font-size: 40px;
 
 }
 

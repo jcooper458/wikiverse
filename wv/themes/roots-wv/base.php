@@ -15,6 +15,11 @@
 
 <?php if ( is_page('home')) { ?> 
   <div class="container" role="document">
+  <div class="gigante">wikiverse</div>
+  <h3>is a powerful content aggregator</h3>
+  <h5>that lets you create stunning infoboards in seconds, with data from wikipedia, flickr, youtube and many other sources </h5>
+  </div><!-- /.wrap -->
+  <div class="fluid-container" role="document">
 <?php } else{ ?>
    <div class="fluid-container" role="document">
 <?php }  ?>
