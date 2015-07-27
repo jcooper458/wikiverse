@@ -1364,53 +1364,7 @@ function getYoutubes(topic) {
 		},
 		dataType:'jsonp',
 		success: function(data){
-
-			if (typeof data.items !== 'undefined' && data.items.length > 0) {
-
-				$.each(data.items, function(){
-
-					//console.log(this);
-
-					var title = this.snippet.channelTitle;
-					var snippet = this.snippet.description;
-					var youtubeID = this.id.videoId;
-					var thumbnailURL = this.snippet.thumbnails.default.url;
-
-					//append row to searchbox-table
-					$youtubeSearchBrick.find('.results').append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td class="youtubeThumb"><img src="'+thumbnailURL+'"></td><td class="result" youtubeID="'+youtubeID+'">'+title+'</td></tr>');
-
-					imagesLoaded( '#youtube-search .results', function() {
-						$packeryContainer.packery();
-					});
-
-					//create the tooltips
-					$('tr').tooltip({animation: true, placement: 'right'});
-
-					//bind event to every row -> so you can start the wikiverse
-					$youtubeSearchBrick.find('tr').unbind('click').click(function(e) {
-
-						//stamp for better clicking
-						$packeryContainer.packery( 'stamp', $youtubeSearchBrick );
-
-						var currentYoutubeID = $(this).find('.result').attr('youtubeID');
-						console.log(currentYoutubeID)
-						$(this).tooltip('destroy');
-						$(this).remove();
-
-						buildYoutube(currentYoutubeID, parseInt($youtubeSearchBrick.css('left')) + 50, parseInt($youtubeSearchBrick.css('top')) + 10);
-
-						//unstamp the searchbrick so you can move it again around
-						//$packeryContainer.packery( 'unstamp', $youtubeSearchBrick );
-
-						return false;
-					});
-
-				});
-			//nothing has been found on youtube
-		}else{
-				//append row to searchbox-table: NO RESULTS
-				$youtubeSearchBrick.find('.results').append('<tr class="no-results"><td>No Youtube Videos found for "'+topic+'"</td></tr>');
-			}
+			buildYoutubeSearchResults(data);
 		}
 	});
 }
@@ -1483,57 +1437,59 @@ function getRelatedYoutubes(videoID) {
 		},
 		dataType:'jsonp',
 		success: function(data){
-			console.log(data);
-			if (typeof data.items !== 'undefined' && data.items.length > 0) {
-
-				$.each(data.items, function(){
-
-					
-
-					var title = this.snippet.channelTitle;
-					var snippet = this.snippet.description;
-					var youtubeID = this.id.videoId;
-					var thumbnailURL = this.snippet.thumbnails.default.url;
-
-					//append row to searchbox-table
-					$youtubeSearchBrick.find('.results').append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td class="youtubeThumb"><img src="'+thumbnailURL+'"></td><td class="result" youtubeID="'+youtubeID+'">'+title+'</td></tr>');
-
-					imagesLoaded( '#youtube-search .results', function() {
-						$packeryContainer.packery();
-					});
-
-					//create the tooltips
-					$('tr').tooltip({animation: true, placement: 'right'});
-
-					//bind event to every row -> so you can start the wikiverse
-					$youtubeSearchBrick.find('tr').unbind('click').click(function(e) {
-
-						//stamp for better clicking
-						$packeryContainer.packery( 'stamp', $youtubeSearchBrick );
-
-						var currentYoutubeID = $(this).find('.result').attr('youtubeID');
-
-						$(this).tooltip('destroy');
-						$(this).remove();
-
-						buildYoutube(currentYoutubeID, parseInt($youtubeSearchBrick.css('left')) + 50, parseInt($youtubeSearchBrick.css('top')) + 10);
-
-						//unstamp the searchbrick so you can move it again around
-						//$packeryContainer.packery( 'unstamp', $youtubeSearchBrick );
-
-						return false;
-					});
-
-				});
-			//nothing has been found on youtube
-		}else{
-				//append row to searchbox-table: NO RESULTS
-				$youtubeSearchBrick.find('.results').append('<tr class="no-results"><td>No Youtube Videos found for "'+topic+'"</td></tr>');
-			}
+			buildYoutubeSearchResults(data);			
 		}
 	});
 }
 
+
+function buildYoutubeSearchResults(apiData){
+
+	if (typeof apiData.items !== 'undefined' && apiData.items.length > 0) {
+
+		$.each(apiData.items, function(){			
+
+			var title = this.snippet.channelTitle;
+			var snippet = this.snippet.description;
+			var youtubeID = this.id.videoId;
+			var thumbnailURL = this.snippet.thumbnails.default.url;
+
+			//append row to searchbox-table
+			$youtubeSearchBrick.find('.results').append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td class="youtubeThumb"><img src="'+thumbnailURL+'"></td><td class="result" youtubeID="'+youtubeID+'">'+title+'</td></tr>');
+
+			imagesLoaded( '#youtube-search .results', function() {
+				$packeryContainer.packery();
+			});
+
+			//create the tooltips
+			$('tr').tooltip({animation: true, placement: 'right'});
+
+			//bind event to every row -> so you can start the wikiverse
+			$youtubeSearchBrick.find('tr').unbind('click').click(function(e) {
+
+				//stamp for better clicking
+				$packeryContainer.packery( 'stamp', $youtubeSearchBrick );
+
+				var currentYoutubeID = $(this).find('.result').attr('youtubeID');
+
+				$(this).tooltip('destroy');
+				$(this).remove();
+
+				buildYoutube(currentYoutubeID, parseInt($youtubeSearchBrick.css('left')) + 50, parseInt($youtubeSearchBrick.css('top')) + 10);
+
+				//unstamp the searchbrick so you can move it again around
+				//$packeryContainer.packery( 'unstamp', $youtubeSearchBrick );
+
+				return false;
+			});
+
+		});
+	//nothing has been found on youtube
+	}else{
+		//append row to searchbox-table: NO RESULTS
+		$youtubeSearchBrick.find('.results').append('<tr class="no-results"><td>No Youtube Videos found .. </td></tr>');
+	}
+}
 
 function getInterWikiLinks(section, $brick){
 
