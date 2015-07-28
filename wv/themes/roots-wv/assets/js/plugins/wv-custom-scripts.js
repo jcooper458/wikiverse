@@ -1920,15 +1920,26 @@ function buildSection($brick, section, parent, callback){
 	});
 }
 
-function buildboard(){
 
-	var str = $("#wikiverse").html();
+var boardsArray = $('#wikiverse').html();
 
-	var wikiverse =	JSON.parse(str);
+/*JSON.parse(boardsArray).forEach(function(board, index){
+	console.log(board);
+});
+*/
+
+function buildboard(index){
+
+	var boardArray = $("#wikiverse").html();
+
+	var wikiverse =	JSON.parse(boardArray);
+	var board = JSON.parse(wikiverse[index]);
 	
-	$packeryContainer.css('zoom', wikiverse.zoom);
+	console.log(board);
 
-	$.each(wikiverse.bricks, function(index, brick) {
+	$packeryContainer.css('zoom', board.zoom);
+
+	$.each(board.bricks, function(index, brick) {
 
 		/*if(is_root && index % 3 === 0){
 
@@ -2187,11 +2198,7 @@ function clearboard(wpnonce){
 	} 
 }
 
-var arr = $('#wikiverse').html();
 
-JSON.parse(arr).forEach(function(item, index){
-	console.log(item);
-});
 
 function saveboard(wpnonce) {
 

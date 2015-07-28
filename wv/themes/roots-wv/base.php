@@ -17,7 +17,7 @@
   <div class="container" role="document">
   <div class="gigante">wikiverse</div>
   <h1>is a powerful content aggregator</h1>
-  <h3>create stunning infoboards in seconds, with data from wikipedia, flickr, youtube and many other sources </h5>
+  <h3>create stunning infoboards with data from wikipedia, flickr, youtube and many other sources </h5>
   </div><!-- /.wrap -->
   <div class="fluid-container" role="document">
 <?php } else{ ?>

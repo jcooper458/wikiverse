@@ -21,6 +21,9 @@ $homePosts = get_posts( $args )
 
 </div>
 
+
+
+
 <div id="packery" class="packery">
 	<!--<div class="brick wi4 hi3 transparent-3 ignore-shuffle">	<span class="handle"> <i class="fa fa-arrows"></i></span></div>
 	<div class="brick w4i4 hi4 transparent-3 ignore-shuffle">	<span class="handle"> <i class="fa fa-arrows"></i></span></div>
