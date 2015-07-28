@@ -17,6 +17,13 @@ var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle con
 var is_root = location.pathname == "/";
 
 $('.selectpicker').selectpicker();
+$('.pagination').pagination({
+  total_pages: 2,
+  current_page: 1,
+  callback: function(event, board) {
+   	changeBoard(board);
+  }
+});
 
 getSearchBricks();
 
@@ -54,6 +61,8 @@ $packeryContainer.on( "click", ".search .cross", function() {
 	$thisBrick.addClass('invisible');
 	$packeryContainer.packery();
 });
+
+
 
 if(!is_root){
 
@@ -1931,11 +1940,9 @@ var boardsArray = $('#wikiverse').html();
 function buildboard(index){
 
 	var boardArray = $("#wikiverse").html();
-
-	var wikiverse =	JSON.parse(boardArray);
-	var board = JSON.parse(wikiverse[index]);
 	
-	console.log(board);
+	var wikiverse =	JSON.parse(boardArray);
+	var board = JSON.parse(wikiverse[index - 1]);	
 
 	$packeryContainer.css('zoom', board.zoom);
 
@@ -1996,7 +2003,9 @@ function buildboard(index){
 function buildYoutube($brick, youtubeID, callback){
 
 	var relatedButton = '<button class="btn btn-default" onclick="getRelatedYoutubes(\'' + youtubeID + '\');" type="button">Related Videos</button>';
-	var iframe = '<iframe class="" id="ytplayer" type="text/html" width="250" height="160" src="http://www.youtube.com/embed/'+youtubeID+'" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0"/>';
+	var iframe = '<iframe class="" id="ytplayer" type="text/html" width="520" height="300" src="http://www.youtube.com/embed/'+youtubeID+'" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0"/>';
+
+	$brick.addClass('w2-fix');
 
 	$brick.data('type', 'youtube');
 	$brick.data('topic', youtubeID);
@@ -2012,14 +2021,14 @@ function playBoard(){
 	$('#play').fadeOut();
 
 	//stop scrolling
-	$('html, body').stop(true);
+	//$('html, body').stop(true);
 	
 	//fadeout elems
 	$('.brick .fa').fadeOut();
 	$('nav').fadeTo('slow', 0.3);
 	$('.wikiverse-nav').fadeOut();
 	$('.selectpicker').css('visibility', 'hidden');
-	$('html, body').animate({scrollTop:$(document).height()}, 50000);
+	//$('html, body').animate({scrollTop:$(document).height()}, 50000);
 	return false;
 }
 
@@ -2031,7 +2040,7 @@ function stopBoard(){
 	$('.wikiverse-nav').fadeIn();	
 	$('.selectpicker').css('visibility', 'visible');
 	//$('.selectpicker').selectpicker('refresh');
-	$('html, body').animate({scrollTop:0}, 'fast');
+	//$('html, body').animate({scrollTop:0}, 'fast');
 	return false;
 }
 
@@ -2086,6 +2095,29 @@ function makeEachDraggable( i, itemElem ) {
     $packeryContainer.packery( 'bindDraggabillyEvents', draggie );
 }
 
+function changeBoard(board){
+
+	destroyBoard(function(){
+		buildboard(board);
+	});
+	
+}
+
+function destroyBoard(callback){
+
+	var itemElems = $packeryContainer.packery('getItemElements');
+
+	for (var i=0;i<=itemElems.length;i++) {
+	   (function(ind) {
+	       setTimeout(function(){
+	       		if(ind === itemElems.length){
+	               callback();
+	           }
+	           $(itemElems[ind]).fadeOut("slow").remove();
+	       }, 10 + (40 * ind));
+	   })(i);
+	}
+}
 function createboard(wpnonce) {
 	var wikiverse = {};
 
@@ -2271,7 +2303,6 @@ function saveboard(wpnonce) {
 		}
 	});
 }
-
 
 function getLanguage(langCode){
 

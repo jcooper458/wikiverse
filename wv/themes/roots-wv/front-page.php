@@ -5,7 +5,7 @@ $args = array( 'post_type'=> 'board', 'category_name' => 'home' );
 $homePosts = get_posts( $args ) 
 ?>
 
-<div id="wikiverse">
+<div id="wikiverse" class="invisible">
 
 <?php 
 	$boardArray = [];
@@ -22,7 +22,7 @@ $homePosts = get_posts( $args )
 </div>
 
 
-
+<div class="pagination pagination-centered pagination-large"></div>
 
 <div id="packery" class="packery">
 	<!--<div class="brick wi4 hi3 transparent-3 ignore-shuffle">	<span class="handle"> <i class="fa fa-arrows"></i></span></div>
