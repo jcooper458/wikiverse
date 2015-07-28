@@ -85,6 +85,7 @@ function register_cpt_board() {
         'query_var' => true,
         'can_export' => true,
         'rewrite' => array('slug'=>''),
+        'taxonomies' => array('category'),
         'capability_type' => 'post'
         );
 

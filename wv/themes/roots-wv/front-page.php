@@ -1,7 +1,25 @@
 
-<?php $homePost = get_post( 380 ) ?>
+<?php 
+$args = array( 'post_type'=> 'board', 'category_name' => 'home' );
 
-<div id="wikiverse"><?php echo $homePost->post_content; ?></div>
+$homePosts = get_posts( $args ) 
+?>
+
+<div id="wikiverse">
+
+<?php 
+	$boardArray = [];
+	foreach ( $homePosts as $post ) :  
+		setup_postdata( $post ); 
+			
+			array_push($boardArray, $post->post_content);
+			
+	endforeach;
+	echo json_encode($boardArray);
+	wp_reset_postdata();
+?>
+
+</div>
 
 <div id="packery" class="packery">
 	<!--<div class="brick wi4 hi3 transparent-3 ignore-shuffle">	<span class="handle"> <i class="fa fa-arrows"></i></span></div>

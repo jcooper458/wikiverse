@@ -1858,7 +1858,12 @@ function buildSection($brick, section, parent, callback){
 		},
 		dataType:'jsonp',
 		success: function(data){
-			var sectionHTML = $(data.parse.text['*']);
+			
+			if(!is_root){
+				var sectionHTML = $(data.parse.text['*']);
+			}else{
+				var sectionHTML = $(data.parse.text['*']).find('p:first');
+			}
 			//var completeSection = $(data.parse.text['*']).find('p:first');
 
 			sectionHTML.find('.error').remove();
@@ -2181,6 +2186,12 @@ function clearboard(wpnonce){
 		$packeryContainer.packery();
 	} 
 }
+
+var arr = $('#wikiverse').html();
+
+JSON.parse(arr).forEach(function(item, index){
+	console.log(item);
+});
 
 function saveboard(wpnonce) {
 

@@ -127,7 +127,7 @@
 </div>
 
 
-<div id="gmaps-search" data-type="gmaps" data-topic="" class="brick invisible w2-fix visible gmaps">
+<div id="gmaps-search" data-type="gmaps" data-topic="" class="brick invisible w3-fix visible gmaps">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
