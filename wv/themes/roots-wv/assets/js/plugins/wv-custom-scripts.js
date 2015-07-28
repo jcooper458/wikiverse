@@ -55,10 +55,11 @@ $packeryContainer.on( "click", ".search .cross", function() {
 	$packeryContainer.packery();
 });
 
-// Stop scrolling when click on nav
-$('nav .li').on( "click", function() {
-	console.log("cdakcdas")
-	stop();
+// Stop scrolling when click anywhere
+$(document).on( "click", function(e) {
+	if(!$('#play').is(":visible") ){
+		stopBoard();
+	}		
 });
 
 //----------------keyboard shortcuts----------------------------
@@ -874,7 +875,7 @@ function buildStreetMap(streetObj) {
 	$mapbrick.data( "topic", streetObj );
 }
 
-function buildFoto($brick, photoObj, type, callback){
+function buildFoto($brick, photoObj, type, dataLoaded){
 
 	$brick.addClass('foto');	
 
@@ -893,7 +894,7 @@ function buildFoto($brick, photoObj, type, callback){
 		}
 		if(photoObj.size === "large") $brick.addClass('w2');
 		$packeryContainer.packery();
-		callback($brick);	
+		dataLoaded($brick);	
 	});
 }
 
@@ -930,7 +931,7 @@ function getFlickrs(topic, sort, type) {
 				lat: latitude,
 				lon: longitude,
 				format: 'json',
-				nojsoncallback: 1
+				nojsondataLoaded: 1
 			},
 			success: function(data){
 
@@ -943,7 +944,7 @@ function getFlickrs(topic, sort, type) {
 							api_key: '1a7d3826d58da8a6285ef7062f670d30',
 							place_id: data.places.place[0].woeid,
 							format: 'json',
-							nojsoncallback: 1,
+							nojsondataLoaded: 1,
 							per_page: 40,
 							sort: sort
 						},
@@ -959,7 +960,7 @@ function getFlickrs(topic, sort, type) {
 											api_key: '1a7d3826d58da8a6285ef7062f670d30',
 											photo_id: photoObj.id,
 											format: 'json',
-											nojsoncallback: 1
+											nojsondataLoaded: 1
 										},
 										success: function(data){
 											createFlickrBrick(data, photoObj);
@@ -989,7 +990,7 @@ function getFlickrs(topic, sort, type) {
 				api_key: '1a7d3826d58da8a6285ef7062f670d30',
 				text: topic,
 				format: 'json',
-				nojsoncallback: 	1,
+				nojsondataLoaded: 	1,
 				per_page: 40,
 				sort: sort
 			},
@@ -1004,7 +1005,7 @@ function getFlickrs(topic, sort, type) {
 								api_key: '1a7d3826d58da8a6285ef7062f670d30',
 								photo_id: photoObj.id,
 								format: 'json',
-								nojsoncallback: 1
+								nojsondataLoaded: 1
 							},
 							success: function(data){
 								createFlickrBrick(data, photoObj);
@@ -1029,7 +1030,7 @@ function getFlickrs(topic, sort, type) {
 				api_key: '1a7d3826d58da8a6285ef7062f670d30',
 				username: topic,
 				format: 'json',
-				nojsoncallback: 1
+				nojsondataLoaded: 1
 			},
 			success: function(data){
 				
@@ -1043,7 +1044,7 @@ function getFlickrs(topic, sort, type) {
 							api_key: '1a7d3826d58da8a6285ef7062f670d30',
 							user_id: data.user.id,
 							format: 'json',
-							nojsoncallback: 1,
+							nojsondataLoaded: 1,
 							per_page: 40,
 							sort: sort
 						},
@@ -1059,7 +1060,7 @@ function getFlickrs(topic, sort, type) {
 											api_key: '1a7d3826d58da8a6285ef7062f670d30',
 											photo_id: photoObj.id,
 											format: 'json',
-											nojsoncallback: 1
+											nojsondataLoaded: 1
 										},
 										success: function(data){
 											createFlickrBrick(data, photoObj);
@@ -1234,7 +1235,7 @@ function getInstagrams(query, type) {
 	}
 	else if(type === "hashtag"){
 
-		instagramUrl = 'https://api.instagram.com/v1/tags/' + query + '/media/recent?callback=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
+		instagramUrl = 'https://api.instagram.com/v1/tags/' + query + '/media/recent?dataLoaded=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
 		//var instagramUrl = 'https://api.instagram.com/v1/tags/' + query + '/media/recent?client_id=db522e56e7574ce9bb70fa5cc760d2e7';
 
 	    $.getJSON(instagramUrl, access_parameters, function(data){
@@ -1263,7 +1264,7 @@ function getInstagrams(query, type) {
 			
 				if (typeof data.data !== 'undefined' && data.data.length > 0) {
 					var userID = data.data[0].id
-					var getUserUrl = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?callback=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
+					var getUserUrl = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?dataLoaded=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
 
 				    $.getJSON(getUserUrl, access_parameters, function(data){
 				    	if (data.meta.code !== 400) {
@@ -1284,7 +1285,7 @@ function getInstagrams(query, type) {
 	}
 }
 
-function buildSoundcloud($brick, soundcloudObj, callback){
+function buildSoundcloud($brick, soundcloudObj, dataLoaded){
 
 	$brick.addClass('w2-fix');
 
@@ -1294,7 +1295,7 @@ function buildSoundcloud($brick, soundcloudObj, callback){
 	$brick.data('topic', soundcloudObj);
 
 	$brick.append($soundcloudIframe);
-	callback($brick);
+	dataLoaded($brick);
 }
 
 function getSoundcloud(query, params) {
@@ -1591,7 +1592,7 @@ function getWikis(topic, lang) {
 						var $thisBrick = buildBrick(parseInt($wikiSearchBrick.css('left')) + 50, parseInt($wikiSearchBrick.css('top')) + 10);
 
 						//build the wikis next to the search brick
-						buildWikipedia($thisBrick, topic, -1);
+						buildWikipedia($thisBrick, topic, -1, APIsContentLoaded);
 
 						$(this).tooltip('destroy');
 						$(this).remove();
@@ -1649,7 +1650,7 @@ function APIsContentLoaded($brick){
 	$brick.fadeTo( "slow", 1); 
 }
 
-function buildWikipedia($brick, topic, parent, callback){
+function buildWikipedia($brick, topic, parent, dataLoaded){
 
 	$brick.data('type', 'wiki');
 	$brick.data('parent', parent);
@@ -1826,14 +1827,14 @@ function buildWikipedia($brick, topic, parent, callback){
 				buildNextTopic($brick, topic.language);				
 
 				if(!is_root) getWikiLanguages(topic.title, topic.language, $brick);
-				callback($brick);	
+				dataLoaded($brick);	
 			}
 		}
 	});
 }
 
 
-function buildSection($brick, section, parent, callback){
+function buildSection($brick, section, parent, dataLoaded){
 
 	$brick.data('type', 'wikiSection');
 	$brick.data('parent', parent);
@@ -1863,8 +1864,8 @@ function buildSection($brick, section, parent, callback){
 		},
 		dataType:'jsonp',
 		success: function(data){
-
 			var sectionHTML = $(data.parse.text['*']);
+			//var completeSection = $(data.parse.text['*']).find('p:first');
 
 			sectionHTML.find('.error').remove();
 			sectionHTML.find('.reference').remove();
@@ -1914,7 +1915,7 @@ function buildSection($brick, section, parent, callback){
 			//enable to create new bricks out of links
 			buildNextTopic($brick, section.language);
 			if(!is_root) getInterWikiLinks(section, $brick);
-			callback($brick);	
+			dataLoaded($brick);	
 			$packeryContainer.packery();
 		}
 	});
@@ -1982,7 +1983,7 @@ function buildboard(){
 }
 
 
-function buildYoutube($brick, youtubeID, callback){
+function buildYoutube($brick, youtubeID, dataLoaded){
 
 	var relatedButton = '<button class="btn btn-default" onclick="getRelatedYoutubes(\'' + youtubeID + '\');" type="button">Related Videos</button>';
 	var iframe = '<iframe class="" id="ytplayer" type="text/html" width="290" height="190" src="http://www.youtube.com/embed/'+youtubeID+'" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0"/>';
@@ -1994,22 +1995,32 @@ function buildYoutube($brick, youtubeID, callback){
     $brick.append(iframe);
 
 	$packeryContainer.packery();
-	callback($brick);
+	dataLoaded($brick);
 }
 
-function play(){
+function playBoard(){
+	$('#play').fadeOut();
 
+	//stop scrolling
 	$('html, body').stop(true);
+	
+	//fadeout elems
+	$('.brick .fa').fadeOut();
 	$('nav').fadeTo('slow', 0.3);
 	$('.wikiverse-nav').fadeOut();
+	$('.selectpicker').css('visibility', 'hidden');
 	$('html, body').animate({scrollTop:$(document).height()}, 50000);
 	return false;
 }
 
-function stop(){
+function stopBoard(){
+	$('#play').fadeIn();
 	$('html, body').stop(true);
+	$('.brick .fa').fadeIn();
 	$('nav').fadeTo('slow', 1);
 	$('.wikiverse-nav').fadeIn();	
+	$('.selectpicker').css('visibility', 'visible');
+	//$('.selectpicker').selectpicker('refresh');
 	$('html, body').animate({scrollTop:0}, 'fast');
 	return false;
 }

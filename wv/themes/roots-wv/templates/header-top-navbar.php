@@ -62,8 +62,7 @@ get_currentuserinfo();
 
 
 	    	<?php if ( is_page('start') || is_singular("board")) { ?>
-          <li><a href="#" class="play-control" id="play" onclick="play();" ><i class="fa fa-play"></i></i></a></li> 
-          <li><a href="#" class="play-control" id="stop" onclick="stop();" ><i class="fa fa-stop"></i></i></a></li> 
+          <li><a href="#" class="play-control play" id="play" onclick="playBoard();" ><i class="fa fa-play"></i></i></a></li> 
           <li><a href="#" class="zoom-control" id="zoom_in" onclick="zoomIn();" ><i class="fa fa-search-plus"></i></a></li> 
           <li><a href="#" class="zoom-control" id="zoom_out" onclick="zoomOut();" ><i class="fa fa-search-minus"></i></a></li>
           <li><a href="#" class="board-pilot" id="clearboard" onclick="clearboard('<?php echo $nonce ?>');" >clear board</a></li> 
