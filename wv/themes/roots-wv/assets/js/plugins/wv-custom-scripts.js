@@ -691,13 +691,10 @@ function buildGmaps($mapbrick, mapObj, callback){
 	$mapbrick.data('bounds', mapObj.bounds.southWest + "," + mapObj.bounds.northEast);
 
 	$mapbrick
-		.addClass('w2-fix')
+		.addClass('w3-fix')
 		.addClass('gmaps');
 	
 	$mapbrick.prepend($mapcanvas)
-	if(!is_root)$mapbrick
-					.prepend('<span class="instagram"><i class="fa fa-instagram instagram-icon"></i></span>')
-					.prepend('<span class="flickr-search"><i class="fa fa-flickr flickr-icon"></i></span>');
 
 	if (mapObj.maptype.toLowerCase() === "roadmap"){
 		myMaptypeID = google.maps.MapTypeId.ROADMAP;
@@ -830,7 +827,7 @@ function buildStreetMap($mapbrick, streetObj, callback) {
 	var $mapcanvas = $('<div id="map_canvas"></div>');
 
 	$mapbrick.data('type', 'streetview');
-	$mapbrick.addClass('w2-fix');
+	$mapbrick.addClass('w3-fix');
 	$mapbrick.prepend($mapcanvas);
 
 	var myCenter = new google.maps.LatLng(streetObj.center.split(",")[0], streetObj.center.split(",")[1]);
@@ -1284,7 +1281,7 @@ function getInstagrams(query, type) {
 
 function buildSoundcloud($brick, soundcloudObj, callback){
 
-	$brick.addClass('w2-fix');
+	$brick.addClass('w3-fix');
 
 	var $soundcloudIframe = $('<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=' + soundcloudObj.uri + '&color=0066cc"></iframe>');
 
