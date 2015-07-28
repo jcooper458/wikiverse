@@ -1021,7 +1021,7 @@ function getFlickrs(topic, sort, type) {
 		});
 	}
 	else if(type === "userQuery"){
-
+		
 		$.ajax({
 			url: 'https://api.flickr.com/services/rest',
 			data:{
@@ -1033,7 +1033,7 @@ function getFlickrs(topic, sort, type) {
 				nojsondataLoaded: 1
 			},
 			success: function(data){
-				
+				console.log(data)
 				if (data.user.id) {
 					
 					$.ajax({
@@ -1217,7 +1217,7 @@ function getInstagrams(query, type) {
 				},
 				dataType:'jsonp',
 				success: function(data){
-					//console.log(data)
+		
 					if (typeof data.data !== 'undefined' && data.data.length > 0) {
 						data.data.forEach(function(photo, index){
 							createInstagramBrick(photo);
@@ -1239,6 +1239,7 @@ function getInstagrams(query, type) {
 		//var instagramUrl = 'https://api.instagram.com/v1/tags/' + query + '/media/recent?client_id=db522e56e7574ce9bb70fa5cc760d2e7';
 
 	    $.getJSON(instagramUrl, access_parameters, function(data){
+
 	    	if (typeof data.data !== 'undefined' && data.data.length > 0) {
 				data.data.forEach(function(photo, index){
 					createInstagramBrick(photo);
@@ -1486,7 +1487,7 @@ function buildYoutubeSearchResults(apiData){
 
 				var $thisBrick = buildBrick(parseInt($youtubeSearchBrick.css('left')) + 50, parseInt($youtubeSearchBrick.css('top')) + 10);
 
-				buildYoutube($thisBrick, currentYoutubeID);
+				buildYoutube($thisBrick, currentYoutubeID, APIsContentLoaded);
 
 				return false;
 			});
@@ -1878,9 +1879,9 @@ function buildSection($brick, section, parent, dataLoaded){
 			sectionHTML.find('img').unwrap();
 
 			//if image is bigger than 290, shrink it
-			if(sectionHTML.find('img').width() > 290 || sectionHTML.find('img').attr("width") > 290){
+			if(sectionHTML.find('img').width() > 250 || sectionHTML.find('img').attr("width") > 250){
 
-				sectionHTML.find('img').attr('width', 290);
+				sectionHTML.find('img').attr('width', 250);
 				sectionHTML.find('img').removeAttr('height');
 			}
 			sectionHTML.find('a[class*=exter]').remove();
@@ -1986,7 +1987,7 @@ function buildboard(){
 function buildYoutube($brick, youtubeID, dataLoaded){
 
 	var relatedButton = '<button class="btn btn-default" onclick="getRelatedYoutubes(\'' + youtubeID + '\');" type="button">Related Videos</button>';
-	var iframe = '<iframe class="" id="ytplayer" type="text/html" width="290" height="190" src="http://www.youtube.com/embed/'+youtubeID+'" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0"/>';
+	var iframe = '<iframe class="" id="ytplayer" type="text/html" width="250" height="160" src="http://www.youtube.com/embed/'+youtubeID+'" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0"/>';
 
 	$brick.data('type', 'youtube');
 	$brick.data('topic', youtubeID);
