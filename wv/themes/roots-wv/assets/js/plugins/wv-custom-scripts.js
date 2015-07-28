@@ -15,23 +15,10 @@ var wikiverse_nav = '<div class="wikiverse-nav pull-left control-buttons"><i cla
 var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
 
 
-var boardsArray = $('#wikiverse').html();
-
-/*JSON.parse(boardsArray).forEach(function(board, index){
-	console.log(board);
-});
-*/
-
 var is_root = location.pathname == "/";
 
 $('.selectpicker').selectpicker();
-$('.pagination').pagination({
-  total_pages: JSON.parse(boardsArray).length,
-  current_page: 1,
-  callback: function(event, board) {
-   	changeBoard(board - 1);
-  }
-});
+
 
 getSearchBricks();
 
@@ -712,6 +699,7 @@ function buildGmaps($mapbrick, mapObj, callback){
 		.addClass('gmaps');
 	
 	$mapbrick.prepend($mapcanvas)
+	$packeryContainer.packery();
 
 	if (mapObj.maptype.toLowerCase() === "roadmap"){
 		myMaptypeID = google.maps.MapTypeId.ROADMAP;
@@ -802,6 +790,10 @@ function buildGmaps($mapbrick, mapObj, callback){
 
 	var thePanorama = map.getStreetView(); //get the streetview object
 
+	google.maps.event.addDomListener(window, 'idle', function(){
+		$packeryContainer.packery();
+	});
+
 	//detect if entering Streetview -> Change the type to streetview
 	google.maps.event.addListener(thePanorama, 'visible_changed', function() {
 
@@ -845,8 +837,10 @@ function buildStreetMap($mapbrick, streetObj, callback) {
 
 	$mapbrick.data('type', 'streetview');
 	$mapbrick.addClass('w3-fix');
-	$mapbrick.prepend($mapcanvas);
 
+	$mapbrick.prepend($mapcanvas);
+	$packeryContainer.packery();
+	
 	var myCenter = new google.maps.LatLng(streetObj.center.split(",")[0], streetObj.center.split(",")[1]);
 
 	var panoramaOptions = {
@@ -1916,15 +1910,6 @@ function buildSection($brick, section, parent, callback){
 
 					getGmapsSearch();
 
-
-					/*$('#pac-input').val(topic);
-					e = jQuery.Event("keypress");
-					e.which = 13; //choose the one you want
-				    d = jQuery.Event("keydown");
-					d.keyCode = 50;
-					$("#pac-input").trigger('click');
-					$("#pac-input").trigger(d);
-					$("#pac-input").trigger(e);*/
 				});
 			}// end if geo
 

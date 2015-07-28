@@ -29,7 +29,7 @@ function roots_scripts() {
   }
 
   wp_register_script('modernizr', get_template_directory_uri() . '/assets/js/vendor/modernizr-2.6.2.min.js', false, null, false);
-  wp_register_script('roots_scripts', get_template_directory_uri() . '/assets/js/scripts.min.js', false, 'b850c299d0560612e904223f07252748', true);
+  wp_register_script('roots_scripts', get_template_directory_uri() . '/assets/js/scripts.min.js', false, '9a26f15c393455267ceec977ee490193', true);
   wp_register_script('gmaps', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&signed_in=true', false, null, false);  
   wp_register_script('soundcloud', '//connect.soundcloud.com/sdk-2.0.0.js', false, null, false);
   wp_register_script('soundcloud_player', '//w.soundcloud.com/player/api.js', false, null, false);

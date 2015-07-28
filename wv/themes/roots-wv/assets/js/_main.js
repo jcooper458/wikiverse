@@ -23,6 +23,16 @@ var ExampleSite = {
   // Home page
   home: {
     init: function() {
+
+      var boardsArray = $('#wikiverse').html();
+
+      $('.pagination').pagination({
+        total_pages: JSON.parse(boardsArray).length,
+        current_page: 1,
+        callback: function(event, board) {
+          changeBoard(board - 1);
+        }
+      });
       
       buildboard(0);
 

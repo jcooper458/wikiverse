@@ -1,6 +1,6 @@
 <div id="postID"></div>
 
-<div id="packery">
+<div id="packery" class="packery">
 </div>
 
 <?php get_template_part('templates/searchboxes'); ?>
