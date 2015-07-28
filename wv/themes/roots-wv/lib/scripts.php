@@ -13,7 +13,7 @@
 function roots_scripts() {
 
 
-  wp_enqueue_style('roots_main', get_template_directory_uri() . '/assets/css/main.min.css', false, 'e8da5b23aad20258306306d4ac603c35');
+  wp_enqueue_style('roots_main', get_template_directory_uri() . '/assets/css/main.min.css', false, '3c63ddfd5c9736b0eb4874050e4e06e3');
 
   // jQuery is loaded using the same method from HTML5 Boilerplate:
   // Grab Google CDN's latest jQuery with a protocol relative URL; fallback to local if offline
@@ -35,7 +35,7 @@ function roots_scripts() {
   wp_register_script('soundcloud_player', '//w.soundcloud.com/player/api.js', false, null, false);
   
   wp_register_style('font_awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', false, null, false);
-
+  wp_register_style('google_font', 'http://fonts.googleapis.com/css?family=Trocchi', false, null, false);
 
 wp_register_script('wv_development', get_template_directory_uri() . '/assets/js/plugins/wv-custom-scripts.js', false, 'afdfc45a1a591270fcf3b570597dee3f', true);
 
@@ -46,7 +46,10 @@ wp_register_script('wv_development', get_template_directory_uri() . '/assets/js/
   wp_enqueue_script('soundcloud_player');
   wp_enqueue_script('jquery');
   wp_enqueue_script('roots_scripts');
+  
   wp_enqueue_style('font_awesome');
+  wp_enqueue_style('google_font');
+
   wp_enqueue_script('wv_development');
 }
 add_action('wp_enqueue_scripts', 'roots_scripts', 100);

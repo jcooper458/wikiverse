@@ -1412,9 +1412,9 @@ function getWikiLanguages(topic, lang, $brick){
 						title: $(this).children(":selected").data('topic'),
 						language: $(this).children(":selected").attr('value')
 					}
-
+					var $thisBrick = buildBrick(thisX, thisY);
 					//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
-					buildWikipedia(thisTopic, $brick.attr("tabindex"), thisX, thisY);
+					buildWikipedia($thisBrick, thisTopic, $brick.attr("tabindex"), APIsContentLoaded);
 				});
 				$packeryContainer.packery();
 			}
@@ -1532,8 +1532,8 @@ function getInterWikiLinks(section, $brick){
 						title: $(this).children(":selected").attr('topic'),
 						language: section.language
 					};
-
-					buildWikipedia(thisTopic, $brick.attr("tabindex"), thisX, thisY);
+					var $thisBrick = buildBrick(thisX, thisY);
+					buildWikipedia($thisBrick, thisTopic, $brick.attr("tabindex"), APIsContentLoaded);
 				});
 
 				$packeryContainer.packery();
