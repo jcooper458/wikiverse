@@ -672,7 +672,7 @@ function getGmapsSearch(){
 	});
 }
 
-function buildGmaps(mapObj){
+function buildGmaps($mapbrick, mapObj, callback){
 
 	var map;
 	var myMaptypeID;
@@ -681,22 +681,18 @@ function buildGmaps(mapObj){
 
 	var $mapcanvas = $('<div id="map_canvas"></div>');
 
-	var $mapbrick = $(defaultBrick);
-
 	$mapbrick.data('type', 'gmaps');
 	$mapbrick.data('position', mapObj.center);
 	$mapbrick.data('bounds', mapObj.bounds.southWest + "," + mapObj.bounds.northEast);
 
-	$mapbrick.addClass('w2-fix');
-	$mapbrick.addClass('gmaps');
-
-	$mapbrick.prepend($mapcanvas);
-	$mapbrick.prepend('<span class="instagram"><i class="fa fa-instagram instagram-icon"></i></span>');
-	$mapbrick.prepend('<span class="flickr-search"><i class="fa fa-flickr flickr-icon"></i></span>');
-
-	$packeryContainer.append($mapbrick).packery( 'appended', $mapbrick);
-	$mapbrick.each( makeEachDraggable );
-
+	$mapbrick
+		.addClass('w2-fix')
+		.addClass('gmaps');
+	
+	$mapbrick.prepend($mapcanvas)
+	if(!is_root)$mapbrick
+					.prepend('<span class="instagram"><i class="fa fa-instagram instagram-icon"></i></span>')
+					.prepend('<span class="flickr-search"><i class="fa fa-flickr flickr-icon"></i></span>');
 
 	if (mapObj.maptype.toLowerCase() === "roadmap"){
 		myMaptypeID = google.maps.MapTypeId.ROADMAP;
@@ -725,13 +721,15 @@ function buildGmaps(mapObj){
 	var mapOptions = {
 		zoom: 8,
 		center: myCenter,
-		scrollwheel: false,
+		//scrollwheel: false,
 		mapTypeId: myMaptypeID
 	};
 
 	map = new google.maps.Map($mapcanvas[0], mapOptions);
 
 	map.fitBounds(myBounds);
+
+	callback($mapbrick);
 
 	google.maps.event.addListener(map, 'idle', function() {
 
@@ -817,27 +815,18 @@ function buildGmaps(mapObj){
 			};
 			$mapbrick.data( "topic", currentStreetMap );
 		}
-
 	});
-
 }
 
-function buildStreetMap(streetObj) {
+function buildStreetMap($mapbrick, streetObj, callback) {
 
-	var $mapbrick;
 	var currentStreetMap;
 
 	var $mapcanvas = $('<div id="map_canvas"></div>');
 
-	var $mapbrick = $(defaultBrick);
-
 	$mapbrick.data('type', 'streetview');
-	$mapbrick.addClass('w2');
+	$mapbrick.addClass('w2-fix');
 	$mapbrick.prepend($mapcanvas);
-
-	$packeryContainer.append($mapbrick).packery( 'appended', $mapbrick);
-	$mapbrick.each( makeEachDraggable );
-
 
 	var myCenter = new google.maps.LatLng(streetObj.center.split(",")[0], streetObj.center.split(",")[1]);
 
@@ -856,6 +845,8 @@ function buildStreetMap(streetObj) {
 	};
 
 	var thePanorama = new google.maps.StreetViewPanorama($mapcanvas[0], panoramaOptions);
+	
+	callback($mapbrick);
 
 	google.maps.event.addListener(thePanorama, 'pov_changed', function() { //detect if entering Streetview
 
@@ -1968,11 +1959,11 @@ function buildboard(){
 		    break;
 
 		    case "gmaps":
-				buildGmaps($thisBrick, brick.Topic);
+				buildGmaps($thisBrick, brick.Topic, APIsContentLoaded);
 		    break;
 
 		    case "streetview":
-				buildStreetMap($thisBrick, brick.Topic);
+				buildStreetMap($thisBrick, brick.Topic, APIsContentLoaded);
 		    break;
 
 		    case "soundcloud":
