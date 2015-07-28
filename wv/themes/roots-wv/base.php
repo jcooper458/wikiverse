@@ -13,11 +13,16 @@
     }
   ?>
 
-<?php //if ( is_page('home')) { ?> 
-  <!--<div class="fluid-container" role="document">-->
-<?php //} else{ ?>
+<?php if ( is_page('home')) { ?> 
+  <div class="container" role="document">
+  <div class="gigante">wikiverse</div>
+  <h1>is a powerful content aggregator</h1>
+  <h3>create stunning infoboards in seconds, with data from wikipedia, flickr, youtube and many other sources </h5>
+  </div><!-- /.wrap -->
+  <div class="fluid-container" role="document">
+<?php } else{ ?>
    <div class="fluid-container" role="document">
-<?php //}  ?>
+<?php }  ?>
       <div class="main <?php echo roots_main_class(); ?>" role="main">
         <?php include roots_template_path(); ?>
       </div><!-- /.main -->

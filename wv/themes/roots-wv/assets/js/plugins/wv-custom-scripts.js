@@ -24,9 +24,9 @@ getSearchBricks();
 var packery = $packeryContainer.packery({
 	itemSelector: '.brick',
 	stamp: '.search',
-	gutter: 10,
+	gutter: 5,
 	transitionDuration: 0,
-	columnWidth: 250
+	//columnWidth: 250
 //	columnWidth: '.brick',
 //	rowHeight: 60,
 //	isInitLayout: false
@@ -53,6 +53,12 @@ $packeryContainer.on( "click", ".search .cross", function() {
 	var $thisBrick = jQuery(this).parent(".search");
 	$thisBrick.addClass('invisible');
 	$packeryContainer.packery();
+});
+
+// Stop scrolling when click on nav
+$('nav .li').on( "click", function() {
+	console.log("cdakcdas")
+	stop();
 });
 
 //----------------keyboard shortcuts----------------------------
@@ -1106,7 +1112,7 @@ function createFlickrBrick(apiData, photoObj){
 			}
 			var $thisBrick = buildBrick(parseInt($flickrSearchBrick.css('left')) + 450, parseInt($flickrSearchBrick.css('top')) + 100);
 
-			buildFoto($thisBrick, thisPhoto, "flickr");
+			buildFoto($thisBrick, thisPhoto, "flickr", APIsContentLoaded);
 			$(this).remove();
 
 			//unstamp the searchbrick so you can move it again around
@@ -1141,7 +1147,7 @@ function createInstagramBrick(photo){
 		}
 		var $thisBrick = buildBrick(parseInt($instagramSearchBrick.css('left')) + 450, parseInt($instagramSearchBrick.css('top')) + 10);
 
-		buildFoto($thisBrick, thisPhoto, "instagram");
+		buildFoto($thisBrick, thisPhoto, "instagram", APIsContentLoaded);
 		$(this).remove();
 
 		//unstamp the searchbrick so you can move it again around
@@ -1278,7 +1284,7 @@ function getInstagrams(query, type) {
 	}
 }
 
-function buildSoundcloud($brick, soundcloudObj){
+function buildSoundcloud($brick, soundcloudObj, callback){
 
 	$brick.addClass('w2-fix');
 
@@ -1288,6 +1294,7 @@ function buildSoundcloud($brick, soundcloudObj){
 	$brick.data('topic', soundcloudObj);
 
 	$brick.append($soundcloudIframe);
+	callback($brick);
 }
 
 function getSoundcloud(query, params) {
@@ -1326,7 +1333,7 @@ function getSoundcloud(query, params) {
 
 				var $thisBrick = buildBrick(parseInt($soundcloudSearchBrick.css('left')) + 50, parseInt($instagramSearchBrick.css('top')) + 10);
 				
-				buildSoundcloud($thisBrick, soundcloudObj);
+				buildSoundcloud($thisBrick, soundcloudObj, APIsContentLoaded);
 
 				$(this).tooltip('destroy');
 				$(this).remove();
@@ -1387,7 +1394,7 @@ function getWikiLanguages(topic, lang, $brick){
 			var languageObj = data.query.pages[Object.keys(data.query.pages)[0]].langlinks;
 
 			if (!$.isEmptyObject(languageObj)) {
-				var langDropDown = $('<select class="selectpicker pull-right show-menu-arrow" data-size="20" data-live-search="true"></select>');
+				var langDropDown = $('<select class="selectpicker pull-right languages show-menu-arrow" data-size="20" data-live-search="true"></select>');
 
 				$.each(languageObj, function(){
 
@@ -1509,7 +1516,7 @@ function getInterWikiLinks(section, $brick){
 
 				var interWikiArray = data.parse.links;
 
-				var interWikiDropDown = $('<select class="pull-right show-menu-arrow" data-size="20"></select>');
+				var interWikiDropDown = $('<select class="pull-right points-to show-menu-arrow" data-size="20"></select>');
 
 				interWikiArray.forEach(function(link, index){
 
@@ -1650,7 +1657,7 @@ function buildWikipedia($brick, topic, parent, callback){
 	
 	$brick.addClass('wiki');
 
-	$brick.prepend('<p><h2>' + topic.title + '</h2></p>');
+	$brick.prepend('<h2>' + topic.title + '</h2>');
 
 	if(!is_root) $brick.prepend( wikiverse_nav );
 
@@ -1662,6 +1669,7 @@ function buildWikipedia($brick, topic, parent, callback){
 				page: topic.title,
 				format:'json',
 				prop:'sections',
+				mobileformat:true
 				/*disableeditsection: true,
 				disablepp: true,
 				//preview: true,
@@ -1922,17 +1930,17 @@ function buildboard(){
 
 	$.each(wikiverse.bricks, function(index, brick) {
 
-		if(is_root && index % 2){
+		/*if(is_root && index % 3 === 0){
 
-			var heights = ["hi1", "hi2", "hi3", "hi4"],
-				widths = ["wi1", "wi2", "wi3", "wi4", "wiHi"],
+			var heights = ["hi1", "hi2"],
+				widths = ["wi1", "wi2"],
 				transparencies = ["1", "2", "3"];
 
 			var $dummyBrick = $('<div class="brick ' + heights[Math.floor(Math.random()*heights.length)] + ' ' + widths[Math.floor(Math.random()*widths.length)] + ' transparent-' + transparencies[Math.floor(Math.random()*transparencies.length)] + '"><span class="handle"> <i class="fa fa-arrows"></i></span></div>');
 			
 			$packeryContainer.append($dummyBrick).packery( 'appended', $dummyBrick);
 			$dummyBrick.each(makeEachDraggable);
-		}
+		}*/
 
 		var $thisBrick = buildBrick();
 
@@ -1966,7 +1974,7 @@ function buildboard(){
 		    break;
 
 		    case "soundcloud":
-				buildSoundcloud($thisBrick, brick.Topic);
+				buildSoundcloud($thisBrick, brick.Topic, APIsContentLoaded);
 		    break;
 		 }
 		
@@ -1987,6 +1995,23 @@ function buildYoutube($brick, youtubeID, callback){
 
 	$packeryContainer.packery();
 	callback($brick);
+}
+
+function play(){
+
+	$('html, body').stop(true);
+	$('nav').fadeTo('slow', 0.3);
+	$('.wikiverse-nav').fadeOut();
+	$('html, body').animate({scrollTop:$(document).height()}, 50000);
+	return false;
+}
+
+function stop(){
+	$('html, body').stop(true);
+	$('nav').fadeTo('slow', 1);
+	$('.wikiverse-nav').fadeIn();	
+	$('html, body').animate({scrollTop:0}, 'fast');
+	return false;
 }
 
 function zoomIn(){

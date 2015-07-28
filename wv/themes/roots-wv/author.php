@@ -13,7 +13,7 @@
 	$the_permalink = get_the_permalink();
 
 	?>
-	<div class="brick">
+	<div class="brick visible">
 
 		<?php echo '<a href="'. $the_permalink . '">' . $the_title . '</a>'; ?>
 		<?php if ($post->post_author == $current_user->ID) { ?><p><a onclick="return confirm('Are you SURE you want to delete this Wish?')" href="<?php echo get_delete_post_link( $post->ID ) ?>">Delete post</a></p><?php } ?>

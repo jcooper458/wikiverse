@@ -13,7 +13,7 @@
    Base
    ========================================================================== */
 body{
-  font-family: 'Trocchi', serif!important;
+  
 }
 
 .fluid-container {
@@ -36,9 +36,14 @@ body{
 .main {margin-top:60px;}
 
 .brick{ 
-  font-size: 20px;
+  /*-moz-box-sizing:    border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing:        border-box;
+  border: 5px solid white; */
+  
+  font-size: 18px;
   opacity: .1;
-  width: 250px; 
+  width: 260px;
   background: #F7F7F7;
   /*background: #95A5A6; */
   outline: 0;
@@ -68,7 +73,7 @@ body{
   
 }
 
-.brick p {overflow: hidden;}
+.brick p {overflow: hidden; font-family: 'Trocchi', serif!important;}
 
 .wiki p{ padding:5px;}
 
@@ -115,40 +120,21 @@ body{
   box-shadow: none;
 }
 .wi1{
-  width: 75px;
+  width: 260px;
 }
 
 .wi2{
-  width: 120px;
-}
-
-.wi3{
-  width: 175px;
-}
-
-.wi4{
-  width: 250px;
-}
-
-.wiHi{
-  width: 780px;
+  width: 520px;
 }
 
 .hi1{
-  height: 50px;
+  height: 260px;
 }
 
 .hi2{
-  height: 100px;
+  height: 520px;
 }
 
-.hi3{
-  height: 150px;
-}
-
-.hi4{
-  height: 200px;
-}
 
 .brick.is-dragging,
 .brick.is-positioning-post-drag {
@@ -168,6 +154,7 @@ body{
 }
 
 .gigante{
+  font-family: 'Trocchi', serif!important;
   font-weight: bold;
   font-size: 90px;
 }
