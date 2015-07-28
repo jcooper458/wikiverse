@@ -55,12 +55,17 @@ $packeryContainer.on( "click", ".search .cross", function() {
 	$packeryContainer.packery();
 });
 
-// Stop scrolling when click anywhere
-$(document).on( "click", function(e) {
-	if(!$('#play').is(":visible") ){
-		stopBoard();
-	}		
-});
+if(!is_root){
+
+	// Stop scrolling when click anywhere
+	$(document).on( "click", function(e) {
+		if(!$('#play').is(":visible") ){
+			stopBoard();
+		}		
+	});
+
+}
+
 
 //----------------keyboard shortcuts----------------------------
 
