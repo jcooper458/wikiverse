@@ -14,6 +14,24 @@ var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 var wikiverse_nav = '<div class="wikiverse-nav pull-left control-buttons"><i class="fa fa-youtube-square youtube-icon icon"></i>&nbsp;<i class="fa fa-flickr flickr-icon icon"></i>&nbsp;<i class="fa fa-instagram instagram-icon icon"></i></div>';
 var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
 
+var rmOptions = {
+  	speed: 700,
+  	moreLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> more </button>',
+  	lessLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> less </button>',
+  	afterToggle: function() {
+  		$packeryContainer.packery();
+  	}
+};
+
+var rmSectionOptions = {
+  	speed: 700,
+  	collapsedHeight: 0,
+  	moreLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> sections </button>',
+  	lessLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> close sections </button>',
+  	afterToggle: function() {
+  		$packeryContainer.packery();
+  	}
+};
 
 var is_root = location.pathname == "/";
 
@@ -26,9 +44,9 @@ getSearchBricks();
 var packery = $packeryContainer.packery({
 	itemSelector: '.brick',
 	stamp: '.search',
-	gutter: 5,
+	gutter: 10,
 	transitionDuration: 0,
-//	columnWidth: 260
+	columnWidth: 270
 //	columnWidth: '.brick',
 //	rowHeight: 60,
 //	isInitLayout: false
@@ -46,8 +64,9 @@ $packeryContainer.find('div.brick').each( makeEachDraggable );
 // REMOVE ITEM
 $packeryContainer.on( "click", ".brick .cross", function() {
 	var $thisBrick = jQuery(this).parent(".brick");
-	$packeryContainer.packery( 'remove', $thisBrick );
-	$packeryContainer.packery();
+	$thisBrick.fadeOut('slow').remove();
+	//$packeryContainer.packery( 'remove', $thisBrick );
+	//$packeryContainer.packery();
 });
 
 // REMOVE ITEM
@@ -840,7 +859,7 @@ function buildStreetMap($mapbrick, streetObj, callback) {
 
 	$mapbrick.prepend($mapcanvas);
 	$packeryContainer.packery();
-	
+
 	var myCenter = new google.maps.LatLng(streetObj.center.split(",")[0], streetObj.center.split(",")[1]);
 
 	var panoramaOptions = {
@@ -1437,6 +1456,8 @@ function getWikiLanguages(topic, lang, $brick){
 }
 
 function getRelatedYoutubes(videoID) {
+	
+	$('li#youtube').trigger('click');
 
 	$('#youtube-search .results').empty();
 
@@ -1664,6 +1685,7 @@ function buildWikipedia($brick, topic, parent, callback){
 	$brick.addClass('wiki');
 
 	$brick.prepend('<h2>' + topic.title + '</h2>');
+	
 
 	if(!is_root) $brick.prepend( wikiverse_nav );
 
@@ -1689,17 +1711,20 @@ function buildWikipedia($brick, topic, parent, callback){
 				//if there is sections, append them
 				if (typeof data.parse.sections !== 'undefined' && data.parse.sections.length > 0) {
 
-					$tableSectionResults = $('<table class="table table-hover wiki"></table>');
+					$tableSectionResults = $('<div class="list-group wiki sections"></div>');
 					$brick.append($tableSectionResults);
 
 					data.parse.sections.forEach(function(section){
 
 						//remove unwanted sections:
 						if((section.line !== "References") && (section.line !== "Notes") && (section.line !== "External links") && (section.line !== "Citations") && (section.line !== "Bibliography") && (section.line !== "Notes and references")) {
-						 	$tableSectionResults.append('<tr><td><div class="result" title="' + section.anchor + '" index="' + section.index + '">' + section.line + '</div></td></tr>');
+						 	$tableSectionResults.append(' <button type="button" class="list-group-item result" title="' + section.anchor + '" index="' + section.index + '">' + section.line + '</button>');
 						}
 
 					});
+
+					$('.sections').readmore(rmSectionOptions);
+
 					$packeryContainer.packery();
 
 					//create the section object and trigger the creation of a section brick
@@ -1711,10 +1736,11 @@ function buildWikipedia($brick, topic, parent, callback){
 
 							title: topic.title,
 							language: topic.language,
+							name: $(this).html(),
 							index: $(this).attr("index")
 						}
 
-						$(this).parents('tr').remove();
+						$(this).remove();
 
 						var newY = parseInt($brick.css('top'));
 						var newX = parseInt($brick.css('left'));
@@ -1819,12 +1845,18 @@ function buildWikipedia($brick, topic, parent, callback){
 					//infobox.find('*').css('max-width', '290px');
 					infobox.find('img').unwrap();
 
-					if($brick.find("img").length){
-						infobox.insertAfter($brick.find("img"));
+					var article = $( '<div class="article"></div>' );
+
+					if($brick.find("img").length){		
+						article.insertAfter($brick.find("img"));
 					}
 					else{
-						infobox.insertAfter($brick.find("h2"));
+						article.insertAfter($brick.find("h2"));
 					}
+	
+					article.append(infobox);
+
+					article.readmore(rmOptions);
 
 					$packeryContainer.packery();
 				//}
@@ -1850,7 +1882,7 @@ function buildSection($brick, section, parent, callback){
 	$brick.prepend('<p><h2>' + section.title + '</h2></p>');
 	if(!is_root) $brick.prepend( wikiverse_nav );
 
-	$brick.addClass('borderBottom');
+	//$brick.append('<div class="article"></div>' );
 
 	$.ajax({
 		url: 'http://' + section.language + '.wikipedia.org/w/api.php',
@@ -1869,33 +1901,31 @@ function buildSection($brick, section, parent, callback){
 		},
 		dataType:'jsonp',
 		success: function(data){
-			
-			if(!is_root){
-				var sectionHTML = $(data.parse.text['*']);
-			}else{
-				var sectionHTML = $(data.parse.text['*']).find('p:first');
-			}
-			//var completeSection = $(data.parse.text['*']).find('p:first');
+		
+			var wholeSection = $(data.parse.text['*']);
 
-			sectionHTML.find('.error').remove();
-			sectionHTML.find('.reference').remove();
-			sectionHTML.find('.references').remove();
-			sectionHTML.find('.notice').remove();
-			sectionHTML.find('.ambox').remove();
-			sectionHTML.find('.org').remove();
-			sectionHTML.find('table').remove();
+			wholeSection.find('.error').remove();
+			wholeSection.find('.reference').remove();
+			wholeSection.find('.references').remove();
+			wholeSection.find('.notice').remove();
+			wholeSection.find('.ambox').remove();
+			wholeSection.find('.org').remove();
+			wholeSection.find('table').remove();
 			//sectionHTML.find('*').css('max-width', '290px');
-			sectionHTML.find('img').unwrap();
+			wholeSection.find('img').unwrap();
 
 			//if image is bigger than 290, shrink it
-			if(sectionHTML.find('img').width() > 250 || sectionHTML.find('img').attr("width") > 250){
+			if(wholeSection.find('img').width() > 250 || wholeSection.find('img').attr("width") > 250){
 
-				sectionHTML.find('img').attr('width', 250);
-				sectionHTML.find('img').removeAttr('height');
+				wholeSection.find('img').attr('width', 250);
+				wholeSection.find('img').removeAttr('height');
 			}
-			sectionHTML.find('a[class*=exter]').remove();
+			wholeSection.find('a[class*=exter]').remove();
 
-			$brick.append(sectionHTML);
+			$brick.append(wholeSection);
+			wholeSection.wrap('<div class="section"></div>');
+
+			$('.section').readmore(rmOptions);
 
 			//check if there is Geolocations
 
