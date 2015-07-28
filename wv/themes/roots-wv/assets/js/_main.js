@@ -24,7 +24,7 @@ var ExampleSite = {
   home: {
     init: function() {
       
-      buildboard(1);
+      buildboard(0);
 
        /*function HomeryMakeEachDraggable( i, itemElem ) {
         // make element draggable with Draggabilly

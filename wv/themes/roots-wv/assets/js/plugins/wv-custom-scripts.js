@@ -14,14 +14,22 @@ var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 var wikiverse_nav = '<div class="wikiverse-nav pull-left control-buttons"><i class="fa fa-youtube-square youtube-icon icon"></i>&nbsp;<i class="fa fa-flickr flickr-icon icon"></i>&nbsp;<i class="fa fa-instagram instagram-icon icon"></i></div>';
 var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
 
+
+var boardsArray = $('#wikiverse').html();
+
+/*JSON.parse(boardsArray).forEach(function(board, index){
+	console.log(board);
+});
+*/
+
 var is_root = location.pathname == "/";
 
 $('.selectpicker').selectpicker();
 $('.pagination').pagination({
-  total_pages: 2,
+  total_pages: JSON.parse(boardsArray).length,
   current_page: 1,
   callback: function(event, board) {
-   	changeBoard(board);
+   	changeBoard(board - 1);
   }
 });
 
@@ -526,7 +534,7 @@ function buildNextTopic($brick, lang){
 
 		//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
 		buildWikipedia($thisBrick, brickData, $brick.attr("tabindex") - 1, APIsContentLoaded);
-		//$packeryContainer.packery( 'unstamp', $brick );
+		$packeryContainer.packery( 'unstamp', $brick );
 	});
 }
 
@@ -1929,21 +1937,13 @@ function buildSection($brick, section, parent, callback){
 	});
 }
 
-
-var boardsArray = $('#wikiverse').html();
-
-/*JSON.parse(boardsArray).forEach(function(board, index){
-	console.log(board);
-});
-*/
-
 function buildboard(index){
 
 	var boardArray = $("#wikiverse").html();
-	
-	var wikiverse =	JSON.parse(boardArray);
-	var board = JSON.parse(wikiverse[index - 1]);	
 
+	var wikiverse =	JSON.parse(boardArray);
+	var board = JSON.parse(wikiverse[index]);	
+		
 	$packeryContainer.css('zoom', board.zoom);
 
 	$.each(board.bricks, function(index, brick) {

@@ -7,17 +7,17 @@ $homePosts = get_posts( $args )
 
 <div id="wikiverse" class="invisible">
 
-<?php 
-	$boardArray = [];
-	foreach ( $homePosts as $post ) :  
-		setup_postdata( $post ); 
-			
-			array_push($boardArray, $post->post_content);
-			
-	endforeach;
-	echo json_encode($boardArray);
-	wp_reset_postdata();
-?>
+	<?php 
+		$boardArray = [];
+		foreach ( $homePosts as $post ) :  
+			setup_postdata( $post ); 
+				
+				array_push($boardArray, $post->post_content);
+				
+		endforeach;
+		echo json_encode($boardArray);
+		wp_reset_postdata();
+	?>
 
 </div>
 
