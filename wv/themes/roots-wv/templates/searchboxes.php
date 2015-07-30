@@ -138,7 +138,7 @@
 	
 </div>
 
-<div id="soundcloud-search" class="invisible visible brick search">
+<div id="soundcloud-search" class="invisible w2-fix visible brick search">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
