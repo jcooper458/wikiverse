@@ -913,11 +913,6 @@ function getFlickrs(topic, sort, type) {
 
 	$('#flickr-search .results').empty();
 
-	if(!$flickrSearchBrick.hasClass("w2")){
-		$flickrSearchBrick.addClass("w2");
-		$packeryContainer.packery();
-	} 
-
 	type  = type || "textQuery";
 
 	//if query is coordinates (bounds)
@@ -1131,7 +1126,7 @@ function createFlickrBrick(apiData, photoObj){
 
 function createInstagramBrick(photo){
 
-	$instagramSearchBrick.find('.results').append('<img class="img-search" width="149" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
+	$instagramSearchBrick.find('.results').append('<img class="img-search" width="140" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
 
 	imagesLoaded('#instagram-search .results', function() {
 		$packeryContainer.packery();
@@ -1185,11 +1180,6 @@ function valid_coords(number_lat,number_lng) {
 function getInstagrams(query, type) {
 
 	$('#instagram-search .results').empty();
-	
-	if(!$instagramSearchBrick.hasClass("w2")){
-		$instagramSearchBrick.addClass("w2");
-		$packeryContainer.packery();
-	} 
 
 	type = type || "hashtag";
 

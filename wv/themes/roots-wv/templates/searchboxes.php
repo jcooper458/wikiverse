@@ -1,4 +1,4 @@
-<div id="wikipedia-search" class="invisible brick search visible">
+<div id="wikipedia-search" class="invisible w2-fix brick search visible">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
@@ -24,7 +24,7 @@
 	</div>
 </div>
 
-<div id="youtube-search" class="invisible brick search visible">
+<div id="youtube-search" class="invisible w2-fix brick search visible">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
@@ -49,7 +49,7 @@
 
 </div>
 
-<div id="flickr-search" class="invisible brick search visible">
+<div id="flickr-search" class="invisible w2-fix brick search visible">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
@@ -92,7 +92,7 @@
 	</div>
 </div>
 
-<div id="instagram-search" class="invisible brick search visible">
+<div id="instagram-search" class="invisible w2-fix brick search visible">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
