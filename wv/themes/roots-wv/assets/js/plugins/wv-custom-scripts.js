@@ -301,14 +301,19 @@ $packeryContainer.on("click", ".gmaps .fa-instagram", function(){
 });
 
 //Toggle Size of Images on click
-$packeryContainer.on( 'click', 'img', function( event ) {
+$packeryContainer.on( 'click', 'img', toggleImageSize);
+
+$packeryContainer.packery( 'on', 'layoutComplete', orderItems );
+$packeryContainer.packery( 'on', 'dragItemPositioned', orderItems );
+
+function toggleImageSize( event ) {
 
 	var $brick= $( event.target ).parents('.brick');
   	var tempDataObj = $brick.data('topic');
   	var widthClass; 
 
   	// toggle the size for images
-  	if($( event.target ).is('img.img-result')){
+  	if($( event.target ).is('img.img-result, .youtube img')){
 
   		//make it large
   		$brick.toggleClass("w2");
@@ -326,10 +331,7 @@ $packeryContainer.on( 'click', 'img', function( event ) {
   		$packeryContainer.packery();
   	}
 
-});
-
-$packeryContainer.packery( 'on', 'layoutComplete', orderItems );
-$packeryContainer.packery( 'on', 'dragItemPositioned', orderItems );
+}
 
 function getSearchBricks(){
 
@@ -1975,6 +1977,7 @@ function buildYoutubeSearchResults(apiData){
 
 				var youtubeObj = {
 					youtubeID: $(this).attr('youtubeID'),
+					size: 'small',
 					thumbnailURL: $(this).find('img').attr('src')
 				};
 
@@ -1994,15 +1997,17 @@ function buildYoutubeSearchResults(apiData){
 function buildYoutube($brick, youtubeObj, callback){
 
 	var relatedButton = '<button class="btn btn-default" onclick="getRelatedYoutubes(\'' + youtubeObj.youtubeID + '\');" type="button">Related Videos</button>';
-	var youtubeThumb = '<img class="" id="ytplayer" type="text/html" width="420" height="250" src="' + youtubeObj.thumbnailURL + '">';
+	var youtubeThumb = '<img class="" id="ytplayer" type="text/html" src="' + youtubeObj.thumbnailURL + '">';
 
 	//stop all other players
 	$('.youtube').find("iframe").remove();
-	$('.youtube').find(".youtubePlayButton").show();
 	$('.youtube').find("img").show();
+	$('.youtube').find(".youtubePlayButton").show();
+	$('.youtube').removeClass("w2-fix");
 
-	$brick.addClass('w2-fix');
+	//$brick.addClass('w2-fix');
  	$brick.addClass('youtube');
+ 	if(youtubeObj.size === "large") $brick.addClass('w2');
 
 	$brick.data('type', 'youtube');
 	$brick.data('topic', youtubeObj);
@@ -2012,9 +2017,12 @@ function buildYoutube($brick, youtubeObj, callback){
 
     $brick.append('<i class="fa youtubePlayButton fa-youtube-play"></i>');
 
-	$packeryContainer.packery();
+	
+	imagesLoaded( '#packery .youtube', function() {
+		$packeryContainer.packery();
+	});
 
-	$brick.find('img, .youtubePlayButton').on('click', function(){
+	$brick.find('.youtubePlayButton').on('click', function(){
 		playYoutube($brick, youtubeObj)
 	});
 
@@ -2027,6 +2035,9 @@ function playYoutube($brick, youtubeObj){
 	$('.youtube').find("iframe").remove();
 	$('.youtube').find("img").show();
 	$('.youtube').find(".youtubePlayButton").show();
+	$('.youtube').removeClass("w2-fix");
+	
+	$brick.addClass('w2-fix');
 
 	var iframe = '<iframe class="" id="ytplayer" type="text/html" width="420" height="250" src="http://www.youtube.com/embed/' + youtubeObj.youtubeID + '?autoplay=1" webkitallowfullscreen autoplay mozallowfullscreen allowfullscreen frameborder="0"/>';
 
