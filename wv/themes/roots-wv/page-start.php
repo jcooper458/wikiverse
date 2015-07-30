@@ -1,4 +1,4 @@
-<div id="postID"></div>
+<div id="postID" class="invisible"></div>
 
 <div id="packery" class="packery">
 </div>

@@ -11,7 +11,7 @@ var $gmapsSearchBrick = $("#gmaps-search");
 
 var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
 var youtube_icon = '<i class="fa fa-youtube-square"></i>';
-var wikiverse_nav = '<div class="wikiverse-nav pull-left control-buttons"><i class="fa fa-youtube-square youtube-icon icon"></i>&nbsp;<i class="fa fa-flickr flickr-icon icon"></i>&nbsp;<i class="fa fa-instagram instagram-icon icon"></i></div>';
+var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-width="50%" data-size="20"><option selected="">create synapse..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option></select>';
 var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
 
 var rmOptions = {
@@ -46,8 +46,8 @@ var packery = $packeryContainer.packery({
 	stamp: '.search',
 	gutter: 10,
 	transitionDuration: 0,
-	columnWidth: 270
-//	columnWidth: '.brick',
+	//columnWidth: 270
+	columnWidth: '.brick',
 //	rowHeight: 60,
 //	isInitLayout: false
 });	
@@ -64,8 +64,8 @@ $packeryContainer.find('div.brick').each( makeEachDraggable );
 // REMOVE ITEM
 $packeryContainer.on( "click", ".brick .cross", function() {
 	var $thisBrick = jQuery(this).parent(".brick");
-	$thisBrick.fadeOut('slow').remove();
-	//$packeryContainer.packery( 'remove', $thisBrick );
+	//$thisBrick.fadeOut('slow').remove();
+	$packeryContainer.packery( 'remove', $thisBrick );
 	//$packeryContainer.packery();
 });
 
@@ -76,8 +76,6 @@ $packeryContainer.on( "click", ".search .cross", function() {
 	$packeryContainer.packery();
 });
 
-
-
 if(!is_root){
 
 	// Stop scrolling when click anywhere
@@ -86,12 +84,9 @@ if(!is_root){
 			stopBoard();
 		}		
 	});
-
 }
 
-
 //----------------keyboard shortcuts----------------------------
-
 
 //make the enter keypress do the search
 $(".search input:text").keyup(function (e) {
@@ -243,7 +238,7 @@ $packeryContainer.on("click", ".instagram-icon", function(){
 $packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laidOutItems ) {
 
 	//cant use show() or fadeIn() coz it messes up the bootstrap nav
-	$(".board-pilot").css('display', 'block');
+	$(".board-pilot").removeClass('invisible');
 
 	//when clear results is clicked
 	$('.clear').on('click', function(){
@@ -1419,7 +1414,7 @@ function getWikiLanguages(topic, lang, $brick){
 			var languageObj = data.query.pages[Object.keys(data.query.pages)[0]].langlinks;
 
 			if (!$.isEmptyObject(languageObj)) {
-				var langDropDown = $('<select class="selectpicker pull-right languages show-menu-arrow" data-size="20" data-live-search="true"></select>');
+				var langDropDown = $('<select class="selectpicker pull-right languages show-menu-arrow" data-width="50%" data-size="20" data-live-search="true"></select>');
 
 				$.each(languageObj, function(){
 
@@ -1427,7 +1422,7 @@ function getWikiLanguages(topic, lang, $brick){
 
 				});
 
-				langDropDown.prepend('<option selected>Read in..</option>');
+				langDropDown.prepend('<option selected>read in..</option>');
 
 				$brick.prepend(langDropDown);
 								
@@ -1543,7 +1538,7 @@ function getInterWikiLinks(section, $brick){
 
 				var interWikiArray = data.parse.links;
 
-				var interWikiDropDown = $('<select class="pull-right points-to show-menu-arrow" data-size="20"></select>');
+				var interWikiDropDown = $('<select class="pull-right points-to show-menu-arrow" data-width="50%" data-size="20"></select>');
 
 				interWikiArray.forEach(function(link, index){
 
@@ -1685,9 +1680,11 @@ function buildWikipedia($brick, topic, parent, callback){
 	$brick.addClass('wiki');
 
 	$brick.prepend('<h2>' + topic.title + '</h2>');
-	
 
-	if(!is_root) $brick.prepend( wikiverse_nav );
+	if(!is_root){
+		$brick.prepend( wikiverse_nav );
+		$brick.find('.selectpicker').selectpicker();
+	} 
 
    	if(!is_root){
 		$.ajax({
@@ -1880,9 +1877,11 @@ function buildSection($brick, section, parent, callback){
 	$brick.addClass('wiki');
 
 	$brick.prepend('<p><h2>' + section.title + '</h2></p>');
-	if(!is_root) $brick.prepend( wikiverse_nav );
 
-	//$brick.append('<div class="article"></div>' );
+	if(!is_root){
+		$brick.prepend( wikiverse_nav );
+		$brick.find('.selectpicker').selectpicker();
+	} 
 
 	$.ajax({
 		url: 'http://' + section.language + '.wikipedia.org/w/api.php',
