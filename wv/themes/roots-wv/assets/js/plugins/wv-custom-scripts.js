@@ -103,20 +103,6 @@ document.addEventListener("keydown", function(e) {
   }
 }, false);
 
-document.addEventListener("keydown", function(e) {
-  if (e.keyCode == 107) {
-    e.preventDefault();
-    $('#zoom_in').trigger('click');
-  }
-}, false);
-
-document.addEventListener("keydown", function(e) {
-  if (e.keyCode == 109) {
-    e.preventDefault();
-    $('#zoom_out').trigger('click');
-  }
-}, false);
-
 
 document.addEventListener("keydown", function(e) {
   if (!($("input").is(":focus")) && e.keyCode == 87) {
@@ -1956,8 +1942,6 @@ function buildboard(index){
 
 	var wikiverse =	JSON.parse(boardArray);
 	var board = JSON.parse(wikiverse[index]);	
-		
-	$packeryContainer.css('zoom', board.zoom);
 
 	$.each(board.bricks, function(index, brick) {
 
@@ -2057,47 +2041,6 @@ function stopBoard(){
 	return false;
 }
 
-function zoomIn(){
-
-	var zoomLevel = Math.round(parseFloat($packeryContainer.css("zoom")) * 10) / 10;
-	//var controlsSize = parseInt($('.control-buttons .fa').css("font-size"));
-
-	if(zoomLevel < 1.6){
-		$("#zoom_in").prop('disabled', false);
-		zoomLevel += 0.1;
-		//controlsSize -= 5;
-	}
-	else{
-		$("#zoom_in").prop('disabled', true);
-		zoomLevel -= 0.1;
-		//controlsSize += 5;
-	}
-	$packeryContainer.css("zoom", zoomLevel);
-	/*console.log(controlsSize)
-	$('.control-buttons .fa').css("font-size", controlsSize);*/
-	$packeryContainer.packery();
-}
-
-function zoomOut(){
-
-	var zoomLevel = Math.round(parseFloat($packeryContainer.css("zoom")) * 10) / 10;
-	//var controlsSize = parseInt($('.control-buttons .fa').css("font-size"));
-
-	if(zoomLevel >= 0.7){
-		$("#zoom_out").prop('disabled', false);
-		zoomLevel -= 0.1;
-		//controlsSize += 5;
-	}
-	else{
-		$("#zoom_out").prop('disabled', true);
-		zoomLevel += 0.1;
-		//controlsSize -= 5;
-	}
-	$packeryContainer.css("zoom", zoomLevel);
-	/*console.log(controlsSize)
-	$('.control-buttons .fa').css("font-size", controlsSize);*/
-	$packeryContainer.packery();
-}
 
 function makeEachDraggable( i, itemElem ) {
     // make element draggable with Draggabilly
@@ -2135,7 +2078,6 @@ function createboard(wpnonce) {
 	var wikiverse = {};
 
 	var board = {
-		"zoom": Math.round(parseFloat($packeryContainer.css('zoom')) * 10) / 10,
 		"bricks": wikiverse
 	};
 
@@ -2252,7 +2194,6 @@ function saveboard(wpnonce) {
 	var wikiverse = {};
 
 	var board = {
-		"zoom": Math.round(parseFloat($packeryContainer.css('zoom')) * 10) / 10,
 		"bricks": wikiverse
 	};
 
