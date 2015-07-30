@@ -1747,13 +1747,12 @@ function buildWikipedia($brick, topic, parent, callback){
 						
 						//$packeryContainer.packery( 'unstamp', $brick );
 					});
-				}		
-
-				$packeryContainer.packery();
-				
+				}
+				$packeryContainer.packery();		
 			}
 		});	
 	}
+
 	//Go get the Main Image - 2 API Calls necessairy.. :(
 	$.ajax({
 		url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
@@ -1775,20 +1774,20 @@ function buildWikipedia($brick, topic, parent, callback){
 							url: 'http://en.wikipedia.org/w/api.php',
 							data:{
 								action:'query',
-								titles: 'Image:' + image,
+								titles: 'File:' + image,
 								prop:'imageinfo',
 								iiprop: 'url',
 								format: 'json',
-								iiurlwidth: 300
+								iiurlwidth: 260
 							},
 							dataType:'jsonp',
 							success: function(data){
-			
+						
 								//get the first key in obj
 								//for (first in data.query.pages) break;
 								//now done better like this:
 
-								var imageUrl = data.query.pages[Object.keys(data.query.pages)[0]].imageinfo[0].url;
+								var imageUrl = data.query.pages[Object.keys(data.query.pages)[0]].imageinfo[0].thumburl;
 								var image = $('<img src="' + imageUrl + '">');
 
 								image.insertAfter($brick.find("h2"));
