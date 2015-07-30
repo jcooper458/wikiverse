@@ -46,8 +46,8 @@ var packery = $packeryContainer.packery({
 	stamp: '.search',
 	gutter: 10,
 	transitionDuration: 0,
-	//columnWidth: 270
-	columnWidth: '.brick',
+	columnWidth: 210
+//	columnWidth: '.brick',
 //	rowHeight: 60,
 //	isInitLayout: false
 });	
@@ -1093,7 +1093,7 @@ function createFlickrBrick(apiData, photoObj){
 		var thumbURL = apiData.sizes.size[1].source;
 		var mediumURL = apiData.sizes.size[6].source;
 
-		$flickrSearchBrick.find('.results').append('<img width="149" owner="' + photoObj.owner + '" large="' + mediumURL + '" thumb="' + thumbURL + '" src="' + thumbURL + '">');
+		$flickrSearchBrick.find('.results').append('<img width="140" owner="' + photoObj.owner + '" large="' + mediumURL + '" thumb="' + thumbURL + '" src="' + thumbURL + '">');
 
 		imagesLoaded( '#flickr-search .results', function() {
 			$packeryContainer.packery();
@@ -2000,7 +2000,7 @@ function buildboard(index){
 function buildYoutube($brick, youtubeID, callback){
 
 	var relatedButton = '<button class="btn btn-default" onclick="getRelatedYoutubes(\'' + youtubeID + '\');" type="button">Related Videos</button>';
-	var iframe = '<iframe class="" id="ytplayer" type="text/html" width="520" height="300" src="http://www.youtube.com/embed/'+youtubeID+'" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0"/>';
+	var iframe = '<iframe class="" id="ytplayer" type="text/html" width="420" height="250" src="http://www.youtube.com/embed/'+youtubeID+'" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0"/>';
 
 	$brick.addClass('w2-fix');
 
