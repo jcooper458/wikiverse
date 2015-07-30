@@ -2182,12 +2182,11 @@ function createboard(wpnonce) {
 					$(id).html('');
 					$(id).append(data);
 
-					var url = data.split('-')[0];
-					var ID = data.split('-')[1];
+					var url = JSON.parse(data)[0];
+					var ID = JSON.parse(data)[1];
 
 					//update the browser history and the new url
 					history.pushState('', 'wikiverse', url);
-					
 					$('#postID').html(ID);
 				},
 				error: function(MLHttpRequest, textStatus, errorThrown) {
