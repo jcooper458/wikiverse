@@ -11,7 +11,7 @@ var $gmapsSearchBrick = $("#gmaps-search");
 
 var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
 var youtube_icon = '<i class="fa fa-youtube-square"></i>';
-var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-width="50%" data-size="20"><option selected="">create synapse..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option></select>';
+var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-width="50%" data-size="20"><option selected="">connect..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option></select>';
 var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
 
 var rmOptions = {
@@ -1953,7 +1953,7 @@ function buildYoutubeSearchResults(apiData){
 			var youtubeID = video.id.videoId;
 			var thumbURL = video.snippet.thumbnails.high.url;
 	
-			if(youtubeID)$youtubeSearchBrick.find('.results').append('<tr data-toggle="tooltip" youtubeID="' + youtubeID + '" title="'+strip(snippet)+'"><td class="youtubeThumb"><img src="' + thumbURL + '"></td><td class="result" >'+title+'</td></tr>');
+			if(youtubeID)$youtubeSearchBrick.find('.results').append('<tr data-toggle="tooltip" youtubeID="' + youtubeID + '" title="'+strip(snippet)+'"><td class="youtubeThumb"><img height="100" src="' + thumbURL + '"></td><td class="result" >'+title+'</td></tr>');
 
 			imagesLoaded( '#youtube-search .results', function() {
 				$packeryContainer.packery();
@@ -2187,6 +2187,7 @@ function createboard(wpnonce) {
 
 					//update the browser history and the new url
 					history.pushState('', 'wikiverse', url);
+					
 					$('#postID').html(ID);
 				},
 				error: function(MLHttpRequest, textStatus, errorThrown) {

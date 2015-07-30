@@ -49,6 +49,7 @@ function apf_addpost() {
     ) );  
     
 	//add_post_meta($post_id, "wikiverse", $meta);//add the iter to a custom field   
+    $response = [];
     
 	$permalink = get_permalink( $post_id );
     //$results = $title . " - " . $permalink;  
