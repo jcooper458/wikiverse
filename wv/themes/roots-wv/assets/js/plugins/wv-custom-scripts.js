@@ -11,7 +11,7 @@ var $gmapsSearchBrick = $("#gmaps-search");
 
 var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
 var youtube_icon = '<i class="fa fa-youtube-square"></i>';
-var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-width="50%" data-size="20"><option selected="">create synapse..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option></select>';
+var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-width="50%" data-size="20"><option selected="">connect..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option></select>';
 var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
 
 var rmOptions = {
@@ -301,14 +301,19 @@ $packeryContainer.on("click", ".gmaps .fa-instagram", function(){
 });
 
 //Toggle Size of Images on click
-$packeryContainer.on( 'click', 'img', function( event ) {
+$packeryContainer.on( 'click', 'img', toggleImageSize);
+
+$packeryContainer.packery( 'on', 'layoutComplete', orderItems );
+$packeryContainer.packery( 'on', 'dragItemPositioned', orderItems );
+
+function toggleImageSize( event ) {
 
 	var $brick= $( event.target ).parents('.brick');
   	var tempDataObj = $brick.data('topic');
   	var widthClass; 
 
   	// toggle the size for images
-  	if($( event.target ).is('img.img-result')){
+  	if($( event.target ).is('img.img-result, .youtube img')){
 
   		//make it large
   		$brick.toggleClass("w2");
@@ -326,10 +331,7 @@ $packeryContainer.on( 'click', 'img', function( event ) {
   		$packeryContainer.packery();
   	}
 
-});
-
-$packeryContainer.packery( 'on', 'layoutComplete', orderItems );
-$packeryContainer.packery( 'on', 'dragItemPositioned', orderItems );
+}
 
 function getSearchBricks(){
 
@@ -1282,7 +1284,7 @@ function getInstagrams(query, type) {
 
 function buildSoundcloud($brick, soundcloudObj, callback){
 
-	$brick.addClass('w3-fix');
+	$brick.addClass('w2-fix');
 
 	var $soundcloudIframe = $('<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=' + soundcloudObj.uri + '&color=0066cc"></iframe>');
 
@@ -1354,24 +1356,6 @@ function getSoundcloud(query, params) {
 
 }
 
-function getYoutubes(topic) {
-
-	$('#youtube-search .results').empty();
-
-	$.ajax({
-		url: 'https://www.googleapis.com/youtube/v3/search',
-		data:{
-			q: topic,
-			key: 'AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8',
-			part: 'snippet',
-			maxResults: 25
-		},
-		dataType:'jsonp',
-		success: function(data){
-			buildYoutubeSearchResults(data);
-		}
-	});
-}
 
 function getWikiLanguages(topic, lang, $brick){
 
@@ -1424,76 +1408,6 @@ function getWikiLanguages(topic, lang, $brick){
 		}
 	});
 
-}
-
-function getRelatedYoutubes(videoID) {
-	
-	$('li#youtube').trigger('click');
-
-	$('#youtube-search .results').empty();
-
-	$.ajax({
-		url: 'https://www.googleapis.com/youtube/v3/search',
-		data:{
-			relatedToVideoId: videoID,
-			key: 'AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8',
-			part: 'snippet',
-			type: 'video',
-			maxResults: 25
-		},
-		dataType:'jsonp',
-		success: function(data){
-			buildYoutubeSearchResults(data);			
-		}
-	});
-}
-
-
-function buildYoutubeSearchResults(apiData){
-
-	if (typeof apiData.items !== 'undefined' && apiData.items.length > 0) {
-
-		$.each(apiData.items, function(){			
-
-			var title = this.snippet.channelTitle;
-			var snippet = this.snippet.description;
-			var youtubeID = this.id.videoId;
-			var thumbnailURL = this.snippet.thumbnails.default.url;
-
-			//append row to searchbox-table
-			$youtubeSearchBrick.find('.results').append('<tr data-toggle="tooltip" title="'+strip(snippet)+'"><td class="youtubeThumb"><img src="'+thumbnailURL+'"></td><td class="result" youtubeID="'+youtubeID+'">'+title+'</td></tr>');
-
-			imagesLoaded( '#youtube-search .results', function() {
-				$packeryContainer.packery();
-			});
-
-			//create the tooltips
-			$('tr').tooltip({animation: true, placement: 'right'});
-
-			//bind event to every row -> so you can start the wikiverse
-			$youtubeSearchBrick.find('tr').unbind('click').click(function(e) {
-
-				//stamp for better clicking
-				$packeryContainer.packery( 'stamp', $youtubeSearchBrick );
-
-				var currentYoutubeID = $(this).find('.result').attr('youtubeID');
-
-				$(this).tooltip('destroy');
-				$(this).remove();
-
-				var $thisBrick = buildBrick(parseInt($youtubeSearchBrick.css('left')) + 50, parseInt($youtubeSearchBrick.css('top')) + 10);
-
-				buildYoutube($thisBrick, currentYoutubeID, APIsContentLoaded);
-
-				return false;
-			});
-
-		});
-	//nothing has been found on youtube
-	}else{
-		//append row to searchbox-table: NO RESULTS
-		$youtubeSearchBrick.find('.results').append('<tr class="no-results"><td>No Youtube Videos found .. </td></tr>');
-	}
 }
 
 function getInterWikiLinks(section, $brick){
@@ -1986,22 +1900,153 @@ function buildboard(index){
 	});
 }
 
+function getYoutubes(topic) {
 
-function buildYoutube($brick, youtubeID, callback){
+	$('#youtube-search .results').empty();
 
-	var relatedButton = '<button class="btn btn-default" onclick="getRelatedYoutubes(\'' + youtubeID + '\');" type="button">Related Videos</button>';
-	var iframe = '<iframe class="" id="ytplayer" type="text/html" width="420" height="250" src="http://www.youtube.com/embed/'+youtubeID+'" webkitallowfullscreen mozallowfullscreen allowfullscreen frameborder="0"/>';
+	$.ajax({
+		url: 'https://www.googleapis.com/youtube/v3/search',
+		data:{
+			q: topic,
+			key: 'AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8',
+			part: 'snippet',
+			maxResults: 25
+		},
+		dataType:'jsonp',
+		success: function(data){
+			buildYoutubeSearchResults(data);
+		}
+	});
+}
 
-	$brick.addClass('w2-fix');
+function getRelatedYoutubes(videoID) {
+	
+	$('li#youtube').trigger('click');
+
+	$('#youtube-search .results').empty();
+
+	$.ajax({
+		url: 'https://www.googleapis.com/youtube/v3/search',
+		data:{
+			relatedToVideoId: videoID,
+			key: 'AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8',
+			part: 'snippet',
+			type: 'video',
+			maxResults: 25
+		},
+		dataType:'jsonp',
+		success: function(data){
+			buildYoutubeSearchResults(data);			
+		}
+	});
+}
+
+
+function buildYoutubeSearchResults(apiData){
+
+	if (typeof apiData.items !== 'undefined' && apiData.items.length > 0) {
+
+		apiData.items.forEach(function(video, index){			
+
+			var title = video.snippet.channelTitle;
+			var snippet = video.snippet.description;
+			var youtubeID = video.id.videoId;
+			var thumbURL = video.snippet.thumbnails.high.url;
+	
+			if(youtubeID)$youtubeSearchBrick.find('.results').append('<tr data-toggle="tooltip" youtubeID="' + youtubeID + '" title="'+strip(snippet)+'"><td class="youtubeThumb"><img height="100" src="' + thumbURL + '"></td><td class="result" >'+title+'</td></tr>');
+
+			imagesLoaded( '#youtube-search .results', function() {
+				$packeryContainer.packery();
+			});
+
+			//create the tooltips
+			$('tr').tooltip({animation: true, placement: 'right'});
+
+			//bind event to every row -> so you can start the wikiverse
+			$youtubeSearchBrick.find('tr').unbind('click').click(function(e) {
+
+				//stamp for better clicking
+				$packeryContainer.packery( 'stamp', $youtubeSearchBrick );
+
+				var currentYoutubeID = $(this).find('.result').attr('youtubeID');
+
+				$(this).tooltip('destroy');
+				$(this).remove();
+
+				var $thisBrick = buildBrick(parseInt($youtubeSearchBrick.css('left')) + 50, parseInt($youtubeSearchBrick.css('top')) + 10);
+
+				var youtubeObj = {
+					youtubeID: $(this).attr('youtubeID'),
+					size: 'small',
+					thumbnailURL: $(this).find('img').attr('src')
+				};
+
+				buildYoutube($thisBrick, youtubeObj, APIsContentLoaded);
+
+				return false;
+			});
+
+		});
+	//nothing has been found on youtube
+	}else{
+		//append row to searchbox-table: NO RESULTS
+		$youtubeSearchBrick.find('.results').append('<tr class="no-results"><td>No Youtube Videos found .. </td></tr>');
+	}
+}
+
+function buildYoutube($brick, youtubeObj, callback){
+
+	var relatedButton = '<button class="btn btn-default" onclick="getRelatedYoutubes(\'' + youtubeObj.youtubeID + '\');" type="button">Related Videos</button>';
+	var youtubeThumb = '<img class="" id="ytplayer" type="text/html" src="' + youtubeObj.thumbnailURL + '">';
+
+	//stop all other players
+	$('.youtube').find("iframe").remove();
+	$('.youtube').find("img").show();
+	$('.youtube').find(".youtubePlayButton").show();
+	$('.youtube').removeClass("w2-fix");
+
+	//$brick.addClass('w2-fix');
+ 	$brick.addClass('youtube');
+ 	if(youtubeObj.size === "large") $brick.addClass('w2');
 
 	$brick.data('type', 'youtube');
-	$brick.data('topic', youtubeID);
+	$brick.data('topic', youtubeObj);
 
     if(!is_root) $brick.append(relatedButton);
+    $brick.append(youtubeThumb);
+
+    $brick.append('<i class="fa youtubePlayButton fa-youtube-play"></i>');
+
+	
+	imagesLoaded( '#packery .youtube', function() {
+		$packeryContainer.packery();
+	});
+
+	$brick.find('.youtubePlayButton').on('click', function(){
+		playYoutube($brick, youtubeObj)
+	});
+
+	callback($brick);
+}
+
+function playYoutube($brick, youtubeObj){
+
+	//stop all other players
+	$('.youtube').find("iframe").remove();
+	$('.youtube').find("img").show();
+	$('.youtube').find(".youtubePlayButton").show();
+	$('.youtube').removeClass("w2-fix");
+	
+	$brick.addClass('w2-fix');
+
+	var iframe = '<iframe class="" id="ytplayer" type="text/html" width="420" height="250" src="http://www.youtube.com/embed/' + youtubeObj.youtubeID + '?autoplay=1" webkitallowfullscreen autoplay mozallowfullscreen allowfullscreen frameborder="0"/>';
+
+	$brick.find('img').hide();
+	$brick.find('.youtubePlayButton').hide();
+
     $brick.append(iframe);
 
 	$packeryContainer.packery();
-	callback($brick);
 }
 
 function playBoard(){
@@ -2137,8 +2182,8 @@ function createboard(wpnonce) {
 					$(id).html('');
 					$(id).append(data);
 
-					var url = data.split('-')[0];
-					var ID = data.split('-')[1];
+					var url = JSON.parse(data)[0];
+					var ID = JSON.parse(data)[1];
 
 					//update the browser history and the new url
 					history.pushState('', 'wikiverse', url);
