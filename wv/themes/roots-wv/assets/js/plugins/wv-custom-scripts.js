@@ -1284,7 +1284,7 @@ function getInstagrams(query, type) {
 
 function buildSoundcloud($brick, soundcloudObj, callback){
 
-	$brick.addClass('w2-fix');
+	$brick.addClass('w3-fix');
 
 	var $soundcloudIframe = $('<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=' + soundcloudObj.uri + '&color=0066cc"></iframe>');
 
