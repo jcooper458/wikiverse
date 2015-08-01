@@ -886,7 +886,7 @@ function buildFoto($brick, photoObj, type, callback){
 	$brick.addClass('foto');	
 
 	var $photo = $('<img class="img-result" src="' + photoObj.mediumURL + '">');
-	var $overlay = $('<div class="overlay"><p class="text_box">Hello World!</p></div>');
+	var $overlay = $('<div class="overlay"><p>' + photoObj.title + '</p>by <p>' + photoObj.owner + '</p></div>');
 
 	$brick.data('type', type);
 	$brick.data('topic', photoObj);
