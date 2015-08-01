@@ -885,12 +885,14 @@ function buildFoto($brick, photoObj, type, callback){
 
 	$brick.addClass('foto');	
 
-	var $photo = $('<img class="img-result" owner="' + photoObj.owner + '" src="' + photoObj.mediumURL + '">');
+	var $photo = $('<img class="img-result" src="' + photoObj.mediumURL + '">');
+	var $overlay = $('<div class="overlay"><p class="text_box">Hello World!</p></div>');
 
 	$brick.data('type', type);
 	$brick.data('topic', photoObj);
 
 	$brick.append($photo);
+	$brick.append($overlay);
 
 	var imgLoad = imagesLoaded( $brick );
 
@@ -1090,7 +1092,14 @@ function createFlickrBrick(apiData, photoObj){
 		var thumbURL = apiData.sizes.size[1].source;
 		var mediumURL = apiData.sizes.size[6].source;
 
-		$flickrSearchBrick.find('.results').append('<img width="140" owner="' + photoObj.owner + '" large="' + mediumURL + '" thumb="' + thumbURL + '" src="' + thumbURL + '">');
+		var $thumb = $('<img width="140" src="' + thumbURL + '">');
+
+		$thumb.data('owner', photoObj.owner);
+		$thumb.data('large', mediumURL);
+		$thumb.data('id', photoObj.id);
+		$thumb.data('title', photoObj.title);
+
+		$flickrSearchBrick.find('.results').append($thumb);
 
 		imagesLoaded( '#flickr-search .results', function() {
 			$packeryContainer.packery();
@@ -1106,10 +1115,12 @@ function createFlickrBrick(apiData, photoObj){
 
 			var thisPhoto = {
 
-				thumbURL: $(this).attr('thumb'),
-				mediumURL: $(this).attr('large'),
+				thumbURL: $(this).attr('src'),
+				mediumURL: $(this).data('large'),
 				size: 'small',
-				owner: $(this).attr('owner')
+				id: $(this).data('id'),
+				title: $(this).data('title'),
+				owner: $(this).data('owner')
 
 			}
 			var $thisBrick = buildBrick(parseInt($flickrSearchBrick.css('left')) + 450, parseInt($flickrSearchBrick.css('top')) + 100);
@@ -1128,8 +1139,16 @@ function createFlickrBrick(apiData, photoObj){
 
 function createInstagramBrick(photo){
 
-	$instagramSearchBrick.find('.results').append('<img class="img-search" width="140" fullres="' + photo.images.standard_resolution.url + '" src="' + photo.images.low_resolution.url + '">');
+	var $thumb = $('<img class="img-search" src="' + photo.images.low_resolution.url + '" width="140">');
 
+	$instagramSearchBrick.find('.results').append($thumb);
+
+	$thumb.data('fullres', photo.images.standard_resolution.url);
+	$thumb.data('author', photo.user.full_name);
+	$thumb.data('id', photo.id);
+	$thumb.data('caption', photo.caption.text);
+	$thumb.data('filter', photo.filtér);
+	
 	imagesLoaded('#instagram-search .results', function() {
 		$packeryContainer.packery();
 	});
@@ -1143,10 +1162,15 @@ function createInstagramBrick(photo){
 		$packeryContainer.packery( 'stamp', $instagramSearchBrick );
 
 		var thisPhoto = {
-			mediumURL: $(this).attr('fullres'),
-			smallURL: $(this).attr('src'),
+			mediumURL: $(this).data('fullres'),
+			thumbURL: $(this).attr('src'),
+			id: $(this).data('id'),
+			owner: $(this).data('author'),
+			title: $(this).data('caption'),
+			filter: $(this).data('filter'),
 			size: 'small'
 		}
+
 		var $thisBrick = buildBrick(parseInt($instagramSearchBrick.css('left')) + 450, parseInt($instagramSearchBrick.css('top')) + 10);
 
 		buildFoto($thisBrick, thisPhoto, "instagram", APIsContentLoaded);
