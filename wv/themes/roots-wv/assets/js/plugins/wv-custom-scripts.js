@@ -2,8 +2,6 @@
 
 var $packeryContainer = $('#packery');
 
-var $gmapsSearchBrick = $("#gmaps-search");
-
 var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
 var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-width="50%" data-size="20"><option selected="">connect..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>';
@@ -29,8 +27,6 @@ var rmSectionOptions = {
 };
 
 var is_root = location.pathname == "/";
-
-$('.selectpicker').selectpicker();
 
 // initialize Packery
 var packery = $packeryContainer.packery({
@@ -72,7 +68,7 @@ $packeryContainer.on( "click", ".search .cross", function() {
 
 if(!is_root){
 
-	// Stop scrolling when click anywhere
+	// Stop PLAY when click anywhere
 	$(document).on( "click", function(e) {
 		if(!$('#play').is(":visible") ){
 			stopBoard();
@@ -80,72 +76,7 @@ if(!is_root){
 	});
 }
 
-//----------------keyboard shortcuts----------------------------
 
-//make the enter keypress do the search
-$(".search input:text").keyup(function (e) {
-    if (e.keyCode == 13) {
-       $(e.target).siblings('span').find('button').trigger('click');
-    }
-});
-
-
-document.addEventListener("keydown", function(e) {
-  if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
-    e.preventDefault();
-    $('#saveboard').trigger('click');
-  }
-}, false);
-
-
-document.addEventListener("keydown", function(e) {
-  if (!($("input").is(":focus")) && e.keyCode == 87) {
-    e.preventDefault();
-    $('li#wikipedia').trigger('click');
-  }
-}, false);
-
-document.addEventListener("keydown", function(e) {
-  if (!($("input").is(":focus")) && e.keyCode == 89) {
-    e.preventDefault();
-    $('li#youtube').trigger('click');
-  }
-}, false);
-
-document.addEventListener("keydown", function(e) {
-  if (!($("input").is(":focus")) && e.keyCode == 71) {
-    e.preventDefault();
-    $('li#gmaps').trigger('click');
-  }
-}, false);
-
-document.addEventListener("keydown", function(e) {
-  if (!($("input").is(":focus")) && e.keyCode == 70) {
-    e.preventDefault();
-    $('li#flickr').trigger('click');
-  }
-}, false);
-
-document.addEventListener("keydown", function(e) {
-  if (!($("input").is(":focus")) && e.keyCode == 73) {
-    e.preventDefault();
-    $('li#instagram').trigger('click');
-  }
-}, false);
-
-document.addEventListener("keydown", function(e) {
-  if (!($("input").is(":focus")) && e.keyCode == 65) {
-    e.preventDefault();
-    $('li#instagram').trigger('click');
-    $('li#gmaps').trigger('click');
-    $('li#flickr').trigger('click');		
-    $('li#soundcloud').trigger('click');
-    $('li#wikipedia').trigger('click');
-    $('li#youtube').trigger('click');
-  }
-}, false);
-
-//----------------keyboard shortcuts----------------------------
 //
 
 //show save board button on packery change (needs work)
@@ -178,53 +109,34 @@ $packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laid
 //create images interconnection and trigger getFlickrs()
 //This time for the gmaps brick, in thise case we only want the bounds passed in to getFlickrs
 $packeryContainer.on("click", ".gmaps .fa-flickr", function(){
+	
+	$('li#flickr').trigger('click');
 
-	$flickrSearchBrick.removeClass("invisible");
-	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
-	$flickrSearchBrick.each( makeEachDraggable );
-	$packeryContainer.packery();
+	var $flickrSearchBrick = $('div#flickr-search');
 
 	var $thisBrick = $(this).parents(".brick");
-
 	var position = $thisBrick.data("position");
-	var sort = $flickrSearchBrick.find(".radio-inline input[type='radio']:checked").val();
-
-	$flickrSearchBrick.find('select[name=flickrType]').val('geoQuery');
-	$flickrSearchBrick.find('#flickrType').attr("disabled", "true");
-	$('.selectpicker').selectpicker('refresh');
 
 	$flickrSearchBrick.find('input#flickr-searchinput').val(position);
-	$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
-	//$flickrSearchBrick.find('.start').addClass('disabled');
 
-
-	getFlickrs(position, sort, "geoQuery");
+	getFlickrs($flickrSearchBrick, position, "relevance", "geoQuery");
 
 });
 
-//create images interconnection and trigger getInstagrams()
+//create images interconnection and trigger getFlickrs()
+//This time for the gmaps brick, in thise case we only want the bounds passed in to getFlickrs
 $packeryContainer.on("click", ".gmaps .fa-instagram", function(){
+	
+	$('li#instagram').trigger('click');
 
-	$instagramSearchBrick.removeClass("invisible");
-	$packeryContainer.prepend($instagramSearchBrick).packery( 'prepended', $instagramSearchBrick);
-	$instagramSearchBrick.each( makeEachDraggable );
-	$packeryContainer.packery();
+	var $instagramSearchBrick = $('div#instagram-search');
 
 	var $thisBrick = $(this).parents(".brick");
-
 	var position = $thisBrick.data("position");
 
-	$instagramSearchBrick.find('input').val(position);
+	$instagramSearchBrick.find('input#instagram-searchinput').val(position);
 
-    $instagramSearchBrick.find("input[name='coordinates']").prop('checked', true);
- 	$instagramSearchBrick.find("input[name='coordinates']").prop('disabled',true);
-
-	$instagramSearchBrick.find('.searchbox').attr('disabled', 'true');
-	$instagramSearchBrick.find('.start').addClass('disabled');
-
-	$('#instagram-search .results').empty();
-
-	getInstagrams(position, "coordinates");
+	getInstagrams($instagramSearchBrick, position, "coordinates");
 
 });
 
@@ -233,6 +145,11 @@ $packeryContainer.on( 'click', 'img', toggleImageSize);
 
 $packeryContainer.packery( 'on', 'layoutComplete', orderItems );
 $packeryContainer.packery( 'on', 'dragItemPositioned', orderItems );
+
+
+
+// --------FUNCTION DEFINITIONS
+
 
 function toggleImageSize( event ) {
 
@@ -274,14 +191,16 @@ $(".sources-menu li").on("click", function(event){
 	//
 	if(!($('#' + source + '-search','#packery').length == 1)) {
 
-		$thisSearch = $('#' + source + '-search').clone();
+		$thisSearch = $('#' + source + '-search');
+
+		$thisSearch.find('.selectpicker').selectpicker();
 
 		$thisSearch.removeClass("invisible");
 		$packeryContainer.prepend($thisSearch).packery( 'prepended', $thisSearch);
 		$thisSearch.each( makeEachDraggable );	
 
 		//if its gmaps do the exception of running that func
-		if(source === "gmaps") getGmapsSearch();
+		if(source === "gmaps") getGmapsSearch($thisSearch);
 
 		$thisSearch.find('input[type=text]').focus();
 
@@ -297,28 +216,30 @@ $(".sources-menu li").on("click", function(event){
 			    break;
 
 			    case "flickr-search":
-					var flickrType = $("#flickrType").val();
-					var query = $("#flickr-search .searchbox").val();
-					var sort = $("#flickr-search .radio-inline input[type='radio']:checked").val();
 
+					var flickrType = $thisSearch.find("select option:selected").val();
+		
+					var query = $thisSearch.find(".searchbox").val();
+					var sort = $thisSearch.find(".radio-inline input[type='radio']:checked").val();
+					
 					getFlickrs($thisSearch, query, sort, flickrType);
 			    break;
 
 			    case "instagram-search":
-					var query = $("#instagram-search .searchbox").val();
+					var query = $thisSearch.find(".searchbox").val();
 					var instagramType = $("#instagramType").val();
 
 					getInstagrams($thisSearch, query, instagramType);
 			    break;
 
 			    case "youtube-search":
-					var topic = $("#youtube-search .searchbox").val();
+					var topic = $thisSearch.find(".searchbox").val();
 					getYoutubes($thisSearch,  topic );
 			    break;
 
 			    case "soundcloud-search":			
-					var query = $("#soundcloud-search .searchbox").val();
-					var params = $("#soundcloud-search .radio-inline input[type='radio']:checked").val();
+					var query = $thisSearch.find(".searchbox").val();
+					var params = $thisSearch.find(".radio-inline input[type='radio']:checked").val();
 
 					getSoundcloud($thisSearch, query, params);
 			    break;
@@ -455,7 +376,7 @@ function buildNextTopic($brick, lang){
 }
 
 var markers = [];
-function getGmapsSearch(){
+function getGmapsSearch($gmapsSearchBrick){
 
 	var mapOptions = {
 		center: {lat: 35, lng: 0},
@@ -510,6 +431,7 @@ function getGmapsSearch(){
 		$gmapsSearchBrick.data('bounds', map.getBounds().toUrlValue());
 
         //$gmapsSearchBrick.find(".fa-instagram, .fa-flickr").fadeIn("slow");
+        
     });
 
 	google.maps.event.addListener(autocomplete, 'place_changed', function() {
@@ -1073,7 +995,7 @@ function createInstagramBrick($instagramSearchBrick, photo){
 	$thumb.data('fullres', photo.images.standard_resolution.url);
 	$thumb.data('author', photo.user.full_name);
 	$thumb.data('id', photo.id);
-	$thumb.data('caption', photo.caption.text);
+	if(photo.caption)$thumb.data('caption', photo.caption.text);
 	$thumb.data('filter', photo.filtér);
 	
 	imagesLoaded('#instagram-search .results', function() {
@@ -2679,3 +2601,71 @@ function getLanguage(langCode){
 	return language;
 
 }
+
+
+//----------------keyboard shortcuts----------------------------
+
+//make the enter keypress do the search
+$(".search input:text").keyup(function (e) {
+    if (e.keyCode == 13) {
+       $(e.target).siblings('span').find('button').trigger('click');
+    }
+});
+
+
+document.addEventListener("keydown", function(e) {
+  if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+    e.preventDefault();
+    $('#saveboard').trigger('click');
+  }
+}, false);
+
+
+document.addEventListener("keydown", function(e) {
+  if (!($("input").is(":focus")) && e.keyCode == 87) {
+    e.preventDefault();
+    $('li#wikipedia').trigger('click');
+  }
+}, false);
+
+document.addEventListener("keydown", function(e) {
+  if (!($("input").is(":focus")) && e.keyCode == 89) {
+    e.preventDefault();
+    $('li#youtube').trigger('click');
+  }
+}, false);
+
+document.addEventListener("keydown", function(e) {
+  if (!($("input").is(":focus")) && e.keyCode == 71) {
+    e.preventDefault();
+    $('li#gmaps').trigger('click');
+  }
+}, false);
+
+document.addEventListener("keydown", function(e) {
+  if (!($("input").is(":focus")) && e.keyCode == 70) {
+    e.preventDefault();
+    $('li#flickr').trigger('click');
+  }
+}, false);
+
+document.addEventListener("keydown", function(e) {
+  if (!($("input").is(":focus")) && e.keyCode == 73) {
+    e.preventDefault();
+    $('li#instagram').trigger('click');
+  }
+}, false);
+
+document.addEventListener("keydown", function(e) {
+  if (!($("input").is(":focus")) && e.keyCode == 65) {
+    e.preventDefault();
+    $('li#instagram').trigger('click');
+    $('li#gmaps').trigger('click');
+    $('li#flickr').trigger('click');		
+    $('li#soundcloud').trigger('click');
+    $('li#wikipedia').trigger('click');
+    $('li#youtube').trigger('click');
+  }
+}, false);
+
+//----------------keyboard shortcuts----------------------------

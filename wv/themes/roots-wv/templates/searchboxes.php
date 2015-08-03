@@ -55,15 +55,14 @@
 
 	<i class="fa fa-flickr"></i>&nbsp;Flickr Search
 
+	<select id="flickrType" name="flickrType" class="selectpicker pull-right show-menu-arrow">
+		<option value="textQuery">query</option>
+		<option value="userQuery">username</option>
+		<option value="geoQuery">coordinates</option>
+	</select>
+
 	<div class="input-group-btn">
-		<h5>Search by:  </h5>
-		<div class="input-group-btn">
-			<select id="flickrType" name="flickrType" class="selectpicker show-menu-arrow">
-				<option value="textQuery">query</option>
-				<option value="userQuery">username</option>
-				<option value="geoQuery">coordinates</option>
-			</select>
-		</div><!-- /btn-group -->
+
 		<div class="input-group">
 			<input type="text" id="flickr-searchinput" placeholder="" class="form-control searchbox">
 			<span class="input-group-btn">
@@ -98,15 +97,14 @@
 
 	<i class="fa fa-instagram"></i>&nbsp;Instagram Search
 
-	<h5>Search by:  </h5>
+	<select id="instagramType" name="input" class="selectpicker pull-right show-menu-arrow">
+		<option value="hashtag"		>hashtag</option>
+		<option value="username"	>username</option>
+		<option value="coordinates"	>coordinates</option>
+	</select>
+
 	<div class="input-group-btn">
-		<div class="input-group-btn">
-			<select id="instagramType" name="input" class="selectpicker show-menu-arrow">
-				<option value="hashtag"		>hashtag</option>
-				<option value="username"	>username</option>
-				<option value="coordinates"	>coordinates</option>
-			</select>
-		</div><!-- /btn-group -->
+
 		<div class="input-group">
 			<input type="text" id="instragram-searchinput" placeholder="" class="form-control form-inline searchbox">
 			<span class="input-group-btn">
