@@ -191,7 +191,7 @@ $(".sources-menu li").on("click", function(event){
 	//
 	if(!($('#' + source + '-search','#packery').length == 1)) {
 
-		$thisSearch = $('#' + source + '-search');
+		$thisSearch = $('#' + source + '-search').clone();
 
 		$thisSearch.find('.selectpicker').selectpicker();
 
@@ -497,8 +497,6 @@ function getGmapsSearch($gmapsSearchBrick){
 	//detect if entering Streetview -> Change the type to streetview
 	google.maps.event.addListener(thePanorama, 'visible_changed', function() {
 
-		//console.log(thePanorama);
-
 		if (thePanorama.getVisible()) {
 
 			currentStreetMap = {
@@ -518,7 +516,7 @@ function getGmapsSearch($gmapsSearchBrick){
 		google.maps.event.addListener(thePanorama, 'pov_changed', function() {
 
 			if (thePanorama.getVisible()) {
-				//console.log(thePanorama);
+	
 				currentStreetMap = {
 					center: thePanorama.position.toUrlValue(),
 					zoom: thePanorama.pov.zoom,
@@ -734,14 +732,53 @@ function buildFoto($brick, photoObj, type, callback){
 
 	$brick.addClass('foto');	
 
+	var owner; 
+	var text; 
+	if(type === "flickr" ){
+		owner = "";
+		text = photoObj.title;
+	}
+	else{
+		owner = photoObj.owner;
+		text = "";
+	}
+
 	var $photo = $('<img class="img-result" src="' + photoObj.mediumURL + '">');
-	var $overlay = $('<div class="overlay"><div class="row"><div class="col-md-9"><p>' + photoObj.title + '</p></div><div class="col-md-3"><p>' + photoObj.owner + '</p></div></div></div>');
+	var $overlay = $('<div class="overlay"><div class="row"><div class="col-md-8"><p class="photoCaption">' + text + '</p></div><div class="col-md-4"><p class="photoOwner"><i class="fa fa-user" style="font-size:12px"></i> ' + owner + '</p></div></div></div>');
 
 	$brick.data('type', type);
 	$brick.data('topic', photoObj);
 
 	$brick.append($photo);
 	$brick.append($overlay);
+
+
+	if(type === "instagram"){
+		photoObj.tags.map(function(tag,index){
+			$brick.find('.photoCaption').append('#<a class="instaTag" href="#">' + tag + '</a> ');
+		});
+		
+		$brick.find('.instaTag').on('click', function(e){	
+			e.preventDefault();
+			getConnections("instagram", $(this).html());
+		});
+	}
+	else{
+
+		getFlickrTags(photoObj, function(tags){
+
+			tags.map(function(tag,index){
+				$brick.find('.photoCaption').append('#<a class="flickrTag" href="#">' + tag.raw + '</a> ');
+			});
+			
+			$brick.find('.flickrTag').on('click', function(e){	
+				e.preventDefault();
+				getConnections("flickr", $(this).html());
+			});
+
+		});
+	}
+
 
 	var imgLoad = imagesLoaded( $brick );
 
@@ -753,7 +790,58 @@ function buildFoto($brick, photoObj, type, callback){
 		$packeryContainer.packery();
 		callback($brick);	
 	});
+	
+	//Go grab the flickr username for each foto hovered 
+	if(type === "flickr" ){
+		getFlickrUsername($brick, photoObj);
+	}
 }
+
+function getFlickrUsername($brick, photoObj){
+
+	$brick.hover(function(event) {
+		if(($(this).find('.photoOwner').is(':empty'))){
+
+			$.ajax({
+				url: 'https://api.flickr.com/services/rest',
+				data:{
+
+					method: 'flickr.people.getInfo',
+					api_key: '1a7d3826d58da8a6285ef7062f670d30',
+					user_id: photoObj.owner,
+					format: 'json',
+					nojsoncallback: 1,
+					per_page: 40
+				},
+				success: function(data){
+					if (data.stat === "ok") {
+						$brick.find('.photoOwner').html(data.person.username._content);
+					}
+				}
+			});
+		}	
+	});		
+}
+
+function getFlickrTags(photoObj, callback){
+
+	$.ajax({
+		url: 'https://api.flickr.com/services/rest',
+		data:{
+
+			method: 'flickr.photos.getInfo',
+			api_key: '1a7d3826d58da8a6285ef7062f670d30',
+			photo_id: photoObj.id,
+			format: 'json',
+			nojsoncallback: 1,
+			per_page: 40
+		},
+		success: function(data){
+			callback(data.photo.tags.tag);
+		}
+	});
+}
+
 
 function strip(html)
 {
@@ -774,6 +862,8 @@ function getFlickrs($flickrSearchBrick, topic, sort, type) {
 		var latitude = topic.split(',')[0];
 		var longitude = topic.split(',')[1];
 
+		if(valid_coords(latitude, longitude)){
+
 		$.ajax({
 			url: 'https://api.flickr.com/services/rest',
 			data:{
@@ -787,7 +877,7 @@ function getFlickrs($flickrSearchBrick, topic, sort, type) {
 			},
 			success: function(data){
 
-				if (typeof data.places.place !== 'undefined' && data.places.place.length > 0) {
+				if (typeof data.places !== 'undefined' && data.places.length > 0 && typeof data.places.place !== 'undefined' && data.places.place.length > 0) {
 					$.ajax({
 						url: 'https://api.flickr.com/services/rest',
 						data:{
@@ -831,6 +921,10 @@ function getFlickrs($flickrSearchBrick, topic, sort, type) {
 				}
 			}
 		});
+		}
+		else{
+			$flickrSearchBrick.find('.results').append('<div class="no-results">"' + topic + '" is not a coordinate .. :( </div>');
+		}
 	}
 	else if(type === "textQuery"){ // is textQuery
 
@@ -921,7 +1015,7 @@ function getFlickrs($flickrSearchBrick, topic, sort, type) {
 								});
 							}
 							else{
-								$flickrSearchBrick.find('.results').append('<div class="no-results">No pictures found for "' + data.places.place[0].name + '"</div>');
+								$flickrSearchBrick.find('.results').append('<div class="no-results">No pictures found for user "' + topic + '"</div>');
 							}
 						}
 					});
@@ -942,7 +1036,7 @@ function createFlickrBrick($flickrSearchBrick, apiData, photoObj){
 		var mediumURL = apiData.sizes.size[6].source;
 
 		var $thumb = $('<img width="140" src="' + thumbURL + '">');
-		console.log(photoObj)
+
 		$thumb.data('owner', photoObj.owner);
 		$thumb.data('large', mediumURL);
 		$thumb.data('id', photoObj.id);
@@ -995,6 +1089,7 @@ function createInstagramBrick($instagramSearchBrick, photo){
 	$thumb.data('fullres', photo.images.standard_resolution.url);
 	$thumb.data('author', photo.user.full_name);
 	$thumb.data('id', photo.id);
+	$thumb.data('tags', photo.tags);
 	if(photo.caption)$thumb.data('caption', photo.caption.text);
 	$thumb.data('filter', photo.filtér);
 	
@@ -1016,6 +1111,7 @@ function createInstagramBrick($instagramSearchBrick, photo){
 			id: $(this).data('id'),
 			owner: $(this).data('author'),
 			title: $(this).data('caption'),
+			tags: $(this).data('tags'),
 			filter: $(this).data('filter'),
 			size: 'small'
 		}
@@ -1024,9 +1120,6 @@ function createInstagramBrick($instagramSearchBrick, photo){
 
 		buildFoto($thisBrick, thisPhoto, "instagram", APIsContentLoaded);
 		$(this).remove();
-
-		//unstamp the searchbrick so you can move it again around
-		//$packeryContainer.packery( 'unstamp', $instagramSearchBrick );
 
 	});
 

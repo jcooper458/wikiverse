@@ -81,3 +81,37 @@ function buildHomeWikipedia(topic){
 		$packeryContainer.packery();
 	}
 });*/
+
+
+
+/*
+function getFlickrExifData($brick, photoObj){
+
+	$brick.find('.getExifButton').on('click', function(e) {
+		
+		e.preventDefault();
+
+		//if(($(this).parents('.row').find('.exif').is(':empty'))){
+			$.ajax({
+				url: 'https://api.flickr.com/services/rest',
+				data:{
+
+					method: 'flickr.photos.getExif',
+					api_key: '1a7d3826d58da8a6285ef7062f670d30',
+					photo_id: photoObj.id,
+					format: 'json',
+					nojsoncallback: 1,
+					per_page: 40
+				},
+				success: function(data){
+					console.log(data)
+					if (data.stat === "ok") {
+						console.log(data)
+						//$brick.find('.exif').html(data.person.username._content);
+					}
+				}
+			});
+		//}	
+	});		
+}
+*/
