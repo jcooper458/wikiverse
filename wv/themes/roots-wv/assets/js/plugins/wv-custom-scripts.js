@@ -6,7 +6,7 @@ var $gmapsSearchBrick = $("#gmaps-search");
 
 var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
 var youtube_icon = '<i class="fa fa-youtube-square"></i>';
-var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-width="50%" data-size="20"><option selected="">connect..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option></select>';
+var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-width="50%" data-size="20"><option selected="">connect..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>';
 var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
 
 var rmOptions = {
@@ -147,72 +147,6 @@ document.addEventListener("keydown", function(e) {
 
 //----------------keyboard shortcuts----------------------------
 //
-//create youtube interconnection button and trigger search
-$packeryContainer.on("click", ".youtube-icon", function(){
-
-	$youtubeSearchBrick.removeClass("invisible");
-	$packeryContainer.prepend($youtubeSearchBrick).packery( 'prepended', $youtubeSearchBrick);
-	$youtubeSearchBrick.each( makeEachDraggable );
-	$packeryContainer.packery();
-
-	var $thisBrick = $(this).parents(".brick");
-
-	var topic = $thisBrick.data("topic");
-
-	$youtubeSearchBrick.find('input').val(topic.title);
-	$youtubeSearchBrick.find('.searchbox').attr('disabled', 'true');
-	$youtubeSearchBrick.find('.start').addClass('disabled');
-
-	$youtubeSearchBrick.find('.start').trigger( "click" );
-
-});
-
-
-
-//create flickr interconnection button and trigger flickr search
-$packeryContainer.on("click", ".flickr-icon", function(){
-
-	$flickrSearchBrick.removeClass("invisible");
-	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $flickrSearchBrick);
-	$flickrSearchBrick.each( makeEachDraggable );
-	$packeryContainer.packery();
-
-	var $thisBrick = $(this).parents(".brick");
-
-	var topic = $thisBrick.data("topic");
-
-	$flickrSearchBrick.find('input').val(topic.title);
-
-
-	//$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
-	//$flickrSearchBrick.find('.start').addClass('disabled');
-
-	getFlickrs(topic.title, "relevance", "textQuery");
-
-});
-
-//create flickr interconnection button and trigger flickr search
-$packeryContainer.on("click", ".instagram-icon", function(){
-
-	$instagramSearchBrick.removeClass("invisible");
-	$packeryContainer.prepend($flickrSearchBrick).packery( 'prepended', $instagramSearchBrick);
-	$instagramSearchBrick.each( makeEachDraggable );
-	$packeryContainer.packery();
-
-	var $thisBrick = $(this).parents(".brick");
-
-	var topic = $thisBrick.data("topic");
-
-	$instagramSearchBrick.find('input').val(topic.title);
-
-	//$flickrSearchBrick.find('.searchbox').attr('disabled', 'true');
-	//$flickrSearchBrick.find('.start').addClass('disabled');
-
-	getInstagrams(topic.title, "hashtag");
-
-});
-
-
 
 //show save board button on packery change (needs work)
 $packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laidOutItems ) {
@@ -302,7 +236,7 @@ $packeryContainer.packery( 'on', 'dragItemPositioned', orderItems );
 
 function toggleImageSize( event ) {
 
-	var $brick= $( event.target ).parents('.brick');
+	var $brick = $( event.target ).parents('.brick');
   	var tempDataObj = $brick.data('topic');
   	var widthClass; 
 
@@ -315,20 +249,15 @@ function toggleImageSize( event ) {
   		//if it is large, update the dataObj so it saves the state
   		if($brick.hasClass("w2")){
   			tempDataObj.size = 'large'; 	
-  			  		// trigger layout
-  		$packeryContainer.packery();		
   		}else{
   			tempDataObj.size = 'small';
   			$packeryContainer.packery( 'fit', event.target );
-  			  		// trigger layout
-  		$packeryContainer.packery();
   		}
   		//set the dataObj to data topic
   		$brick.data('topic', tempDataObj);
-  		
 
+  		$packeryContainer.packery();	
   	}
-
 }
 
 function getSearchBricks(){
@@ -506,11 +435,10 @@ function isPortrait(imgObj){
 
 function buildNextTopic($brick, lang){
 
-	$brick.find("a").unbind('click').click(function(e) {
-
-		$packeryContainer.packery( 'stamp', $brick );
+	$brick.find(".article a, .section a").unbind('click').click(function(e) {
 
 		e.preventDefault();
+		$packeryContainer.packery( 'stamp', $brick );		
 
 		var topic = $(this).attr("title");
 		$(this).contents().unwrap();
@@ -1589,6 +1517,34 @@ function APIsContentLoaded($brick){
 	$brick.fadeTo( "slow", 1); 
 }
 
+function getConnections(source, topic){
+
+	$('li#' + source).trigger('click');
+
+	switch (source) {
+
+	    case "flickr":
+	    	$('#flickr-search').find('input').val(topic);
+			getFlickrs($('#flickr-search'), topic, "relevance", "textQuery");
+	    break;
+
+	    case "instagram":
+	    	$('#instagram-search').find('input').val(topic);
+			getInstagrams($('#instagram-search'), topic, "hashtag");
+	    break;
+
+	    case "youtube":
+	    	$('#youtube-search').find('input').val(topic);
+			getYoutubes($('#youtube-search'),  topic );
+	    break;
+
+	    case "soundcloud":	
+	    	$('#soundcloud-search').find('input').val(topic);		
+			getSoundcloud($('#soundcloud-search'), topic);
+	    break;
+	}
+}
+
 function buildWikipedia($brick, topic, parent, callback){
 
 	$brick.data('type', 'wiki');
@@ -1600,8 +1556,13 @@ function buildWikipedia($brick, topic, parent, callback){
 	$brick.prepend('<h2>' + topic.title + '</h2>');
 
 	if(!is_root){
-		$brick.prepend( wikiverse_nav );
-		$brick.find('.selectpicker').selectpicker();
+		var $connections = $(wikiverse_nav);
+		$brick.prepend( $connections );
+		$connections.selectpicker();
+
+		$connections.change(function(event) {
+			getConnections($(this).find("option:selected").text(), topic.title);
+		});
 	} 
 
    	if(!is_root){
@@ -1947,10 +1908,10 @@ function getYoutubes($youtubeSearchBrick, topic) {
 	});
 }
 
-function getRelatedYoutubes(videoID) {
+function getRelatedYoutubes($youtubeSearchBrick, videoID) {
 	
 	$('li#youtube').trigger('click');
-
+	
 	$('#youtube-search .results').empty();
 
 	$.ajax({
@@ -1964,7 +1925,7 @@ function getRelatedYoutubes(videoID) {
 		},
 		dataType:'jsonp',
 		success: function(data){
-			buildYoutubeSearchResults(data);			
+			buildYoutubeSearchResults($('#youtube-search'), data);			
 		}
 	});
 }
