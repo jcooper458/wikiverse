@@ -64,6 +64,7 @@ get_currentuserinfo();
 	    	<?php if ( is_page('start') || is_singular("board")) { ?>
           <li><a href="#" class="board-pilot invisible play-control play" id="play" onclick="playBoard();" ><i class="fa fa-play"></i></i></a></li> 
           <li><a href="#" class="board-pilot invisible" id="clearboard" onclick="clearboard('<?php echo $nonce ?>');" >clear board</a></li> 
+          <li><a href="#" class="board-pilot invisible" id="forkboard" onclick="forkboard('<?php echo $nonce ?>');" >fork board</a></li> 
           <?php if ( is_page('start') ) { ?>
 	    		   <li><a href="#" class="board-pilot invisible" id="saveboard" onclick="createboard('<?php echo $nonce ?>');" >save board</a></li>
 			   <?php }  ?>

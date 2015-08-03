@@ -2,11 +2,6 @@
 
 var $packeryContainer = $('#packery');
 
-var $wikiSearchBrick = $("#wikipedia-search");
-var $youtubeSearchBrick = $("#youtube-search");
-var $flickrSearchBrick = $("#flickr-search");
-var $instagramSearchBrick = $("#instagram-search");
-var $soundcloudSearchBrick = $("#soundcloud-search");
 var $gmapsSearchBrick = $("#gmaps-search");
 
 var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
@@ -37,9 +32,6 @@ var is_root = location.pathname == "/";
 
 $('.selectpicker').selectpicker();
 
-
-getSearchBricks();
-
 // initialize Packery
 var packery = $packeryContainer.packery({
 	itemSelector: '.brick',
@@ -52,7 +44,9 @@ var packery = $packeryContainer.packery({
 //	isInitLayout: false
 });	
 
-$packeryContainer.find('div.brick').each( makeEachDraggable );
+//$packeryContainer.find('div.brick').each( makeEachDraggable );
+
+getSearchBricks();
 
 //var container = document.querySelector('.packery');
 //var pckry = Packery.data( container );
@@ -335,6 +329,8 @@ function toggleImageSize( event ) {
 
 function getSearchBricks(){
 
+var $thisSearch;
+
 //Global get SearchBoxes
 $(".sources-menu li").on("click", function(event){
 
@@ -342,19 +338,65 @@ $(".sources-menu li").on("click", function(event){
 	var source = $(this).attr('id');
 
 	//if searchbrick is not inside packery
+	//
 	if(!($('#' + source + '-search','#packery').length == 1)) {
 
-		$('#' + source + '-search').removeClass("invisible");
-		$packeryContainer.prepend($('#' + source + '-search')).packery( 'prepended', $('#' + source + '-search'));
-		$('#' + source + '-search').each( makeEachDraggable );	
+		$thisSearch = $('#' + source + '-search').clone();
 
-		$packeryContainer.packery('fit', $('#' + source + '-search')[0], 0, 0);
-		$packeryContainer.packery();
+		$thisSearch.removeClass("invisible");
+		$packeryContainer.prepend($thisSearch).packery( 'prepended', $thisSearch);
+		$thisSearch.each( makeEachDraggable );	
+
+		//$packeryContainer.packery('fit', $thisSearch[0], 0, 0);
+		//$packeryContainer.packery();
 
 		//if its gmaps do the exception of running that func
 		if(source === "gmaps") getGmapsSearch();
 
-		$('#' + source + '-search').find('input[type=text]').focus();
+		$thisSearch.find('input[type=text]').focus();
+
+		$thisSearch.find(".start").on("click", function(){
+
+			var $searchBrick = $(this).parents('.search'); 
+
+			switch ($searchBrick.attr('id')) {
+
+			    case "wikipedia-search":
+	
+					var topic = $thisSearch.find("#wiki-searchinput").val();
+					getWikis($thisSearch, topic, lang );
+
+			    break;
+
+			    case "flickr-search":
+					var flickrType = $("#flickrType").val();
+					var query = $("#flickr-search .searchbox").val();
+					var sort = $("#flickr-search .radio-inline input[type='radio']:checked").val();
+
+					getFlickrs($thisSearch, query, sort, flickrType);
+			    break;
+
+			    case "instagram-search":
+					var query = $("#instagram-search .searchbox").val();
+					var instagramType = $("#instagramType").val();
+
+					getInstagrams($thisSearch, query, instagramType);
+			    break;
+
+			    case "youtube-search":
+					var topic = $("#youtube-search .searchbox").val();
+					getYoutubes($thisSearch,  topic );
+			    break;
+
+			    case "soundcloud-search":			
+					var query = $("#soundcloud-search .searchbox").val();
+					var params = $("#soundcloud-search .radio-inline input[type='radio']:checked").val();
+
+					getSoundcloud($thisSearch, query, params);
+			    break;
+			 }
+
+		});
 
 	}
 	else{
@@ -365,48 +407,6 @@ $(".sources-menu li").on("click", function(event){
 });
 
 
-$(".search .start").on("click", function(){
-	
-	var $searchBrick = $(this).parents('.search'); 
-
-	switch ($searchBrick.attr('id')) {
-
-	    case "wikipedia-search":
-			
-			var topic = $("#wiki-searchinput").val();
-			getWikis( topic, lang );
-
-	    break;
-
-	    case "flickr-search":
-			var flickrType = $("#flickrType").val();
-			var query = $("#flickr-search .searchbox").val();
-			var sort = $("#flickr-search .radio-inline input[type='radio']:checked").val();
-
-			getFlickrs(query, sort, flickrType);
-	    break;
-
-	    case "instagram-search":
-			var query = $("#instagram-search .searchbox").val();
-			var instagramType = $("#instagramType").val();
-
-			getInstagrams(query, instagramType);
-	    break;
-
-	    case "youtube-search":
-			var topic = $("#youtube-search .searchbox").val();
-			getYoutubes( topic );
-	    break;
-
-	    case "soundcloud-search":			
-			var query = $("#soundcloud-search .searchbox").val();
-			var params = $("#soundcloud-search .radio-inline input[type='radio']:checked").val();
-
-			getSoundcloud(query, params);
-	    break;
-	 }
-
-});
 
 var lang = $("#langselect").val();
 
@@ -886,7 +886,7 @@ function buildFoto($brick, photoObj, type, callback){
 	$brick.addClass('foto');	
 
 	var $photo = $('<img class="img-result" src="' + photoObj.mediumURL + '">');
-	var $overlay = $('<div class="overlay"><p>' + photoObj.title + '</p>by <p>' + photoObj.owner + '</p></div>');
+	var $overlay = $('<div class="overlay"><div class="row"><div class="col-md-9"><p>' + photoObj.title + '</p></div><div class="col-md-3"><p>' + photoObj.owner + '</p></div></div></div>');
 
 	$brick.data('type', type);
 	$brick.data('topic', photoObj);
@@ -913,9 +913,9 @@ function strip(html)
 	return tmp.textContent || tmp.innerText || "";
 }
 
-function getFlickrs(topic, sort, type) {
+function getFlickrs($flickrSearchBrick, topic, sort, type) {
 
-	$('#flickr-search .results').empty();
+	$flickrSearchBrick.find('.results').empty();
 
 	type  = type || "textQuery";
 
@@ -966,7 +966,7 @@ function getFlickrs(topic, sort, type) {
 											nojsoncallback: 1
 										},
 										success: function(data){
-											createFlickrBrick(data, photoObj);
+											createFlickrBrick($flickrSearchBrick, data, photoObj);
 										}
 									});
 								});
@@ -1011,7 +1011,7 @@ function getFlickrs(topic, sort, type) {
 								nojsoncallback: 1
 							},
 							success: function(data){
-								createFlickrBrick(data, photoObj);
+								createFlickrBrick($flickrSearchBrick, data, photoObj);
 							}
 
 						});
@@ -1036,7 +1036,7 @@ function getFlickrs(topic, sort, type) {
 				nojsoncallback: 1
 			},
 			success: function(data){
-				console.log(data)
+
 				if (data.user.id) {
 					
 					$.ajax({
@@ -1066,7 +1066,7 @@ function getFlickrs(topic, sort, type) {
 											nojsoncallback: 1
 										},
 										success: function(data){
-											createFlickrBrick(data, photoObj);
+											createFlickrBrick($flickrSearchBrick, data, photoObj);
 										}
 									});
 								});
@@ -1085,7 +1085,7 @@ function getFlickrs(topic, sort, type) {
 	}
 }
 
-function createFlickrBrick(apiData, photoObj){
+function createFlickrBrick($flickrSearchBrick, apiData, photoObj){
 
 	if (typeof apiData.sizes.size !== 'undefined' && apiData.sizes.size.length > 0 && typeof apiData.sizes.size[6] !== 'undefined') {										
 											
@@ -1093,7 +1093,7 @@ function createFlickrBrick(apiData, photoObj){
 		var mediumURL = apiData.sizes.size[6].source;
 
 		var $thumb = $('<img width="140" src="' + thumbURL + '">');
-
+		console.log(photoObj)
 		$thumb.data('owner', photoObj.owner);
 		$thumb.data('large', mediumURL);
 		$thumb.data('id', photoObj.id);
@@ -1137,7 +1137,7 @@ function createFlickrBrick(apiData, photoObj){
 	}
 }
 
-function createInstagramBrick(photo){
+function createInstagramBrick($instagramSearchBrick, photo){
 
 	var $thumb = $('<img class="img-search" src="' + photo.images.low_resolution.url + '" width="140">');
 
@@ -1203,9 +1203,9 @@ function valid_coords(number_lat,number_lng) {
     }
 }
 
-function getInstagrams(query, type) {
+function getInstagrams($instagramSearchBrick, query, type) {
 
-	$('#instagram-search .results').empty();
+	$instagramSearchBrick.find('.results').empty();
 
 	type = type || "hashtag";
 
@@ -1240,7 +1240,7 @@ function getInstagrams(query, type) {
 		
 					if (typeof data.data !== 'undefined' && data.data.length > 0) {
 						data.data.forEach(function(photo, index){
-							createInstagramBrick(photo);
+							createInstagramBrick($instagramSearchBrick, photo);
 						});
 					}
 					else{
@@ -1262,7 +1262,7 @@ function getInstagrams(query, type) {
 
 	    	if (typeof data.data !== 'undefined' && data.data.length > 0) {
 				data.data.forEach(function(photo, index){
-					createInstagramBrick(photo);
+					createInstagramBrick($instagramSearchBrick, photo);
 				});
 			}
 			else{
@@ -1290,7 +1290,7 @@ function getInstagrams(query, type) {
 				    $.getJSON(getUserUrl, access_parameters, function(data){
 				    	if (data.meta.code !== 400) {
 							data.data.forEach(function(photo, index){
-								createInstagramBrick(photo);
+								createInstagramBrick($instagramSearchBrick, photo);
 							});
 						}
 						else{
@@ -1319,9 +1319,9 @@ function buildSoundcloud($brick, soundcloudObj, callback){
 	callback($brick);
 }
 
-function getSoundcloud(query, params) {
+function getSoundcloud($soundcloudSearchBrick, query, params) {
 
-	$('#soundcloud-search .results').empty();
+	$soundcloudSearchBrick.find('.results').empty();
 
 	SC.initialize({
 	  client_id: '15bc70bcd9762ddca2e82ee99de9e2e7'
@@ -1486,9 +1486,9 @@ function getInterWikiLinks(section, $brick){
 
 }
 
-function getWikis(topic, lang) {
+function getWikis($wikiSearchBrick, topic, lang) {
 
-	$('#wikipedia-search .results').empty();
+	$wikiSearchBrick.find('#wikipedia-search .results').empty();
 
 	$.ajax({
 		url: 'http://'+lang+'.wikipedia.org/w/api.php',
@@ -1924,7 +1924,7 @@ function buildboard(index){
 	});
 }
 
-function getYoutubes(topic) {
+function getYoutubes($youtubeSearchBrick, topic) {
 
 	$('#youtube-search .results').empty();
 
@@ -1938,7 +1938,7 @@ function getYoutubes(topic) {
 		},
 		dataType:'jsonp',
 		success: function(data){
-			buildYoutubeSearchResults(data);
+			buildYoutubeSearchResults($youtubeSearchBrick, data);
 		}
 	});
 }
@@ -1966,7 +1966,7 @@ function getRelatedYoutubes(videoID) {
 }
 
 
-function buildYoutubeSearchResults(apiData){
+function buildYoutubeSearchResults($youtubeSearchBrick, apiData){
 
 	if (typeof apiData.items !== 'undefined' && apiData.items.length > 0) {
 
@@ -2133,6 +2133,112 @@ function destroyBoard(callback){
 	   })(i);
 	}
 }
+
+function forkboard(wpnonce) {
+	var wikiverse = {};
+
+	var board = {
+		"bricks": wikiverse
+	};
+
+	//remove search bricks:
+	var searchBricks = jQuery(".search");
+	$packeryContainer.packery( 'remove', searchBricks );
+
+	//$packeryContainer.packery();
+
+	var itemElems = $packeryContainer.packery('getItemElements');
+
+	var tabindex = 0;
+
+	$.each(itemElems, function(){
+
+		var type = $(this).data('type');
+		var topic = $(this).data('topic');
+		var parent = $(this).data('parent');
+
+		wikiverse[tabindex] = {
+
+			Type: type,
+			Topic: topic,
+			Parent: parent
+		};
+		tabindex++;
+	});
+
+	var JSONwikiverse = JSON.stringify(board);
+
+	$("#saveboardModal").modal('show');
+	$("#boardTitle").focus();	
+	
+	$packeryContainer.packery();
+	
+	$('#boardTitle').keyup(function (e) {
+		e.preventDefault();
+		//enable the save board button
+		$("#boardSubmitButton").prop('disabled', false);
+
+		//make enter save the board
+		if (e.keyCode == 13) {
+	       $("#boardSubmitButton").trigger('click');
+	    }
+	});
+
+	$("#boardSubmitButton").on("click", function(){
+
+		var value=$.trim($("#boardTitle").val());
+
+		if(value.length>0)
+		{
+
+			var title = $('#boardTitle').val();
+
+			$.ajax({
+				type: 'POST',
+				url: "/wp-admin/admin-ajax.php",
+				data: {
+					action: 'apf_addpost',
+					boardtitle: title,
+					boardmeta: JSONwikiverse,
+					nonce: wpnonce
+				},
+				success: function(data, textStatus, XMLHttpRequest) {
+					var id = '#apf-response';
+					$(id).html('');
+					$(id).append(data);
+
+					var url = JSON.parse(data)[0];
+					var ID = JSON.parse(data)[1];
+
+					//update the browser history and the new url
+					history.pushState('', 'wikiverse', url);
+					$('#postID').html(ID);
+				},
+				error: function(MLHttpRequest, textStatus, errorThrown) {
+					alert("cdascsacsa");
+				}
+			});
+
+			$("#saveboardModal").modal('hide');
+
+			var nonce = $('#nonce').html()
+
+			$('#saveboard').attr('onclick', 'saveboard("' + nonce + '")');
+			$('#saveboard').attr('id', $('#saveboard').attr('id'));
+			$('#saveboard').html('Save Changes');
+
+		}
+		else{
+
+			$('#boardTitle').parent(".form-group").addClass("has-error");
+
+		}
+
+	});
+
+}
+
+
 function createboard(wpnonce) {
 	var wikiverse = {};
 
@@ -2239,8 +2345,8 @@ function createboard(wpnonce) {
 
 function clearboard(wpnonce){
 	if (confirm('Are you sure you want to clear this board?')) {
-	   	$packeryContainer.empty();
-		$packeryContainer.packery();
+		var elements = $packeryContainer.packery('getItemElements');
+	   	$packeryContainer.packery( 'remove', elements );		
 	} 
 }
 
