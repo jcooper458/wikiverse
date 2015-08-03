@@ -314,15 +314,19 @@ function toggleImageSize( event ) {
 
   		//if it is large, update the dataObj so it saves the state
   		if($brick.hasClass("w2")){
-  			tempDataObj.size = 'large'; 			
+  			tempDataObj.size = 'large'; 	
+  			  		// trigger layout
+  		$packeryContainer.packery();		
   		}else{
   			tempDataObj.size = 'small';
+  			$packeryContainer.packery( 'fit', event.target );
+  			  		// trigger layout
+  		$packeryContainer.packery();
   		}
   		//set the dataObj to data topic
   		$brick.data('topic', tempDataObj);
   		
-  		// trigger layout
-  		$packeryContainer.packery();
+
   	}
 
 }
