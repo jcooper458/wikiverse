@@ -280,9 +280,6 @@ $(".sources-menu li").on("click", function(event){
 		$packeryContainer.prepend($thisSearch).packery( 'prepended', $thisSearch);
 		$thisSearch.each( makeEachDraggable );	
 
-		//$packeryContainer.packery('fit', $thisSearch[0], 0, 0);
-		//$packeryContainer.packery();
-
 		//if its gmaps do the exception of running that func
 		if(source === "gmaps") getGmapsSearch();
 
@@ -290,9 +287,7 @@ $(".sources-menu li").on("click", function(event){
 
 		$thisSearch.find(".start").on("click", function(){
 
-			var $searchBrick = $(this).parents('.search'); 
-
-			switch ($searchBrick.attr('id')) {
+			switch ($thisSearch.attr('id')) {
 
 			    case "wikipedia-search":
 	
@@ -1285,7 +1280,7 @@ function getSoundcloud($soundcloudSearchBrick, query, params) {
 					genre: $(this).attr('genre')
 				}
 
-				var $thisBrick = buildBrick(parseInt($soundcloudSearchBrick.css('left')) + 50, parseInt($instagramSearchBrick.css('top')) + 10);
+				var $thisBrick = buildBrick(parseInt($soundcloudSearchBrick.css('left')) + 50, parseInt($soundcloudSearchBrick.css('top')) + 10);
 				
 				buildSoundcloud($thisBrick, soundcloudObj, APIsContentLoaded);
 
