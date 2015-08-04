@@ -367,7 +367,7 @@ function buildNextTopic($brick, lang){
 		var y = parseInt($brick.css('top'));
 		var x = parseInt($brick.css('left'));
 
-		var $thisBrick = buildBrick( x + 100, y);
+		var $thisBrick = buildBrick( x, y);
 
 		//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
 		buildWikipedia($thisBrick, brickData, $brick.attr("tabindex") - 1, APIsContentLoaded);
@@ -744,8 +744,22 @@ function buildFoto($brick, photoObj, type, callback){
 	}
 
 	var $photo = $('<img class="img-result" src="' + photoObj.mediumURL + '">');
-	var $overlay = $('<div class="overlay"><div class="row"><div class="col-md-8"><p class="photoCaption">' + text + '</p></div><div class="col-md-4"><p class="photoOwner"><i class="fa fa-user" style="font-size:12px"></i> ' + owner + '</p></div></div></div>');
 
+	var html = 
+		'<div class="overlay">' +
+			//'<div class="row">' +
+			//	'<p class="photoOwner pull-left">' +
+			//		'<i class="fa fa-user" style="font-size:12px"></i> ' + owner + 
+			//	'</p>' +
+			//'</div>' +
+			//'<div class="row">' +
+				'<p class="photoCaption">' + text + 
+				' </p>' +
+			//'</div>' +
+		'</div>';
+
+
+	var $overlay = $(html);
 	$brick.data('type', type);
 	$brick.data('topic', photoObj);
 
@@ -764,7 +778,6 @@ function buildFoto($brick, photoObj, type, callback){
 		});
 	}
 	else{
-
 		getFlickrTags(photoObj, function(tags){
 
 			tags.map(function(tag,index){
@@ -778,7 +791,6 @@ function buildFoto($brick, photoObj, type, callback){
 
 		});
 	}
-
 
 	var imgLoad = imagesLoaded( $brick );
 
@@ -1466,7 +1478,7 @@ function getWikis($wikiSearchBrick, topic, lang) {
 							title: $(this).find('.result').html(),
 							language: lang
 						}
-						var $thisBrick = buildBrick(parseInt($wikiSearchBrick.css('left')) + 50, parseInt($wikiSearchBrick.css('top')) + 10);
+						var $thisBrick = buildBrick(parseInt($wikiSearchBrick.css('left')), parseInt($wikiSearchBrick.css('top')));
 
 						//build the wikis next to the search brick
 						buildWikipedia($thisBrick, topic, -1, APIsContentLoaded);
