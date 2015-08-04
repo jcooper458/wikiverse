@@ -60,11 +60,11 @@ $packeryContainer.on( "click", ".brick .cross", function() {
 });
 
 // REMOVE ITEM
-$packeryContainer.on( "click", ".search .cross", function() {
+/*$packeryContainer.on( "click", ".search .cross", function() {
 	var $thisBrick = jQuery(this).parent(".search");
 	$thisBrick.addClass('invisible');
 	$packeryContainer.packery();
-});
+});*/
 
 if(!is_root){
 
@@ -242,6 +242,12 @@ $(".sources-menu li").on("click", function(event){
 					var params = $thisSearch.find(".radio-inline input[type='radio']:checked").val();
 
 					getSoundcloud($thisSearch, query, params);
+			    break;
+
+			    case "twitter-search":			
+					var query = $thisSearch.find(".searchbox").val();
+
+						getTweets($thisSearch, query);
 			    break;
 			 }
 
@@ -758,7 +764,6 @@ function buildFoto($brick, photoObj, type, callback){
 			//'</div>' +
 		'</div>';
 
-
 	var $overlay = $(html);
 	$brick.data('type', type);
 	$brick.data('topic', photoObj);
@@ -766,29 +771,30 @@ function buildFoto($brick, photoObj, type, callback){
 	$brick.append($photo);
 	$brick.append($overlay);
 
-
 	if(type === "instagram"){
-		photoObj.tags.map(function(tag,index){
-			$brick.find('.photoCaption').append('#<a class="instaTag" href="#">' + tag + '</a> ');
-		});
-		
-		$brick.find('.instaTag').on('click', function(e){	
-			e.preventDefault();
-			getConnections("instagram", $(this).html());
-		});
+		if(photoObj.tags){
+			photoObj.tags.map(function(tag,index){
+				$brick.find('.photoCaption').append('#<a class="instaTag" href="#">' + tag + '</a> ');
+			});
+			
+			$brick.find('.instaTag').on('click', function(e){	
+				e.preventDefault();
+				getConnections("instagram", $(this).html());
+			});
+		}
 	}
 	else{
 		getFlickrTags(photoObj, function(tags){
-
-			tags.map(function(tag,index){
-				$brick.find('.photoCaption').append('#<a class="flickrTag" href="#">' + tag.raw + '</a> ');
-			});
-			
-			$brick.find('.flickrTag').on('click', function(e){	
-				e.preventDefault();
-				getConnections("flickr", $(this).html());
-			});
-
+			if(tags){
+				tags.map(function(tag,index){
+					$brick.find('.photoCaption').append('#<a class="flickrTag" href="#">' + tag.raw + '</a> ');
+				});
+				
+				$brick.find('.flickrTag').on('click', function(e){	
+					e.preventDefault();
+					getConnections("flickr", $(this).html());
+				});
+			}
 		});
 	}
 
@@ -1260,19 +1266,6 @@ function getInstagrams($instagramSearchBrick, query, type) {
 	}
 }
 
-function buildSoundcloud($brick, soundcloudObj, callback){
-
-	$brick.addClass('w3-fix');
-
-	var $soundcloudIframe = $('<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=' + soundcloudObj.uri + '&color=0066cc"></iframe>');
-
-	$brick.data('type', 'soundcloud');
-	$brick.data('topic', soundcloudObj);
-
-	$brick.append($soundcloudIframe);
-	callback($brick);
-}
-
 function getSoundcloud($soundcloudSearchBrick, query, params) {
 
 	$soundcloudSearchBrick.find('.results').empty();
@@ -1333,6 +1326,95 @@ function getSoundcloud($soundcloudSearchBrick, query, params) {
 	});
 
 }
+
+function buildSoundcloud($brick, soundcloudObj, callback){
+
+	$brick.addClass('w3-fix');
+
+	var $soundcloudIframe = $('<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=' + soundcloudObj.uri + '&color=0066cc"></iframe>');
+
+	$brick.data('type', 'soundcloud');
+	$brick.data('topic', soundcloudObj);
+
+	$brick.append($soundcloudIframe);
+	callback($brick);
+}
+
+function getTweets($twitterSearchBrick, query) {
+
+	$('#twitter-search .results').empty();
+
+	$.ajax({
+		url: 'http://wikiver.se/wv/plugins/wp-twitter-api/api.php',
+		data:{
+			"search": query
+		},
+		success: function(data){
+			buildTwitterSearchResults($twitterSearchBrick, JSON.parse(data));
+		}
+	});
+
+}
+
+
+function buildTwitterSearchResults($twitterSearchBrick, apiData){
+
+	if (typeof apiData.statuses !== 'undefined' && apiData.statuses.length > 0) {
+
+		apiData.statuses.map(function(tweet, index){	
+
+			//console.log(tweet);
+
+			var text = tweet.text;
+			var userURL = tweet.user.profile_image_url;
+	
+			if(tweet)$twitterSearchBrick.find('.results').append('<tr text="' + text + '" data-toggle="tooltip" title="By ' + tweet.user.name + '"><td class="twitterThumb"><img src="' + userURL + '"></td><td class="result" >'+text+'</td></tr>');
+
+			//create the tooltips
+			$('tr').tooltip({animation: true, placement: 'right'});
+
+			//bind event to every row -> so you can start the wikiverse
+			$twitterSearchBrick.find('tr').unbind('click').click(function(e) {
+
+				//stamp for better clicking
+				$packeryContainer.packery( 'stamp', $twitterSearchBrick );
+
+				$(this).tooltip('destroy');
+				$(this).remove();
+
+				var $thisBrick = buildBrick(parseInt($twitterSearchBrick.css('left')), parseInt($twitterSearchBrick.css('top')));
+
+				var twitterObj = {
+					text: $(this).attr('text'),
+					userURL: $(this).find('img').attr('src')
+				};
+
+				buildTweet($thisBrick, twitterObj, APIsContentLoaded);
+
+				return false;
+			});
+
+		});
+	//nothing has been found on youtube
+	}else{
+		//append row to searchbox-table: NO RESULTS
+		$twitterSearchBrick.find('.results').append('<tr class="no-results"><td>No Tweets found .. </td></tr>');
+	}
+}
+
+function buildTweet($brick, twitterObj, callback){
+	console.log(twitterObj);
+	$brick.addClass('w2-fix');
+
+	var $tweetContainer = $('<p>' + twitterObj.text + '<p>');
+
+	$brick.data('type', 'twitter');
+	$brick.data('topic', twitterObj);
+
+	$brick.append($tweetContainer);
+	callback($brick);
+}
+
 
 
 function getWikiLanguages(topic, lang, $brick){
@@ -1860,18 +1942,6 @@ function buildboard(index){
 
 	$.each(board.bricks, function(index, brick) {
 
-		/*if(is_root && index % 3 === 0){
-
-			var heights = ["hi1", "hi2"],
-				widths = ["wi1", "wi2"],
-				transparencies = ["1", "2", "3"];
-
-			var $dummyBrick = $('<div class="brick ' + heights[Math.floor(Math.random()*heights.length)] + ' ' + widths[Math.floor(Math.random()*widths.length)] + ' transparent-' + transparencies[Math.floor(Math.random()*transparencies.length)] + '"><span class="handle"> <i class="fa fa-arrows"></i></span></div>');
-			
-			$packeryContainer.append($dummyBrick).packery( 'appended', $dummyBrick);
-			$dummyBrick.each(makeEachDraggable);
-		}*/
-
 		var $thisBrick = buildBrick();
 
 		switch (brick.Type) {
@@ -1905,6 +1975,10 @@ function buildboard(index){
 
 		    case "soundcloud":
 				buildSoundcloud($thisBrick, brick.Topic, APIsContentLoaded);
+		    break;
+
+		    case "twitter":
+				buildTweet($thisBrick, brick.Topic, APIsContentLoaded);
 		    break;
 		 }
 		

@@ -159,3 +159,28 @@
 		</ul>
 	</div>
 </div>
+
+
+<div id="twitter-search" class="invisible w2-fix visible brick search">
+	<span class="cross"><i class="fa fa-close"></i></span>
+	<span class="handle"> <i class="fa fa-arrows"></i></span>
+
+	<i class="fa fa-twitter"></i>&nbsp;Twitter Search
+
+	<div class="input-group">
+		<input type="text" id="twitter-searchinput" placeholder="" class="form-control searchbox">
+		<span class="input-group-btn">
+			<button class="btn btn-default start" type="button">Search</button>
+		</span>
+	</div><!-- /input-group -->
+
+	<table class="table table-hover twitter results"></table>
+
+	<div class="search-ui">
+		<ul class="nav nav-pills">
+			<li class="pull-right">
+				<a class="clear"><h6>clear results</h6></a>
+			</li>
+		</ul>
+	</div>
+</div>

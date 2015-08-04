@@ -41,6 +41,7 @@ get_currentuserinfo();
 			    <li id="flickr"    ><a href="#"><i class="fa fa-flickr"></i>		flickr		</a></li>
 			    <li id="instagram" ><a href="#"><i    class="fa fa-instagram"></i>	instagram	</a></li>
 			    <li id="soundcloud"><a href="#"><i     class="fa fa-soundcloud"></i>&nbsp;soundcloud	</a></li>
+          <li id="twitter"><a href="#"><i     class="fa fa-twitter"></i>&nbsp;Twitter  </a></li>
 			    <li id="gmaps"     ><a href="#">&nbsp;<i class="fa fa-map-marker"></i>	google maps	</a></li>
           </ul>
         </li>
