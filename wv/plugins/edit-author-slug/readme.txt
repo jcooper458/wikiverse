@@ -2,8 +2,8 @@
 Contributors: thebrandonallen
 Tags: author, author base, author slug, user nicename, nicename, permalink, permalinks, slug, users, user, role, roles
 Requires at least: 3.6.1
-Tested up to: 4.2
-Stable tag: 1.0.4
+Tested up to: 4.3
+Stable tag: 1.0.5.1
 
 Allows an admin (or capable user) to edit the author slug of a user, and change the author base.
 
@@ -26,7 +26,7 @@ Development of this plugin takes place on [GitHub](https://github.com/thebrandon
 #### Translations Available
 * Dutch - props Juliette Reinders Folmer
 
-You can also visit the plugin's homepage at http://brandonallen.org/wordpress/plugins/edit-author-slug/
+You can also visit the plugin's homepage at http://brandonallen.me/wordpress/plugins/edit-author-slug/
 
 == Installation ==
 
@@ -55,6 +55,15 @@ While I've made every attempt to prevent this, I may have missed a spot or two. 
 If this doesn't work, make sure you don't have any slug conflicts from other posts/pages/plugins/permalink setting/etc. If you're still experiencing the issue, feel free to post a support request in the forums.
 
 == Changelog ==
+
+= 1.0.5.1 =
+* Identical to 1.0.5, which failed to commit properly.
+
+= 1.0.5 =
+* Add WP_User object as a parameter passed to the `ba_eas_show_user_nicename_options_list` filter
+* Add Japanese translation files. Props SmokyJp.
+* Fixed possible (although unlikely) cache invalidation issue
+* Minor code improvements and optimizations.
 
 = 1.0.4 =
 * Improve upgrade routine for older installs

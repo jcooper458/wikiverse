@@ -178,7 +178,7 @@ function ba_eas_auto_update_user_nicename( $user_id, $bulk = false ) {
 	if ( ! empty( $user_id ) && ! is_wp_error( $user_id ) ) {
 
 		// Update the nicename cache
-		ba_eas_update_nicename_cache( $user_id, $current_nicename, $nicename );
+		ba_eas_update_nicename_cache( $user_id, $user, $nicename );
 	}
 
 	// Add it back in case other plugins do some updating
@@ -473,6 +473,8 @@ if ( ! function_exists( 'array_replace_recursive' ) ) {
 	 *
 	 * @since 1.0.2
 	 *
+	 * @codeCoverageIgnore
+	 *
 	 * @param array $base
 	 * @param array $replacements
 	 *
@@ -512,7 +514,7 @@ if ( ! function_exists( 'array_replace_recursive' ) ) {
  * @since 1.0.0
  *
  * @param int $user_id
- * @param object|string $old_user_data WP_User object when coming from hook. Old nicename otherwise.
+ * @param object $old_user_data WP_User object.
  * @param string $new_nicename
  *
  * @uses get_userdata() To get a WP_User object.
@@ -534,17 +536,17 @@ function ba_eas_update_nicename_cache( $user_id = 0, $old_user_data = '', $new_n
 	// We got here via 'profile_update'
 	if ( empty( $new_nicename ) ) {
 
-		// Set the old nicename
-		$old_nicename = $old_user_data->user_nicename;
-
 		// Get the new nicename
 		$user = get_userdata( $user_id );
 		$new_nicename = $user->user_nicename;
+	}
 
-	// We're passing our own data
+	// Set the old nicename
+	// Note: This check is only for back-compat. You should pass a WP_User object.
+	if ( isset( $old_user_data->user_nicename ) ) {
+		$old_nicename = $old_user_data->user_nicename;
 	} else {
-
-		// Set the old nicename
+		_doing_it_wrong( __FUNCTION__, ' The function ba_eas_update_nicename_cache() expects $old_user_data to be a WP_User object.', 'Edit Author Slug 1.0.4' );
 		$old_nicename = $old_user_data;
 	}
 

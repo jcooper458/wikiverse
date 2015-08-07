@@ -13,19 +13,19 @@
 
 /**
  * Plugin Name: Edit Author Slug
- * Plugin URI: http://brandonallen.org/wordpress/plugins/edit-author-slug/
+ * Plugin URI: http://brandonallen.me/wordpress/plugins/edit-author-slug/
  * Description: Allows an Admin (or capable user) to edit the author slug of a user, and change the Author Base. <em>i.e. - (WordPress default structure) http://example.com/author/username/ (Plugin allows) http://example.com/ninja/master-ninja/</em>
- * Version: 1.0.4
- * Tested With: 3.6.1, 3.7.1, 3.8.1, 3.9.2, 4.0.1, 4.1.1, 4.2
+ * Version: 1.0.5.1
+ * Tested With: 3.8.10, 3.9.8, 4.0.7, 4.1.7, 4.2.4, 4.3
  * Author: Brandon Allen
- * Author URI: http://brandonallen.org/
+ * Author URI: http://brandonallen.me/
  * License: GPL2+
  * Text Domain: edit-author-slug
  * Domain Path: /languages
  */
 
 /*
-	Copyright 2015  Brandon Allen  (email : wp_plugins ([at]) brandonallen ([dot]) org)
+	Copyright 2015  Brandon Allen  (email : plugins ([at]) brandonallen ([dot]) me)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -211,7 +211,7 @@ if ( ! class_exists( 'BA_Edit_Author_Slug' ) ) :
 
 			/** Versions ****************************************************************/
 
-			$this->version            = '1.0.4';
+			$this->version            = '1.0.5.1';
 			$this->db_version         = 133;
 			$this->current_db_version = 0;
 
@@ -350,7 +350,7 @@ if ( ! class_exists( 'BA_Edit_Author_Slug' ) ) :
 				$GLOBALS['wp_rewrite']->author_base = '%ba_eas_author_role%';
 
 			// Has the author base changed from the default?
-			} elseif ( ! empty( $this->author_base ) && 'author' != $this->author_base ) {
+			} elseif ( ! empty( $this->author_base ) && 'author' !== $this->author_base ) {
 
 				$GLOBALS['wp_rewrite']->author_base = $this->author_base;
 			}
