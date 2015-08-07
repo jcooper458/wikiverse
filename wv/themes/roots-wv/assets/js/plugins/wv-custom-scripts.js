@@ -2215,7 +2215,7 @@ function destroyBoard(callback){
 
 function forkboard(wpnonce) {
 
-	var boardID = $('#boardID').html();
+	var boardID = $('#postID').html();
 
 	$.ajax({
 		type: 'POST',
@@ -2226,13 +2226,15 @@ function forkboard(wpnonce) {
 			nonce: wpnonce
 		},
 		success: function(data, textStatus, XMLHttpRequest) {
-			console.log(data);
+			if (confirm('Are you sure you want to fork this board? \n \n (Forking means the board will be cloned, saved to your boards and ready to be enhanced..')) {
+				window.location = JSON.parse(data)[0];
+			} 
 		},
 		error: function(MLHttpRequest, textStatus, errorThrown) {
-			alert("cdascsacsa");
+			alert("error..");
 		}
 	});
-	
+
 }
 
 

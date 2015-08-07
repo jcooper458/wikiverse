@@ -308,8 +308,10 @@ add_action('validate_password_reset', 'wv_validate_password_reset', 10, 2);
 
 
 
+/**
+ * BOARD creator functions
+ */
 define('APFSURL', WP_PLUGIN_URL."/".dirname( plugin_basename( __FILE__ ) ) );  
-
 
 
 function boardCScripts(){  
@@ -361,6 +363,36 @@ function apf_addpost() {
 
 } 
 
+
+function apf_clonepost() { 
+
+    $nonce = $_REQUEST['nonce'];
+    if (! wp_verify_nonce($nonce, 'board') ) die("Security Check");
+
+    $oldID = $_POST['id'];
+    $content = get_post_field('post_content', $oldID);
+    $title = get_post_field('post_title', $oldID);
+    $user_id = get_current_user_id();
+    
+    $newid = wp_insert_post( array(  
+    
+        'post_title'        => $title,  
+        'post_status'       => 'publish', 
+        'post_type'         => 'board', 
+        'post_author'       => $user_id,
+        'post_content'      => $content
+        
+    ) );  
+    
+    $response = [];    
+
+    $permalink = get_permalink( $newid );
+  
+    array_push($response, $permalink, $newid, $title, $content, $user_id);
+
+     die(json_encode($response)); 
+} 
+
 function apf_editpost() { 
     
     $nonce = $_REQUEST['nonce'];
@@ -385,5 +417,8 @@ function apf_editpost() {
 
 // creating Ajax call for WordPress  
 add_action( 'wp_ajax_nopriv_apf_addpost', 'apf_addpost' );  
+add_action( 'wp_ajax_nopriv_apf_clonepost', 'apf_clonepost' );  
+
 add_action( 'wp_ajax_apf_addpost', 'apf_addpost' );
+add_action( 'wp_ajax_apf_clonepost', 'apf_clonepost' );
 add_action( 'wp_ajax_apf_editpost', 'apf_editpost' );
