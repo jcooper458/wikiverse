@@ -31,7 +31,7 @@ get_currentuserinfo();
 
       <ul class="nav navbar-nav">
 
-         <?php if ( is_page('start') || is_singular("board")) { ?>
+         <?php if ( is_page('start')) { ?>
 
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">add content<span class="caret"></span></a>
@@ -46,12 +46,33 @@ get_currentuserinfo();
           </ul>
         </li>
 
-      <?php } else if (is_page('home')) { ?>
-
+      <?php }
+       if (is_page('home')) { ?>
           <li><a href="/start">create board</a></li>
-
       <?php }  ?>
 
+        <?php if ( is_singular("board")) { ?>    
+
+          <?php if ( $current_user->ID == $post->post_author ) { // if is author ?>
+             
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">add content<span class="caret"></span></a>
+                <ul class="dropdown-menu sources-menu">
+                <li id="wikipedia" ><a href="#"><i class="fa fa-wikipedia"></i>   wikipedia </a></li>
+                <li id="youtube"   ><a href="#"><i class="fa fa-youtube"></i>   youTube   </a></li>
+                <li id="flickr"    ><a href="#"><i class="fa fa-flickr"></i>    flickr    </a></li>
+                <li id="instagram" ><a href="#"><i    class="fa fa-instagram"></i>  instagram </a></li>
+                <li id="soundcloud"><a href="#"><i     class="fa fa-soundcloud"></i>&nbsp;soundcloud  </a></li>
+                <li id="twitter"><a href="#"><i     class="fa fa-twitter"></i>&nbsp;Twitter  </a></li>
+                <li id="gmaps"     ><a href="#">&nbsp;<i class="fa fa-map-marker"></i>  google maps </a></li>
+                </ul>
+              </li>
+              
+          <?php }  ?>   
+              
+
+         
+        <?php }  ?>
       </ul>
 
 
@@ -61,17 +82,20 @@ get_currentuserinfo();
 	    	$nonce = wp_create_nonce( 'board' ); ?>
         <div id="nonce" class="invisible"><?php echo $nonce ?></div>      
 
-
-	    	<?php if ( is_page('start') || is_singular("board")) { ?>
+	    	<?php if ( is_page('start') ) { ?>
           <li><a href="#" class="board-pilot invisible play-control play" id="play" onclick="playBoard();" ><i class="fa fa-play"></i></i></a></li> 
           <li><a href="#" class="board-pilot invisible" id="clearboard" onclick="clearboard('<?php echo $nonce ?>');" >clear board</a></li> 
-          <li><a href="#" class="board-pilot invisible" id="forkboard" onclick="forkboard('<?php echo $nonce ?>');" >fork board</a></li> 
-          <?php if ( is_page('start') ) { ?>
-	    		   <li><a href="#" class="board-pilot invisible" id="saveboard" onclick="createboard('<?php echo $nonce ?>');" >save board</a></li>
-			   <?php }  ?>
-          <?php if ( is_singular("board")) { ?>
-             <li><a href="#" class="board-pilot" id="saveboard" onclick="saveboard('<?php echo $nonce ?>');" >save changes</a></li>
-         <?php }  ?>
+          <li><a href="#" class="board-pilot invisible" id="saveboard" onclick="createboard('<?php echo $nonce ?>');" >save board</a></li>
+        <?php }  ?>
+          <?php if ( is_singular("board")) { ?>            
+              
+          <?php if ( $current_user->ID != $post->post_author ) { // if is author ?>
+             <li><a href="#" class="board-pilot invisible" id="forkboard" onclick="forkboard('<?php echo $nonce ?>');" >fork board</a></li> 
+          <?php }  else{ // if is not author?>   
+               <li><a href="#" class="board-pilot" id="saveboard" onclick="saveboard('<?php echo $nonce ?>');" >save changes</a></li>
+             <li><a href="#" class="board-pilot invisible" id="clearboard" onclick="clearboard('<?php echo $nonce ?>');" >clear board</a></li> 
+          <?php }  ?>
+         
         <?php }  ?>
 
 			<?php } else {?> 
