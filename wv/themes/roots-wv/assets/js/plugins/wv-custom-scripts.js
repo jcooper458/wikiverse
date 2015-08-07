@@ -1342,8 +1342,6 @@ function buildSoundcloud($brick, soundcloudObj, callback){
 
 function getTweets($twitterSearchBrick, query) {
 
-	$('#twitter-search .results').empty();
-
 	$.ajax({
 		url: 'http://wikiver.se/wv/plugins/wp-twitter-api/api.php',
 		data:{
@@ -1358,35 +1356,36 @@ function getTweets($twitterSearchBrick, query) {
 
 
 function buildTwitterSearchResults($twitterSearchBrick, apiData){
-
+console.log(apiData)
 	if (typeof apiData.statuses !== 'undefined' && apiData.statuses.length > 0) {
 
+		$twitterSearchBrick.find('.results').empty();
+		
 		apiData.statuses.map(function(tweet, index){	
 
-			//console.log(tweet);
-
 			var text = tweet.text;
-			var userURL = tweet.user.profile_image_url;
-	
-			if(tweet)$twitterSearchBrick.find('.results').append('<tr text="' + text + '" data-toggle="tooltip" title="By ' + tweet.user.name + '"><td class="twitterThumb"><img src="' + userURL + '"></td><td class="result" >'+text+'</td></tr>');
-
-			//create the tooltips
-			$('tr').tooltip({animation: true, placement: 'right'});
+			var userThumb = tweet.user.profile_image_url;
+			console.log(userThumb);
+			if(tweet){
+				// setTimeout(function() { 
+						$twitterSearchBrick.find('.results').append('<tr text="' + text + '" user="' + tweet.user.name + '"><td class="twitterThumb col-md-2"><img src="' + userThumb + '"></td><td class="result col-md-10" ><strong>' + tweet.user.name + '</strong><br>' + text + '</td></tr>');
+			   			$packeryContainer.packery();
+				//  }, index * 50); 
+			}			
 
 			//bind event to every row -> so you can start the wikiverse
 			$twitterSearchBrick.find('tr').unbind('click').click(function(e) {
 
 				//stamp for better clicking
 				$packeryContainer.packery( 'stamp', $twitterSearchBrick );
-
-				$(this).tooltip('destroy');
 				$(this).remove();
 
-				var $thisBrick = buildBrick(parseInt($twitterSearchBrick.css('left')), parseInt($twitterSearchBrick.css('top')));
+				var $thisBrick = buildBrick(parseInt($twitterSearchBrick.css('left')) + 400, parseInt($twitterSearchBrick.css('top')));
 
 				var twitterObj = {
 					text: $(this).attr('text'),
-					userURL: $(this).find('img').attr('src')
+					user: $(this).attr('user'),
+					userThumb: $(this).find('img').attr('src')
 				};
 
 				buildTweet($thisBrick, twitterObj, APIsContentLoaded);
@@ -1403,18 +1402,40 @@ function buildTwitterSearchResults($twitterSearchBrick, apiData){
 }
 
 function buildTweet($brick, twitterObj, callback){
-	console.log(twitterObj);
-	$brick.addClass('w2-fix');
 
-	var $tweetContainer = $('<p>' + twitterObj.text + '<p>');
+	$brick.addClass('w2-fix');		
+	$brick.addClass('twitter');
+
+	//replace hashtags with links
+	var repl = twitterObj.text.replace(/(^|\W)(#[a-z\d][\w-]*)/ig, '$1<a hashtag="$2" href="#">$2</a>');
+		repl = repl.replace(/(^|\W)(@[a-z\d][\w-]*)/ig, '$1<a hashtag="$2" href="#">$2</a>');
+
+	var $tweetContainer = $('<div class="col-md-2"><img class="twitterUserThumb" src="' + twitterObj.userThumb + '"></div><div class="col-md-10"><strong>' + twitterObj.user + '</strong><br><p>' + repl + '</p></div>');
+
+	$tweetContainer.on('click', 'a', function(event) {
+		event.preventDefault();
+		buildNextTweet($(this).attr('hashtag'));
+		$(this).contents().unwrap();
+	});
 
 	$brick.data('type', 'twitter');
 	$brick.data('topic', twitterObj);
 
 	$brick.append($tweetContainer);
 	callback($brick);
+
+	//$packeryContainer.packery();
 }
 
+function buildNextTweet(query){
+
+	$('li#twitter').trigger('click');	
+
+	$thisSearch = $('#twitter-search');
+	$thisSearch.find('input[type=text]').val(query);
+
+	getTweets($thisSearch, query);
+}
 
 
 function getWikiLanguages(topic, lang, $brick){
@@ -1610,15 +1631,12 @@ function buildBrick(x, y){
 	$brick.each( makeEachDraggable );
 
    	$packeryContainer.packery('fit', $brick[0], x, y);
-  
-
-
 	return $brick;
 }
 
 function APIsContentLoaded($brick){
-
 	$brick.fadeTo( "slow", 1); 
+	$packeryContainer.packery();
 }
 
 function getConnections(source, topic){
@@ -2196,107 +2214,24 @@ function destroyBoard(callback){
 }
 
 function forkboard(wpnonce) {
-	var wikiverse = {};
 
-	var board = {
-		"bricks": wikiverse
-	};
+	var boardID = $('#boardID').html();
 
-	//remove search bricks:
-	var searchBricks = jQuery(".search");
-	$packeryContainer.packery( 'remove', searchBricks );
-
-	//$packeryContainer.packery();
-
-	var itemElems = $packeryContainer.packery('getItemElements');
-
-	var tabindex = 0;
-
-	$.each(itemElems, function(){
-
-		var type = $(this).data('type');
-		var topic = $(this).data('topic');
-		var parent = $(this).data('parent');
-
-		wikiverse[tabindex] = {
-
-			Type: type,
-			Topic: topic,
-			Parent: parent
-		};
-		tabindex++;
-	});
-
-	var JSONwikiverse = JSON.stringify(board);
-
-	$("#saveboardModal").modal('show');
-	$("#boardTitle").focus();	
-	
-	$packeryContainer.packery();
-	
-	$('#boardTitle').keyup(function (e) {
-		e.preventDefault();
-		//enable the save board button
-		$("#boardSubmitButton").prop('disabled', false);
-
-		//make enter save the board
-		if (e.keyCode == 13) {
-	       $("#boardSubmitButton").trigger('click');
-	    }
-	});
-
-	$("#boardSubmitButton").on("click", function(){
-
-		var value=$.trim($("#boardTitle").val());
-
-		if(value.length>0)
-		{
-
-			var title = $('#boardTitle').val();
-
-			$.ajax({
-				type: 'POST',
-				url: "/wp-admin/admin-ajax.php",
-				data: {
-					action: 'apf_addpost',
-					boardtitle: title,
-					boardmeta: JSONwikiverse,
-					nonce: wpnonce
-				},
-				success: function(data, textStatus, XMLHttpRequest) {
-					var id = '#apf-response';
-					$(id).html('');
-					$(id).append(data);
-
-					var url = JSON.parse(data)[0];
-					var ID = JSON.parse(data)[1];
-
-					//update the browser history and the new url
-					history.pushState('', 'wikiverse', url);
-					$('#postID').html(ID);
-				},
-				error: function(MLHttpRequest, textStatus, errorThrown) {
-					alert("cdascsacsa");
-				}
-			});
-
-			$("#saveboardModal").modal('hide');
-
-			var nonce = $('#nonce').html()
-
-			$('#saveboard').attr('onclick', 'saveboard("' + nonce + '")');
-			$('#saveboard').attr('id', $('#saveboard').attr('id'));
-			$('#saveboard').html('Save Changes');
-
+	$.ajax({
+		type: 'POST',
+		url: "/wp-admin/admin-ajax.php",
+		data: {
+			action: 'apf_clonepost',
+			id: boardID,
+			nonce: wpnonce
+		},
+		success: function(data, textStatus, XMLHttpRequest) {
+			console.log(data);
+		},
+		error: function(MLHttpRequest, textStatus, errorThrown) {
+			alert("cdascsacsa");
 		}
-		else{
-
-			$('#boardTitle').parent(".form-group").addClass("has-error");
-
-		}
-
 	});
-
 }
 
 
