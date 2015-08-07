@@ -2242,6 +2242,7 @@ function createboard(wpnonce) {
 	var wikiverse = {};
 
 	var board = {
+		"featured_image": $packeryContainer.find('.brick[tabindex=0] img').attr('src'),
 		"bricks": wikiverse
 	};
 
@@ -2358,6 +2359,7 @@ function saveboard(wpnonce) {
 	var wikiverse = {};
 
 	var board = {
+		"featured_image": $packeryContainer.find('.brick[tabindex=0] img').attr('src'),
 		"bricks": wikiverse
 	};
 
