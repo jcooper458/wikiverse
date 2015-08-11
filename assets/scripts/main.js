@@ -36,7 +36,8 @@
     // single board page
     'single_board': {
       init: function() {
-        WIKIVERSE.buildWikiverse(0);      
+        WIKIVERSE.buildWikiverse(0); 
+        WIKIVERSE.initSearchBricks();       
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS
