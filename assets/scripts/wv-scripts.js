@@ -6,7 +6,7 @@ var WIKIVERSE = (function($) {
 
 	var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
 	var youtube_icon = '<i class="fa fa-youtube-square"></i>';
-	var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-width="50%" data-size="20"><option selected="">connect..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>';
+	var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-style="btn-xs" data-width="50%" data-size="20"><option selected="">connect..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>';
 	var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
 
 	var rmOptions = {
@@ -302,7 +302,7 @@ google.maps.event.addListener(map, 'maptypeid_changed', function() {
     google.maps.event.addListener(thePanorama, 'pov_changed', function() {
 
     	if (thePanorama.getVisible()) {
-    		
+
     		currentStreetMap = {
     			center: thePanorama.position.toUrlValue(),
     			zoom: thePanorama.pov.zoom,
@@ -332,7 +332,7 @@ function buildGmaps($mapbrick, mapObj, callback){
 	$mapbrick
 	.addClass('w3-fix')
 	.addClass('gmaps');
-	
+
 	$mapbrick.prepend($mapcanvas);
 	$packeryContainer.packery();
 
@@ -493,7 +493,7 @@ function buildStreetMap($mapbrick, streetObj, callback) {
 	};
 
 	var thePanorama = new google.maps.StreetViewPanorama($mapcanvas[0], panoramaOptions);
-	
+
 	callback($mapbrick);
 
   google.maps.event.addListener(thePanorama, 'pov_changed', function() { //detect if entering Streetview
@@ -619,6 +619,7 @@ function getFlickrs($flickrSearchBrick, topic, sort, type) {
   							}
   							else{
   								$flickrSearchBrick.find('.results').append('<div class="no-results">No pictures found for "' + data.places.place[0].name + '"</div>');
+  								$packeryContainer.packery();
   							}
   						}
   					});
@@ -669,12 +670,13 @@ else{
   			}
   			else{
   				$flickrSearchBrick.find('.results').append('<div class="no-results">No pictures found for "' + topic + '"</div>');
+  				$packeryContainer.packery();
   			}
   		}
   	});
   }
   else if(type === "userQuery"){
-  	
+
   	$.ajax({
   		url: 'https://api.flickr.com/services/rest',
   		data:{
@@ -688,7 +690,7 @@ else{
   		success: function(data){
 
   			if (data.user.id) {
-  				
+
   				$.ajax({
   					url: 'https://api.flickr.com/services/rest',
   					data:{
@@ -723,6 +725,7 @@ else{
   						}
   						else{
   							$flickrSearchBrick.find('.results').append('<div class="no-results">No pictures found for user "' + topic + '"</div>');
+  							$packeryContainer.packery();
   						}
   					}
   				});
@@ -749,7 +752,7 @@ function createInstagramBrick($instagramSearchBrick, photo){
 		$thumb.data('caption', photo.caption.text);
 	}
 	$thumb.data('filter', photo.filtér);
-	
+
 	imagesLoaded('#instagram-search .results', function() {
 		$packeryContainer.packery();
 	});
@@ -816,7 +819,7 @@ function getInstagrams($instagramSearchBrick, query, type) {
     			},
     			dataType:'jsonp',
     			success: function(data){
-    				
+
     				if (typeof data.data !== 'undefined' && data.data.length > 0) {
     					data.data.forEach(function(photo, index){
     						createInstagramBrick($instagramSearchBrick, photo);
@@ -824,6 +827,7 @@ function getInstagrams($instagramSearchBrick, query, type) {
     				}
     				else{
     					$instagramSearchBrick.find('.results').append('<div class="no-results">No pictures found at this location:  "' + query + '"</div>');
+    					$packeryContainer.packery();
     				}
     			}
     		});
@@ -846,6 +850,7 @@ function getInstagrams($instagramSearchBrick, query, type) {
     	}
     	else{
     		$instagramSearchBrick.find('.results').append('<div class="no-results">No pictures found for "' + query + '"</div>');
+    		$packeryContainer.packery();
     	}
     });
 
@@ -861,7 +866,7 @@ else if(type === "username"){
 		},
 		dataType:'jsonp',
 		success: function(data){
-			
+
 			if (typeof data.data !== 'undefined' && data.data.length > 0) {
 				var userID = data.data[0].id;
 				var getUserUrl = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?callback=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
@@ -888,6 +893,8 @@ else if(type === "username"){
 function getConnections(source, topic){
 	
 	$('li#' + source).trigger('click');
+
+	$('#' + source + '-search').find('.results').empty();
 
 	switch (source) {
 
@@ -958,7 +965,7 @@ function getConnections(source, topic){
       		photoObj.tags.map(function(tag,index){
       			$brick.find('.photoCaption').append('#<a class="instaTag" href="#">' + tag + '</a> ');
       		});
-      		
+
       		$brick.find('.instaTag').on('click', function(e){ 
       			e.preventDefault();
       			getConnections("instagram", $(this).html());
@@ -971,7 +978,7 @@ function getConnections(source, topic){
       			tags.map(function(tag,index){
       				$brick.find('.photoCaption').append('#<a class="flickrTag" href="#">' + tag.raw + '</a> ');
       			});
-      			
+
       			$brick.find('.flickrTag').on('click', function(e){  
       				e.preventDefault();
       				getConnections("flickr", $(this).html());
@@ -992,7 +999,7 @@ function getConnections(source, topic){
       	$packeryContainer.packery();
       	callback($brick); 
       });
-      
+
   //Go grab the flickr username for each foto hovered 
   if(type === "flickr" ){
   	getFlickrUsername($brick, photoObj);
@@ -1002,7 +1009,7 @@ function getConnections(source, topic){
 createFlickrBrick = function($flickrSearchBrick, apiData, photoObj){
 
 	if (typeof apiData.sizes.size !== 'undefined' && apiData.sizes.size.length > 0 && typeof apiData.sizes.size[6] !== 'undefined') {                   
-		
+
 		var thumbURL = apiData.sizes.size[1].source;
 		var mediumURL = apiData.sizes.size[6].source;
 
@@ -1249,7 +1256,7 @@ function getWikiLanguages(topic, lang, $brick){
 			var languageObj = data.query.pages[Object.keys(data.query.pages)[0]].langlinks;
 
 			if (!$.isEmptyObject(languageObj)) {
-				var langDropDown = $('<select class="selectpicker pull-right languages show-menu-arrow" data-width="50%" data-size="20" data-live-search="true"></select>');
+				var langDropDown = $('<select class="pull-right languages show-menu-arrow" data-width="50%" data-size="20" data-style="btn-xs" data-live-search="true"></select>');
 
 				$.each(languageObj, function(){
 
@@ -1260,7 +1267,7 @@ function getWikiLanguages(topic, lang, $brick){
 				langDropDown.prepend('<option selected>read in..</option>');
 
 				$brick.prepend(langDropDown);
-				
+
         //make it a beautiful dropdown with selectpicker
         langDropDown.selectpicker();
 
@@ -1422,7 +1429,7 @@ buildWikipedia = function($brick, topic, parent, callback){
 	$brick.data('type', 'wiki');
 	$brick.data('parent', parent);
 	$brick.data('topic', topic);
-	
+
 	$brick.addClass('wiki');
 
 	$brick.prepend('<h2>' + topic.title + '</h2>');
@@ -1495,7 +1502,7 @@ buildWikipedia = function($brick, topic, parent, callback){
 
           	var $thisBrick = buildBrick(newX, newY);
           	buildSection($thisBrick, section, $brick.attr("tabindex"), APIsContentLoaded);
-          	
+
             //$packeryContainer.packery( 'unstamp', $brick );
         });
       }
@@ -1533,7 +1540,7 @@ buildWikipedia = function($brick, topic, parent, callback){
             	},
             	dataType:'jsonp',
             	success: function(data){
-            		
+
                 //get the first key in obj
                 //for (first in data.query.pages) break;
                 //now done better like this:
@@ -1600,7 +1607,7 @@ buildWikipedia = function($brick, topic, parent, callback){
           else{
           	article.insertAfter($brick.find("h2"));
           }
-          
+
           article.append(infobox);
 
           article.readmore(rmOptions);
@@ -1652,7 +1659,7 @@ buildSection = function($brick, section, parent, callback){
   },
   dataType:'jsonp',
   success: function(data){
-  	
+
   	var wholeSection = $(data.parse.text['*']);
 
   	wholeSection.find('.error').remove();
@@ -1724,9 +1731,9 @@ getYoutubes = function($youtubeSearchBrick, topic) {
 };
 
 function getRelatedYoutubes($youtubeSearchBrick, videoID) {
-	
+
 	$('li#youtube').trigger('click');
-	
+
 	$('#youtube-search .results').empty();
 
 	$.ajax({
@@ -1756,7 +1763,7 @@ buildYoutubeSearchResults = function($youtubeSearchBrick, apiData){
 			var snippet = video.snippet.description;
 			var youtubeID = video.id.videoId;
 			var thumbURL = video.snippet.thumbnails.high.url;
-			
+
 			if(youtubeID){
 				$youtubeSearchBrick.find('.results').append('<tr data-toggle="tooltip" youtubeID="' + youtubeID + '" title="'+strip(snippet)+'"><td class="youtubeThumb"><img height="100" src="' + thumbURL + '"></td><td class="result" >'+title+'</td></tr>');
 			}
@@ -1918,7 +1925,7 @@ wikiverse.buildWikiverse = function(index){
 			buildTweet($thisBrick, brick.Topic, APIsContentLoaded);
 			break;
 		}
-		
+
 	});
 };
 
@@ -2490,7 +2497,7 @@ $(".sources-menu li").on("click", function(event){
     $thisSearch.find('input[type=text]').focus();
 
     $thisSearch.find(".start").on("click", function(){
-    	
+
     	$thisSearch.find('.results').empty();
 
     	var query, topic, params, sort, lang; 
@@ -2507,10 +2514,10 @@ $(".sources-menu li").on("click", function(event){
     		case "flickr-search":
 
     		var flickrType = $thisSearch.find("select option:selected").val();
-    		
+
     		query = $thisSearch.find(".searchbox").val();
     		sort = $thisSearch.find(".radio-inline input[type='radio']:checked").val();
-    		
+
     		getFlickrs($thisSearch, query, sort, flickrType);
     		break;
 
@@ -2759,7 +2766,7 @@ $packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laid
 //create images interconnection and trigger getFlickrs()
 //This time for the gmaps brick, in thise case we only want the bounds passed in to getFlickrs
 $packeryContainer.on("click", ".gmaps .fa-flickr", function(){
-	
+
 	$('li#flickr').trigger('click');
 
 	var $flickrSearchBrick = $('div#flickr-search');
@@ -2776,7 +2783,7 @@ $packeryContainer.on("click", ".gmaps .fa-flickr", function(){
 //create images interconnection and trigger getFlickrs()
 //This time for the gmaps brick, in thise case we only want the bounds passed in to getFlickrs
 $packeryContainer.on("click", ".gmaps .fa-instagram", function(){
-	
+
 	$('li#instagram').trigger('click');
 
 	var $instagramSearchBrick = $('div#instagram-search');
