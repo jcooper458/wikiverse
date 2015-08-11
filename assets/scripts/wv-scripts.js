@@ -6,7 +6,7 @@ var WIKIVERSE = (function($) {
 
 	var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
 	var youtube_icon = '<i class="fa fa-youtube-square"></i>';
-	var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-style="btn-xs" data-width="50%" data-size="20"><option selected="">connect..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>';
+	var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="50%" data-size="20"><option selected="">connect..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>';
 	var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
 
 	var rmOptions = {
@@ -918,6 +918,11 @@ function getConnections(source, topic){
       	$('#soundcloud-search').find('input').val(topic);   
       	getSoundcloud($('#soundcloud-search'), topic);
       	break;
+
+      	case "twitter":  
+      	$('#twitter-search').find('input').val(topic);   
+      	getTweets($('#twitter-search'), topic);
+      	break;
       }
   }
 
@@ -1182,13 +1187,14 @@ if (typeof apiData.statuses !== 'undefined' && apiData.statuses.length > 0) {
 }else{
     //append row to searchbox-table: NO RESULTS
     $twitterSearchBrick.find('.results').append('<tr class="no-results"><td>No Tweets found .. </td></tr>');
+    $packeryContainer.packery();
 }
 }
 
 function getTweets($twitterSearchBrick, query) {
 
 	$.ajax({
-		url: 'http://wikiver.se/wv/plugins/wp-twitter-api/api.php',
+		url: '/app/plugins/wp-twitter-api/api.php',
 		data:{
 			"search": query
 		},
@@ -1196,18 +1202,6 @@ function getTweets($twitterSearchBrick, query) {
 			buildTwitterSearchResults($twitterSearchBrick, JSON.parse(data));
 		}
 	});
-
-}
-
-
-function buildNextTweet(query){
-
-	$('li#twitter').trigger('click'); 
-
-	$thisSearch = $('#twitter-search');
-	$thisSearch.find('input[type=text]').val(query);
-
-	getTweets($thisSearch, query);
 }
 
 
@@ -1224,7 +1218,7 @@ buildTweet = function($brick, twitterObj, callback){
 
   $tweetContainer.on('click', 'a', function(event) {
   	event.preventDefault();
-  	buildNextTweet($(this).attr('hashtag'));
+  	getConnections("twitter", $(this).attr('hashtag'))
   	$(this).contents().unwrap();
   });
 
@@ -1256,7 +1250,7 @@ function getWikiLanguages(topic, lang, $brick){
 			var languageObj = data.query.pages[Object.keys(data.query.pages)[0]].langlinks;
 
 			if (!$.isEmptyObject(languageObj)) {
-				var langDropDown = $('<select class="pull-right languages show-menu-arrow" data-width="50%" data-size="20" data-style="btn-xs" data-live-search="true"></select>');
+				var langDropDown = $('<select class="pull-right languages show-menu-arrow" data-width="50%" data-size="20" data-style="btn btn-default btn-xs" data-live-search="true"></select>');
 
 				$.each(languageObj, function(){
 
@@ -1310,7 +1304,7 @@ function getInterWikiLinks(section, $brick){
 
 				var interWikiArray = data.parse.links;
 
-				var interWikiDropDown = $('<select class="pull-right points-to show-menu-arrow" data-width="50%" data-size="20"></select>');
+				var interWikiDropDown = $('<select class="pull-right points-to show-menu-arrow" data-width="50%" data-style="btn btn-default btn-xs" data-size="20"></select>');
 
 				interWikiArray.forEach(function(link, index){
 
