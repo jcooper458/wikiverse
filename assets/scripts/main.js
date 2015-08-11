@@ -27,10 +27,7 @@
     // Home page
     'home': {
       init: function() {
-
-
-        
-       WIKIVERSE.initSearchBricks();       
+       WIKIVERSE.buildWikiverse(0);
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS

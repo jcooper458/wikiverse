@@ -903,7 +903,7 @@ function getInstagrams($instagramSearchBrick, query, type) {
 }
 
 function getConnections(source, topic){
-
+	
   $('li#' + source).trigger('click');
 
   switch (source) {
@@ -914,8 +914,9 @@ function getConnections(source, topic){
       break;
 
       case "instagram":
-        $('#instagram-search').find('input').val(topic);
-      getInstagrams($('#instagram-search'), topic, "hashtag");
+      	//remove whitespace from instagram query
+        $('#instagram-search').find('input').val(topic.replace(/ /g,''));        
+      	getInstagrams($('#instagram-search'), topic.replace(/ /g,''), "hashtag");
       break;
 
       case "youtube":
@@ -2526,9 +2527,9 @@ $(".sources-menu li").on("click", function(event){
 
           case "instagram-search":
               query = $thisSearch.find(".searchbox").val();
-          var instagramType = $("#instagramType").val();
+          		var instagramType = $("#instagramType").val();
 
-          	getInstagrams($thisSearch, query, instagramType);
+          		getInstagrams($thisSearch, query, instagramType);
           break;
 
           case "youtube-search":
