@@ -1753,13 +1753,13 @@ buildYoutubeSearchResults = function($youtubeSearchBrick, apiData){
 
 		apiData.items.forEach(function(video, index){     
 
-			var title = video.snippet.channelTitle;
+			var title = video.snippet.title;
 			var snippet = video.snippet.description;
 			var youtubeID = video.id.videoId;
 			var thumbURL = video.snippet.thumbnails.high.url;
 
 			if(youtubeID){
-				$youtubeSearchBrick.find('.results').append('<tr data-toggle="tooltip" youtubeID="' + youtubeID + '" title="'+strip(snippet)+'"><td class="youtubeThumb"><img height="100" src="' + thumbURL + '"></td><td class="result" >'+title+'</td></tr>');
+				$youtubeSearchBrick.find('.results').append('<tr data-toggle="tooltip" youtubeID="' + youtubeID + '" title="'+strip(snippet)+'"><td class="youtubeThumb col-md-6"><img height="100" src="' + thumbURL + '"></td class="col-md-6"><td class="result" >'+title+'</td></tr>');
 			}
 
 			imagesLoaded( '#youtube-search .results', function() {
@@ -2490,6 +2490,14 @@ $(".sources-menu li").on("click", function(event){
 
     $thisSearch.find('input[type=text]').focus();
 
+	//make the enter keypress do the search
+	$thisSearch.find("input[type=text]").keyup(function (e) {
+		if (e.keyCode === 13) {
+			
+			$(e.target).siblings('span').find('button').trigger('click');
+		}
+	});
+
     $thisSearch.find(".start").on("click", function(){
 
     	$thisSearch.find('.results').empty();
@@ -2614,12 +2622,7 @@ $('#youtube-searchinput').typeahead({
 
 //----------------keyboard shortcuts----------------------------
 
-//make the enter keypress do the search
-$(".search input:text").keyup(function (e) {
-	if (e.keyCode === 13) {
-		$(e.target).siblings('span').find('button').trigger('click');
-	}
-});
+
 
 
 document.addEventListener("keydown", function(e) {
