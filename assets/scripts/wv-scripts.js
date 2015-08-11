@@ -9,7 +9,7 @@ var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-width="50%" data-size="20"><option selected="">connect..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>';
 var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
 
-//for the wikipedia search:
+//for the selects (wikilanguage, instatype, flickrtype):
 var lang;
 
 var rmOptions = {
@@ -45,7 +45,7 @@ $(document).ready(function() {
 	$( 'body' ).on('change', "#langselect", function() {
 	  	lang = $(this).val();
 	});
-
+	
 });
 
 
@@ -2487,8 +2487,7 @@ $(".sources-menu li").on("click", function(event){
 
     $thisSearch = $('#' + source + '-search').clone();
 
-    $thisSearch.find('#langselect').selectpicker();
-
+    $thisSearch.find('select').selectpicker();
 
     $thisSearch.removeClass("invisible");
     $packeryContainer.prepend($thisSearch).packery( 'prepended', $thisSearch);

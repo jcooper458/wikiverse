@@ -55,7 +55,7 @@
 
 	<i class="fa fa-flickr"></i>&nbsp;Flickr Search
 
-	<select id="flickrType" name="flickrType" class="selectpicker pull-right show-menu-arrow">
+	<select id="flickrType" name="flickrType" class="pull-right show-menu-arrow">
 		<option value="textQuery">query</option>
 		<option value="userQuery">username</option>
 		<option value="geoQuery">coordinates</option>
@@ -97,7 +97,7 @@
 
 	<i class="fa fa-instagram"></i>&nbsp;Instagram Search
 
-	<select id="instagramType" name="input" class="selectpicker pull-right show-menu-arrow">
+	<select id="instagramType" name="input" class="pull-right show-menu-arrow">
 		<option value="hashtag"		>hashtag</option>
 		<option value="username"	>username</option>
 		<option value="coordinates"	>coordinates</option>
