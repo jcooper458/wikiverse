@@ -1973,7 +1973,7 @@ wikiverse.forkBoard = function(wpnonce) {
 
   $.ajax({
     type: 'POST',
-    url: "/wp-admin/admin-ajax.php",
+    url: "/wp/wp-admin/admin-ajax.php",
     data: {
       action: 'apf_clonepost',
       id: boardID,
