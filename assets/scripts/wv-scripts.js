@@ -2029,20 +2029,26 @@ wikiverse.createBoard = function(wpnonce) {
   var JSONwikiverse = JSON.stringify(board);
 
   $("#myModal").modal('show');
-  $("#boardTitle").focus(); 
   
+//Focus MOdal Input and trigger enter save
+$('#myModal').on('shown.bs.modal', function () {
+	$("#boardTitle").focus();
+
+	$('#boardTitle').keyup(function (e) {
+	    e.preventDefault();
+	    //enable the save board button
+	    $("#boardSubmitButton").prop('disabled', false);
+
+	    //make enter save the board
+	    if (e.keyCode === 13) {
+	         $("#boardSubmitButton").trigger('click');
+	      }
+	  });
+});
+
+
   $packeryContainer.packery();
   
-  $('#boardTitle').keyup(function (e) {
-    e.preventDefault();
-    //enable the save board button
-    $("#boardSubmitButton").prop('disabled', false);
-
-    //make enter save the board
-    if (e.keyCode === 13) {
-         $("#boardSubmitButton").trigger('click');
-      }
-  });
 
   $("#boardSubmitButton").on("click", function(){
 
