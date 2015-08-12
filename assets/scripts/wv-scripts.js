@@ -42,6 +42,7 @@ buildWikipedia,
 buildTweet,
 buildSection,
 getyoutubes,
+getRelatedYoutubes,
 buildYoutubeSearchResults,
 makeEachDraggable,
 playYoutube,
@@ -111,6 +112,45 @@ function APIsContentLoaded($brick){
 	$packeryContainer.packery();
 }
 
+
+getYoutubes = function($youtubeSearchBrick, topic) {
+console.log($youtubeSearchBrick)
+	$.ajax({
+		url: 'https://www.googleapis.com/youtube/v3/search',
+		data:{
+			q: topic,
+			key: 'AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8',
+			part: 'snippet',
+			maxResults: 25
+		},
+		dataType:'jsonp',
+		success: function(data){
+			buildYoutubeSearchResults($youtubeSearchBrick, data);
+		}
+	});
+};
+
+getRelatedYoutubes = function($youtubeSearchBrick, videoID) {
+
+	$('li#youtube').trigger('click');
+
+	$('#youtube-search .results').empty();
+
+	$.ajax({
+		url: 'https://www.googleapis.com/youtube/v3/search',
+		data:{
+			relatedToVideoId: videoID,
+			key: 'AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8',
+			part: 'snippet',
+			type: 'video',
+			maxResults: 25
+		},
+		dataType:'jsonp',
+		success: function(data){
+			buildYoutubeSearchResults($('#youtube-search'), data);      
+		}
+	});
+}
 
 
 function valid_coords(number_lat,number_lng) {
@@ -1707,46 +1747,6 @@ buildSection = function($brick, section, parent, callback){
 };
 
 
-getYoutubes = function($youtubeSearchBrick, topic) {
-
-	$.ajax({
-		url: 'https://www.googleapis.com/youtube/v3/search',
-		data:{
-			q: topic,
-			key: 'AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8',
-			part: 'snippet',
-			maxResults: 25
-		},
-		dataType:'jsonp',
-		success: function(data){
-			buildYoutubeSearchResults($youtubeSearchBrick, data);
-		}
-	});
-};
-
-function getRelatedYoutubes($youtubeSearchBrick, videoID) {
-
-	$('li#youtube').trigger('click');
-
-	$('#youtube-search .results').empty();
-
-	$.ajax({
-		url: 'https://www.googleapis.com/youtube/v3/search',
-		data:{
-			relatedToVideoId: videoID,
-			key: 'AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8',
-			part: 'snippet',
-			type: 'video',
-			maxResults: 25
-		},
-		dataType:'jsonp',
-		success: function(data){
-			buildYoutubeSearchResults($('#youtube-search'), data);      
-		}
-	});
-}
-
-
 buildYoutubeSearchResults = function($youtubeSearchBrick, apiData){
 
 	if (typeof apiData.items !== 'undefined' && apiData.items.length > 0) {
@@ -1803,7 +1803,7 @@ buildYoutubeSearchResults = function($youtubeSearchBrick, apiData){
 
 buildYoutube = function($brick, youtubeObj, callback){
 
-	var relatedButton = '<button class="btn btn-default" onclick="getRelatedYoutubes(\'' + youtubeObj.youtubeID + '\');" type="button">Related Videos</button>';
+	var relatedButton = '<button class="btn btn-default related" type="button">Related Videos</button>';
 	var youtubeThumb = '<img class="" id="ytplayer" type="text/html" src="' + youtubeObj.thumbnailURL + '">';
 
   //stop all other players
@@ -1836,6 +1836,10 @@ buildYoutube = function($brick, youtubeObj, callback){
 
   $brick.find('.youtubePlayButton').on('click', function(){
   	playYoutube($brick, youtubeObj);
+  });
+
+  $brick.find('.related').on('click', function(){
+  	getRelatedYoutubes(youtubeObj.youtubeID);
   });
 
   callback($brick);
