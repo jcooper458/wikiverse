@@ -28,6 +28,6 @@
     }
   },
   "config": {
-    "devUrl": "http://localhost:35729/livereload.js"
+    "devUrl": "http://localhost:3000/livereload.js"
   }
 }

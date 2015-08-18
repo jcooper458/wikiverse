@@ -205,18 +205,18 @@ $failed = !empty( $_GET['failed'] ) ? $_GET['failed'] : false;
 <script>
 
 // tabs
-$('#login-tabs a').click(function (e) {
+jQuery('#login-tabs a').click(function (e) {
 	e.preventDefault();
 
 	$this = $(this);
 
 	// add class to tab
-	$('#login-tabs li').removeClass('active-tab');
+	jQuery('#login-tabs li').removeClass('active-tab');
 	$this.parent().addClass('active-tab');
 
 	// show the right tab
-	$('#page-login .tab-content').hide();
-	$('#page-login ' + $this.attr('href')).show();
+	jQuery('#page-login .tab-content').hide();
+	jQuery('#page-login ' + $this.attr('href')).show();
 
 	return false;
 });

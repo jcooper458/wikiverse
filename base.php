@@ -35,5 +35,9 @@ use Roots\Sage\Wrapper;
       get_template_part('templates/footer');
       wp_footer();
     ?>
+    
+    <script src="http://localhost:3000/livereload.js"></script>
+
   </body>
 </html>
+

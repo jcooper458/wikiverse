@@ -34,9 +34,8 @@
       }
     },
     // single board page
-    'single': {
+    'single_board': {
       init: function() {
-        console.log("in single");
         WIKIVERSE.buildWikiverse(0); 
         WIKIVERSE.initSearchBricks();       
       },
