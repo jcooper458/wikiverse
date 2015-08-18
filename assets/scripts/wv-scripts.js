@@ -2474,7 +2474,7 @@ $(".sources-menu li").on("click", function(event){
 
   //what are we searching for? wikipedia, soundcloud, etc
   var source = $(this).attr('id');
-
+console.log(source)
   //if searchbrick is not inside packery
   //
   if($('#' + source + '-search','#packery').length !== 1) {
