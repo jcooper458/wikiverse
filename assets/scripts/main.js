@@ -36,6 +36,7 @@
     // single board page
     'single_board': {
       init: function() {
+        console.log("cdjskacsa");
         WIKIVERSE.buildWikiverse(0); 
         WIKIVERSE.initSearchBricks();       
       },
