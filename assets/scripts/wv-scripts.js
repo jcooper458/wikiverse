@@ -1803,7 +1803,7 @@ buildYoutubeSearchResults = function($youtubeSearchBrick, apiData){
 
 buildYoutube = function($brick, youtubeObj, callback){
 
-	var relatedButton = '<button class="btn btn-default related" type="button">Related Videos</button>';
+	var relatedButton = '<button class="btn btn-default btn-xs related" type="button">Related Videos</button>';
 	var youtubeThumb = '<img class="" id="ytplayer" type="text/html" src="' + youtubeObj.thumbnailURL + '">';
 
   //stop all other players
