@@ -34,7 +34,7 @@
       }
     },
     // single board page
-    'single_board': {
+    'single': {
       init: function() {
         console.log("cdjskacsa");
         WIKIVERSE.buildWikiverse(0); 
