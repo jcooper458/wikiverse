@@ -2466,7 +2466,7 @@ getLanguage = function(langCode){
 };
 
 wikiverse.initSearchBricks = function(){
-console.log("cdadscascdsa")
+console.log("inside initSearchBricks")
 	var $thisSearch;
 
 //Global get SearchBoxes
