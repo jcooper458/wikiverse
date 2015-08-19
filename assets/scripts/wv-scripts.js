@@ -601,7 +601,7 @@ function getFlickrUsername($brick, photoObj){
 
 function getFlickrs($flickrSearchBrick, topic, sort, type) {
 
-	type  = type || "textQuery";
+type  = type || "textQuery";
 
 //if query is coordinates (bounds)
 if(type === "geoQuery"){
@@ -638,7 +638,7 @@ if(type === "geoQuery"){
   							sort: sort
   						},
   						success: function(data){
-  	
+
   							if (data.photos.photo.length >= 1) {
   								data.photos.photo.forEach(function(photoObj, index){
 
