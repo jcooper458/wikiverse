@@ -2477,7 +2477,6 @@ $(".sources-menu li").on("click", function(event){
   var source = $(this).attr('id');
 
   //if searchbrick is not inside packery
-  //
   if($('#' + source + '-search','#packery').length !== 1) {
 
   	$thisSearch = $('#' + source + '-search').clone();
@@ -2488,7 +2487,6 @@ $(".sources-menu li").on("click", function(event){
   	$packeryContainer.prepend($thisSearch).packery( 'prepended', $thisSearch);
   	$thisSearch.each( makeEachDraggable );  
 
-    //if its gmaps do the exception of running that func
     if(source === "gmaps"){
     	getGmapsSearch($thisSearch);
     }
@@ -2497,23 +2495,82 @@ $(".sources-menu li").on("click", function(event){
 
 	//make the enter keypress do the search
 	$thisSearch.find("input[type=text]").keyup(function (e) {
-		if (e.keyCode === 13) {
-			
+		if (e.keyCode === 13) {			
 			$(e.target).siblings('span').find('button').trigger('click');
 		}
+	});
+
+	//set default lang to english
+	var lang = "en"; 
+
+	//track the change of the language and pass it to both wiki-typeahead and getWikis
+	$thisSearch.find('select').live('change',function(){
+	    lang = $(this).val();
+	});
+
+	//WIKIPEDIA AUTOCOMPLETE
+	$thisSearch.find('#wiki-searchinput').typeahead({
+	  source: function(query, process) {
+	    return $.ajax({
+	      url: 'http://' + lang + '.wikipedia.org/w/api.php',
+	      dataType: "jsonp",
+	      data: {
+	        'action': "opensearch",
+	        'format': "json",
+	        'search': query
+	      },
+	      success: function(json) {
+	        process(json[1]);
+	      }
+
+	    });
+	  },
+	  matcher: function (item) {
+	    if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
+	      return true;
+	    }
+	  }
+	});
+
+	//YOUTUBE AUTOCOMPLETE
+	$thisSearch.find('#youtube-searchinput').typeahead({
+
+	  source: function(query, process) {
+	    return $.ajax({
+	      url: "http://suggestqueries.google.com/complete/search",
+	      dataType: "jsonp",
+	      data: {
+	        'client': "youtube",
+	        'ds': "yt",
+	        'q': query
+	      },
+	      success: function(json) {
+	        var resultArray = [];
+	        $.each(json[1], function(){
+	          resultArray.push(this[0]);
+	        });
+	        process(resultArray);
+	      }
+
+	    });
+	  },
+	  matcher: function (item) {
+	    if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
+	      return true;
+	    }
+	  }
 	});
 
     $thisSearch.find(".start").on("click", function(){
 
     	$thisSearch.find('.results').empty();
 
-    	var query, topic, params, sort, lang; 
+    	var query, topic, params, sort; 
 
     	switch ($thisSearch.attr('id')) {
 
     		case "wikipedia-search":
     		topic = $thisSearch.find("#wiki-searchinput").val();
-    		lang = $("#langselect").val();
     		getWikis($thisSearch, topic, lang );
 
     		break;
@@ -2564,64 +2621,7 @@ else{
 });
 
 
-//WIKIPEDIA AUTOCOMPLETE
-/*$('#wiki-searchinput').typeahead({
-  source: function(query, process) {
-    return $.ajax({
-      url: "http://"+lang+".wikipedia.org/w/api.php",
-      dataType: "jsonp",
-      data: {
-        'action': "opensearch",
-        'format': "json",
-        'search': query
-      },
-      success: function(json) {
-        process(json[1]);
-      }
 
-    });
-  },
-  matcher: function (item) {
-    if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
-      return true;
-    }
-  }
-});
-
-//YOUTUBE AUTOCOMPLETE
-$('#youtube-searchinput').typeahead({
-
-  source: function(query, process) {
-    return $.ajax({
-      url: "http://suggestqueries.google.com/complete/search",
-      dataType: "jsonp",
-      data: {
-        'client': "youtube",
-        'ds': "yt",
-        'q': query
-      },
-      success: function(json) {
-
-        var resultArray = [];
-
-        $.each(json[1], function(){
-
-          resultArray.push(this[0]);
-
-        });
-
-        process(resultArray);
-      }
-
-    });
-  },
-  matcher: function (item) {
-    if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
-      return true;
-    }
-  }
-});
-*/
 };
 
 
