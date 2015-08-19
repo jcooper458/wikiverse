@@ -28,6 +28,6 @@
     }
   },
   "config": {
-    "devUrl": "http://localhost:3000/livereload.js"
+    "devUrl": "http://wikiver.se"
   }
 }

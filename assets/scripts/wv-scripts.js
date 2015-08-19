@@ -1,36 +1,36 @@
 var WIKIVERSE = (function($) {
 
-	var wikiverse = {};
+var wikiverse = {};
 
-	var $packeryContainer = $('#packery');
+var $packeryContainer = $('#packery');
 
-	var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
-	var youtube_icon = '<i class="fa fa-youtube-square"></i>';
-	var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="50%" data-size="20"><option selected="">connect..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>';
-	var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
+var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
+var youtube_icon = '<i class="fa fa-youtube-square"></i>';
+var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="50%" data-size="20"><option selected="">connect..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>';
+var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
 
-	var rmOptions = {
-		speed: 700,
-		moreLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> more </button>',
-		lessLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> less </button>',
-		afterToggle: function() {
-			$packeryContainer.packery();
-		}
-	};
+var rmOptions = {
+	speed: 700,
+	moreLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> more </button>',
+	lessLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> less </button>',
+	afterToggle: function() {
+		$packeryContainer.packery();
+	}
+};
 
-	var rmSectionOptions = {
-		speed: 700,
-		collapsedHeight: 0,
-		moreLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> sections </button>',
-		lessLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> close sections </button>',
-		afterToggle: function() {
-			$packeryContainer.packery();
-		}
-	};
+var rmSectionOptions = {
+	speed: 700,
+	collapsedHeight: 0,
+	moreLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> sections </button>',
+	lessLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> close sections </button>',
+	afterToggle: function() {
+		$packeryContainer.packery();
+	}
+};
 
-	var is_root = location.pathname === "/";
+var is_root = location.pathname === "/";
 
-	var wpnonce = $('#nonce').html();
+var wpnonce = $('#nonce').html();
 
 
 // --------FUNCTION DEFINITIONS
