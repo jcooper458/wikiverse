@@ -242,7 +242,7 @@ google.maps.event.addListener(map, 'rightclick', function(event) {
 		map: map
 	});
 
-	infowindow.setContent('get photos from: <br><br>' +
+	infowindow.setContent('get photos around this Pin: <br><br>' +
 		'<span class="instagram"><i class="fa fa-instagram"></i></span>' + 
 		'<span class="flickr-search"><i class="fa fa-flickr"></i></span>');
 
@@ -288,7 +288,7 @@ google.maps.event.addListener(autocomplete, 'place_changed', function() {
     $gmapsSearchBrick.data('bounds', map.getBounds().toUrlValue());
 
     infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + place.formatted_address + 
-    	'<br><br>get photos from: ' +
+    	'<br><br>get photos around this Pin: ' +
     	'<span class="instagram"><i class="fa fa-instagram"></i></span>' + 
     	'<span class="flickr-search"><i class="fa fa-flickr"></i></span>');
 
@@ -603,8 +603,8 @@ function getFlickrs($flickrSearchBrick, topic, sort, type) {
 
 	type  = type || "textQuery";
 
-  //if query is coordinates (bounds)
-  if(type === "geoQuery"){
+//if query is coordinates (bounds)
+if(type === "geoQuery"){
 
   	var latitude = topic.split(',')[0];
   	var longitude = topic.split(',')[1];
@@ -624,7 +624,7 @@ function getFlickrs($flickrSearchBrick, topic, sort, type) {
   			},
   			success: function(data){
 
-  				if (typeof data.places !== 'undefined' && data.places.length > 0 && typeof data.places.place !== 'undefined' && data.places.place.length > 0) {
+  				if (data.places.place.length >= 1) {
   					$.ajax({
   						url: 'https://api.flickr.com/services/rest',
   						data:{
@@ -638,7 +638,8 @@ function getFlickrs($flickrSearchBrick, topic, sort, type) {
   							sort: sort
   						},
   						success: function(data){
-  							if (typeof data.photos.photo !== 'undefined' && data.photos.photo.length > 0) {
+  	
+  							if (data.photos.photo.length >= 1) {
   								data.photos.photo.forEach(function(photoObj, index){
 
   									$.ajax({
@@ -663,16 +664,16 @@ function getFlickrs($flickrSearchBrick, topic, sort, type) {
   							}
   						}
   					});
-}
-else{
-	$flickrSearchBrick.find('.results').append('<div class="no-results">No places found for these coordinates: "' + topic + '"</div>');
-}
-}
-});
-}
-else{
-	$flickrSearchBrick.find('.results').append('<div class="no-results">"' + topic + '" is not a coordinate .. :( </div>');
-}
+				}
+				else{
+					$flickrSearchBrick.find('.results').append('<div class="no-results">No places found for these coordinates: "' + topic + '"</div>');
+				}
+			}
+		});
+	}
+	else{
+		$flickrSearchBrick.find('.results').append('<div class="no-results">"' + topic + '" is not a coordinate .. :( </div>');
+	}
 }
   else if(type === "textQuery"){ // is textQuery
 
@@ -802,26 +803,26 @@ function createInstagramBrick($instagramSearchBrick, photo){
 
 	$instagramSearchBrick.find('img').unbind('click').click(function(e) {
 
-    //stamp for better clicking
-    $packeryContainer.packery( 'stamp', $instagramSearchBrick );
+	    //stamp for better clicking
+	    $packeryContainer.packery( 'stamp', $instagramSearchBrick );
 
-    var thisPhoto = {
-    	mediumURL: $(this).data('fullres'),
-    	thumbURL: $(this).attr('src'),
-    	id: $(this).data('id'),
-    	owner: $(this).data('author'),
-    	title: $(this).data('caption'),
-    	tags: $(this).data('tags'),
-    	filter: $(this).data('filter'),
-    	size: 'small'
-    };
+	    var thisPhoto = {
+	    	mediumURL: $(this).data('fullres'),
+	    	thumbURL: $(this).attr('src'),
+	    	id: $(this).data('id'),
+	    	owner: $(this).data('author'),
+	    	title: $(this).data('caption'),
+	    	tags: $(this).data('tags'),
+	    	filter: $(this).data('filter'),
+	    	size: 'small'
+	    };
 
-    var $thisBrick = buildBrick(parseInt($instagramSearchBrick.css('left')) + 450, parseInt($instagramSearchBrick.css('top')) + 10);
+	    var $thisBrick = buildBrick(parseInt($instagramSearchBrick.css('left')) + 450, parseInt($instagramSearchBrick.css('top')) + 10);
 
-    buildFoto($thisBrick, thisPhoto, "instagram", APIsContentLoaded);
-    $(this).remove();
+	    buildFoto($thisBrick, thisPhoto, "instagram", APIsContentLoaded);
+	    $(this).remove();
 
-});
+	});
 
 	$instagramSearchBrick.find('.search-ui').show();
 }
@@ -2467,8 +2468,6 @@ getLanguage = function(langCode){
 
 wikiverse.initSearchBricks = function(){
 
-console.log("cdskalcdsjals");
-
 var $thisSearch;
 
 //Global get SearchBoxes
@@ -2772,14 +2771,21 @@ $packeryContainer.on("click", ".gmaps .fa-flickr", function(){
 
 	$('li#flickr').trigger('click');
 
-	var $flickrSearchBrick = $('div#flickr-search');
+	$flickrSearchBrick = $packeryContainer.find('div#flickr-search');
 
-	var $thisBrick = $(this).parents(".brick");
-	var position = $thisBrick.data("position");
+	//fill the input text with the retrieved coordinates from gmaps parent brick 
+	$flickrSearchBrick
+		.find('input#flickr-searchinput')
+		.val($(this).parents(".brick").data("position"));
 
-	$flickrSearchBrick.find('input#flickr-searchinput').val(position);
+	//set the searchtype to coordinates
+	$flickrSearchBrick
+		.find('select#flickrType')
+		.val('geoQuery');
 
-	getFlickrs($flickrSearchBrick, position, "relevance", "geoQuery");
+	$('select#flickrType').selectpicker('refresh');	
+
+	getFlickrs($flickrSearchBrick, $(this).parents(".brick").data("position"), "relevance", "geoQuery");
 
 });
 
@@ -2789,14 +2795,21 @@ $packeryContainer.on("click", ".gmaps .fa-instagram", function(){
 
 	$('li#instagram').trigger('click');
 
-	var $instagramSearchBrick = $('div#instagram-search');
+	$instagramSearchBrick = $packeryContainer.find('div#instagram-search');
 
-	var $thisBrick = $(this).parents(".brick");
-	var position = $thisBrick.data("position");
+	//fill the input text with the retrieved coordinates from gmaps parent brick 
+	$instagramSearchBrick
+		.find('input#instagram-searchinput')
+		.val($(this).parents(".brick").data("position"));
 
-	$instagramSearchBrick.find('input#instagram-searchinput').val(position);
+	//set the searchtype to coordinates
+	$instagramSearchBrick
+		.find('select#instagramType')
+		.val('coordinates');
 
-	getInstagrams($instagramSearchBrick, position, "coordinates");
+	$('select#instagramType').selectpicker('refresh');	
+
+	getInstagrams($instagramSearchBrick, $(this).parents(".brick").data("position"), "coordinates");
 
 });
 

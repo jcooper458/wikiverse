@@ -106,7 +106,7 @@
 	<div class="input-group-btn">
 
 		<div class="input-group">
-			<input type="text" id="instragram-searchinput" placeholder="" class="form-control form-inline searchbox">
+			<input type="text" id="instagram-searchinput" placeholder="" class="form-control form-inline searchbox">
 			<span class="input-group-btn">
 				<button class="btn btn-default start" type="button">Search</button>
 			</span>
