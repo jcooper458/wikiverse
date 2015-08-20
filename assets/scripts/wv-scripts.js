@@ -59,19 +59,38 @@ function toggleImageSize( event ) {
     // toggle the size for images
     if($( event.target ).is('img.img-result, .youtube img')){
 
-      //make it large
-      $brick.toggleClass("w2");
-
       //if it is large, update the dataObj so it saves the state
-      if($brick.hasClass("w2")){
-      	tempDataObj.size = 'large';   
-      }else{
-      	tempDataObj.size = 'small';
-      	//$packeryContainer.packery( 'fit', event.target );
+      if($brick.hasClass("w1")){      	  
+      	$brick.removeClass('w1');
+      	$brick.addClass('w2'); 
+      	tempDataObj.size = 'medium';
       }
-      //set the dataObj to data topic
-      $brick.data('topic', tempDataObj);
+      //if medium image
+      else if($brick.hasClass("w2") && $( event.target ).is('.img.img-result')){     	   
+      	$brick.removeClass('w2');
+      	$brick.addClass('w3'); 
+      	tempDataObj.size = 'large';
+      }
+      //if medium youtube
+      else if($brick.hasClass("w2") && $( event.target ).is('.youtube img')){      	 
+      	$brick.removeClass('w2');
+      	$brick.addClass('w1');  
+      	tempDataObj.size = 'small'; 
+      }
+      //if large image (coz youtube never gets large)
+      else if($brick.hasClass("w3")){      	 
+      	$brick.removeClass('w3');
+      	$brick.addClass('w1');  
+      	tempDataObj.size = 'small'; 
+      }
+      //else if theres no class at all
+      else{          	 
+      	$brick.removeClass('w1');
+      	$brick.addClass('w2');
+      	tempDataObj.size = 'medium';        
+      }
 
+      $brick.data('topic', tempDataObj);
       $packeryContainer.packery();  
   }
 }
@@ -115,7 +134,7 @@ function APIsContentLoaded($brick){
 
 
 getYoutubes = function($youtubeSearchBrick, topic) {
-console.log($youtubeSearchBrick)
+
 	$.ajax({
 		url: 'https://www.googleapis.com/youtube/v3/search',
 		data:{
@@ -1008,8 +1027,14 @@ buildFoto = function($brick, photoObj, type, callback){
 		if ( !image.isLoaded ) {
 			return;
 		}
-		if(photoObj.size === "large"){
+		if(photoObj.size === "small"){
+			$brick.addClass('w1');
+		}
+		else if(photoObj.size === "medium"){
 			$brick.addClass('w2');
+		}
+		else if(photoObj.size === "large"){
+			$brick.addClass('w3');
 		}
 		$packeryContainer.packery();
 		callback($brick); 
@@ -1829,7 +1854,7 @@ buildYoutube = function($brick, youtubeObj, callback){
   //$brick.addClass('w2-fix');
   $brick.addClass('youtube');
 
-  if(youtubeObj.size === "large"){
+  if(youtubeObj.size === "medium"){
   	$brick.addClass('w2');
   } 
 

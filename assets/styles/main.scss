@@ -171,9 +171,21 @@ h2, .h2 {
   z-index: 2;
 }
 
+.w1 { 
+  width: auto;
+  max-width: 210px;
+  height:auto;
+}
+
 .w2 { 
   width: auto;
   max-width: 430px;
+  height:auto;
+}
+
+.w3 { 
+  width: auto;
+  max-width: 660px;
   height:auto;
 }
 
