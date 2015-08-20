@@ -78,15 +78,15 @@ function toggleImageSize( event ) {
       	$brick.addClass('w2'); 
       	thisBrickData.size = 'medium';
       }
-      //if medium image
-      else if($brick.hasClass("w2") && $brick.hasClass('foto')){
+      //if medium image and not portrait
+      else if($brick.hasClass("w2") && $brick.hasClass('foto') && !($brick.hasClass('portrait'))){
       	console.log("medium image")     	   
       	$brick.removeClass('w2');
       	$brick.addClass('w3'); 
       	thisBrickData.size = 'large';
       }
-      //if medium youtube
-      else if($brick.hasClass("w2") && $brick.hasClass('youtube')){ 
+      //if medium youtube or foto is portrait
+      else if($brick.hasClass("w2") && ($brick.hasClass('youtube') || $brick.hasClass('foto')) && $brick.hasClass('portrait')){ 
       	$brick.removeClass('w2');
       	$brick.addClass('w1');  
       	thisBrickData.size = 'small'; 
@@ -962,7 +962,7 @@ buildFoto = function($brick, photoObj, type, callback){
     $brick.data('topic', photoObj);
 
   	var $photo = $('<img class="img-result" src="' + photoObj.mediumURL + '">');
-  	
+
   	var htmlTitleOverlay = 
   	'<div class="title-overlay overlay">' +
       '<p class="foto-title">' + photoObj.title + '</p>' +
@@ -1053,6 +1053,11 @@ buildFoto = function($brick, photoObj, type, callback){
 		}
 		$packeryContainer.packery();
 		callback($brick); 
+
+		//add class if is Portrait
+		if (isPortrait($brick.find('img'))){
+			$brick.addClass('portrait')
+		}
 	});
 
 };
@@ -2786,27 +2791,27 @@ if(!is_root){
 //show save board button on packery change (needs work)
 $packeryContainer.packery( 'on', 'layoutComplete', function( pckryInstance, laidOutItems ) {
 
-  //cant use show() or fadeIn() coz it messes up the bootstrap nav
-  $(".board-pilot").removeClass('invisible');
+	//cant use show() or fadeIn() coz it messes up the bootstrap nav
+	$(".board-pilot").removeClass('invisible');
 
-  //when clear results is clicked
-  $('.clear').on('click', function(){
+	//when clear results is clicked
+	$('.clear').on('click', function(){
 
-  	var $thisBrick = $(this).parents('.brick');
-    //remove all UI elements
-    $thisBrick.find('.results').empty();
-    $thisBrick.find('.search-ui').hide();
+	  	var $thisBrick = $(this).parents('.brick');
+	    //remove all UI elements
+	    $thisBrick.find('.results').empty();
+	    $thisBrick.find('.search-ui').hide();
 
-    //empty the wiki-searchbox for new search
-    $thisBrick.find('select').removeAttr('disabled');
-    $thisBrick.find('input').removeAttr('disabled');
-    $thisBrick.find('input[type=text]').val('');
+	    //empty the wiki-searchbox for new search
+	    $thisBrick.find('select').removeAttr('disabled');
+	    $thisBrick.find('input').removeAttr('disabled');
+	    $thisBrick.find('input[type=text]').val('');
 
-    $thisBrick.find('.selectpicker').selectpicker('refresh');
+	    $thisBrick.find('.selectpicker').selectpicker('refresh');
 
-    //scroll to top
-    //window.scrollTo(0, 0);
-});
+	    //scroll to top
+	    //window.scrollTo(0, 0);
+	});
 
 });
 
