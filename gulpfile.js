@@ -255,11 +255,11 @@ gulp.task('watch', function() {
       blacklist: ['/wp-admin/**']
     }
   });
-  //gulp.watch([path.source + 'styles/**/*'], ['styles']);
-  //gulp.watch([path.source + 'scripts/**/*'], ['jshint', 'scripts']);
-  //gulp.watch([path.source + 'fonts/**/*'], ['fonts']);
-  //gulp.watch([path.source + 'images/**/*'], ['images']);
-  //gulp.watch(['bower.json', 'assets/manifest.json'], ['build']);
+  gulp.watch([path.source + 'styles/**/*'], ['styles']);
+  gulp.watch([path.source + 'scripts/**/*'], ['jshint', 'scripts']);
+  gulp.watch([path.source + 'fonts/**/*'], ['fonts']);
+  gulp.watch([path.source + 'images/**/*'], ['images']);
+  gulp.watch(['bower.json', 'assets/manifest.json'], ['build']);
 });
 
 // ### Build

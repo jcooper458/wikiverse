@@ -130,7 +130,7 @@ console.log($youtubeSearchBrick)
 	});
 };
 
-getRelatedYoutubes = function($youtubeSearchBrick, videoID) {
+getRelatedYoutubes = function(videoID) {
 
 	$('li#youtube').trigger('click');
 
@@ -1133,7 +1133,7 @@ getSoundcloud = function($soundcloudSearchBrick, query, params) {
 		client_id: '15bc70bcd9762ddca2e82ee99de9e2e7'
 	});
 
-	SC.get('/tracks', { q: query }, function(tracks) {
+	SC.get('/tracks', { q: query, limit: 40 }, function(tracks) {
 
 		tracks.forEach(function(track, index){
 
@@ -1501,24 +1501,22 @@ buildWikipedia = function($brick, topic, parent, callback){
         //if there is sections, append them
         if (typeof data.parse.sections !== 'undefined' && data.parse.sections.length > 0) {
 
-        	$tableSectionResults = $('<div class="list-group wiki sections"></div>');
+        	$tableSectionResults = $('<div class="wiki sections"></div>');
         	$brick.append($tableSectionResults);
 
         	data.parse.sections.forEach(function(section){
 
-            //remove unwanted sections:
+            //if not any of those, add the resulting sections
             if((section.line !== "References") && (section.line !== "Notes") && (section.line !== "External links") && (section.line !== "Citations") && (section.line !== "Bibliography") && (section.line !== "Notes and references")) {
             	$tableSectionResults.append(' <button type="button" class="list-group-item result" title="' + section.anchor + '" index="' + section.index + '">' + section.line + '</button>');
             }
+            $('.sections').readmore(rmSectionOptions);
+        });       	
 
-        });
+        $packeryContainer.packery();
 
-        	$('.sections').readmore(rmSectionOptions);
-
-        	$packeryContainer.packery();
-
-          //create the section object and trigger the creation of a section brick
-          $tableSectionResults.find(".result").on('click', function() {
+        //create the section object and trigger the creation of a section brick
+        $tableSectionResults.find(".result").on('click', function() {
 
           	$packeryContainer.packery( 'stamp', $brick );
 
