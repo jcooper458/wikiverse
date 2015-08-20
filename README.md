@@ -1,4 +1,4 @@
-# [Important:]
+# Important:
 wikiverse wont work without these two plugins: 
 
 - Edit Author Slug (can be installed via Wordpress - set the slug to "user")
