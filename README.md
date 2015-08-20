@@ -1,8 +1,8 @@
 # [Important:]
 wikiverse wont work without these two plugins: 
 
-Edit Author Slug (can be installed via Wordpress - set the slug to "user")
-wp-twitter-api (you can find that plugin in my github - needs configuration via the Wordpress backend)
+- Edit Author Slug (can be installed via Wordpress - set the slug to "user")
+- wp-twitter-api (you can find that plugin in my github - needs configuration via the Wordpress backend)
 
 I will add my composer.json so that you can automate the process of installing these two plugins soon
 
