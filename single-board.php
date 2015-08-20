@@ -1,11 +1,6 @@
-<div id="packery"></div>
+<div id="packery" class="packery"></div>
 
-<?php 
-$boardArray = [];
-array_push($boardArray, $post->post_content);
- ?>
-
-<div id="wikiverseJSON" class="invisible"><?php echo json_encode($boardArray);  ?></div>
+<div id="JSONboard" class="invisible"><?php echo $post->post_content; ?></div>
 <div id="postID" class="invisible"><?php echo $post->ID; ?></div>
 
 <?php get_template_part('templates/searchboxes'); ?>

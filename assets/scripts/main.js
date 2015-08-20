@@ -27,7 +27,13 @@
     // Home page
     'home': {
       init: function() {
-       WIKIVERSE.buildWikiverse(0);
+
+        var boardArray = $("#JSONboardArray").html();
+
+        WIKIVERSE.buildBoard($('#homeBoard1'), JSON.parse(JSON.parse(boardArray)[0]));
+        WIKIVERSE.buildBoard($('#homeBoard2'), JSON.parse(JSON.parse(boardArray)[1]));
+        WIKIVERSE.buildBoard($('#homeBoard3'), JSON.parse(JSON.parse(boardArray)[2]));
+
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS
@@ -36,7 +42,7 @@
     // single board page
     'single_board': {
       init: function() {
-        WIKIVERSE.buildWikiverse(0); 
+        WIKIVERSE.buildSinglePage($('#packery')); 
         WIKIVERSE.initSearchBricks();       
       },
       finalize: function() {

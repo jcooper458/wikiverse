@@ -2,9 +2,7 @@ var WIKIVERSE = (function($) {
 
 var wikiverse = {};
 
-var $packeryContainer = $('#packery');
-
-var close_icon = '<span class="cross"><i class="fa fa-close"></i></span>';
+var close_icon = '<span class="cross control-buttons"><i class="fa fa-close"></i></span>';
 var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="50%" data-size="20"><option selected="">connect..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>';
 var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
@@ -31,6 +29,21 @@ var rmSectionOptions = {
 var is_root = location.pathname === "/";
 
 var wpnonce = $('#nonce').html();
+
+
+var $packeryContainer = $('.packery');
+
+// initialize Packery
+var packery = $packeryContainer.packery({
+	itemSelector: '.brick',
+	stamp: '.search',
+	gutter: 10,
+	transitionDuration: 0,
+	columnWidth: 210,
+//  columnWidth: '.brick',
+//  rowHeight: 60,
+//  isInitLayout: false
+}); 
 
 
 // --------FUNCTION DEFINITIONS
@@ -108,9 +121,9 @@ function orderItems(packery, items) {
 }
 
 
-function isPortrait(imgObj){
+function isPortrait(imgElement){
 
-	if(imgObj.width() < imgObj.height())
+	if(imgElement.width() < imgElement.height())
 	{
 		return true;
 	}else
@@ -130,7 +143,7 @@ function inrange(min,number,max){
 
 
 function APIsContentLoaded($brick){
-	$brick.fadeTo( "slow", 1); 
+	$brick.fadeTo( 'slow', 1); 
 	$packeryContainer.packery();
 }
 
@@ -186,7 +199,7 @@ function valid_coords(number_lat,number_lng) {
 	}
 }
 
-function buildBrick(x, y){
+function buildBrick($packeryContainer, x, y){
 
 	var $brick = $(defaultBrick);
 
@@ -215,7 +228,7 @@ function buildNextTopic($brick, lang){
 		var y = parseInt($brick.css('top'));
 		var x = parseInt($brick.css('left'));
 
-		var $thisBrick = buildBrick( x, y);
+		var $thisBrick = buildBrick($packeryContainer, x, y);
 
     //note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
     buildWikipedia($thisBrick, brickData, $brick.attr("tabindex") - 1, APIsContentLoaded);
@@ -1083,7 +1096,7 @@ createFlickrBrick = function($flickrSearchBrick, apiData, photoObj){
 
       };
 
-      var $thisBrick = buildBrick(parseInt($flickrSearchBrick.css('left')) + 450, parseInt($flickrSearchBrick.css('top')) + 100);
+      var $thisBrick = buildBrick($packeryContainer, parseInt($flickrSearchBrick.css('left')) + 450, parseInt($flickrSearchBrick.css('top')) + 100);
 
       buildFoto($thisBrick, thisPhoto, "flickr", APIsContentLoaded);
       $(this).remove();
@@ -1136,7 +1149,7 @@ createInstagramBrick = function($instagramSearchBrick, photo){
 	    	size: 'small'
 	    };
 
-	    var $thisBrick = buildBrick(parseInt($instagramSearchBrick.css('left')) + 450, parseInt($instagramSearchBrick.css('top')) + 10);
+	    var $thisBrick = buildBrick($packeryContainer, parseInt($instagramSearchBrick.css('left')) + 450, parseInt($instagramSearchBrick.css('top')) + 10);
 
 	    buildFoto($thisBrick, thisPhoto, "instagram", APIsContentLoaded);
 	    $(this).remove();
@@ -1201,7 +1214,7 @@ getSoundcloud = function($soundcloudSearchBrick, query, params) {
         	genre: $(this).attr('genre')
         };
 
-        var $thisBrick = buildBrick(parseInt($soundcloudSearchBrick.css('left')) + 50, parseInt($soundcloudSearchBrick.css('top')) + 10);
+        var $thisBrick = buildBrick($packeryContainer, parseInt($soundcloudSearchBrick.css('left')) + 50, parseInt($soundcloudSearchBrick.css('top')) + 10);
         
         buildSoundcloud($thisBrick, soundcloudObj, APIsContentLoaded);
 
@@ -1252,7 +1265,7 @@ if (typeof apiData.statuses !== 'undefined' && apiData.statuses.length > 0) {
         $packeryContainer.packery( 'stamp', $twitterSearchBrick );
         $(this).remove();
 
-        var $thisBrick = buildBrick(parseInt($twitterSearchBrick.css('left')) + 400, parseInt($twitterSearchBrick.css('top')));
+        var $thisBrick = buildBrick($packeryContainer, parseInt($twitterSearchBrick.css('left')) + 400, parseInt($twitterSearchBrick.css('top')));
 
         var twitterObj = {
         	text: $(this).attr('text'),
@@ -1358,7 +1371,7 @@ function getWikiLanguages(topic, lang, $brick){
         		title: $(this).children(":selected").data('topic'),
         		language: $(this).children(":selected").attr('value')
         	};
-        	var $thisBrick = buildBrick(thisX, thisY);
+        	var $thisBrick = buildBrick($packeryContainer, thisX, thisY);
           //note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
           buildWikipedia($thisBrick, thisTopic, $brick.attr("tabindex"), APIsContentLoaded);
       });
@@ -1410,7 +1423,7 @@ function getInterWikiLinks(section, $brick){
 						title: $(this).children(":selected").attr('topic'),
 						language: section.language
 					};
-					var $thisBrick = buildBrick(thisX, thisY);
+					var $thisBrick = buildBrick($packeryContainer, thisX, thisY);
 					buildWikipedia($thisBrick, thisTopic, $brick.attr("tabindex"), APIsContentLoaded);
 				});
 
@@ -1457,7 +1470,7 @@ function getWikis($wikiSearchBrick, topic, lang) {
             	title: $(this).find('.result').html(),
             	language: lang
             };
-            var $thisBrick = buildBrick(parseInt($wikiSearchBrick.css('left')), parseInt($wikiSearchBrick.css('top')));
+            var $thisBrick = buildBrick($packeryContainer, parseInt($wikiSearchBrick.css('left')), parseInt($wikiSearchBrick.css('top')));
 
             //build the wikis next to the search brick
             buildWikipedia($thisBrick, topic, -1, APIsContentLoaded);
@@ -1575,7 +1588,7 @@ buildWikipedia = function($brick, topic, parent, callback){
           	var newY = parseInt($brick.css('top'));
           	var newX = parseInt($brick.css('left'));
 
-          	var $thisBrick = buildBrick(newX, newY);
+          	var $thisBrick = buildBrick($packeryContainer, newX, newY);
           	buildSection($thisBrick, section, $brick.attr("tabindex"), APIsContentLoaded);
 
             //$packeryContainer.packery( 'unstamp', $brick );
@@ -1821,7 +1834,7 @@ buildYoutubeSearchResults = function($youtubeSearchBrick, apiData){
         $(this).tooltip('destroy');
         $(this).remove();
 
-        var $thisBrick = buildBrick(parseInt($youtubeSearchBrick.css('left')) + 50, parseInt($youtubeSearchBrick.css('top')) + 10);
+        var $thisBrick = buildBrick($packeryContainer, parseInt($youtubeSearchBrick.css('left')) + 50, parseInt($youtubeSearchBrick.css('top')) + 10);
 
         var youtubeObj = {
         	youtubeID: $(this).attr('youtubeID'),
@@ -1916,16 +1929,10 @@ makeEachDraggable = function( i, itemElem ) {
     $packeryContainer.packery( 'bindDraggabillyEvents', draggie );
 };
 
-wikiverse.buildWikiverse = function(index){
-
-	var boardArray = $("#wikiverseJSON").html();
-
-	var wikiverseParsed = JSON.parse(boardArray);
-	var board = JSON.parse(wikiverseParsed[index]); 
-
+wikiverse.buildBoard = function($packeryContainer, board){
 	$.each(board.bricks, function(index, brick) {
 
-		var $thisBrick = buildBrick();
+		var $thisBrick = buildBrick($packeryContainer);
 
 		switch (brick.Type) {
 			case "wiki":
@@ -1966,21 +1973,29 @@ wikiverse.buildWikiverse = function(index){
 		}
 
 	});
+
+}
+
+wikiverse.buildSinglePage = function($packeryContainer){
+
+	var JSONboard = $("#JSONboard").html();
+	var board = JSON.parse(JSONboard); 
+
+	wikiverse.buildBoard($packeryContainer, board);
 };
 
 wikiverse.playBoard = function(wpnonce){
 	$('#playBoard').fadeOut();
+	//stop scrolling
+	//$('html, body').stop(true);
 
-  //stop scrolling
-  //$('html, body').stop(true);
-  
-  //fadeout elems
-  $('.brick .fa').fadeOut();
-  $('nav').fadeTo('slow', 0.3);
-  $('.wikiverse-nav').fadeOut();
-  $('.selectpicker').css('visibility', 'hidden');
-  $('html, body').animate({scrollTop:$(document).height()}, 50000);
-  return false;
+	//fadeout elems
+	$('.brick .fa').fadeOut();
+	$('nav').fadeTo('slow', 0.3);
+	$('.wikiverse-nav').fadeOut();
+	$('.selectpicker').css('visibility', 'hidden');
+	$('html, body').animate({scrollTop:$(document).height()}, 50000);
+	return false;
 };
 
 wikiverse.stopBoard = function(wpnonce){
@@ -2736,17 +2751,7 @@ $('.board-pilot').click(function(){
 
 //----------------GENERAL STUFF----------------------------
 
-// initialize Packery
-var packery = $packeryContainer.packery({
-	itemSelector: '.brick',
-	stamp: '.search',
-	gutter: 10,
-	transitionDuration: 0,
-	columnWidth: 210,
-//  columnWidth: '.brick',
-//  rowHeight: 60,
-//  isInitLayout: false
-}); 
+
 
 //$packeryContainer.find('div.brick').each( makeEachDraggable );
 
