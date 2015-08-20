@@ -278,10 +278,8 @@ nav {
 
 .brick.foto:hover .overlay{opacity:.7;}
 
-.overlay {
-  bottom: 0;
+.brick.foto .overlay{
   height: auto;
-  max-height: 80%;
   width: 100%;
   margin: auto;
   position: absolute;
@@ -291,6 +289,16 @@ nav {
   font-size:12px;
   padding-left:5px;
   overflow:hidden;
+}
+
+.title-overlay {
+  top: 0;
+  max-height: 40%;
+}
+
+.tags-overlay {
+  bottom: 0;
+  max-height: 40%;
 }
 
 .controls {
