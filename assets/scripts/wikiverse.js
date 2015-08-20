@@ -53,7 +53,7 @@ getLanguage;
 function toggleImageSize( event ) {
 
 	var $brick = $( event.target ).parents('.brick');
-	var tempDataObj = $brick.data('topic');
+	var thisBrickData = $brick.data('topic');
 	var widthClass; 
 
     // toggle the size for images
@@ -63,34 +63,36 @@ function toggleImageSize( event ) {
       if($brick.hasClass("w1")){      	  
       	$brick.removeClass('w1');
       	$brick.addClass('w2'); 
-      	tempDataObj.size = 'medium';
+      	thisBrickData.size = 'medium';
       }
       //if medium image
-      else if($brick.hasClass("w2") && $( event.target ).is('.img.img-result')){     	   
+      else if($brick.hasClass("w2") && (thisBrickData.type === "foto"){
+      	console.log("medium image")     	   
       	$brick.removeClass('w2');
       	$brick.addClass('w3'); 
-      	tempDataObj.size = 'large';
+      	thisBrickData.size = 'large';
       }
       //if medium youtube
-      else if($brick.hasClass("w2") && $( event.target ).is('.youtube img')){      	 
+      else if($brick.hasClass("w2") && thisBrickData.type === "youtube"){  	 
       	$brick.removeClass('w2');
       	$brick.addClass('w1');  
-      	tempDataObj.size = 'small'; 
+      	thisBrickData.size = 'small'; 
       }
       //if large image (coz youtube never gets large)
       else if($brick.hasClass("w3")){      	 
       	$brick.removeClass('w3');
       	$brick.addClass('w1');  
-      	tempDataObj.size = 'small'; 
+      	thisBrickData.size = 'small'; 
       }
       //else if theres no class at all
-      else{          	 
+      else{   
+      	console.log("else")        	 
       	$brick.removeClass('w1');
       	$brick.addClass('w2');
-      	tempDataObj.size = 'medium';        
+      	thisBrickData.size = 'medium';        
       }
 
-      $brick.data('topic', tempDataObj);
+      $brick.data('topic', thisBrickData);
       $packeryContainer.packery();  
   }
 }
