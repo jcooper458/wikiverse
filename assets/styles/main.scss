@@ -248,7 +248,8 @@ nav {
 
 .brick .container {padding:0;}
 
-.cross { display:none;
+.cross { 
+  visibility: hidden;
     cursor: pointer;
     top: -11px;
     left: -9px;
@@ -256,7 +257,7 @@ nav {
     z-index: 2;
 }
 .handle { 
-    display: none;
+    visibility: hidden;
     cursor: move;
     font-size: 19px;
     right: -20px;
@@ -327,9 +328,14 @@ content: "VV"; letter-spacing:-0.45em; margin-right:0.5em; }
 
 .search-ui{display: none;}
 
+.brick select, 
+.brick .btn{visibility: hidden;}
+
 .search:hover .cross, 
-.brick:hover .cross, 
-.brick:hover .handle{display: block;}
+.brick:hover .cross,
+.brick:hover select, 
+.brick:hover .btn, 
+.brick:hover .handle{visibility: visible;}
 
 
 table tr, .result, #clear, .results img, .clear{cursor: pointer;} 
