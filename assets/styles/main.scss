@@ -27,8 +27,8 @@
 
 
 h1, .h1, h2, .h2, h3, .h3 {
-  margin: 10px;
-  font-family: 'Libre Baskerville', serif!important;
+  margin: 30px 5px 15px 5px;
+  font-family: 'Open Sans', sans-serif!important;
 }
 
 h2, .h2 {
@@ -60,7 +60,7 @@ h2, .h2 {
   
   font-size: 14px;
   opacity: .1;
-  width: 200px;
+  width: 210px;
   background: #F7F7F7;
   /*background: #95A5A6; */
   outline: 0;
@@ -93,12 +93,12 @@ h2, .h2 {
 
 .brick p {
   overflow: hidden; 
-  font-family: 'Libre Baskerville', serif!important;
+  font-family: 'Open Sans', sans-serif!important;
 }
 
 .wiki p{ 
-  padding-left:5px; 
-  padding-right: 5px;
+  margin-left:5px; 
+  margin-right: 5px;
 }
 
 .twitterUserThumb{
@@ -173,31 +173,30 @@ h2, .h2 {
 
 .w2 { 
   width: auto;
-  max-width: 420px;
+  max-width: 430px;
   height:auto;
 }
 
 .w2-fix { 
-  width: 420px;
+  width: 430px;
 }
 
 .w3-fix { 
-  width: 640px;
+  width: 660px;
 }
 
 .gigante{
-  font-family: 'Libre Baskerville', serif!important;
+  font-family: 'Open Sans', sans-serif!important;
  /* font-weight: bold;*/
   font-size: 90px;
 }
 
 #packery{
-  zoom:1;
   margin: 0 auto;
   width:100%
 }
 
-.brick p{ /*padding:0px 5px;*/ margin-top:5px; }
+.brick p{ margin-top:5px; }
 
 .borderBottom{border-bottom: 1px solid #ccc;}
 
@@ -287,7 +286,7 @@ nav {
   color:#fff;
   opacity:0;
   font-size:12px;
-  padding-left:5px;
+  padding:0px 5px 0px 5px;
   overflow:hidden;
 }
 
@@ -336,13 +335,13 @@ content: "VV"; letter-spacing:-0.45em; margin-right:0.5em; }
 
 .search-ui{display: none;}
 
-.brick select, 
-.brick .btn{visibility: hidden;}
+.wiki select, 
+.wiki .btn{visibility: hidden;}
 
 .search:hover .cross, 
 .brick:hover .cross,
-.brick:hover select, 
-.brick:hover .btn, 
+.wiki:hover select, 
+.wiki:hover .btn, 
 .brick:hover .handle{visibility: visible;}
 
 
