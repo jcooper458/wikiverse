@@ -66,14 +66,14 @@ function toggleImageSize( event ) {
       	thisBrickData.size = 'medium';
       }
       //if medium image
-      else if($brick.hasClass("w2") && (thisBrickData.type === "foto"){
+      else if($brick.hasClass("w2") && $brick.hasClass('foto')){
       	console.log("medium image")     	   
       	$brick.removeClass('w2');
       	$brick.addClass('w3'); 
       	thisBrickData.size = 'large';
       }
       //if medium youtube
-      else if($brick.hasClass("w2") && thisBrickData.type === "youtube"){  	 
+      else if($brick.hasClass("w2") && $brick.hasClass('youtube')){ 
       	$brick.removeClass('w2');
       	$brick.addClass('w1');  
       	thisBrickData.size = 'small'; 
