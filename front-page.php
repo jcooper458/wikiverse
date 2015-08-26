@@ -31,8 +31,8 @@ $homePosts = get_posts( $args )
 	
 <div class="container buffer-bottom" role="document">
   <div class="gigante">wikiverse</div>
-  <h1>is a powerful content aggregator</h1>
-  <h3>create stunning infoboards with data from wikipedia, flickr, youtube and many other sources </h5>
+  <h1>some more text here</h1>
+  <h3>some more sources here soon </h5>
 </div>
 
 
@@ -49,6 +49,6 @@ $homePosts = get_posts( $args )
 <div class="container buffer-bottom" role="document">
   <div class="gigante">wikiverse</div>
   <h1>is a powerful content aggregator</h1>
-  <h3>create stunning infoboards with data from wikipedia, flickr, youtube and many other sources </h5>
+  <h3>even more sources here soon  </h5>
 </div>
 
