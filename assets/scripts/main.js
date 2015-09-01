@@ -30,9 +30,7 @@
 
         var boardArray = $("#JSONboardArray").html();
 
-        WIKIVERSE.buildBoard($('#homeBoard1'), JSON.parse(JSON.parse(boardArray)[0]));
-        WIKIVERSE.buildBoard($('#homeBoard2'), JSON.parse(JSON.parse(boardArray)[1]));
-        WIKIVERSE.buildBoard($('#homeBoard3'), JSON.parse(JSON.parse(boardArray)[2]));
+        WIKIVERSE.buildBoard($('#homeBoard1'), JSON.parse(JSON.parse(boardArray)[1]));
 
       },
       finalize: function() {

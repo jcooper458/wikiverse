@@ -36,19 +36,3 @@ $homePosts = get_posts( $args )
 </div>
 
 
-<div id="homeBoard2" class="packery"></div>
-	
-<div class="container buffer-bottom" role="document">
-  <div class="gigante">enjoy serendipity</div>
-  <h1>start with a topic, get lost</h1>
-  <h3>create stunning infoboards with data from wikipedia, flickr, youtube and many other sources </h5>
-</div>
-
-<div id="homeBoard3" class="packery"></div>
-	
-<div class="container buffer-bottom" role="document">
-  <div class="gigante">wikiverse</div>
-  <h1>is a powerful content aggregator</h1>
-  <h3>even more sources here soon  </h5>
-</div>
-
