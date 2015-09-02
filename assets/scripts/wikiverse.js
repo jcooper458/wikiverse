@@ -859,55 +859,65 @@ function getInstagrams($instagramSearchBrick, query, type) {
     else if(type === "hashtag"){
 
     	instagramUrl = 'https://api.instagram.com/v1/tags/' + query + '/media/recent?callback=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
-    //var instagramUrl = 'https://api.instagram.com/v1/tags/' + query + '/media/recent?client_id=db522e56e7574ce9bb70fa5cc760d2e7';
+	    //var instagramUrl = 'https://api.instagram.com/v1/tags/' + query + '/media/recent?client_id=db522e56e7574ce9bb70fa5cc760d2e7';
 
-    $.getJSON(instagramUrl, access_parameters, function(data){
+	    $.getJSON(instagramUrl, access_parameters, function(data){
 
-    	if (typeof data.data !== 'undefined' && data.data.length > 0) {
-    		data.data.forEach(function(photo, index){
-    			createInstagramBrick($instagramSearchBrick, photo);
-    		});
-    	}
-    	else{
-    		$instagramSearchBrick.find('.results').append('<div class="no-results">No pictures found for "' + query + '"</div>');
-    		$packeryContainer.packery();
-    	}
-    });
+	    	if (typeof data.data !== 'undefined' && data.data.length > 0) {
+	    		data.data.forEach(function(photo, index){
+	    			createInstagramBrick($instagramSearchBrick, photo);
+	    		});
+	    	}
+	    	else{
+	    		$instagramSearchBrick.find('.results').append('<div class="no-results">No pictures found for "' + query + '"</div>');
+	    		$packeryContainer.packery();
+	    	}
+	    });
 
-}
-else if(type === "username"){
+	}
+	else if(type === "username"){
 
-	$.ajax({
-		url: 'https://api.instagram.com/v1/users/search',
-		data:{
-			q: query,
-			client_id: 'db522e56e7574ce9bb70fa5cc760d2e7',
-			format: 'json'
-		},
-		dataType:'jsonp',
-		success: function(data){
+		$.ajax({
+			url: 'https://api.instagram.com/v1/users/search',
+			data:{
+				q: query,
+				client_id: 'db522e56e7574ce9bb70fa5cc760d2e7',
+				format: 'json'
+			},
+			dataType:'jsonp',
+			success: function(data){
 
-			if (typeof data.data !== 'undefined' && data.data.length > 0) {
-				var userID = data.data[0].id;
-				var getUserUrl = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?callback=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
+				if (typeof data.data !== 'undefined' && data.data.length > 0) {
 
-				$.getJSON(getUserUrl, access_parameters, function(data){
-					if (data.meta.code !== 400) {
-						data.data.forEach(function(photo, index){
-							createInstagramBrick($instagramSearchBrick, photo);
-						});
-					}
-					else{
-						$instagramSearchBrick.find('.results').append('<div class="no-results">Search failed with error message: ' + data.meta.error_message + '</div>');
-					}
-				});
+					data.data.map(function(user, index){
+
+						if (user.username === query){
+							var userID = user.id;
+							var getUserUrl = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?callback=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
+
+							$.getJSON(getUserUrl, access_parameters, function(data){
+								if (data.meta.code !== 400) {
+									data.data.forEach(function(photo, index){
+										createInstagramBrick($instagramSearchBrick, photo);
+									});
+								}
+								else{
+									$instagramSearchBrick.find('.results').append('<div class="no-results">Search failed with error message: ' + data.meta.error_message + '</div>');
+								}
+							});
+							return;
+						}
+
+					});
+
+
+				}
+				else{
+					$instagramSearchBrick.find('.results').append('<div class="no-results">No user found with this query: "' + query + '"</div>');
+				}
 			}
-			else{
-				$instagramSearchBrick.find('.results').append('<div class="no-results">No user found with this query: "' + query + '"</div>');
-			}
-		}
-	});
-}
+		});
+	}
 }
 
 function getConnections(source, topic){
