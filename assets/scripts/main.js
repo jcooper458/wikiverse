@@ -29,9 +29,10 @@
       init: function() {
 
         var boardArray = $("#JSONboardArray").html();
+        var parsedArray = JSON.parse(boardArray);
+        var randBoard = parsedArray[Math.floor(Math.random()*parsedArray.length)];
 
-        WIKIVERSE.buildBoard($('#homeBoard1'), JSON.parse(JSON.parse(boardArray)[0]));
-
+        WIKIVERSE.buildBoard($('#homeBoard1'), JSON.parse(randBoard));
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS
@@ -40,8 +41,8 @@
     // single board page
     'single_board': {
       init: function() {
-        WIKIVERSE.buildSinglePage($('#packery')); 
-        WIKIVERSE.initSearchBricks();       
+        WIKIVERSE.initSearchBricks();
+        WIKIVERSE.buildBoard($('#packery'), JSON.parse($("#JSONboard").html()));
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS

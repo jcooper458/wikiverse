@@ -1979,14 +1979,6 @@ wikiverse.buildBoard = function($packeryContainer, board){
 
 }
 
-wikiverse.buildSinglePage = function($packeryContainer){
-
-	var JSONboard = $("#JSONboard").html();
-	var board = JSON.parse(JSONboard); 
-
-	wikiverse.buildBoard($packeryContainer, board);
-};
-
 wikiverse.playBoard = function(wpnonce){
 	$('#playBoard').fadeOut();
 	//stop scrolling
