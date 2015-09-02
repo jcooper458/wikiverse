@@ -115,7 +115,6 @@ function orderItems(packery, items) {
 	var itemElems = $packeryContainer.packery('getItemElements');
 	for ( var i=0, len = itemElems.length; i < len; i++ ) {
 		var elem = itemElems[i];
-
 		$(elem).attr( "tabindex", i );
 	}
 }
@@ -168,7 +167,6 @@ getYoutubes = function($youtubeSearchBrick, topic) {
 getRelatedYoutubes = function(videoID) {
 
 	$('li#youtube').trigger('click');
-
 	$('#youtube-search .results').empty();
 
 	$.ajax({
@@ -405,8 +403,8 @@ function buildGmaps($mapbrick, mapObj, callback){
 	$mapbrick.data('bounds', mapObj.bounds.southWest + "," + mapObj.bounds.northEast);
 
 	$mapbrick
-	.addClass('w3-fix')
-	.addClass('gmaps');
+		.addClass('w3-fix')
+		.addClass('gmaps');
 
 	$mapbrick.prepend($mapcanvas);
 	$packeryContainer.packery();
@@ -1261,7 +1259,7 @@ if (typeof apiData.statuses !== 'undefined' && apiData.statuses.length > 0) {
         	$twitterSearchBrick.find('.results').append('<tr text="' + text + '" user="' + tweet.user.name + '"><td class="twitterThumb col-md-2"><img src="' + userThumb + '"></td><td class="result col-md-10" ><strong>' + tweet.user.name + '</strong><br>' + text + '</td></tr>');
         	$packeryContainer.packery();
         //  }, index * 50); 
-}     
+		}     
 
       //bind event to every row -> so you can start the wikiverse
       $twitterSearchBrick.find('tr').unbind('click').click(function(e) {
