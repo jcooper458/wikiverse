@@ -346,7 +346,7 @@ function apf_addpost() {
         'post_status'       => 'publish', 
         'post_type'         => 'board', 
         'post_author'       => $user_id,
-        'post_content'      => $meta
+        'post_content'      => json_encode($meta)
         
     ) );  
     
@@ -405,7 +405,7 @@ function apf_editpost() {
   // Update post 37
   $thisPost = array(
       'ID'           => $postID,
-      'post_content' => $meta
+      'post_content' => json_encode($meta)
   );
 
   // Update the post into the database
