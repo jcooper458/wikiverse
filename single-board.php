@@ -1,3 +1,5 @@
+<div class="text-center"><h1><?php the_title(); ?></h1></div>
+
 <div id="packery" class="packery"></div>
 
 <div id="JSONboard" class="invisible"><?php echo $post->post_content; ?></div>
