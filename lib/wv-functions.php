@@ -74,7 +74,7 @@ function register_cpt_board() {
         
        // 'menu_icon' => get_stylesheet_directory_uri() . '/includes/images/bike_icon.png',  // Icon Path
         
-        'supports' => array( 'title', 'author', 'thumbnail', 'editor'),
+        'supports' => array( 'title', 'author', 'thumbnail', 'editor', 'revisions'),
       //  'yarpp_support' => true,
         'public' => true,
         'show_ui' => true,
