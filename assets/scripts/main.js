@@ -42,7 +42,12 @@
     'single_board': {
       init: function() {
         WIKIVERSE.initSearchBricks();
-        WIKIVERSE.buildBoard($('#packery'), $("#JSONboard").data('json'));
+
+        var postID = $("#postID").html();
+
+        $.getJSON( '/wp-json/posts/' + postID, function( board ) {
+          WIKIVERSE.buildBoard($('#packery'), JSON.parse(board.content_raw));
+        });
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS
