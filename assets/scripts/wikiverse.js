@@ -1932,6 +1932,10 @@ var WIKIVERSE = (function($) {
 	};
 
 	wikiverse.buildBoard = function($packeryContainer, board) {
+
+		$('#boardTitle > h1').append(board.title);
+		$('#boardDescription').append(board.description);
+
 		$.each(board.bricks, function(index, brick) {
 
 			var $thisBrick = buildBrick($packeryContainer);
@@ -2039,8 +2043,10 @@ var WIKIVERSE = (function($) {
 		var wikiverseParsed = {};
 
 		var board = {
+			"title": "",
 			"featured_image": $packeryContainer.find('.brick[tabindex=0] img').attr('src'),
-			"bricks": wikiverseParsed
+			"bricks": wikiverseParsed,
+			"description": ""
 		};
 
 		//remove search bricks:
@@ -2068,7 +2074,7 @@ var WIKIVERSE = (function($) {
 			tabindex++;
 		});
 
-		var JSONwikiverse = JSON.stringify(board);
+		
 
 		$("#myModal").modal('show');
 
@@ -2099,6 +2105,11 @@ var WIKIVERSE = (function($) {
 			if (value.length > 0) {
 
 				var title = $('#boardTitle').val();
+				var description = $('#boardDescription').val();
+				board.description = description;
+				board.title = title;
+				
+				var JSONwikiverse = JSON.stringify(board);
 
 				$.ajax({
 					type: 'POST',
@@ -2155,8 +2166,10 @@ var WIKIVERSE = (function($) {
 		var wikiverseParsed = {};
 
 		var board = {
+			"title": "",
 			"featured_image": $packeryContainer.find('.brick[tabindex=0] img').attr('src'),
-			"bricks": wikiverseParsed
+			"bricks": wikiverseParsed,
+			"description": ""
 		};
 
 		//remove search bricks:
@@ -2182,6 +2195,11 @@ var WIKIVERSE = (function($) {
 				Parent: parent
 			};
 		});
+
+		var title = $('#boardTitle').text();
+		var description = $('#boardDescription').text();
+		board.description = description;
+		board.title = title;
 
 		var wikiverseJSON = JSON.stringify(board);
 

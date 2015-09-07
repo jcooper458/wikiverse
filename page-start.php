@@ -24,6 +24,8 @@
         <div class="form-group">
           <input id="boardTitle" placeholder="Insert a Title for your board" type="text" class="form-control">
         </div>      
+        
+        <textarea id="boardDescription" class="form-control" placeholder="Optionally add a description" rows="3"></textarea>
       
       </div>
       <div class="modal-footer">
