@@ -2051,8 +2051,8 @@ var WIKIVERSE = (function($) {
 			"title": "",
 			"theme": $('body').data('theme'),
 			"featured_image": $packeryContainer.find('.brick[tabindex=0] img').attr('src'),
-			"description": ""
-			"bricks": wikiverseParsed,
+			"description": "",
+			"bricks": wikiverseParsed
 		};
 
 		//remove search bricks:
@@ -2173,13 +2173,13 @@ var WIKIVERSE = (function($) {
 		var postid = $('#postID').html();
 
 		var wikiverseParsed = {};
-		
+
 		var board = {
 			"title": "",
 			"theme": $('body').data('theme'),
 			"featured_image": $packeryContainer.find('.brick[tabindex=0] img').attr('src'),
-			"description": ""
-			"bricks": wikiverseParsed,
+			"description": "",
+			"bricks": wikiverseParsed
 		};
 
 		//remove search bricks:
