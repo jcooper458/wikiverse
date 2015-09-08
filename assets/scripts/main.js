@@ -19,16 +19,16 @@
     'common': {
       init: function() {
 
-        function set_theme(theme) {
-          $('link[title="main"]').attr('href', theme);
-        }
-
         $('body').on('click', '.change-style-menu-item', function() {
+
           var theme_name = $(this).attr('rel');
           var theme = "//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/" + theme_name + "/bootstrap.min.css";
-          set_theme(theme);
+          
+          setTheme(theme);
+
           $('body').data('theme', theme_name);
           $('#packery').packery();
+
         });
 
       },

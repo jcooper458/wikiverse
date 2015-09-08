@@ -904,7 +904,7 @@ var WIKIVERSE = (function($) {
 		}
 	}
 	
-	function set_theme(theme) {
+	function setTheme(theme) {
 	  $('link[title="main"]').attr('href', theme);
 	}
 
@@ -1939,7 +1939,7 @@ var WIKIVERSE = (function($) {
 	wikiverse.buildBoard = function($packeryContainer, board) {
 
         var theme = "//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/" + board.theme + "/bootstrap.min.css";
-        set_theme(theme);
+        setTheme(theme);
 
 		$('#boardTitle > h1').append(board.title);
 		$('#boardDescription').append(board.description);
