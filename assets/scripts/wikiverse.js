@@ -5,7 +5,7 @@ var WIKIVERSE = (function($) {
 	var close_icon = '<span class="cross control-buttons"><i class="fa fa-close"></i></span>';
 	var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 	var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="50%" data-size="20"><option selected="">connect..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>';
-	var defaultBrick = '<div class="brick">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
+	var defaultBrick = '<div class="brick well well-sm">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
 
 	var rmOptions = {
 		speed: 700,
@@ -33,18 +33,19 @@ var WIKIVERSE = (function($) {
 
 	var $packeryContainer = $('.packery');
 
-	// initialize Packery
-	var packery = $packeryContainer.packery({
-		itemSelector: '.brick',
-		stamp: '.search',
-		gutter: 10,
-		transitionDuration: 0,
-		columnWidth: 210,
-		//  columnWidth: '.brick',
-		//  rowHeight: 60,
-		//  isInitLayout: false
-	});
-
+//	$('#packery').imagesLoaded( function() {
+		// initialize Packery
+		var packery = $packeryContainer.packery({
+			itemSelector: '.brick',
+			stamp: '.search',
+			gutter: 10,
+			transitionDuration: 0,
+			columnWidth: 210,
+			//  columnWidth: '.brick',
+			//  rowHeight: 60,
+			//  isInitLayout: false
+		});
+//	});
 
 	// --------FUNCTION DEFINITIONS
 	var createFlickrBrick,
@@ -901,6 +902,10 @@ var WIKIVERSE = (function($) {
 				}
 			});
 		}
+	}
+	
+	function set_theme(theme) {
+	  $('link[title="main"]').attr('href', theme);
 	}
 
 	function getConnections(source, topic) {
@@ -1933,6 +1938,9 @@ var WIKIVERSE = (function($) {
 
 	wikiverse.buildBoard = function($packeryContainer, board) {
 
+        var theme = "//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/" + board.theme + "/bootstrap.min.css";
+        set_theme(theme);
+
 		$('#boardTitle > h1').append(board.title);
 		$('#boardDescription').append(board.description);
 
@@ -2044,6 +2052,7 @@ var WIKIVERSE = (function($) {
 
 		var board = {
 			"title": "",
+			"theme": $('body').data('theme'),
 			"featured_image": $packeryContainer.find('.brick[tabindex=0] img').attr('src'),
 			"bricks": wikiverseParsed,
 			"description": ""
@@ -2167,6 +2176,7 @@ var WIKIVERSE = (function($) {
 
 		var board = {
 			"title": "",
+			"theme": $('body').data('theme'),
 			"featured_image": $packeryContainer.find('.brick[tabindex=0] img').attr('src'),
 			"bricks": wikiverseParsed,
 			"description": ""

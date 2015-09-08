@@ -28,7 +28,7 @@
 
 h1, .h1, h2, .h2, h3, .h3 {
   margin: 30px 5px 15px 5px;
-  font-family: 'Open Sans', sans-serif!important;
+  /*font-family: 'Open Sans', sans-serif!important;*/
 }
 
 h2, .h2 {
@@ -62,31 +62,9 @@ h2, .h2 {
 }
 
 .brick{ 
-  /*-moz-box-sizing:    border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing:        border-box;
-  border: 5px solid white; */
-  
-  font-size: 14px;
+
   opacity: .1;
   width: 210px;
-  background: #F7F7F7;
-  /*background: #95A5A6; */
-  outline: 0;
-  border-radius: 1px;
-  /*border-bottom: 4px solid #e7e7e7;*/
- /* border: 1px solid #ddd;
-  
-  */
-  /*border-radius: 2px 2px 2px 2px; */
-  -webkit-box-shadow: 0 1px 4px 
-  rgba(0, 0, 0, 0.3), 0 0 40px 
-  rgba(0, 0, 0, 0.1) inset;
-  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-  box-shadow: 0 1px 4px 
-  rgba(0, 0, 0, 0.3), 0 0 40px 
-  rgba(0, 0, 0, 0.1) inset;
-
   #map_canvas {
     height: 400px;
     margin: 0px;
@@ -100,9 +78,18 @@ h2, .h2 {
   .btn{width:100%;}
 }
 
+.well-sm {
+    padding: 0px!important;
+    border-radius: 1px!important;
+}
+
+.well-sm {
+  margin-bottom:0px!important;
+}
+
 .brick p {
   overflow: hidden; 
-  font-family: 'Open Sans', sans-serif!important;
+  /*font-family: 'Open Sans', sans-serif!important;*/
 }
 
 .wiki p{ 

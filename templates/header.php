@@ -47,10 +47,7 @@ $nonce = wp_create_nonce( 'board' );
             </ul>
           </li>
 
-          <?php }
-          if (is_page('home')) { ?>
-          <li><a href="/start">create board</a></li>
-          <?php }  ?>
+          <?php } ?>
 
           <?php if ( is_singular("board")) { ?>    
 
@@ -101,6 +98,30 @@ $nonce = wp_create_nonce( 'board' );
             <button class="btn btn-default pull-right" id="editboard" type="button"><a href="/wp-login.php?action=register" >Register</a></button>-->
             <?php }  ?>   
             <?php if ( is_user_logged_in() ) { ?>
+
+            <li class="dropdown" id="theme-dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cogs icon-large"></i> Theme<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#" class="change-style-menu-item" rel="yeti"><i class="icon-fixed-width icon-pencil"></i> Yeti (Default)</a></li>
+                <li><a href="#" class="change-style-menu-item" rel="cerulean"><i class="icon-fixed-width icon-pencil"></i> Cerulean</a></li>
+                <li><a href="#" class="change-style-menu-item" rel="cosmo"><i class="icon-fixed-width icon-pencil"></i> Cosmo</a></li>
+                <li><a href="#" class="change-style-menu-item" rel="flatly"><i class="icon-fixed-width icon-pencil"></i> Flatly</a></li>
+                <li><a href="#" class="change-style-menu-item" rel="darkly"><i class="icon-fixed-width icon-pencil"></i> Darkly</a></li>
+                <li><a href="#" class="change-style-menu-item" rel="journal"><i class="icon-fixed-width icon-pencil"></i> Journal</a></li>
+                <li><a href="#" class="change-style-menu-item" rel="readable"><i class="icon-fixed-width icon-pencil"></i> Readable</a></li>
+                <li><a href="#" class="change-style-menu-item" rel="paper"><i class="icon-fixed-width icon-pencil"></i> Paper</a></li>
+                <li><a href="#" class="change-style-menu-item" rel="slate"><i class="icon-fixed-width icon-pencil"></i> Slate</a></li>
+                <li><a href="#" class="change-style-menu-item" rel="lumen"><i class="icon-fixed-width icon-pencil"></i> Lumen</a></li>
+                <li><a href="#" class="change-style-menu-item" rel="sandstone"><i class="icon-fixed-width icon-pencil"></i> Sandstone</a></li>
+                <li><a href="#" class="change-style-menu-item" rel="spacelab"><i class="icon-fixed-width icon-pencil"></i> Spacelab</a></li>
+                <li><a href="#" class="change-style-menu-item" rel="simplex"><i class="icon-fixed-width icon-pencil"></i> Simplex</a></li>
+                <li><a href="#" class="change-style-menu-item" rel="superhero"><i class="icon-fixed-width icon-pencil"></i> Superhero</a></li>
+                <li><a href="#" class="change-style-menu-item" rel="united"><i class="icon-fixed-width icon-pencil"></i> United</a></li>
+                <li><a href="#" class="change-style-menu-item" rel="cyborg"><i class="icon-fixed-width icon-pencil"></i> Cyborg</a></li>
+              </ul>
+            </li>
+
+
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo esc_html($current_user->display_name); ?> <span class="caret"></span></a>
               <ul class="dropdown-menu">

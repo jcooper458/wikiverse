@@ -19,7 +19,7 @@
 
 
 	?>
-	<div class="brick visible">
+	<div class="brick well well-sm visible">
 
 		<?php if(isset($the_content_Array->featured_image)){ echo '<a href="'. $the_permalink . '"><img src="' . $the_content_Array->featured_image . '"></a>'; }?>
 		<?php echo '<a href="'. $the_permalink . '">' . $the_title . '</a>'; ?>	

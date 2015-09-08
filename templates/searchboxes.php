@@ -1,4 +1,4 @@
-<div id="wikipedia-search" class="invisible w2-fix brick search visible">
+<div id="wikipedia-search" class="invisible w2-fix brick well well-sm search visible">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
@@ -24,7 +24,7 @@
 	</div>
 </div>
 
-<div id="youtube-search" class="invisible w2-fix brick search visible">
+<div id="youtube-search" class="invisible w2-fix brick well well-sm search visible">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
@@ -49,7 +49,7 @@
 
 </div>
 
-<div id="flickr-search" class="invisible w2-fix brick search visible">
+<div id="flickr-search" class="invisible w2-fix brick well well-sm search visible">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
@@ -91,7 +91,7 @@
 	</div>
 </div>
 
-<div id="instagram-search" class="invisible w2-fix brick search visible">
+<div id="instagram-search" class="invisible w2-fix brick well well-sm search visible">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
@@ -125,7 +125,7 @@
 </div>
 
 
-<div id="gmaps-search" data-type="gmaps" data-topic="" class="brick invisible w3-fix visible gmaps">
+<div id="gmaps-search" data-type="gmaps" data-topic="" class="brick well well-sm invisible w3-fix visible gmaps">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
@@ -136,7 +136,7 @@
 	
 </div>
 
-<div id="soundcloud-search" class="invisible w2-fix visible brick search">
+<div id="soundcloud-search" class="invisible w2-fix visible brick well well-sm search">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
@@ -161,7 +161,7 @@
 </div>
 
 
-<div id="twitter-search" class="invisible w2-fix visible brick search">
+<div id="twitter-search" class="invisible w2-fix visible brick well well-sm search">
 	<span class="cross"><i class="fa fa-close"></i></span>
 	<span class="handle"> <i class="fa fa-arrows"></i></span>
 
