@@ -1934,8 +1934,7 @@ var WIKIVERSE = (function($) {
 
 	wikiverse.buildBoard = function($packeryContainer, board) {
 
-        var themeURL = "//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/" + board.theme + "/bootstrap.min.css";
-        $('link[title="main"]').attr('href', themeURL);
+        $('link[title="main"]').attr('href', "//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/" + board.theme + "/bootstrap.min.css");
         $('body').data('theme', board.theme);
 
 		$('#boardTitle > h1').append(board.title);
@@ -2100,9 +2099,7 @@ var WIKIVERSE = (function($) {
 			});
 		});
 
-
 		$packeryContainer.packery();
-
 
 		$("#boardSubmitButton").on("click", function() {
 
@@ -2186,11 +2183,7 @@ var WIKIVERSE = (function($) {
 		var searchBricks = jQuery(".search");
 		$packeryContainer.packery('remove', searchBricks);
 
-		//$packeryContainer.packery();
-
 		var itemElems = $packeryContainer.packery('getItemElements');
-
-		//var tabindex = 0;
 
 		$.each(itemElems, function() {
 
