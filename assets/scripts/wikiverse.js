@@ -86,8 +86,14 @@ var WIKIVERSE = (function($) {
 				$brick.addClass('w3');
 				thisBrickData.size = 'large';
 			}
-			//if medium youtube or foto is portrait
-			else if ($brick.hasClass("w2") && ($brick.hasClass('youtube') || $brick.hasClass('foto')) && $brick.hasClass('portrait')) {
+			//if foto is portrait
+			else if ( $brick.hasClass('foto') && $brick.hasClass('portrait')) {
+				$brick.removeClass('w2');
+				$brick.addClass('w1');
+				thisBrickData.size = 'small';
+			}
+			//if medium youtube 
+			else if ($brick.hasClass("w2") && $brick.hasClass('youtube') ) {
 				$brick.removeClass('w2');
 				$brick.addClass('w1');
 				thisBrickData.size = 'small';
@@ -1912,7 +1918,7 @@ var WIKIVERSE = (function($) {
 
 		$brick.addClass('w2-fix');
 
-		var iframe = '<iframe class="" id="ytplayer" type="text/html" width="420" height="250" src="http://www.youtube.com/embed/' + youtubeObj.youtubeID + '?autoplay=1" webkitallowfullscreen autoplay mozallowfullscreen allowfullscreen frameborder="0"/>';
+		var iframe = '<iframe class="" id="ytplayer" type="text/html" width="430" height="250" src="http://www.youtube.com/embed/' + youtubeObj.youtubeID + '?autoplay=1" webkitallowfullscreen autoplay mozallowfullscreen allowfullscreen frameborder="0"/>';
 
 		$brick.find('img').hide();
 		$brick.find('.youtubePlayButton').hide();
