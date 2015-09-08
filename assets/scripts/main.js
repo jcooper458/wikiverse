@@ -22,9 +22,9 @@
         $('body').on('click', '.change-style-menu-item', function() {
 
           var theme_name = $(this).attr('rel');
-          var theme = "//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/" + theme_name + "/bootstrap.min.css";
+          var themeURL = "//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/" + theme_name + "/bootstrap.min.css";
           
-          setTheme(theme);
+          $('link[title="main"]').attr('href', themeURL);
 
           $('body').data('theme', theme_name);
           $('#packery').packery();

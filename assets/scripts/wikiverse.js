@@ -903,10 +903,6 @@ var WIKIVERSE = (function($) {
 			});
 		}
 	}
-	
-	function setTheme(theme) {
-	  $('link[title="main"]').attr('href', theme);
-	}
 
 	function getConnections(source, topic) {
 
@@ -1938,8 +1934,9 @@ var WIKIVERSE = (function($) {
 
 	wikiverse.buildBoard = function($packeryContainer, board) {
 
-        var theme = "//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/" + board.theme + "/bootstrap.min.css";
-        setTheme(theme);
+        var themeURL = "//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/" + board.theme + "/bootstrap.min.css";
+        $('link[title="main"]').attr('href', themeURL);
+        $('body').data('theme', board.theme);
 
 		$('#boardTitle > h1').append(board.title);
 		$('#boardDescription').append(board.description);
@@ -2054,8 +2051,8 @@ var WIKIVERSE = (function($) {
 			"title": "",
 			"theme": $('body').data('theme'),
 			"featured_image": $packeryContainer.find('.brick[tabindex=0] img').attr('src'),
-			"bricks": wikiverseParsed,
 			"description": ""
+			"bricks": wikiverseParsed,
 		};
 
 		//remove search bricks:
@@ -2115,8 +2112,11 @@ var WIKIVERSE = (function($) {
 
 				var title = $('#boardTitle').val();
 				var description = $('#boardDescription').val();
+				var theme = $('body').data('theme');
+
 				board.description = description;
 				board.title = title;
+				board.theme = theme;
 				
 				var JSONwikiverse = JSON.stringify(board);
 
@@ -2173,13 +2173,13 @@ var WIKIVERSE = (function($) {
 		var postid = $('#postID').html();
 
 		var wikiverseParsed = {};
-
+		
 		var board = {
 			"title": "",
 			"theme": $('body').data('theme'),
 			"featured_image": $packeryContainer.find('.brick[tabindex=0] img').attr('src'),
-			"bricks": wikiverseParsed,
 			"description": ""
+			"bricks": wikiverseParsed,
 		};
 
 		//remove search bricks:
