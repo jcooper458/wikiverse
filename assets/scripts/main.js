@@ -26,10 +26,19 @@
           $('body').data('theme', theme_name);
           $('#packery').packery();
         });
-
       },
       finalize: function() {
-        // JavaScript to be fired on all pages, after page specific JS is fired
+
+        //var showLeftPush = document.getElementById( 'showLeftPush' );
+        var menuLeft = document.getElementById( 'cbp-spmenu-s1' );
+        var body = document.body;
+        var wv_nav = document.getElementById( 'wv_nav' );
+
+        showLeftPush.onclick = function() {          
+           classie.toggle( body, 'cbp-spmenu-push-toright' );
+           classie.toggle( menuLeft, 'cbp-spmenu-open' );
+           classie.toggle( wv_nav, 'navbar-fixed-top' );
+         };        
       }
     },
     // Home page

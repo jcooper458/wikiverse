@@ -8,7 +8,7 @@ use Roots\Sage\Wrapper;
 <!doctype html>
 <html class="no-js" <?php language_attributes(); ?>>
   <?php get_template_part('templates/head'); ?>
-  <body <?php body_class(); ?>>
+  <body <?php body_class('cbp-spmenu-push'); ?>>
     <!--[if lt IE 9]>
       <div class="alert alert-warning">
         <?php _e('You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.', 'sage'); ?>
@@ -20,7 +20,7 @@ use Roots\Sage\Wrapper;
         get_template_part('templates/header');
       }
     ?>
-    <div class="fluid-container" role="document">
+    <div class="container-fluid" role="document">
       <div class="content">
         <main class="main" role="main">
           <?php include Wrapper\template_path(); ?>
@@ -37,5 +37,7 @@ use Roots\Sage\Wrapper;
       get_template_part('templates/footer');
       wp_footer();
     ?>
+  
   </body>
+
 </html>
