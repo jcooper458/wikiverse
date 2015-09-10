@@ -2666,7 +2666,6 @@ var WIKIVERSE = (function($) {
 			$results.empty();
 
 			switch ($('#source').val()) {
-
 				case "wikipedia":
 					getWikis($topBrick, query, lang);
 					break;

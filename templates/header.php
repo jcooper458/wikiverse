@@ -47,12 +47,7 @@ $nonce = wp_create_nonce( 'board' );
 
         <?php if ( is_singular("board") && ( $current_user->ID == $post->post_author ) || ( is_page('start'))) { ?>    
 
-        <?php if ( $current_user->ID == $post->post_author ) { // if is author ?>
-
-        <li><a class="searchButton" href="#">add content</a></li>
-
-
-        <?php }  ?>                  
+        <li><a class="searchButton" href="#">add content</a></li>              
 
         <?php }  ?>
       </ul>
