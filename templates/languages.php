@@ -1,4 +1,4 @@
-<select id="langselect" name="input" class="pull-right show-menu-arrow"  data-size="10" data-live-search="true">
+<select id="langselect" name="input" class="selectpicker pull-right show-menu-arrow" data-size="10" data-width="100%" data-style="btn btn-default btn-lg" data-live-search="true">
 	<option value="en">English</option>
 	<option value="de">Deutsch</option>
 	<option value="fr">Français</option>

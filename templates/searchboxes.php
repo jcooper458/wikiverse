@@ -1,186 +1,61 @@
-<div id="wikipedia-search" class="invisible w2-fix brick well well-sm search visible">
-	<span class="cross"><i class="fa fa-close"></i></span>
-	<span class="handle"> <i class="fa fa-arrows"></i></span>
+<div id="search">
+	<button type="button" class="close">×</button>
 
-	<i class="fa fa-wikipedia"></i>&nbsp;Wikipedia
+	<div class="search-container center buffer-top-large">
 
-	<?php get_template_part('templates/languages'); ?>
+		<div class="row">
+			<h3>First select a source..</h3>
+			<select id="source" name="searchType" class="selectpicker" data-style="btn btn-default btn-lg" data-width="100%">
+				<option value=""></option>
+				<option value="wikipedia">  <i class="fa fa-wikipedia"></i>wikipedia</option>
+				<option value="youtube">    <i class="fa fa-youtube"></i>youtube</option>
+				<option value="flickr">     <i class="fa fa-flickr"></i>flickr</option>
+				<option value="instagram">  <i class="fa fa-instagram"></i>instagram</option>
+				<option value="twitter">    <i class="fa fa-twitter"></i>twitter</option>
+				<option value="soundcloud"> <i class="fa fa-soundcloud"></i>soundcloud</option>
+				<option value="gmaps">      <i class="fa fa-map-marker"></i>gmaps</option>
+			</select>
+		</div>    
 
-	<div class="input-group">
-		<input type="text" id="wiki-searchinput" placeholder="" class="form-control">
-		<span class="input-group-btn">
-			<button class="btn btn-default start"1 type="button">Search</button>
-		</span>
-	</div><!-- /input-group -->
+		<div class="row sourceParams" id="wikipediaType" >
+			<h3>Wikipedia, fine! Which language do you want?</h3>
+			<?php get_template_part('templates/languages'); ?>
+		</div>  
 
-	<table class="table table-hover wiki results"></table>
+		<div class="row sourceParams" id="instagramType" >
+			<h3>Optionally select some more criteria, search by..</h3>
+			<select name="input" class="selectpicker" data-style="btn btn-default btn-lg" data-width="100%">
+				<option value="hashtag">#hashtag</option>
+				<option value="username"  >@username</option>
+				<option value="coordinates" >coordinates</option>
+			</select>
+		</div>        
 
-	<div class="search-ui">
-		<ul class="nav nav-pills">
-			<li class="pull-right">
-				<a class="clear"><h6>clear results</h6></a>
-			</li>
-		</ul>
-	</div>
-</div>
+		<div class="row sourceParams" id="flickrType" >
+			<h3>Optionally select some more criteria, search by..</h3>
+			<select name="flickrType" class="selectpicker" data-style="btn btn-default btn-lg" data-width="100%">
+				<option value="textQuery">keyword</option>
+				<option value="userQuery">username</option>
+				<option value="geoQuery">coordinates</option>
+			</select>
+		</div>
 
-<div id="youtube-search" class="invisible w2-fix brick well well-sm search visible">
-	<span class="cross"><i class="fa fa-close"></i></span>
-	<span class="handle"> <i class="fa fa-arrows"></i></span>
+		<div class="row sourceParams" id="flickrSort" >
+			<h3>..optionally sort by..</h3>
+			<select name="flickrSort" class="selectpicker" data-style="btn btn-default btn-lg" data-width="100%">
+				<option value="relevance">by relevance</option>
+				<option value="interestingness-desc">by interestingness</option>
+			</select>
+		</div>
 
-	<i class="fa fa-youtube"></i>&nbsp;Youtube Search
+		<div class="row sourceParams" id="searchInput" >
+			<input type="search" value="" placeholder="type any keyword here.." />
+		</div>        
 
-	<div class="input-group">
-		<input type="text" id="youtube-searchinput" placeholder="" class="form-control searchbox">
-		<span class="input-group-btn">
-			<button class="btn btn-default start" type="button">Search</button>
-		</span>
-	</div><!-- /input-group -->
+		<div class="row sourceParams" id="searchButton" >
+		<button id="wv_search" type="submit" class="btn btn-primary btn-lg">Search</button>
+		</div>
 
-	<table class="table table-hover results youtube"></table>
-
-	<div class="search-ui">
-		<ul class="nav nav-pills">
-			<li class="pull-right">
-				<a class="clear"><h6>clear results</h6></a>
-			</li>
-		</ul>
-	</div>
-
-</div>
-
-<div id="flickr-search" class="invisible w2-fix brick well well-sm search visible">
-	<span class="cross"><i class="fa fa-close"></i></span>
-	<span class="handle"> <i class="fa fa-arrows"></i></span>
-
-	<i class="fa fa-flickr"></i>&nbsp;Flickr Search
-
-	<select id="flickrType" name="flickrType" class="pull-right show-menu-arrow">
-		<option value="textQuery">query</option>
-		<option value="userQuery">username</option>
-		<option value="geoQuery">coordinates</option>
-	</select>
-
-	<div class="input-group-btn">
-
-		<div class="input-group">
-			<input type="text" id="flickr-searchinput" placeholder="" class="form-control searchbox">
-			<span class="input-group-btn">
-				<button class="btn btn-default start" type="button">Search</button>
-			</span>
-		</div><!-- /input-group -->
-	</div><!-- /input-group -->
-
-	<h5>Sort by: </h5>
-
-	<div class="radio-inline">
-		<label><input class="interestingness" type="radio" name="sort" value="relevance" checked>Relevance</label>
-	</div>
-	<div class="radio-inline">
-		<label><input class="relevance" type="radio" name="sort" value="interestingness-desc">Interestingness</label>
 	</div>
 
-	<div class="flickr results"></div>
-
-	<div class="search-ui">
-		<ul class="nav nav-pills">
-			<li class="pull-right">
-				<a class="clear"><h6>clear results</h6></a>
-			</li>
-		</ul>
-	</div>
-</div>
-
-<div id="instagram-search" class="invisible w2-fix brick well well-sm search visible">
-	<span class="cross"><i class="fa fa-close"></i></span>
-	<span class="handle"> <i class="fa fa-arrows"></i></span>
-
-	<i class="fa fa-instagram"></i>&nbsp;Instagram Search
-
-	<select id="instagramType" name="input" class="pull-right show-menu-arrow">
-		<option value="hashtag"		>hashtag</option>
-		<option value="username"	>username</option>
-		<option value="coordinates"	>coordinates</option>
-	</select>
-
-	<div class="input-group-btn">
-
-		<div class="input-group">
-			<input type="text" id="instagram-searchinput" placeholder="" class="form-control form-inline searchbox">
-			<span class="input-group-btn">
-				<button class="btn btn-default start" type="button">Search</button>
-			</span>
-		</div><!-- /input-group -->
-	</div><!-- /input-group -->
-
-	<div class="instagram results"></div>
-
-	<div class="search-ui">
-		<ul class="nav nav-pills">
-			<li class="pull-right">
-				<a class="clear"><h6>clear results</h6></a>
-			</li>
-		</ul>
-	</div>
-</div>
-
-
-<div id="gmaps-search" data-type="gmaps" data-topic="" class="brick well well-sm invisible w3-fix visible gmaps">
-	<span class="cross"><i class="fa fa-close"></i></span>
-	<span class="handle"> <i class="fa fa-arrows"></i></span>
-
-	<i class="fa fa-map-marker"></i>&nbsp;Google Maps Search
-
-	<input id="pac-input" class="controls" type="text" placeholder="Enter a location">
-	<div id="map_canvas"></div>
-	
-</div>
-
-<div id="soundcloud-search" class="invisible w2-fix visible brick well well-sm search">
-	<span class="cross"><i class="fa fa-close"></i></span>
-	<span class="handle"> <i class="fa fa-arrows"></i></span>
-
-	<i class="fa fa-soundcloud"></i>&nbsp;Soundcloud Search
-
-	<div class="input-group">
-		<input type="text" id="soundcloud-searchinput" placeholder="" class="form-control searchbox">
-		<span class="input-group-btn">
-			<button class="btn btn-default start" type="button">Search</button>
-		</span>
-	</div><!-- /input-group -->
-
-	<table class="table table-hover soundcloud results"></table>
-
-	<div class="search-ui">
-		<ul class="nav nav-pills">
-			<li class="pull-right">
-				<a class="clear"><h6>clear results</h6></a>
-			</li>
-		</ul>
-	</div>
-</div>
-
-
-<div id="twitter-search" class="invisible w2-fix visible brick well well-sm search">
-	<span class="cross"><i class="fa fa-close"></i></span>
-	<span class="handle"> <i class="fa fa-arrows"></i></span>
-
-	<i class="fa fa-twitter"></i>&nbsp;Twitter Search
-
-	<div class="input-group">
-		<input type="text" id="twitter-searchinput" placeholder="" class="form-control searchbox">
-		<span class="input-group-btn">
-			<button class="btn btn-default start" type="button">Search</button>
-		</span>
-	</div><!-- /input-group -->
-
-	<table class="table table-hover twitter results"></table>
-
-	<div class="search-ui">
-		<ul class="nav nav-pills">
-			<li class="pull-right">
-				<a class="clear"><h6>clear results</h6></a>
-			</li>
-		</ul>
-	</div>
 </div>

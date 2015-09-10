@@ -11,14 +11,9 @@ $nonce = wp_create_nonce( 'board' );
 
 <header class="banner" role="banner">
 
-  <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
-    <h3>Menu</h3>
-    <a href="#">Celery seakale</a>
-    <a href="#">Dulse daikon</a>
-    <a href="#">Zucchini garlic</a>
-    <a href="#">Catsear azuki bean</a>
-    <a href="#">Dandelion bunya</a>
-    <a href="#">Rutabaga</a>
+  <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left well well-sm" id="sidebar">
+    <h3>Search results</h3>
+    <div class="results"></div>
   </nav>
 
   <nav id="wv_nav" class="navbar navbar-default navbar-fixed-top">
@@ -40,24 +35,12 @@ $nonce = wp_create_nonce( 'board' );
 
         <ul class="nav navbar-nav">    
 
-         <li><a href="#" class="" id="showLeftPush">add content</a></li> 
-
-        <?php if ( is_singular("board")) { ?>    
+        <?php if ( is_singular("board") && ( $current_user->ID == $post->post_author ) || ( is_page('start'))) { ?>    
 
         <?php if ( $current_user->ID == $post->post_author ) { // if is author ?>
 
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">add content<span class="caret"></span></a>
-          <ul class="dropdown-menu sources-menu">
-            <li id="wikipedia" ><a href="#"><i class="fa fa-wikipedia"></i>   wikipedia </a></li>
-            <li id="youtube"   ><a href="#"><i class="fa fa-youtube"></i>   youTube   </a></li>
-            <li id="flickr"    ><a href="#"><i class="fa fa-flickr"></i>    flickr    </a></li>
-            <li id="instagram" ><a href="#"><i    class="fa fa-instagram"></i>  instagram </a></li>
-            <li id="soundcloud"><a href="#"><i     class="fa fa-soundcloud"></i>&nbsp;soundcloud  </a></li>
-            <li id="twitter"><a href="#"><i     class="fa fa-twitter"></i>&nbsp;Twitter  </a></li>
-            <li id="gmaps"     ><a href="#">&nbsp;<i class="fa fa-map-marker"></i>  google maps </a></li>
-          </ul>
-        </li>
+        <li><a href="#search">Search</a></li>
+
 
         <?php }  ?>                  
 

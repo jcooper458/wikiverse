@@ -1439,7 +1439,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	function getWikis($wikiSearchBrick, topic, lang) {
-
+		console.log($wikiSearchBrick.find('h2').html())
 		$.ajax({
 			url: 'http://' + lang + '.wikipedia.org/w/api.php',
 			data: {
@@ -1458,9 +1458,10 @@ var WIKIVERSE = (function($) {
 
 						var title = this.title;
 						var snippet = this.snippet;
+						var $results = $('.results');
 
 						//append row to searchbox-table
-						$wikiSearchBrick.find('.results').append('<tr data-toggle="tooltip" title="' + strip(snippet) + '"><td><el class="result">' + title + '</el></td></tr>');
+						$results.append('<tr data-toggle="tooltip" title="' + strip(snippet) + '"><td><el class="result">' + title + '</el></td></tr>');
 
 						//create the tooltips
 						$('tr').tooltip({
@@ -1468,10 +1469,7 @@ var WIKIVERSE = (function($) {
 							placement: 'right'
 						});
 						//bind event to every row -> so you can start the wikiverse
-						$wikiSearchBrick.find('tr').unbind('click').click(function(e) {
-
-							//stamp the searchbrick for better clicking
-							$packeryContainer.packery('stamp', $wikiSearchBrick);
+						$results.find('tr').unbind('click').click(function(e) {
 
 							var topic = {
 								title: $(this).find('.result').html(),
@@ -1485,15 +1483,10 @@ var WIKIVERSE = (function($) {
 							$(this).tooltip('destroy');
 							$(this).remove();
 
-							//unstamp the searchbrick so you can move it again around
-							//$packeryContainer.packery( 'unstamp', $wikiSearchBrick );
-
 							return false;
 						});
 
 					});
-
-					$wikiSearchBrick.find('.search-ui').show();
 
 					//relayout packery
 					$packeryContainer.packery();
@@ -1501,7 +1494,7 @@ var WIKIVERSE = (function($) {
 					//nothing has been found on Wikipedia
 				} else {
 					//append row to searchbox-table: NO RESULTS
-					$wikiSearchBrick.find('.results').append('<tr class="no-results"><td>No Wikipedia articles found for "' + topic + '"</td></tr>');
+					$results.find('.results').append('<tr class="no-results"><td>No Wikipedia articles found for "' + topic + '"</td></tr>');
 				}
 			},
 			error: function(data) {
@@ -2544,47 +2537,51 @@ var WIKIVERSE = (function($) {
 
 	};
 
-	wikiverse.initSearchBricks = function() {
+	wikiverse.initSearch = function() {
 
-		var $thisSearch;
+		$('a[href="#search"]').on('click', function(event) {
+		    event.preventDefault();
+		    $('#search').addClass('open');
+		    $('#search > form > input[type="search"]').focus();
+		});
+		
+		$('#search, #search button.close').on('click keyup', function(event) {
+		    if (event.target === this || event.target.className === 'close' || event.keyCode === 27) {
+		        $(this).removeClass('open');
+		    }
+		});
 
-		//Global get SearchBoxes
-		$(".sources-menu li").on("click", function(event) {
+		var $topBrick = $(defaultBrick);
+		
 
-			//what are we searching for? wikipedia, soundcloud, etc
-			var source = $(this).attr('id');
-
-			//if searchbrick is not inside packery
-			if ($('#' + source + '-search', '#packery').length !== 1) {
-
-				$thisSearch = $('#' + source + '-search').clone();
-
-				$thisSearch.find('select').selectpicker();
-
-				$thisSearch.removeClass("invisible");
-				$packeryContainer.prepend($thisSearch).packery('prepended', $thisSearch);
-				$thisSearch.each(makeEachDraggable);
+		//detect top element
+		/*$(document).scroll(function() {
+		    var cutoff = $(window).scrollTop();
+		    $('.brick').removeClass('top').each(function() {
+		        if ($(this).offset().top > cutoff) {
+		            $topBrick = $(this);
+		            $topBrick.addClass('top');
+		            console.log($topBrick.find('h2').html());
+		            return false; // stops the iteration after the first one on screen
+		        }
+		    });
+		});*/
 
 				if (source === "gmaps") {
 					getGmapsSearch($thisSearch);
 				}
 
-				$thisSearch.find('input[type=text]').focus();
+				/*$thisSearch.find('input[type=text]').focus();*/
 
 				//make the enter keypress do the search
-				$thisSearch.find("input[type=text]").keyup(function(e) {
+				/*$thisSearch.find("input[type=text]").keyup(function(e) {
 					if (e.keyCode === 13) {
 						$(e.target).siblings('span').find('button').trigger('click');
 					}
-				});
+				});*/
 
-				//set default lang to english
-				var lang = "en";
 
-				//track the change of the language and pass it to both wiki-typeahead and getWikis
-				$thisSearch.find('select').live('change', function() {
-					lang = $(this).val();
-				});
+/*
 
 				//WIKIPEDIA AUTOCOMPLETE
 				$thisSearch.find('#wiki-searchinput').typeahead({
@@ -2637,65 +2634,110 @@ var WIKIVERSE = (function($) {
 							return true;
 						}
 					}
-				});
+				});*/
 
-				$thisSearch.find(".start").on("click", function() {
+	$('div.sourceParams').hide();
 
-					$thisSearch.find('.results').empty();
+	$('#source').on('change', function(){   
+
+	    var selected = $('#source option:selected').val();
+
+	    if(selected === "instagram"){
+	      $('div.sourceParams').hide();
+	      $("div#instagramType.row").show();
+	      $("div#searchInput.row").show();
+	      $("div#searchButton.row").show();
+	    }
+	    else if(selected === "wikipedia"){
+	      $('div.sourceParams').hide();
+	      $("div#wikipediaType.row").show();
+	      $("div#searchInput.row").show();
+	      $("div#searchButton.row").show();
+	    }
+	    else if(selected === "flickr"){
+	      $('div.sourceParams').hide();
+	      $("div#flickrType.row").show();
+	      $("div#flickrSort.row").show();
+	      $("div#searchInput.row").show();
+	      $("div#searchButton.row").show();
+	    }
+	    else if(selected === "gmaps"){
+	      $('div.sourceParams').hide();
+	    }
+	    else{
+	      $('div.sourceParams').hide();
+	      $("div#searchInput.row").show();
+	      $("div#searchButton.row").show();              
+	    }
+	});
+
+				$("#wv_search").on("click", function() {
+					
+					//close the search
+					$('#search').removeClass('open');
+
+					//Open the sidebar:
+			        classie.toggle( document.body, 'cbp-spmenu-push-toright' );
+			        classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );
+
+					$('.results').empty();	
 
 					var query, topic, params, sort;
 
-					switch ($thisSearch.attr('id')) {
+					//set default lang to english
+					var lang = "en";
 
-						case "wikipedia-search":
-							topic = $thisSearch.find("#wiki-searchinput").val();
-							getWikis($thisSearch, topic, lang);
+					query = $("#searchInput input").val();
 
-							break;
+					switch ($('#source').val()) {
 
-						case "flickr-search":
+						case "wikipedia":
+							//track the change of the language and pass it to both wiki-typeahead and getWikis
+							$('#langselect').live('change', function() {
+								lang = $(this).val();
+							});
+	
+							getWikis($topBrick, query, lang);
 
+						break;
+
+						case "flickr":
 							var flickrType = $thisSearch.find("select option:selected").val();
 
-							query = $thisSearch.find(".searchbox").val();
+							
 							sort = $thisSearch.find(".radio-inline input[type='radio']:checked").val();
 
-							getFlickrs($thisSearch, query, sort, flickrType);
-							break;
+							getFlickrs($topBrick, query, sort, flickrType);
+						break;
 
-						case "instagram-search":
-							query = $thisSearch.find(".searchbox").val();
+						case "instagram":
+
 							var instagramType = $("#instagramType").val();
 
-							getInstagrams($thisSearch, query, instagramType);
-							break;
+							getInstagrams($topBrick, query, instagramType);
+						break;
 
-						case "youtube-search":
-							topic = $thisSearch.find(".searchbox").val();
-							getYoutubes($thisSearch, topic);
-							break;
+						case "youtube":
 
-						case "soundcloud-search":
-							query = $thisSearch.find(".searchbox").val();
+							getYoutubes($topBrick, topic);
+						break;
+
+						case "soundcloud":
+
 							params = $thisSearch.find(".radio-inline input[type='radio']:checked").val();
 
-							getSoundcloud($thisSearch, query, params);
-							break;
+							getSoundcloud($topBrick, query, params);
+						break;
 
-						case "twitter-search":
-							query = $thisSearch.find(".searchbox").val();
-							getTweets($thisSearch, query);
-							break;
+						case "twitter":
+
+							getTweets($topBrick, query);
+						break;
 					}
 
 				});
 
-			} else {
-				$('html, body').animate({
-					scrollTop: 0
-				}, 1000);
-			}
-		});
+	
 
 
 
@@ -2714,7 +2756,7 @@ var WIKIVERSE = (function($) {
 	}, false);
 
 
-	document.addEventListener("keydown", function(e) {
+	/*document.addEventListener("keydown", function(e) {
 		if (!($("input").is(":focus")) && e.keyCode === 87) {
 			e.preventDefault();
 			$('li#wikipedia').trigger('click');
@@ -2759,7 +2801,7 @@ var WIKIVERSE = (function($) {
 			$('li#wikipedia').trigger('click');
 			$('li#youtube').trigger('click');
 		}
-	}, false);
+	}, false);*/
 
 	//ccall the board-pilots on click (saveboard, clearboard, etc)
 	$('.board-pilot').click(function() {
@@ -2801,8 +2843,6 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
-
-	//
 
 	//show save board button on packery change (needs work)
 	$packeryContainer.packery('on', 'layoutComplete', function(pckryInstance, laidOutItems) {

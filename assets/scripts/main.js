@@ -29,16 +29,6 @@
       },
       finalize: function() {
 
-        //var showLeftPush = document.getElementById( 'showLeftPush' );
-        var menuLeft = document.getElementById( 'cbp-spmenu-s1' );
-        var body = document.body;
-        var wv_nav = document.getElementById( 'wv_nav' );
-
-        showLeftPush.onclick = function() {          
-           classie.toggle( body, 'cbp-spmenu-push-toright' );
-           classie.toggle( menuLeft, 'cbp-spmenu-open' );
-           classie.toggle( wv_nav, 'navbar-fixed-top' );
-         };        
       }
     },
     // Home page
@@ -58,7 +48,7 @@
     // single board page
     'single_board': {
       init: function() {
-        WIKIVERSE.initSearchBricks();
+        WIKIVERSE.initSearch();
 
         var postID = $("#postID").html();
 
@@ -73,7 +63,7 @@
     // Start page
     'start': {
       init: function() {
-        WIKIVERSE.initSearchBricks();
+        WIKIVERSE.initSearch();
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS      
