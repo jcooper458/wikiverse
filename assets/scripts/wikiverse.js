@@ -2513,19 +2513,17 @@ var WIKIVERSE = (function($) {
 		    }
 		});
 
-		//adding escape functionality for closing search
-		
-			$(document).keyup(function(e) {
-			     if ($('#search').hasClass('open') && e.keyCode === 27) { // escape key maps to keycode `27`
-			     	console.log("cdksladcjlkas");
-			        $('#search').removeClass('open');
-			    }
-			});
+		//adding escape functionality for closing search		
+		$(document).keyup(function(e) {
+		     if ($('#search').hasClass('open') && e.keyCode === 27) { // escape key maps to keycode `27`
+		     	console.log("cdksladcjlkas");
+		        $('#search').removeClass('open');
+		    }
+		});
 		
 		//topbrick is the toppest brick in regards to the scroll position
 		//this is used to insert bricks at the same height of the scroll position
-		var $topBrick = $(defaultBrick);
-		
+		var $topBrick = $(defaultBrick);		
 
 		//detect top element
 		$(document).scroll(function() {
@@ -2554,60 +2552,15 @@ var WIKIVERSE = (function($) {
 				});*/
 
 
-/*
+				//set default lang to english
+				var lang = "en";
 
-				//WIKIPEDIA AUTOCOMPLETE
-				$thisSearch.find('#wiki-searchinput').typeahead({
-					source: function(query, process) {
-						return $.ajax({
-							url: 'http://' + lang + '.wikipedia.org/w/api.php',
-							dataType: "jsonp",
-							data: {
-								'action': "opensearch",
-								'format': "json",
-								'search': query
-							},
-							success: function(json) {
-								process(json[1]);
-							}
-
-						});
-					},
-					matcher: function(item) {
-						if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
-							return true;
-						}
-					}
+				$('#langselect').live('change', function() {
+					lang = $(this).val();
 				});
 
-				//YOUTUBE AUTOCOMPLETE
-				$thisSearch.find('#youtube-searchinput').typeahead({
 
-					source: function(query, process) {
-						return $.ajax({
-							url: "http://suggestqueries.google.com/complete/search",
-							dataType: "jsonp",
-							data: {
-								'client': "youtube",
-								'ds': "yt",
-								'q': query
-							},
-							success: function(json) {
-								var resultArray = [];
-								$.each(json[1], function() {
-									resultArray.push(this[0]);
-								});
-								process(resultArray);
-							}
 
-						});
-					},
-					matcher: function(item) {
-						if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
-							return true;
-						}
-					}
-				});*/
 
 	$('div.sourceParams').hide();
 
@@ -2623,25 +2576,86 @@ var WIKIVERSE = (function($) {
 	      $("div#searchButton.row").show();
 	    }
 	    else if(selected === "wikipedia"){
-	      $('div.sourceParams').hide();
-	      $("div#wikipediaType.row").show();
-	      $("div#searchInput.row").show();
-	      $("div#searchButton.row").show();
+
+	    	//WIKIPEDIA AUTOCOMPLETE
+	    	$('#searchInput input').typeahead('destroy');
+	    	$('#searchInput input').typeahead({
+	    		source: function(query, process) {
+	    			return $.ajax({
+	    				url: 'http://' + lang + '.wikipedia.org/w/api.php',
+	    				dataType: "jsonp",
+	    				data: {
+	    					'action': "opensearch",
+	    					'format': "json",
+	    					'search': query
+	    				},
+	    				success: function(json) {
+	    					process(json[1]);
+	    				}
+
+	    			});
+	    		},
+	    		matcher: function(item) {
+	    			if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
+	    				return true;
+	    			}
+	    		}
+	    	});
+			$('div.sourceParams').hide();
+			$("div#wikipediaType.row").show();
+			$("div#searchInput.row").show();
+			$("div#searchButton.row").show();
 	    }
 	    else if(selected === "flickr"){
-	      $('div.sourceParams').hide();
-	      $("div#flickrType.row").show();
-	      $("div#flickrSort.row").show();
-	      $("div#searchInput.row").show();
-	      $("div#searchButton.row").show();
+			$('div.sourceParams').hide();
+			$("div#flickrType.row").show();
+			$("div#flickrSort.row").show();
+			$("div#searchInput.row").show();
+			$("div#searchButton.row").show();
 	    }
 	    else if(selected === "gmaps"){
-	      $('div.sourceParams').hide();
+	        $('div.sourceParams').hide();
+	    }
+	    else if(selected === "youtube"){
+
+	        //YOUTUBE AUTOCOMPLETE	        
+	        $('#searchInput input').typeahead('destroy');
+
+	        $('#searchInput input').typeahead({
+
+	        	source: function(query, process) {
+	        		return $.ajax({
+	        			url: "http://suggestqueries.google.com/complete/search",
+	        			dataType: "jsonp",
+	        			data: {
+	        				'client': "youtube",
+	        				'ds': "yt",
+	        				'q': query
+	        			},
+	        			success: function(json) {
+	        				var resultArray = [];
+	        				$.each(json[1], function() {
+	        					resultArray.push(this[0]);
+	        				});
+	        				process(resultArray);
+	        			}
+
+	        		});
+	        	},
+	        	matcher: function(item) {
+	        		if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
+	        			return true;
+	        		}
+	        	}
+	        });
+	        $('div.sourceParams').hide();
+	        $("div#searchInput.row").show();
+	        $("div#searchButton.row").show();   
 	    }
 	    else{
-	      $('div.sourceParams').hide();
-	      $("div#searchInput.row").show();
-	      $("div#searchButton.row").show();              
+			$('div.sourceParams').hide();
+			$("div#searchInput.row").show();
+			$("div#searchButton.row").show();              
 	    }
 	});
 
@@ -2661,21 +2675,12 @@ var WIKIVERSE = (function($) {
 
 					var query, topic, params, sort;
 
-					//set default lang to english
-					var lang = "en";
-
 					query = $("#searchInput input").val();
 
 					switch ($('#source').val()) {
 
-						case "wikipedia":
-							//track the change of the language and pass it to both wiki-typeahead and getWikis
-							$('#langselect').live('change', function() {
-								lang = $(this).val();
-							});
-	
+						case "wikipedia":							
 							getWikis($topBrick, query, lang);
-
 						break;
 
 						case "flickr":
@@ -2685,23 +2690,19 @@ var WIKIVERSE = (function($) {
 						break;
 
 						case "instagram":
-
 							var instagramType = $("#instagramType select").val();
 							getInstagrams($topBrick, query, instagramType);
 						break;
 
 						case "youtube":
-
 							getYoutubes($topBrick, topic);
 						break;
 
 						case "soundcloud":
-
 							getSoundcloud($topBrick, query, params);
 						break;
 
 						case "twitter":
-
 							getTweets($topBrick, query);
 						break;
 					}
