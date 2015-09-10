@@ -35,6 +35,7 @@ var WIKIVERSE = (function($) {
 
 	var $packeryContainer = $('.packery');
 	var $results = $('.results');
+	var $sidebar = $('#sidebar');
 
 //	$('#packery').imagesLoaded( function() {
 		// initialize Packery
@@ -922,29 +923,35 @@ var WIKIVERSE = (function($) {
 		}
 
 		$results.empty();
+		$('#sidebar').find('h3').empty();
+		$('#sidebar').find('h3').append( topic );
 
 		switch (source) {
 
 			case "flickr":
 				getFlickrs($(defaultBrick), topic, "relevance", "textQuery");
-				break;
+			break;
 
 			case "instagram":
 				//remove whitespace from instagram query
 				getInstagrams($(defaultBrick), topic.replace(/ /g, ''), "hashtag");
-				break;
+			break;
 
 			case "youtube":
 				getYoutubes($(defaultBrick), topic);
-				break;
+			break;
 
 			case "soundcloud":
 				getSoundcloud($(defaultBrick), topic);
-				break;
+			break;
 
 			case "twitter":
 				getTweets($(defaultBrick), topic);
-				break;
+			break;
+
+			case "wikipedia":
+				getWikis($(defaultBrick), topic, "en");
+			break;
 		}
 	}
 
@@ -2010,6 +2017,12 @@ var WIKIVERSE = (function($) {
 
 	wikiverse.createBoard = function(wpnonce) {
 
+		//Open the sidebar:
+		if($('body').hasClass('cbp-spmenu-push-toright')){
+			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
+			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
+		}
+
 		var wikiverseParsed = {};
 
 		var board = {
@@ -2019,10 +2032,6 @@ var WIKIVERSE = (function($) {
 			"description": "",
 			"bricks": wikiverseParsed
 		};
-
-		//remove search bricks:
-		var searchBricks = jQuery(".search");
-		$packeryContainer.packery('remove', searchBricks);
 
 		//$packeryContainer.packery();
 
@@ -2064,8 +2073,6 @@ var WIKIVERSE = (function($) {
 				}
 			});
 		});
-
-		$packeryContainer.packery();
 
 		$("#boardSubmitButton").on("click", function() {
 
@@ -2133,6 +2140,12 @@ var WIKIVERSE = (function($) {
 
 	wikiverse.saveBoard = function(wpnonce) {
 
+		//Open the sidebar:
+		if($('body').hasClass('cbp-spmenu-push-toright')){
+			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
+			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
+		}
+
 		var postid = $('#postID').html();
 
 		var wikiverseParsed = {};
@@ -2144,10 +2157,6 @@ var WIKIVERSE = (function($) {
 			"description": "",
 			"bricks": wikiverseParsed
 		};
-
-		//remove search bricks:
-		var searchBricks = jQuery(".search");
-		$packeryContainer.packery('remove', searchBricks);
 
 		var itemElems = $packeryContainer.packery('getItemElements');
 
@@ -2198,8 +2207,6 @@ var WIKIVERSE = (function($) {
 						nonblock_opacity: 0.2
 					}
 				});
-
-				$packeryContainer.packery();
 			},
 			error: function(MLHttpRequest, textStatus, errorThrown) {
 				alert(errorThrown);
@@ -2652,55 +2659,58 @@ var WIKIVERSE = (function($) {
 	    }
 	});
 
-				$("#wv_search").on("click", function() {
-					
-					//close the search
-					$('#search').removeClass('open');
+	$("#wv_search").on("click", function() {
+		
+		//close the search
+		$('#search').removeClass('open');
 
-					//Open the sidebar:
-					if(!$('body').hasClass('cbp-spmenu-push-toright')){
-						classie.toggle( document.body, 'cbp-spmenu-push-toright' );
-						classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
-					}
+		//Open the sidebar:
+		if(!$('body').hasClass('cbp-spmenu-push-toright')){
+			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
+			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
+		}
 
 
-					$('.results').empty();	
+		
 
-					var query, topic, params, sort;
+		var query, topic, params, sort;
 
-					query = $("#searchInput input").val();
+		query = $("#searchInput input").val();
 
-					switch ($('#source').val()) {
+		$sidebar.find('h3').append( query );	
+		$results.empty();
 
-						case "wikipedia":							
-							getWikis($topBrick, query, lang);
-						break;
+		switch ($('#source').val()) {
 
-						case "flickr":
-							var flickrType = $("#flickrType select").val();						
-							sort = $("#flickrSort select").val();	
-							getFlickrs($topBrick, query, sort, flickrType);
-						break;
+			case "wikipedia":							
+				getWikis($topBrick, query, lang);
+			break;
 
-						case "instagram":
-							var instagramType = $("#instagramType select").val();
-							getInstagrams($topBrick, query, instagramType);
-						break;
+			case "flickr":
+				var flickrType = $("#flickrType select").val();						
+				sort = $("#flickrSort select").val();	
+				getFlickrs($topBrick, query, sort, flickrType);
+			break;
 
-						case "youtube":
-							getYoutubes($topBrick, topic);
-						break;
+			case "instagram":
+				var instagramType = $("#instagramType select").val();
+				getInstagrams($topBrick, query, instagramType);
+			break;
 
-						case "soundcloud":
-							getSoundcloud($topBrick, query, params);
-						break;
+			case "youtube":
+				getYoutubes($topBrick, topic);
+			break;
 
-						case "twitter":
-							getTweets($topBrick, query);
-						break;
-					}
+			case "soundcloud":
+				getSoundcloud($topBrick, query, params);
+			break;
 
-				});
+			case "twitter":
+				getTweets($topBrick, query);
+			break;
+		}
+
+	});
 
 	
 
@@ -2791,9 +2801,8 @@ var WIKIVERSE = (function($) {
 	//----------------EVENTS----------------------------
 	
 
-	//when clear results is clicked
-	$('.clear').on('click', function() {
-		$('.results').empty();
+	$('.otherSource').change(function(event) {
+		getConnections($(this).val(), $(this).parents('#sidebar').find('h3').html());
 	});
 
 	//

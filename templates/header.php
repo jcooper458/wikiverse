@@ -13,14 +13,12 @@ $nonce = wp_create_nonce( 'board' );
 
   <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left well well-sm" id="sidebar">
     <i id="closeSidebar" class="fa fa-close"></i>
-    <h3>search results</h3> 
-
-
+    <h3></h3> 
       <div class="search-ui">
         <ul class="nav nav-pills">
           <li class="">
             <button class="btn btn-xs btn-primary searchButton cursor">search for something else</button>
-            <button class="btn btn-xs btn-danger clear cursor">clear all results</button>
+            <select class="selectpicker pull-left otherSource show-menu-arrow" data-style="btn btn-default btn-xs" data-width="50%" data-size="20"><option selected="">try another source..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-wikipedia wikipedia-icon icon"></i>wikipedia</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>
           </li>
         </ul>
       </div>
