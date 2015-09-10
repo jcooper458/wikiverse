@@ -910,36 +910,35 @@ var WIKIVERSE = (function($) {
 
 	function getConnections(source, topic) {
 
-		$('li#' + source).trigger('click');
+		//Open the sidebar:
+		if(!$('body').hasClass('cbp-spmenu-push-toright')){
+			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
+			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
+		}
 
-		$('#' + source + '-search').find('.results').empty();
+		$results.empty();
 
 		switch (source) {
 
 			case "flickr":
-				$('#flickr-search').find('input').val(topic);
-				getFlickrs($('#flickr-search'), topic, "relevance", "textQuery");
+				getFlickrs($(defaultBrick), topic, "relevance", "textQuery");
 				break;
 
 			case "instagram":
 				//remove whitespace from instagram query
-				$('#instagram-search').find('input').val(topic.replace(/ /g, ''));
-				getInstagrams($('#instagram-search'), topic.replace(/ /g, ''), "hashtag");
+				getInstagrams($(defaultBrick), topic.replace(/ /g, ''), "hashtag");
 				break;
 
 			case "youtube":
-				$('#youtube-search').find('input').val(topic);
-				getYoutubes($('#youtube-search'), topic);
+				getYoutubes($(defaultBrick), topic);
 				break;
 
 			case "soundcloud":
-				$('#soundcloud-search').find('input').val(topic);
-				getSoundcloud($('#soundcloud-search'), topic);
+				getSoundcloud($(defaultBrick), topic);
 				break;
 
 			case "twitter":
-				$('#twitter-search').find('input').val(topic);
-				getTweets($('#twitter-search'), topic);
+				getTweets($(defaultBrick), topic);
 				break;
 		}
 	}
@@ -1294,7 +1293,6 @@ var WIKIVERSE = (function($) {
 		$brick.append($tweetContainer);
 		callback($brick);
 
-		//$packeryContainer.packery();
 	};
 
 
@@ -1894,6 +1892,8 @@ var WIKIVERSE = (function($) {
 	};
 
 	wikiverse.buildBoard = function($packeryContainer, board) {
+
+		if (typeof board.theme === 'undefined') board.theme = "superhero";
 
         $('link[title="main"]').attr('href', "//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/" + board.theme + "/bootstrap.min.css");
         $('body').data('theme', board.theme);
@@ -2645,8 +2645,6 @@ var WIKIVERSE = (function($) {
 					if(!$('body').hasClass('cbp-spmenu-push-toright')){
 						classie.toggle( document.body, 'cbp-spmenu-push-toright' );
 						classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
-
-
 					}
 
 
@@ -2792,15 +2790,14 @@ var WIKIVERSE = (function($) {
 
 	//when clear results is clicked
 	$('.clear').on('click', function() {
-		//remove all UI elements
 		$('.results').empty();
-		$('.results').find('.search-ui').hide();
 	});
 
 	//
 	//
 	//close sidebar
 	$('#closeSidebar').click(function(){
+
 		classie.toggle( document.body, 'cbp-spmenu-push-toright' );
 		classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );
 
@@ -2813,7 +2810,6 @@ var WIKIVERSE = (function($) {
 			$(this).addClass('fa-close');	
 			$(this).css('right', 20);	
 		}
-
 
 	});		
 
