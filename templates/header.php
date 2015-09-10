@@ -60,7 +60,7 @@ $nonce = wp_create_nonce( 'board' );
           <?php if ( is_page('start') ) { ?>
           <li><a href="#" class="board-pilot invisible" id="playBoard" ><i class="fa fa-play"></i></i></a></li> 
           <li><a href="#" class="board-pilot invisible" id="clearBoard">clear board</a></li> 
-          <li><a href="#" class="board-pilot invisible" id="createBoard" >create board</a></li>
+          <li><a href="#" class="board-pilot invisible" id="createBoard" >save board</a></li>
           <?php }  ?>
           <?php if ( is_singular("board")) { ?>            
           <li><a href="#" class="board-pilot invisible" id="playBoard"><i class="fa fa-play"></i></i></a></li>    
@@ -108,8 +108,7 @@ $nonce = wp_create_nonce( 'board' );
             <ul class="dropdown-menu">
               <li><a href="/start">create board</a></li>
               <li><a href="/user/<?php echo esc_html($current_user->display_name); ?>">my boards</a></li>
-              <li role="separator" class="divider"></li>
-              <li><a href="/user">change password</a></li>            
+              <li role="separator" class="divider"></li>         
               <li><a href="<?php echo wp_logout_url( home_url() ); ?>">logout</a></li>
             </ul>
           </li>
