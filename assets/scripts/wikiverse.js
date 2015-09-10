@@ -2514,208 +2514,187 @@ var WIKIVERSE = (function($) {
 	wikiverse.initSearch = function() {
 
 		$('.searchButton').on('click', function(event) {
-		    event.preventDefault();
-		    $('#search').addClass('open');
-		    $('#search > form > input[type="search"]').focus();
+			event.preventDefault();
+			$('#search').addClass('open');
+			$('#search > form > input[type="search"]').focus();
 		});
-		
+
 		$('#search, #search button.close').on('click', function(event) {
-		    if (event.target.className === 'close') {
-		        $(this).removeClass('open');
-		    }
+			if (event.target.className === 'close') {
+				$(this).removeClass('open');
+			}
 		});
 
 		//adding escape functionality for closing search		
 		$(document).keyup(function(e) {
-		     if ($('#search').hasClass('open') && e.keyCode === 27) { // escape key maps to keycode `27`
-		        $('#search').removeClass('open');
-		    }
+			if ($('#search').hasClass('open') && e.keyCode === 27) { // escape key maps to keycode `27`
+				$('#search').removeClass('open');
+			}
 		});
-		
+
 		//topbrick is the toppest brick in regards to the scroll position
 		//this is used to insert bricks at the same height of the scroll position
-		var $topBrick = $(defaultBrick);		
+		var $topBrick = $(defaultBrick);
 
 		//detect top element
 		$(document).scroll(function() {
-		    var cutoff = $(window).scrollTop();
-		    $('.brick').removeClass('top').each(function() {
-		        if ($(this).offset().top > cutoff) {
-		            $topBrick = $(this);
-		            $topBrick.addClass('top');
-		            console.log($topBrick.find('h2').html());
-		            return false; // stops the iteration after the first one on screen
-		        }
-		    });
+			var cutoff = $(window).scrollTop();
+			$('.brick').removeClass('top').each(function() {
+				if ($(this).offset().top > cutoff) {
+					$topBrick = $(this);
+					$topBrick.addClass('top');
+					console.log($topBrick.find('h2').html());
+					return false; // stops the iteration after the first one on screen
+				}
+			});
 		});
 
+		//set default lang to english
+		var lang = "en";
 
-	//set default lang to english
-	var lang = "en";
+		$('#langselect').live('change', function() {
+			lang = $(this).val();
+		});
 
-	$('#langselect').live('change', function() {
-		lang = $(this).val();
-	});
+		$('div.sourceParams').hide();
 
+		//first dropdown (source), on change, conditionally open the others
+		$('#source').on('change', function() {
 
+			var selected = $('#source option:selected').val();
 
+			if (selected === "instagram") {
+				$('div.sourceParams').hide();
+				$("div#instagramType.row").show();
+				$("div#searchInput.row").show();
+				$("div#searchButton.row").show();
+			} else if (selected === "wikipedia") {
+				//WIKIPEDIA AUTOCOMPLETE
+				$('#searchInput input').typeahead('destroy');
+				$('#searchInput input').typeahead({
+					source: function(query, process) {
+						return $.ajax({
+							url: 'http://' + lang + '.wikipedia.org/w/api.php',
+							dataType: "jsonp",
+							data: {
+								'action': "opensearch",
+								'format': "json",
+								'search': query
+							},
+							success: function(json) {
+								process(json[1]);
+							}
+						});
+					},
+					matcher: function(item) {
+						if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
+							return true;
+						}
+					}
+				});
+				$('div.sourceParams').hide();
+				$("div#wikipediaType.row").show();
+				$("div#searchInput.row").show();
+				$("div#searchButton.row").show();
+			} else if (selected === "flickr") {
+				$('div.sourceParams').hide();
+				$("div#flickrType.row").show();
+				$("div#flickrSort.row").show();
+				$("div#searchInput.row").show();
+				$("div#searchButton.row").show();
+			} else if (selected === "gmaps") {
+				$('#search').removeClass('open');
+				var $thisBrick = buildBrick($packeryContainer, parseInt($topBrick.css('left')), parseInt($topBrick.css('top')));
+				getGmapsSearch($thisBrick);
+			} else if (selected === "youtube") {
 
-	$('div.sourceParams').hide();
+				//YOUTUBE AUTOCOMPLETE	        
+				$('#searchInput input').typeahead('destroy');
 
-	//first dropdown (source), on change, conditionally open the others
-	$('#source').on('change', function(){   
+				$('#searchInput input').typeahead({
 
-	    var selected = $('#source option:selected').val();
+					source: function(query, process) {
+						return $.ajax({
+							url: "http://suggestqueries.google.com/complete/search",
+							dataType: "jsonp",
+							data: {
+								'client': "youtube",
+								'ds': "yt",
+								'q': query
+							},
+							success: function(json) {
+								var resultArray = [];
+								$.each(json[1], function() {
+									resultArray.push(this[0]);
+								});
+								process(resultArray);
+							}
+						});
+					},
+					matcher: function(item) {
+						if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
+							return true;
+						}
+					}
+				});
+				$('div.sourceParams').hide();
+				$("div#searchInput.row").show();
+				$("div#searchButton.row").show();
+			} else {
+				$('div.sourceParams').hide();
+				$("div#searchInput.row").show();
+				$("div#searchButton.row").show();
+			}
+		});
 
-	    if(selected === "instagram"){
-	      $('div.sourceParams').hide();
-	      $("div#instagramType.row").show();
-	      $("div#searchInput.row").show();
-	      $("div#searchButton.row").show();
-	    }
-	    else if(selected === "wikipedia"){
+		$("#wv_search").on("click", function() {
 
-	    	//WIKIPEDIA AUTOCOMPLETE
-	    	$('#searchInput input').typeahead('destroy');
-	    	$('#searchInput input').typeahead({
-	    		source: function(query, process) {
-	    			return $.ajax({
-	    				url: 'http://' + lang + '.wikipedia.org/w/api.php',
-	    				dataType: "jsonp",
-	    				data: {
-	    					'action': "opensearch",
-	    					'format': "json",
-	    					'search': query
-	    				},
-	    				success: function(json) {
-	    					process(json[1]);
-	    				}
+			//close the search
+			$('#search').removeClass('open');
 
-	    			});
-	    		},
-	    		matcher: function(item) {
-	    			if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
-	    				return true;
-	    			}
-	    		}
-	    	});
-			$('div.sourceParams').hide();
-			$("div#wikipediaType.row").show();
-			$("div#searchInput.row").show();
-			$("div#searchButton.row").show();
-	    }
-	    else if(selected === "flickr"){
-			$('div.sourceParams').hide();
-			$("div#flickrType.row").show();
-			$("div#flickrSort.row").show();
-			$("div#searchInput.row").show();
-			$("div#searchButton.row").show();
-	    }
-	    else if(selected === "gmaps"){
-	        $('#search').removeClass('open');
-	        var $thisBrick = buildBrick($packeryContainer, parseInt($topBrick.css('left')), parseInt($topBrick.css('top')));
-	        getGmapsSearch($thisBrick);	        
-	    }
-	    else if(selected === "youtube"){
+			//Open the sidebar:
+			if (!$('body').hasClass('cbp-spmenu-push-toright')) {
+				classie.toggle(document.body, 'cbp-spmenu-push-toright');
+				classie.toggle($('#sidebar')[0], 'cbp-spmenu-open');
+			}
 
-	        //YOUTUBE AUTOCOMPLETE	        
-	        $('#searchInput input').typeahead('destroy');
+			var query, topic, params, sort;
 
-	        $('#searchInput input').typeahead({
+			query = $("#searchInput input").val();
 
-	        	source: function(query, process) {
-	        		return $.ajax({
-	        			url: "http://suggestqueries.google.com/complete/search",
-	        			dataType: "jsonp",
-	        			data: {
-	        				'client': "youtube",
-	        				'ds': "yt",
-	        				'q': query
-	        			},
-	        			success: function(json) {
-	        				var resultArray = [];
-	        				$.each(json[1], function() {
-	        					resultArray.push(this[0]);
-	        				});
-	        				process(resultArray);
-	        			}
+			$sidebar.find('h3').append(query);
+			$results.empty();
 
-	        		});
-	        	},
-	        	matcher: function(item) {
-	        		if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
-	        			return true;
-	        		}
-	        	}
-	        });
-	        $('div.sourceParams').hide();
-	        $("div#searchInput.row").show();
-	        $("div#searchButton.row").show();   
-	    }
-	    else{
-			$('div.sourceParams').hide();
-			$("div#searchInput.row").show();
-			$("div#searchButton.row").show();              
-	    }
-	});
+			switch ($('#source').val()) {
 
-	$("#wv_search").on("click", function() {
-		
-		//close the search
-		$('#search').removeClass('open');
+				case "wikipedia":
+					getWikis($topBrick, query, lang);
+					break;
 
-		//Open the sidebar:
-		if(!$('body').hasClass('cbp-spmenu-push-toright')){
-			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
-			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
-		}
+				case "flickr":
+					var flickrType = $("#flickrType select").val();
+					sort = $("#flickrSort select").val();
+					getFlickrs($topBrick, query, sort, flickrType);
+					break;
 
+				case "instagram":
+					var instagramType = $("#instagramType select").val();
+					getInstagrams($topBrick, query, instagramType);
+					break;
 
-		
+				case "youtube":
+					getYoutubes($topBrick, topic);
+					break;
 
-		var query, topic, params, sort;
+				case "soundcloud":
+					getSoundcloud($topBrick, query, params);
+					break;
 
-		query = $("#searchInput input").val();
-
-		$sidebar.find('h3').append( query );	
-		$results.empty();
-
-		switch ($('#source').val()) {
-
-			case "wikipedia":							
-				getWikis($topBrick, query, lang);
-			break;
-
-			case "flickr":
-				var flickrType = $("#flickrType select").val();						
-				sort = $("#flickrSort select").val();	
-				getFlickrs($topBrick, query, sort, flickrType);
-			break;
-
-			case "instagram":
-				var instagramType = $("#instagramType select").val();
-				getInstagrams($topBrick, query, instagramType);
-			break;
-
-			case "youtube":
-				getYoutubes($topBrick, topic);
-			break;
-
-			case "soundcloud":
-				getSoundcloud($topBrick, query, params);
-			break;
-
-			case "twitter":
-				getTweets($topBrick, query);
-			break;
-		}
-
-	});
-
-	
-
-
-
+				case "twitter":
+					getTweets($topBrick, query);
+					break;
+			}
+		});
 	};
 
 
