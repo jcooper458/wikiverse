@@ -18,13 +18,13 @@
 		</div>    
 
 		<div class="row sourceParams" id="wikipediaType" >
-			<h3>Wikipedia, fine! Which language do you want?</h3>
+			<h4>Wikipedia, fine! Which language do you want?</h4>
 			<?php get_template_part('templates/languages'); ?>
 		</div>  
 
 		<div class="row sourceParams" id="instagramType" >
-			<h3>Optionally select some more criteria, search by..</h3>
-			<select name="input" class="selectpicker" data-style="btn btn-default btn-lg" data-width="100%">
+			<h4>Optionally select some more criteria, search by..</h4>
+			<select name="input" class="selectpicker" data-style="btn btn-default" data-width="100%">
 				<option value="hashtag">#hashtag</option>
 				<option value="username"  >@username</option>
 				<option value="coordinates" >coordinates</option>
@@ -32,8 +32,8 @@
 		</div>        
 
 		<div class="row sourceParams" id="flickrType" >
-			<h3>Optionally select some more criteria, search by..</h3>
-			<select name="flickrType" class="selectpicker" data-style="btn btn-default btn-lg" data-width="100%">
+			<h4>Optionally select some more criteria, search by..</h4>
+			<select name="flickrType" class="selectpicker" data-style="btn btn-default" data-width="100%">
 				<option value="textQuery">keyword</option>
 				<option value="userQuery">username</option>
 				<option value="geoQuery">coordinates</option>
@@ -41,8 +41,8 @@
 		</div>
 
 		<div class="row sourceParams" id="flickrSort" >
-			<h3>..optionally sort by..</h3>
-			<select name="flickrSort" class="selectpicker" data-style="btn btn-default btn-lg" data-width="100%">
+			<h4>..optionally sort by..</h4>
+			<select name="flickrSort" class="selectpicker" data-style="btn btn-default" data-width="100%">
 				<option value="relevance">by relevance</option>
 				<option value="interestingness-desc">by interestingness</option>
 			</select>
