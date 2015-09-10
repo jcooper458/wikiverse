@@ -175,8 +175,7 @@ var WIKIVERSE = (function($) {
 
 	getRelatedYoutubes = function(videoID) {
 
-		$('li#youtube').trigger('click');
-		$('#youtube-search .results').empty();
+		$results.empty();
 
 		$.ajax({
 			url: 'https://www.googleapis.com/youtube/v3/search',
@@ -189,7 +188,7 @@ var WIKIVERSE = (function($) {
 			},
 			dataType: 'jsonp',
 			success: function(data) {
-				buildYoutubeSearchResults($('#youtube-search'), data);
+				buildYoutubeSearchResults($(defaultBrick), data);
 			}
 		});
 	}
