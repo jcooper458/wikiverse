@@ -19,8 +19,8 @@ $nonce = wp_create_nonce( 'board' );
       <div class="search-ui">
         <ul class="nav nav-pills">
           <li class="">
-            <button class="btn btn-xs btn-danger clear cursor">clear results</button>
-            <button class="btn btn-xs btn-primary searchButton cursor">search something else</button>
+            <button class="btn btn-xs btn-primary searchButton cursor">search for something else</button>
+            <button class="btn btn-xs btn-danger clear cursor">clear all results</button>
           </li>
         </ul>
       </div>

@@ -1,5 +1,5 @@
 <div id="search">
-	<span class="cross close control-buttons"><i class="fa fa-close"></i></span>
+	<button type="button" class="close">×</button>
 
 	<div class="search-container center buffer-top-large">
 

@@ -7,6 +7,7 @@ var WIKIVERSE = (function($) {
 	var loadingIcon = '<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate pull-right"></span>';
 	var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="50%" data-size="20"><option selected="">connect..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>';
 	var defaultBrick = '<div class="brick well well-sm">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
+	var resultsTable = '<table class="table table-hover"></table>';
 
 	var rmOptions = {
 		speed: 700,
@@ -33,6 +34,7 @@ var WIKIVERSE = (function($) {
 
 
 	var $packeryContainer = $('.packery');
+	var $results = $('.results');
 
 //	$('#packery').imagesLoaded( function() {
 		// initialize Packery
@@ -153,7 +155,7 @@ var WIKIVERSE = (function($) {
 	}
 
 
-	getYoutubes = function($youtubeSearchBrick, topic) {
+	getYoutubes = function($parentBrick, topic) {
 
 		$.ajax({
 			url: 'https://www.googleapis.com/youtube/v3/search',
@@ -165,7 +167,7 @@ var WIKIVERSE = (function($) {
 			},
 			dataType: 'jsonp',
 			success: function(data) {
-				buildYoutubeSearchResults($youtubeSearchBrick, data);
+				buildYoutubeSearchResults($parentBrick, data);
 			}
 		});
 	};
@@ -633,10 +635,10 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
-	function getFlickrs($flickrSearchBrick, topic, sort, type) {
+	function getFlickrs($parentBrick, topic, sort, type) {
 
 		type = type || "textQuery";
-
+		
 		//if query is coordinates (bounds)
 		if (type === "geoQuery") {
 
@@ -687,23 +689,22 @@ var WIKIVERSE = (function($) {
 													nojsoncallback: 1
 												},
 												success: function(data) {
-													createFlickrBrick($flickrSearchBrick, data, photoObj);
+													createFlickrBrick($parentBrick, data, photoObj);
 												}
 											});
 										});
 									} else {
-										$flickrSearchBrick.find('.results').append('<div class="no-results">No pictures found for "' + data.places.place[0].name + '"</div>');
-										$packeryContainer.packery();
+										$results.append('<div class="no-results">No pictures found for "' + data.places.place[0].name + '"</div>');
 									}
 								}
 							});
 						} else {
-							$flickrSearchBrick.find('.results').append('<div class="no-results">No places found for these coordinates: "' + topic + '"</div>');
+							$results.append('<div class="no-results">No places found for these coordinates: "' + topic + '"</div>');
 						}
 					}
 				});
 			} else {
-				$flickrSearchBrick.find('.results').append('<div class="no-results">"' + topic + '" is not a coordinate .. :( </div>');
+				$results.append('<div class="no-results">"' + topic + '" is not a coordinate .. :( </div>');
 			}
 		} else if (type === "textQuery") { // is textQuery
 
@@ -733,14 +734,13 @@ var WIKIVERSE = (function($) {
 									nojsoncallback: 1
 								},
 								success: function(data) {
-									createFlickrBrick($flickrSearchBrick, data, photoObj);
+									createFlickrBrick($parentBrick, data, photoObj);
 								}
 
 							});
 						});
 					} else {
-						$flickrSearchBrick.find('.results').append('<div class="no-results">No pictures found for "' + topic + '"</div>');
-						$packeryContainer.packery();
+						$results.append('<div class="no-results">No pictures found for "' + topic + '"</div>');
 					}
 				}
 			});
@@ -787,25 +787,24 @@ var WIKIVERSE = (function($) {
 												nojsoncallback: 1
 											},
 											success: function(data) {
-												createFlickrBrick($flickrSearchBrick, data, photoObj);
+												createFlickrBrick($parentBrick, data, photoObj);
 											}
 										});
 									});
 								} else {
-									$flickrSearchBrick.find('.results').append('<div class="no-results">No pictures found for user "' + topic + '"</div>');
-									$packeryContainer.packery();
+									$results.append('<div class="no-results">No pictures found for user "' + topic + '"</div>');
 								}
 							}
 						});
 					} else {
-						$flickrSearchBrick.find('.results').append('<div class="no-results">No User found with username: "' + topic + '"</div>');
+						$results.append('<div class="no-results">No User found with username: "' + topic + '"</div>');
 					}
 				}
 			});
 		}
 	}
 
-	function getInstagrams($instagramSearchBrick, query, type) {
+	function getInstagrams($parentBrick, query, type) {
 
 		type = type || "hashtag";
 
@@ -840,11 +839,10 @@ var WIKIVERSE = (function($) {
 
 						if (typeof data.data !== 'undefined' && data.data.length > 0) {
 							data.data.forEach(function(photo, index) {
-								createInstagramBrick($instagramSearchBrick, photo);
+								createInstagramBrick($parentBrick, photo);
 							});
 						} else {
-							$instagramSearchBrick.find('.results').append('<div class="no-results">No pictures found at this location:  "' + query + '"</div>');
-							$packeryContainer.packery();
+							$results.append('<div class="no-results">No pictures found at this location:  "' + query + '"</div>');
 						}
 					}
 				});
@@ -860,11 +858,10 @@ var WIKIVERSE = (function($) {
 
 				if (typeof data.data !== 'undefined' && data.data.length > 0) {
 					data.data.forEach(function(photo, index) {
-						createInstagramBrick($instagramSearchBrick, photo);
+						createInstagramBrick($parentBrick, photo);
 					});
 				} else {
-					$instagramSearchBrick.find('.results').append('<div class="no-results">No pictures found for "' + query + '"</div>');
-					$packeryContainer.packery();
+					$results.append('<div class="no-results">No pictures found for "' + query + '"</div>');
 				}
 			});
 
@@ -891,10 +888,10 @@ var WIKIVERSE = (function($) {
 								$.getJSON(getUserUrl, access_parameters, function(data) {
 									if (data.meta.code !== 400) {
 										data.data.forEach(function(photo, index) {
-											createInstagramBrick($instagramSearchBrick, photo);
+											createInstagramBrick($parentBrick, photo);
 										});
 									} else {
-										$instagramSearchBrick.find('.results').append('<div class="no-results">Search failed with error message: ' + data.meta.error_message + '</div>');
+										$results.append('<div class="no-results">Search failed with error message: ' + data.meta.error_message + '</div>');
 									}
 								});
 								return;
@@ -904,7 +901,7 @@ var WIKIVERSE = (function($) {
 
 
 					} else {
-						$instagramSearchBrick.find('.results').append('<div class="no-results">No user found with this query: "' + query + '"</div>');
+						$results.append('<div class="no-results">No user found with this query: "' + query + '"</div>');
 					}
 				}
 			});
@@ -1057,33 +1054,27 @@ var WIKIVERSE = (function($) {
 
 	};
 
-	createFlickrBrick = function($flickrSearchBrick, apiData, photoObj) {
+	createFlickrBrick = function($parentBrick, apiData, photoObj) {
 
 		if (typeof apiData.sizes.size !== 'undefined' && apiData.sizes.size.length > 0 && typeof apiData.sizes.size[6] !== 'undefined') {
 
 			var thumbURL = apiData.sizes.size[1].source;
 			var mediumURL = apiData.sizes.size[6].source;
 
-			var $thumb = $('<img width="140" src="' + thumbURL + '">');
+			var $thumb = $('<img width="112" src="' + thumbURL + '">');
 
 			$thumb.data('owner', photoObj.owner);
 			$thumb.data('mediumURL', mediumURL);
 			$thumb.data('id', photoObj.id);
 			$thumb.data('title', photoObj.title);
 
-			$flickrSearchBrick.find('.results').append($thumb);
+			$results.append($thumb);
 
-			imagesLoaded('#flickr-search .results', function() {
-				$packeryContainer.packery();
-			});
+			var y = parseInt($parentBrick.css('top'));
+			var x = parseInt($parentBrick.css('left'));
 
-			var y = parseInt($flickrSearchBrick.css('top'));
-			var x = parseInt($flickrSearchBrick.css('left'));
+			$results.find('img').unbind('click').click(function(e) {
 
-			$flickrSearchBrick.find('img').unbind('click').click(function(e) {
-
-				//stamp for better clicking
-				$packeryContainer.packery('stamp', $flickrSearchBrick);
 
 				var thisPhoto = {
 
@@ -1096,47 +1087,37 @@ var WIKIVERSE = (function($) {
 
 				};
 
-				var $thisBrick = buildBrick($packeryContainer, parseInt($flickrSearchBrick.css('left')) + 450, parseInt($flickrSearchBrick.css('top')) + 100);
+				var $thisBrick = buildBrick($packeryContainer, parseInt($parentBrick.css('left')) + 450, parseInt($parentBrick.css('top')) + 100);
 
 				buildFoto($thisBrick, thisPhoto, "flickr", APIsContentLoaded);
 				$(this).remove();
 
-				//unstamp the searchbrick so you can move it again around
-				//$packeryContainer.packery( 'unstamp', $flickrSearchBrick );
-
 			});
 
-			$flickrSearchBrick.find('.search-ui').show();
 		}
 	};
 
-	createInstagramBrick = function($instagramSearchBrick, photo) {
+	createInstagramBrick = function($parentBrick, photo) {
 
-		var $thumb = $('<img class="img-search" src="' + photo.images.low_resolution.url + '" width="140">');
+		var $thumb = $('<img class="img-search" src="' + photo.images.low_resolution.url + '" width="112">');
 
-		$instagramSearchBrick.find('.results').append($thumb);
+		$results.append($thumb);
 
 		$thumb.data('mediumURL', photo.images.standard_resolution.url);
 		$thumb.data('owner', photo.user.full_name);
 		$thumb.data('id', photo.id);
 		$thumb.data('tags', photo.tags);
+
 		if (photo.caption) {
 			$thumb.data('title', photo.caption.text);
 		}
 		//maybe re-add later on
 		//$thumb.data('filter', photo.filtér);
 
-		imagesLoaded('#instagram-search .results', function() {
-			$packeryContainer.packery();
-		});
+		var y = parseInt($parentBrick.css('top'));
+		var x = parseInt($parentBrick.css('left'));
 
-		var y = parseInt($instagramSearchBrick.css('top'));
-		var x = parseInt($instagramSearchBrick.css('left'));
-
-		$instagramSearchBrick.find('img').unbind('click').click(function(e) {
-
-			//stamp for better clicking
-			$packeryContainer.packery('stamp', $instagramSearchBrick);
+		$results.find('img').unbind('click').click(function(e) {
 
 			var thisPhoto = {
 
@@ -1149,14 +1130,12 @@ var WIKIVERSE = (function($) {
 				size: 'small'
 			};
 
-			var $thisBrick = buildBrick($packeryContainer, parseInt($instagramSearchBrick.css('left')) + 450, parseInt($instagramSearchBrick.css('top')) + 10);
+			var $thisBrick = buildBrick($packeryContainer, parseInt($parentBrick.css('left')) + 450, parseInt($parentBrick.css('top')) + 10);
 
 			buildFoto($thisBrick, thisPhoto, "instagram", APIsContentLoaded);
 			$(this).remove();
 
 		});
-
-		$instagramSearchBrick.find('.search-ui').show();
 	}
 
 
@@ -1181,7 +1160,7 @@ var WIKIVERSE = (function($) {
 		callback($brick);
 	}
 
-	getSoundcloud = function($soundcloudSearchBrick, query, params) {
+	getSoundcloud = function($parentBrick, query, params) {
 
 		SC.initialize({
 			client_id: '15bc70bcd9762ddca2e82ee99de9e2e7'
@@ -1191,11 +1170,13 @@ var WIKIVERSE = (function($) {
 			q: query,
 			limit: 40
 		}, function(tracks) {
+		
+		$results.append(resultsTable);
 
 			tracks.forEach(function(track, index) {
 
 				//append row to searchbox-table
-				$soundcloudSearchBrick.find('.results').append('<tr data-toggle="tooltip" title="' + track.title + '" uri="' + track.uri + '" genre="' + track.genre + '"><td><el class="result">' + track.title + '</el></td></tr>');
+				$results.find('table').append('<tr data-toggle="tooltip" title="' + track.title + '" uri="' + track.uri + '" genre="' + track.genre + '"><td><el class="result">' + track.title + '</el></td></tr>');
 
 				//create the tooltips
 				$('tr').tooltip({
@@ -1204,14 +1185,11 @@ var WIKIVERSE = (function($) {
 				});
 
 
-				var y = parseInt($soundcloudSearchBrick.css('top'));
-				var x = parseInt($soundcloudSearchBrick.css('left'));
+				var y = parseInt($parentBrick.css('top'));
+				var x = parseInt($parentBrick.css('left'));
 
 				//bind event to every row
-				$soundcloudSearchBrick.find('tr').unbind('click').click(function(e) {
-
-					//stamp it for better clicking
-					$packeryContainer.packery('stamp', $soundcloudSearchBrick);
+				$results.find('tr').unbind('click').click(function(e) {
 
 					var soundcloudObj = {
 						title: $(this).attr('title'),
@@ -1219,58 +1197,45 @@ var WIKIVERSE = (function($) {
 						genre: $(this).attr('genre')
 					};
 
-					var $thisBrick = buildBrick($packeryContainer, parseInt($soundcloudSearchBrick.css('left')) + 50, parseInt($soundcloudSearchBrick.css('top')) + 10);
+					var $thisBrick = buildBrick($packeryContainer, parseInt($parentBrick.css('left')) + 50, parseInt($parentBrick.css('top')) + 10);
 
 					buildSoundcloud($thisBrick, soundcloudObj, APIsContentLoaded);
 
 					$(this).tooltip('destroy');
-					$(this).remove();
-
-					//unstamp the searchbrick so you can move it again around
-					//$packeryContainer.packery( 'unstamp', $soundcloudSearchBrick );
-
-					//relayout packery
-					$packeryContainer.packery();
+					$(this).remove();	
 
 					return false;
 
 				});
-
-				$soundcloudSearchBrick.find('.search-ui').show();
-
-				//relayout packery
-				$packeryContainer.packery();
 			});
-
 		});
-
 	};
 
 
-	function buildTwitterSearchResults($twitterSearchBrick, apiData) {
-		//console.log(apiData);
+	function buildTwitterSearchResults($parentBrick, apiData) {
+
 		if (typeof apiData.statuses !== 'undefined' && apiData.statuses.length > 0) {
 
 			apiData.statuses.map(function(tweet, index) {
 
 				var text = tweet.text;
 				var userThumb = tweet.user.profile_image_url;
-				console.log(userThumb);
+
+				$results.append(resultsTable);
+				//append row to sidebar-results-table
+				
 				if (tweet) {
-					// setTimeout(function() { 
-					$twitterSearchBrick.find('.results').append('<tr text="' + text + '" user="' + tweet.user.name + '"><td class="twitterThumb col-md-2"><img src="' + userThumb + '"></td><td class="result col-md-10" ><strong>' + tweet.user.name + '</strong><br>' + text + '</td></tr>');
-					$packeryContainer.packery();
-					//  }, index * 50); 
+
+					$results.find('.table').append('<tr text="' + text + '" user="' + tweet.user.name + '"><td class="twitterThumb col-md-2"><img src="' + userThumb + '"></td><td class="result col-md-10" ><strong>' + tweet.user.name + '</strong><br>' + text + '</td></tr>');
+
 				}
 
 				//bind event to every row -> so you can start the wikiverse
-				$twitterSearchBrick.find('tr').unbind('click').click(function(e) {
+				$results.find('tr').unbind('click').click(function(e) {
 
-					//stamp for better clicking
-					$packeryContainer.packery('stamp', $twitterSearchBrick);
 					$(this).remove();
 
-					var $thisBrick = buildBrick($packeryContainer, parseInt($twitterSearchBrick.css('left')) + 400, parseInt($twitterSearchBrick.css('top')));
+					var $thisBrick = buildBrick($packeryContainer, parseInt($parentBrick.css('left')) + 400, parseInt($parentBrick.css('top')));
 
 					var twitterObj = {
 						text: $(this).attr('text'),
@@ -1287,12 +1252,12 @@ var WIKIVERSE = (function($) {
 			//nothing has been found on youtube
 		} else {
 			//append row to searchbox-table: NO RESULTS
-			$twitterSearchBrick.find('.results').append('<tr class="no-results"><td>No Tweets found .. </td></tr>');
-			$packeryContainer.packery();
+			$results.find('.table').append('<tr class="no-results"><td>No Tweets found .. </td></tr>');
+
 		}
 	}
 
-	function getTweets($twitterSearchBrick, query) {
+	function getTweets($parentBrick, query) {
 
 		$.ajax({
 			url: '/app/plugins/wp-twitter-api/api.php',
@@ -1300,7 +1265,7 @@ var WIKIVERSE = (function($) {
 				"search": query
 			},
 			success: function(data) {
-				buildTwitterSearchResults($twitterSearchBrick, JSON.parse(data));
+				buildTwitterSearchResults($parentBrick, JSON.parse(data));
 			}
 		});
 	}
@@ -1459,13 +1424,11 @@ var WIKIVERSE = (function($) {
 
 						var title = this.title;
 						var snippet = this.snippet;
-						var $results = $('.results');
-
 
 						//stop loading glyph
 						$('.glyphicon').addClass('invisible');
 
-						$results.append('<table class="table table-hover"></table>');
+						$results.append(resultsTable);
 						//append row to sidebar-results-table
 						$results.find('.table').append('<tr data-toggle="tooltip" title="' + strip(snippet) + '"><td><el class="result">' + title + '</el></td></tr>');
 
@@ -1803,7 +1766,7 @@ var WIKIVERSE = (function($) {
 	};
 
 
-	buildYoutubeSearchResults = function($youtubeSearchBrick, apiData) {
+	buildYoutubeSearchResults = function($parentBrick, apiData) {
 
 		if (typeof apiData.items !== 'undefined' && apiData.items.length > 0) {
 
@@ -1814,13 +1777,11 @@ var WIKIVERSE = (function($) {
 				var youtubeID = video.id.videoId;
 				var thumbURL = video.snippet.thumbnails.high.url;
 
-				if (youtubeID) {
-					$youtubeSearchBrick.find('.results').append('<tr data-toggle="tooltip" youtubeID="' + youtubeID + '" title="' + strip(snippet) + '"><td class="youtubeThumb col-md-6"><img height="100" src="' + thumbURL + '"></td class="col-md-6"><td class="result" >' + title + '</td></tr>');
-				}
+				$results.append(resultsTable);
 
-				imagesLoaded('#youtube-search .results', function() {
-					$packeryContainer.packery();
-				});
+				if (youtubeID) {
+					$results.find('table').append('<tr data-toggle="tooltip" youtubeID="' + youtubeID + '" title="' + strip(snippet) + '"><td class="youtubeThumb col-md-6"><img height="100" src="' + thumbURL + '"></td class="col-md-6"><td class="result" >' + title + '</td></tr>');
+				}
 
 				//create the tooltips
 				$('tr').tooltip({
@@ -1829,17 +1790,15 @@ var WIKIVERSE = (function($) {
 				});
 
 				//bind event to every row -> so you can start the wikiverse
-				$youtubeSearchBrick.find('tr').unbind('click').click(function(e) {
+				$results.find('tr').unbind('click').click(function(e) {
 
-					//stamp for better clicking
-					$packeryContainer.packery('stamp', $youtubeSearchBrick);
 
 					var currentYoutubeID = $(this).find('.result').attr('youtubeID');
 
 					$(this).tooltip('destroy');
 					$(this).remove();
 
-					var $thisBrick = buildBrick($packeryContainer, parseInt($youtubeSearchBrick.css('left')) + 50, parseInt($youtubeSearchBrick.css('top')) + 10);
+					var $thisBrick = buildBrick($packeryContainer, parseInt($parentBrick.css('left')) + 50, parseInt($parentBrick.css('top')) + 10);
 
 					var youtubeObj = {
 						youtubeID: $(this).attr('youtubeID'),
@@ -1856,7 +1815,7 @@ var WIKIVERSE = (function($) {
 			//nothing has been found on youtube
 		} else {
 			//append row to searchbox-table: NO RESULTS
-			$youtubeSearchBrick.find('.results').append('<tr class="no-results"><td>No Youtube Videos found .. </td></tr>');
+			$results.find('table').append('<tr class="no-results"><td>No Youtube Videos found .. </td></tr>');
 		}
 	};
 
@@ -2554,6 +2513,8 @@ var WIKIVERSE = (function($) {
 		    }
 		});
 
+		//topbrick is the toppest brick in regards to the scroll position
+		//this is used to insert bricks at the same height of the scroll position
 		var $topBrick = $(defaultBrick);
 		
 
@@ -2641,6 +2602,7 @@ var WIKIVERSE = (function($) {
 
 	$('div.sourceParams').hide();
 
+	//first dropdown (source), on change, conditionally open the others
 	$('#source').on('change', function(){   
 
 	    var selected = $('#source option:selected').val();
@@ -2710,16 +2672,14 @@ var WIKIVERSE = (function($) {
 						break;
 
 						case "flickr":
-							var flickrType = $thisSearch.find("select option:selected").val();							
-							sort = $thisSearch.find(".radio-inline input[type='radio']:checked").val();
-
+							var flickrType = $("#flickrType select").val();						
+							sort = $("#flickrSort select").val();	
 							getFlickrs($topBrick, query, sort, flickrType);
 						break;
 
 						case "instagram":
 
-							var instagramType = $("#instagramType").val();
-
+							var instagramType = $("#instagramType select").val();
 							getInstagrams($topBrick, query, instagramType);
 						break;
 
@@ -2729,8 +2689,6 @@ var WIKIVERSE = (function($) {
 						break;
 
 						case "soundcloud":
-
-							params = $thisSearch.find(".radio-inline input[type='radio']:checked").val();
 
 							getSoundcloud($topBrick, query, params);
 						break;
