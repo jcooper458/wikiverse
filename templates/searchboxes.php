@@ -1,6 +1,6 @@
 <div id="search">
-	<button type="button" class="close">×</button>
-	
+	<span class="cross close control-buttons"><i class="fa fa-close"></i></span>
+
 	<div class="search-container center buffer-top-large">
 
 		<div class="row">

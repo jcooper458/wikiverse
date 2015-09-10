@@ -13,7 +13,18 @@ $nonce = wp_create_nonce( 'board' );
 
   <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left well well-sm" id="sidebar">
     <i id="closeSidebar" class="fa fa-close"></i>
-    <h3>search results</h3>    
+    <h3>search results</h3> 
+
+
+      <div class="search-ui">
+        <ul class="nav nav-pills">
+          <li class="">
+            <button class="btn btn-xs btn-danger clear cursor">clear results</button>
+            <button class="btn btn-xs btn-primary searchButton cursor">search something else</button>
+          </li>
+        </ul>
+      </div>
+ 
     <div class="results"></div>
   </nav>
 
@@ -40,7 +51,7 @@ $nonce = wp_create_nonce( 'board' );
 
         <?php if ( $current_user->ID == $post->post_author ) { // if is author ?>
 
-        <li><a href="#search">add content</a></li>
+        <li><a class="searchButton" href="#">add content</a></li>
 
 
         <?php }  ?>                  

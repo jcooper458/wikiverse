@@ -80,7 +80,7 @@ h2, .h2 {
   .fa{
     font-size: 25px;
     position: absolute;
-    top: 25px;
+    top: 30px;
     right: 10px;
   }
 }
@@ -377,8 +377,6 @@ content: "VV"; letter-spacing:-0.45em; margin-right:0.5em; }
   color: red;
 }
 
-.search-ui{display: none;}
-
 .wiki select, 
 .wiki .btn{visibility: hidden;}
 
@@ -389,7 +387,7 @@ content: "VV"; letter-spacing:-0.45em; margin-right:0.5em; }
 .brick:hover .handle{visibility: visible;}
 
 
-table tr, .result, #clear, .results img, .clear{cursor: pointer;} 
+table tr, .result, #clear, .results img, .cursor{cursor: pointer;} 
 
 .results img {
     opacity: 1;
