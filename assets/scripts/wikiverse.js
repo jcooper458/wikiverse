@@ -4,6 +4,7 @@ var WIKIVERSE = (function($) {
 
 	var close_icon = '<span class="cross control-buttons"><i class="fa fa-close"></i></span>';
 	var youtube_icon = '<i class="fa fa-youtube-square"></i>';
+	var loadingIcon = '<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate pull-right"></span>';
 	var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="50%" data-size="20"><option selected="">connect..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>';
 	var defaultBrick = '<div class="brick well well-sm">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
 
@@ -1438,8 +1439,8 @@ var WIKIVERSE = (function($) {
 
 	}
 
-	function getWikis($wikiSearchBrick, topic, lang) {
-		console.log($wikiSearchBrick.find('h2').html())
+	function getWikis($parentBrick, topic, lang) {
+
 		$.ajax({
 			url: 'http://' + lang + '.wikipedia.org/w/api.php',
 			data: {
@@ -1460,8 +1461,13 @@ var WIKIVERSE = (function($) {
 						var snippet = this.snippet;
 						var $results = $('.results');
 
-						//append row to searchbox-table
-						$results.append('<tr data-toggle="tooltip" title="' + strip(snippet) + '"><td><el class="result">' + title + '</el></td></tr>');
+
+						//stop loading glyph
+						$('.glyphicon').addClass('invisible');
+
+						$results.append('<table class="table table-hover"></table>');
+						//append row to sidebar-results-table
+						$results.find('.table').append('<tr data-toggle="tooltip" title="' + strip(snippet) + '"><td><el class="result">' + title + '</el></td></tr>');
 
 						//create the tooltips
 						$('tr').tooltip({
@@ -1475,7 +1481,7 @@ var WIKIVERSE = (function($) {
 								title: $(this).find('.result').html(),
 								language: lang
 							};
-							var $thisBrick = buildBrick($packeryContainer, parseInt($wikiSearchBrick.css('left')), parseInt($wikiSearchBrick.css('top')));
+							var $thisBrick = buildBrick($packeryContainer, parseInt($parentBrick.css('left')), parseInt($parentBrick.css('top')));
 
 							//build the wikis next to the search brick
 							buildWikipedia($thisBrick, topic, -1, APIsContentLoaded);
@@ -1487,9 +1493,6 @@ var WIKIVERSE = (function($) {
 						});
 
 					});
-
-					//relayout packery
-					$packeryContainer.packery();
 
 					//nothing has been found on Wikipedia
 				} else {
@@ -2555,7 +2558,7 @@ var WIKIVERSE = (function($) {
 		
 
 		//detect top element
-		/*$(document).scroll(function() {
+		$(document).scroll(function() {
 		    var cutoff = $(window).scrollTop();
 		    $('.brick').removeClass('top').each(function() {
 		        if ($(this).offset().top > cutoff) {
@@ -2565,7 +2568,7 @@ var WIKIVERSE = (function($) {
 		            return false; // stops the iteration after the first one on screen
 		        }
 		    });
-		});*/
+		});
 
 				if (source === "gmaps") {
 					getGmapsSearch($thisSearch);
@@ -2677,8 +2680,13 @@ var WIKIVERSE = (function($) {
 					$('#search').removeClass('open');
 
 					//Open the sidebar:
-			        classie.toggle( document.body, 'cbp-spmenu-push-toright' );
-			        classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );
+					if(!$('body').hasClass('cbp-spmenu-push-toright')){
+						classie.toggle( document.body, 'cbp-spmenu-push-toright' );
+						classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
+
+
+					}
+
 
 					$('.results').empty();	
 
@@ -2702,9 +2710,7 @@ var WIKIVERSE = (function($) {
 						break;
 
 						case "flickr":
-							var flickrType = $thisSearch.find("select option:selected").val();
-
-							
+							var flickrType = $thisSearch.find("select option:selected").val();							
 							sort = $thisSearch.find(".radio-inline input[type='radio']:checked").val();
 
 							getFlickrs($topBrick, query, sort, flickrType);
@@ -2824,6 +2830,34 @@ var WIKIVERSE = (function($) {
 	//----------------GENERAL STUFF----------------------------
 
 	//----------------EVENTS----------------------------
+	
+
+	//when clear results is clicked
+	$('.clear').on('click', function() {
+		//remove all UI elements
+		$('.results').empty();
+		$('.results').find('.search-ui').hide();
+	});
+
+	//
+	//
+	//close sidebar
+	$('#closeSidebar').click(function(){
+		classie.toggle( document.body, 'cbp-spmenu-push-toright' );
+		classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );
+
+		if($(this).hasClass('fa-close')){
+			$(this).removeClass('fa-close');	
+			$(this).addClass('fa-plus');	
+			$(this).css('right', -30);			
+		}else{
+			$(this).removeClass('fa-plus');	
+			$(this).addClass('fa-close');	
+			$(this).css('right', 20);	
+		}
+
+
+	});		
 
 	// REMOVE ITEM
 	$packeryContainer.on("click", ".brick .cross", function() {
@@ -2849,25 +2883,6 @@ var WIKIVERSE = (function($) {
 
 		//cant use show() or fadeIn() coz it messes up the bootstrap nav
 		$(".board-pilot").removeClass('invisible');
-
-		//when clear results is clicked
-		$('.clear').on('click', function() {
-
-			var $thisBrick = $(this).parents('.brick');
-			//remove all UI elements
-			$thisBrick.find('.results').empty();
-			$thisBrick.find('.search-ui').hide();
-
-			//empty the wiki-searchbox for new search
-			$thisBrick.find('select').removeAttr('disabled');
-			$thisBrick.find('input').removeAttr('disabled');
-			$thisBrick.find('input[type=text]').val('');
-
-			$thisBrick.find('.selectpicker').selectpicker('refresh');
-
-			//scroll to top
-			//window.scrollTo(0, 0);
-		});
 
 	});
 

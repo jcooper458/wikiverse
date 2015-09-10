@@ -12,7 +12,8 @@ $nonce = wp_create_nonce( 'board' );
 <header class="banner" role="banner">
 
   <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left well well-sm" id="sidebar">
-    <h3>Search results</h3>
+    <i id="closeSidebar" class="fa fa-close"></i>
+    <h3>search results</h3>    
     <div class="results"></div>
   </nav>
 
@@ -39,7 +40,7 @@ $nonce = wp_create_nonce( 'board' );
 
         <?php if ( $current_user->ID == $post->post_author ) { // if is author ?>
 
-        <li><a href="#search">Search</a></li>
+        <li><a href="#search">add content</a></li>
 
 
         <?php }  ?>                  

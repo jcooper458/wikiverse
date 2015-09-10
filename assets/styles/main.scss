@@ -76,6 +76,15 @@ h2, .h2 {
   .btn{width:100%;}
 }
 
+#sidebar{  
+  .fa{
+    font-size: 25px;
+    position: absolute;
+    top: 25px;
+    right: 10px;
+  }
+}
+
 .well-sm, #sidebar.well-sm {
     padding: 0px!important;
     border-radius: 1px!important;
@@ -290,6 +299,24 @@ nav {
   cursor: pointer;
   font-size: 40px;
 
+}
+
+/*Loading Icon */
+
+.glyphicon-refresh-animate {
+    margin-right:10px;
+    -animation: spin .7s infinite linear;
+    -webkit-animation: spin2 .7s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
 }
 
 .brick.foto:hover .overlay{opacity:.7;}
