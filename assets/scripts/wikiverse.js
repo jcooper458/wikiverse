@@ -245,6 +245,11 @@ var WIKIVERSE = (function($) {
 
 	function getGmapsSearch($gmapsSearchBrick) {
 
+		$gmapsSearchBrick.addClass('w3-fix visible');
+
+		$gmapsSearchBrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">');
+		$gmapsSearchBrick.append('<div id="map_canvas"></div>');		
+
 		var mapOptions = {
 			center: {
 				lat: 35,
@@ -2516,7 +2521,6 @@ var WIKIVERSE = (function($) {
 		//adding escape functionality for closing search		
 		$(document).keyup(function(e) {
 		     if ($('#search').hasClass('open') && e.keyCode === 27) { // escape key maps to keycode `27`
-		     	console.log("cdksladcjlkas");
 		        $('#search').removeClass('open');
 		    }
 		});
@@ -2538,26 +2542,13 @@ var WIKIVERSE = (function($) {
 		    });
 		});
 
-				if (source === "gmaps") {
-					getGmapsSearch($thisSearch);
-				}
 
-				/*$thisSearch.find('input[type=text]').focus();*/
+	//set default lang to english
+	var lang = "en";
 
-				//make the enter keypress do the search
-				/*$thisSearch.find("input[type=text]").keyup(function(e) {
-					if (e.keyCode === 13) {
-						$(e.target).siblings('span').find('button').trigger('click');
-					}
-				});*/
-
-
-				//set default lang to english
-				var lang = "en";
-
-				$('#langselect').live('change', function() {
-					lang = $(this).val();
-				});
+	$('#langselect').live('change', function() {
+		lang = $(this).val();
+	});
 
 
 
@@ -2614,7 +2605,9 @@ var WIKIVERSE = (function($) {
 			$("div#searchButton.row").show();
 	    }
 	    else if(selected === "gmaps"){
-	        $('div.sourceParams').hide();
+	        $('#search').removeClass('open');
+	        var $thisBrick = buildBrick($packeryContainer, parseInt($topBrick.css('left')), parseInt($topBrick.css('top')));
+	        getGmapsSearch($thisBrick);	        
 	    }
 	    else if(selected === "youtube"){
 
@@ -2852,23 +2845,14 @@ var WIKIVERSE = (function($) {
 
 	//create images interconnection and trigger getFlickrs()
 	//This time for the gmaps brick, in thise case we only want the bounds passed in to getFlickrs
+	//
 	$packeryContainer.on("click", ".gmaps .fa-flickr", function() {
 
-		$('li#flickr').trigger('click');
-
-		$flickrSearchBrick = $packeryContainer.find('div#flickr-search');
-
-		//fill the input text with the retrieved coordinates from gmaps parent brick 
-		$flickrSearchBrick
-			.find('input#flickr-searchinput')
-			.val($(this).parents(".brick").data("position"));
-
-		//set the searchtype to coordinates
-		$flickrSearchBrick
-			.find('select#flickrType')
-			.val('geoQuery');
-
-		$('select#flickrType').selectpicker('refresh');
+		//Open the sidebar:
+		if(!$('body').hasClass('cbp-spmenu-push-toright')){
+			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
+			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
+		}
 
 		getFlickrs($flickrSearchBrick, $(this).parents(".brick").data("position"), "relevance", "geoQuery");
 
@@ -2878,24 +2862,12 @@ var WIKIVERSE = (function($) {
 	//This time for the gmaps brick, in thise case we only want the bounds passed in to getFlickrs
 	$packeryContainer.on("click", ".gmaps .fa-instagram", function() {
 
-		$('li#instagram').trigger('click');
-
-		$instagramSearchBrick = $packeryContainer.find('div#instagram-search');
-
-		//fill the input text with the retrieved coordinates from gmaps parent brick 
-		$instagramSearchBrick
-			.find('input#instagram-searchinput')
-			.val($(this).parents(".brick").data("position"));
-
-		//set the searchtype to coordinates
-		$instagramSearchBrick
-			.find('select#instagramType')
-			.val('coordinates');
-
-		$('select#instagramType').selectpicker('refresh');
-
+		//Open the sidebar:
+		if(!$('body').hasClass('cbp-spmenu-push-toright')){
+			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
+			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
+		}
 		getInstagrams($instagramSearchBrick, $(this).parents(".brick").data("position"), "coordinates");
-
 	});
 
 	//Toggle Size of Images on click
