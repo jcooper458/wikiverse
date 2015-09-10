@@ -2507,12 +2507,21 @@ var WIKIVERSE = (function($) {
 		    $('#search > form > input[type="search"]').focus();
 		});
 		
-		$('#search, #search button.close').on('click keyup', function(event) {
-		    if (event.target === this || event.target.className === 'close' || event.keyCode === 27) {
+		$('#search, #search button.close').on('click', function(event) {
+		    if (event.target.className === 'close') {
 		        $(this).removeClass('open');
 		    }
 		});
 
+		//adding escape functionality for closing search
+		
+			$(document).keyup(function(e) {
+			     if ($('#search').hasClass('open') && e.keyCode === 27) { // escape key maps to keycode `27`
+			     	console.log("cdksladcjlkas");
+			        $('#search').removeClass('open');
+			    }
+			});
+		
 		//topbrick is the toppest brick in regards to the scroll position
 		//this is used to insert bricks at the same height of the scroll position
 		var $topBrick = $(defaultBrick);
