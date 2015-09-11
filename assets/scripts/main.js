@@ -20,7 +20,7 @@
       init: function() {
 
         $('body').on('click', '.change-style-menu-item', function() {
-          var theme_name = $(this).attr('rel');          
+          var theme_name = $(this).attr('rel');
           $('link[title="main"]').attr('href', "//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/" + theme_name + "/bootstrap.min.css");
 
           $('body').data('theme', theme_name);
@@ -37,7 +37,7 @@
 
         var boardArray = $("#JSONboardArray").html();
         var parsedArray = JSON.parse(boardArray);
-        var randBoard = parsedArray[Math.floor(Math.random()*parsedArray.length)];
+        var randBoard = parsedArray[Math.floor(Math.random() * parsedArray.length)];
 
         WIKIVERSE.buildBoard($('#homeBoard1'), JSON.parse(randBoard));
       },
@@ -52,7 +52,7 @@
 
         var postID = $("#postID").html();
 
-        $.getJSON( '/wp-json/posts/' + postID, function( board ) {
+        $.getJSON('/wp-json/posts/' + postID, function(board) {
           WIKIVERSE.buildBoard($('#packery'), JSON.parse(board.content_raw));
         });
       },
@@ -72,10 +72,10 @@
     // Login page
     'login': {
       init: function() {
-       
+
       },
       finalize: function() {
-         $('#user_login').focus();     
+        $('#user_login').focus();
       }
     },
     // About us page, note the change from about-us to about_us.
