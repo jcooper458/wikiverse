@@ -1,6 +1,8 @@
 <?php while (have_posts()) : the_post(); ?>
   <?php //get_template_part('templates/page', 'header'); ?>
 
+  <div id="wvTitle" class="text-center"><h1></h1></div>
+
   <div id="postID" class="invisible"></div>
 
   <div id="packery" class="packery"></div>
@@ -25,7 +27,7 @@
           <input id="boardTitle" placeholder="Insert a Title for your board" type="text" class="form-control">
         </div>      
         
-        <textarea id="boardDescription" class="form-control" placeholder="Optionally add a description" rows="3"></textarea>
+        <!--<textarea id="boardDescription" class="form-control" placeholder="Optionally add a description" rows="3"></textarea>-->
       
       </div>
       <div class="modal-footer">

@@ -1909,7 +1909,7 @@ var WIKIVERSE = (function($) {
         $('link[title="main"]').attr('href', "//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/" + board.theme + "/bootstrap.min.css");
         $('body').data('theme', board.theme);
 
-		$('#boardTitle > h1').append(board.title);
+		$('#wvTitle > h1').append(board.title);
 		$('#boardDescription').append(board.description);
 
 		$.each(board.bricks, function(index, brick) {
@@ -2013,7 +2013,6 @@ var WIKIVERSE = (function($) {
 
 	};
 
-
 	wikiverse.createBoard = function(wpnonce) {
 
 		//Close the sidebar:
@@ -2028,7 +2027,7 @@ var WIKIVERSE = (function($) {
 			"title": "",
 			"theme": $('body').data('theme'),
 			"featured_image": $packeryContainer.find('.brick[tabindex=0] img').attr('src'),
-			"description": "",
+			//"description": "",
 			"bricks": wikiverseParsed
 		};
 
@@ -2076,10 +2075,10 @@ var WIKIVERSE = (function($) {
 			if (value.length > 0) {
 
 				var title = $('#boardTitle').val();
-				var description = $('#boardDescription').val();
+				//var description = $('#boardDescription').val();
 				var theme = $('body').data('theme');
 
-				board.description = description;
+				//board.description = description;
 				board.title = title;
 				board.theme = theme;
 				
@@ -2104,7 +2103,20 @@ var WIKIVERSE = (function($) {
 
 						//update the browser history and the new url
 						history.pushState('', 'wikiverse', url);
+						
+						//update the Post ID
 						$('#postID').html(ID);
+
+						//update the post title
+						$('#wvTitle h1').html(title);
+
+						//swap the save board button:						
+						var $createBoard = $('#createBoard');
+						console.log($createBoard);
+						$createBoard.removeAttr('id');
+						$createBoard.attr('id', 'saveBoard');
+						$createBoard.html('Save Changes');
+
 					},
 					error: function(MLHttpRequest, textStatus, errorThrown) {
 						alert(errorThrown);
@@ -2113,8 +2125,6 @@ var WIKIVERSE = (function($) {
 
 				$("#myModal").modal('hide');
 
-				$('#saveBoard').attr('id', $('#saveBoard').attr('id'));
-				$('#saveBoard').html('Save Changes');
 
 			} else {
 
@@ -2169,7 +2179,7 @@ var WIKIVERSE = (function($) {
 			};
 		});
 
-		var title = $('#boardTitle').text();
+		var title = $('#wvTitle').text();
 		var description = $('#boardDescription').text();
 		board.description = description;
 		board.title = title;
