@@ -2030,12 +2030,6 @@ var WIKIVERSE = (function($) {
 
 	wikiverse.saveBoard = function(wpnonce) {
 
-		//Open the sidebar:
-		if($('body').hasClass('cbp-spmenu-push-toright')){
-			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
-			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
-		}
-
 		var board = wikiverse.collectBricks();
 
 		var title = $('#wvTitle').text();
@@ -2079,12 +2073,6 @@ var WIKIVERSE = (function($) {
 	};
 
 	wikiverse.createBoard = function(wpnonce, forkedTitle) {
-
-		//Close the sidebar:
-		if($('body').hasClass('cbp-spmenu-push-toright')){
-			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
-			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
-		}
 
 		var board = wikiverse.collectBricks();
 
@@ -2166,7 +2154,7 @@ var WIKIVERSE = (function($) {
 
 						if(forkedTitle){							
 							$buttonToSwap = $('#forkBoard');
-							PNotifyMessage = "board copied successfully!";
+							PNotifyMessage = "board copied successfully! your changes can be saved..";
 						}
 						else{
 							$buttonToSwap = $('#createBoard');
@@ -2685,7 +2673,7 @@ var WIKIVERSE = (function($) {
 					break;
 
 				case "youtube":
-					getYoutubes($topBrick, topic);
+					getYoutubes($topBrick, query);
 					break;
 
 				case "soundcloud":
@@ -2761,6 +2749,13 @@ var WIKIVERSE = (function($) {
 
 	//call the board-pilots on click (saveboard, clearboard, etc)
 	$('.board-pilot').click(function() {
+
+		//Close the sidebar if open:
+		if($('body').hasClass('cbp-spmenu-push-toright')){
+			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
+			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
+		}
+
 		wikiverse[$(this).attr('id')](wpnonce);
 	});
 
@@ -2830,6 +2825,27 @@ var WIKIVERSE = (function($) {
 
 		//cant use show() or fadeIn() coz it messes up the bootstrap nav
 		$(".board-pilot").removeClass('invisible');
+
+	});
+
+	//detect if user is interacting with a board of somebody else
+	$packeryContainer.one('click', '.brick', function() {
+
+		if($('#author').data('isauthor') !== "true"){
+
+			var message = "You are interacting with someone else's board. If you want to save your changes to your own board, click on 'fork board', in the menu. Otherwise you can just play around but your changes won't be saved";
+			new PNotify({
+				text: message,
+				type: 'info',
+				styling: 'fontawesome',
+				shadow: false,
+				animation: 'fade',
+				nonblock: {
+					nonblock: true,
+					nonblock_opacity: 0.2
+				}
+			});
+		}
 
 	});
 
