@@ -2013,13 +2013,7 @@ var WIKIVERSE = (function($) {
 
 	};
 
-	wikiverse.createBoard = function(wpnonce) {
-
-		//Close the sidebar:
-		if($('body').hasClass('cbp-spmenu-push-toright')){
-			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
-			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
-		}
+	wikiverse.collectBricks = function(){
 
 		var wikiverseParsed = {};
 
@@ -2049,6 +2043,69 @@ var WIKIVERSE = (function($) {
 			};
 			tabindex++;
 		});		
+
+		return board; 
+	};
+
+	wikiverse.saveBoard = function(wpnonce) {
+
+		//Open the sidebar:
+		if($('body').hasClass('cbp-spmenu-push-toright')){
+			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
+			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
+		}
+
+		var board = wikiverse.collectBricks();
+
+		var title = $('#wvTitle').text();
+		var description = $('#boardDescription').text();
+		board.description = description;
+		board.title = title;
+
+		var wikiverseJSON = JSON.stringify(board);
+
+		$.ajax({
+			type: 'POST',
+			url: "/wp/wp-admin/admin-ajax.php",
+			data: {
+				action: 'apf_editpost',
+				boardID: $('#postID').html(),
+				boardmeta: wikiverseJSON,
+				nonce: wpnonce
+			},
+			success: function(data, textStatus, XMLHttpRequest) {
+				var id = '#apf-response';
+				$(id).html('');
+				$(id).append(data);
+
+				new PNotify({
+					text: 'board saved',
+					type: 'success',
+					icon: 'fa fa-floppy-o',
+					styling: 'fontawesome',
+					shadow: false,
+					animation: 'fade',
+					nonblock: {
+						nonblock: true,
+						nonblock_opacity: 0.2
+					}
+				});
+			},
+			error: function(MLHttpRequest, textStatus, errorThrown) {
+				alert(errorThrown);
+			}
+		});
+	};
+
+	wikiverse.createBoard = function(wpnonce, isForked) {
+
+		//Close the sidebar:
+		if($('body').hasClass('cbp-spmenu-push-toright')){
+			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
+			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
+		}
+
+		var board = wikiverse.collectBricks();
 
 		$("#myModal").modal('show');
 
@@ -2112,7 +2169,7 @@ var WIKIVERSE = (function($) {
 
 						//swap the save board button:						
 						var $createBoard = $('#createBoard');
-						console.log($createBoard);
+	
 						$createBoard.removeAttr('id');
 						$createBoard.attr('id', 'saveBoard');
 						$createBoard.html('Save Changes');
@@ -2127,9 +2184,7 @@ var WIKIVERSE = (function($) {
 
 
 			} else {
-
 				$('#boardTitle').parent(".form-group").addClass("has-error");
-
 			}
 
 		});
@@ -2143,81 +2198,7 @@ var WIKIVERSE = (function($) {
 		}
 	};
 
-	wikiverse.saveBoard = function(wpnonce) {
 
-		//Open the sidebar:
-		if($('body').hasClass('cbp-spmenu-push-toright')){
-			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
-			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
-		}
-
-		var postid = $('#postID').html();
-
-		var wikiverseParsed = {};
-
-		var board = {
-			"title": "",
-			"theme": $('body').data('theme'),
-			"featured_image": $packeryContainer.find('.brick[tabindex=0] img').attr('src'),
-			"description": "",
-			"bricks": wikiverseParsed
-		};
-
-		var itemElems = $packeryContainer.packery('getItemElements');
-
-		$.each(itemElems, function() {
-
-			var type = $(this).data('type');
-			var topic = $(this).data('topic');
-			var parent = $(this).data('parent');
-			var tabindex = $(this).attr('tabindex');
-
-			wikiverseParsed[tabindex] = {
-				Type: type,
-				Topic: topic,
-				Parent: parent
-			};
-		});
-
-		var title = $('#wvTitle').text();
-		var description = $('#boardDescription').text();
-		board.description = description;
-		board.title = title;
-
-		var wikiverseJSON = JSON.stringify(board);
-
-		$.ajax({
-			type: 'POST',
-			url: "/wp/wp-admin/admin-ajax.php",
-			data: {
-				action: 'apf_editpost',
-				boardID: postid,
-				boardmeta: wikiverseJSON,
-				nonce: wpnonce
-			},
-			success: function(data, textStatus, XMLHttpRequest) {
-				var id = '#apf-response';
-				$(id).html('');
-				$(id).append(data);
-
-				new PNotify({
-					text: 'board saved',
-					type: 'success',
-					icon: 'fa fa-floppy-o',
-					styling: 'fontawesome',
-					shadow: false,
-					animation: 'fade',
-					nonblock: {
-						nonblock: true,
-						nonblock_opacity: 0.2
-					}
-				});
-			},
-			error: function(MLHttpRequest, textStatus, errorThrown) {
-				alert(errorThrown);
-			}
-		});
-	};
 
 	getLanguage = function(langCode) {
 
@@ -2763,7 +2744,7 @@ var WIKIVERSE = (function($) {
 		}
 	}, false);*/
 
-	//ccall the board-pilots on click (saveboard, clearboard, etc)
+	//call the board-pilots on click (saveboard, clearboard, etc)
 	$('.board-pilot').click(function() {
 		wikiverse[$(this).attr('id')](wpnonce);
 	});
