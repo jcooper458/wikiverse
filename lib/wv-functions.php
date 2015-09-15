@@ -364,6 +364,9 @@ function apf_addpost() {
 
 } 
 
+/*
+
+//not needed for now because forkBoard is calling createBoard
 
 function apf_clonepost() { 
 
@@ -393,7 +396,7 @@ function apf_clonepost() {
 
      die(json_encode($response)); 
 } 
-
+*/
 function apf_editpost() { 
     
     $nonce = $_REQUEST['nonce'];

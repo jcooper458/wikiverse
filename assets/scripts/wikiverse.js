@@ -1990,27 +1990,8 @@ var WIKIVERSE = (function($) {
 
 
 	wikiverse.forkBoard = function(wpnonce) {
-
-		var boardID = $('#postID').html();
-
-		$.ajax({
-			type: 'POST',
-			url: "/wp/wp-admin/admin-ajax.php",
-			data: {
-				action: 'apf_clonepost',
-				id: boardID,
-				nonce: wpnonce
-			},
-			success: function(data, textStatus, XMLHttpRequest) {
-				if (confirm('Are you sure you want to fork this board? \n \n (Forking means the board will be cloned, saved to your boards and ready to be enhanced..')) {
-					window.location = JSON.parse(data)[0];
-				}
-			},
-			error: function(MLHttpRequest, textStatus, errorThrown) {
-				alert("error..");
-			}
-		});
-
+		var forkedTitle = $('#wvTitle h1').html();
+		wikiverse.createBoard(wpnonce, forkedTitle);
 	};
 
 	wikiverse.collectBricks = function(){
@@ -2097,7 +2078,7 @@ var WIKIVERSE = (function($) {
 		});
 	};
 
-	wikiverse.createBoard = function(wpnonce, isForked) {
+	wikiverse.createBoard = function(wpnonce, forkedTitle) {
 
 		//Close the sidebar:
 		if($('body').hasClass('cbp-spmenu-push-toright')){
@@ -2111,6 +2092,19 @@ var WIKIVERSE = (function($) {
 
 		//Focus MOdal Input and trigger enter save
 		$('#myModal').on('shown.bs.modal', function() {
+
+			//if its being forked
+			if(forkedTitle){
+				$('#saveThisBoard').addClass('invisible');
+				$('#copyThisBoard').removeClass('invisible');
+				$('#copyThisBoardDescription').removeClass('invisible');
+				$("#boardTitle").val(forkedTitle);
+
+				//enable the save board button
+				$("#boardSubmitButton").prop('disabled', false);
+			}
+
+
 			$("#boardTitle").focus();
 
 			$('#boardTitle').keyup(function(e) {
@@ -2167,13 +2161,34 @@ var WIKIVERSE = (function($) {
 						//update the post title
 						$('#wvTitle h1').html(title);
 
-						//swap the save board button:						
-						var $createBoard = $('#createBoard');
-	
-						$createBoard.removeAttr('id');
-						$createBoard.attr('id', 'saveBoard');
-						$createBoard.html('Save Changes');
+						var $buttonToSwap;
+						var PNotifyMessage; 
 
+						if(forkedTitle){							
+							$buttonToSwap = $('#forkBoard');
+							PNotifyMessage = "board copied successfully!";
+						}
+						else{
+							$buttonToSwap = $('#createBoard');
+							PNotifyMessage = "board created successfully!";
+						}
+
+						$buttonToSwap.removeAttr('id');
+						$buttonToSwap.attr('id', 'saveBoard');
+						$buttonToSwap.html('Save Changes');
+
+						new PNotify({
+							text: PNotifyMessage,
+							type: 'success',
+							icon: 'fa fa-floppy-o',
+							styling: 'fontawesome',
+							shadow: false,
+							animation: 'fade',
+							nonblock: {
+								nonblock: true,
+								nonblock_opacity: 0.2
+							}
+						});
 					},
 					error: function(MLHttpRequest, textStatus, errorThrown) {
 						alert(errorThrown);

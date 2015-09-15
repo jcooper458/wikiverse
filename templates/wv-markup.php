@@ -68,7 +68,10 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Save this board</h4>
+        <h4 class="modal-title" id="saveThisBoard">Save this board</h4>
+        <h4 class="modal-title invisible" id="copyThisBoard">Copy this board</h4><br>
+        <h5 class="modal-title invisible" id="copyThisBoardDescription">You are about to clone this board. It will then be listed under your boards. Enjoy modifying and enhancing it!</h5>
+
         <i class="fa fa-icon-save"></i>
       </div>
       <div class="modal-body">
