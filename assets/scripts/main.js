@@ -64,6 +64,10 @@
     'start': {
       init: function() {
         WIKIVERSE.initSearch();
+
+        //open the search by default on /start
+        $('#search').addClass('open');
+        $('#search > form > input[type="search"]').focus();
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS      

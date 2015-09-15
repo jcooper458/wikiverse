@@ -2518,11 +2518,7 @@ var WIKIVERSE = (function($) {
 
 	wikiverse.initSearch = function() {
 
-		//open the search by default on /start
-		$('#search').addClass('open');
-		$('#search > form > input[type="search"]').focus();
-
-		//also when clicked
+		//open the search if clicked
 		$('.searchButton').on('click', function(event) {
 			event.preventDefault();
 			$('#search').addClass('open');
