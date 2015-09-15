@@ -2016,7 +2016,7 @@ var WIKIVERSE = (function($) {
 
 	wikiverse.createBoard = function(wpnonce) {
 
-		//Open the sidebar:
+		//Close the sidebar:
 		if($('body').hasClass('cbp-spmenu-push-toright')){
 			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
 			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
@@ -2031,8 +2031,6 @@ var WIKIVERSE = (function($) {
 			"description": "",
 			"bricks": wikiverseParsed
 		};
-
-		//$packeryContainer.packery();
 
 		var itemElems = $packeryContainer.packery('getItemElements');
 
@@ -2051,9 +2049,7 @@ var WIKIVERSE = (function($) {
 				Parent: parent
 			};
 			tabindex++;
-		});
-
-		
+		});		
 
 		$("#myModal").modal('show');
 
