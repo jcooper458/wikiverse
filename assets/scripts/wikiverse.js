@@ -355,6 +355,7 @@ var WIKIVERSE = (function($) {
 				maptype: map.getMapTypeId()
 			};
 
+			$gmapsSearchBrick.data("type", "gmaps");
 			$gmapsSearchBrick.data("topic", currentMap);
 
 		});
@@ -1938,6 +1939,7 @@ var WIKIVERSE = (function($) {
 					break;
 
 				case "gmaps":
+					console.log(brick.Topic)
 					buildGmaps($thisBrick, brick.Topic, APIsContentLoaded);
 					break;
 
@@ -2008,11 +2010,11 @@ var WIKIVERSE = (function($) {
 			"bricks": wikiverseParsed
 		};
 
-		var itemElems = $packeryContainer.packery('getItemElements');
+		var bricks = $packeryContainer.packery('getItemElements');
 
 		var tabindex = 0;
 
-		$.each(itemElems, function() {
+		$.each(bricks, function() {
 
 			var type = $(this).data('type');
 			var topic = $(this).data('topic');
