@@ -1991,7 +1991,9 @@ var WIKIVERSE = (function($) {
 
 	wikiverse.forkBoard = function(wpnonce) {
 		var forkedTitle = $('#wvTitle h1').html();
-		wikiverse.createBoard(wpnonce, forkedTitle);
+		var newAuthor = $('#wvAuthor').attr('data-currentUser');
+
+		wikiverse.createBoard(wpnonce, forkedTitle, newAuthor);
 	};
 
 	wikiverse.collectBricks = function(){
@@ -2000,9 +2002,9 @@ var WIKIVERSE = (function($) {
 
 		var board = {
 			"title": "",
+			"author": $('#wvAuthor').attr('data-author'),
 			"theme": $('body').data('theme'),
 			"featured_image": $packeryContainer.find('.brick[tabindex=0] img').attr('src'),
-			//"description": "",
 			"bricks": wikiverseParsed
 		};
 
@@ -2032,12 +2034,7 @@ var WIKIVERSE = (function($) {
 
 		var board = wikiverse.collectBricks();
 
-		var title = $('#wvTitle').text();
-		var description = $('#boardDescription').text();
-		board.description = description;
-		board.title = title;
-
-		var wikiverseJSON = JSON.stringify(board);
+		board.title = $('#wvTitle').text();
 
 		$.ajax({
 			type: 'POST',
@@ -2045,7 +2042,7 @@ var WIKIVERSE = (function($) {
 			data: {
 				action: 'apf_editpost',
 				boardID: $('#postID').html(),
-				boardmeta: wikiverseJSON,
+				boardmeta: JSON.stringify(board),
 				nonce: wpnonce
 			},
 			success: function(data, textStatus, XMLHttpRequest) {
@@ -2072,7 +2069,7 @@ var WIKIVERSE = (function($) {
 		});
 	};
 
-	wikiverse.createBoard = function(wpnonce, forkedTitle) {
+	wikiverse.createBoard = function(wpnonce, forkedTitle, newAuthor) {
 
 		var board = wikiverse.collectBricks();
 
@@ -2090,6 +2087,7 @@ var WIKIVERSE = (function($) {
 
 				//enable the save board button
 				$("#boardSubmitButton").prop('disabled', false);
+				board.author = newAuthor;
 			}
 
 
@@ -2113,23 +2111,16 @@ var WIKIVERSE = (function($) {
 
 			if (value.length > 0) {
 
-				var title = $('#boardTitle').val();
-				//var description = $('#boardDescription').val();
-				var theme = $('body').data('theme');
-
-				//board.description = description;
-				board.title = title;
-				board.theme = theme;
-				
-				var JSONwikiverse = JSON.stringify(board);
+				//this is saved here because its not available before
+				board.title = $('#boardTitle').val();
 
 				$.ajax({
 					type: 'POST',
 					url: "/wp/wp-admin/admin-ajax.php",
 					data: {
 						action: 'apf_addpost',
-						boardtitle: title,
-						boardmeta: JSONwikiverse,
+						boardtitle: board.title,
+						boardmeta: JSON.stringify(board),
 						nonce: wpnonce
 					},
 					success: function(data, textStatus, XMLHttpRequest) {
@@ -2146,15 +2137,18 @@ var WIKIVERSE = (function($) {
 						//update the Post ID
 						$('#postID').html(ID);
 
-						//update the post title
-						$('#wvTitle h1').html(title);
+						//update the board title
+						$('#wvTitle h1').html(board.title);
+
+						//update the board author
+						$('#wvAuthor h2').html('by ' + '<a href="/user/' + board.author + '">' + board.author + '</a>');
 
 						var $buttonToSwap;
 						var PNotifyMessage; 
 
 						if(forkedTitle){							
 							$buttonToSwap = $('#forkBoard');
-							PNotifyMessage = "board copied successfully! your changes can be saved..";
+							PNotifyMessage = "This board now is owned by you. Go enhance it!";
 						}
 						else{
 							$buttonToSwap = $('#createBoard');
@@ -2831,7 +2825,7 @@ var WIKIVERSE = (function($) {
 	//detect if user is interacting with a board of somebody else
 	$packeryContainer.one('click', '.brick', function() {
 
-		if($('#author').data('isauthor') !== "true"){
+		if($('#author').attr('data-isVisitorAuthor') !== "true"){
 
 			var message = "You are interacting with someone else's board. If you want to save your changes to your own board, click on 'fork board', in the menu. Otherwise you can just play around but your changes won't be saved";
 			new PNotify({
