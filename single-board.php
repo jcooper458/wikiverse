@@ -1,5 +1,4 @@
 <div id="wvTitle" class="text-center"><h1></h1></div>
-<div id="boardDescription" class="text-center"></div>
 
 <div id="packery" class="packery"></div>
 

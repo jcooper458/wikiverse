@@ -38,7 +38,7 @@ use Roots\Sage\Wrapper;
       wp_footer();
     ?>
 
-    <?php get_template_part('templates/searchboxes'); ?>
+    <?php get_template_part('templates/wv-markup.php'); ?>
 
   </body>
 

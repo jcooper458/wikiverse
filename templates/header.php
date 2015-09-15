@@ -5,9 +5,17 @@ get_currentuserinfo();
 
 $nonce = wp_create_nonce( 'board' );
 
+$author = "false"; 
+
+//this is used to store in the HTML if the user is the author
+//and then hide/show the move arrows
+if ( $current_user->ID == $post->post_author ) { 
+  $author = "true"; 
+}
 ?>
 
 <div id="nonce" class="invisible"><?php echo $nonce ?></div>  
+<div id="author" data-isauthor="<?php echo $author ?>" class="invisible"></div>  
 
 <header class="banner" role="banner">
 

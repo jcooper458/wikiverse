@@ -2,9 +2,6 @@
 
 	<?php 
 	$fotoURL = "";
-	global $current_user;
-	global $post; 
-	get_currentuserinfo();
 
 	if ( have_posts() ) : while ( have_posts() ) : the_post(); 
 
