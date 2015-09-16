@@ -1110,13 +1110,13 @@ var WIKIVERSE = (function($) {
 	};
 
 	createInstagramBrick = function($parentBrick, photo) {
-
+console.log(photo)
 		var $thumb = $('<img class="img-search" src="' + photo.images.low_resolution.url + '" width="112">');
 
 		$results.append($thumb);
 
 		$thumb.data('mediumURL', photo.images.standard_resolution.url);
-		$thumb.data('owner', photo.user.full_name);
+		$thumb.data('owner', photo.user.username);
 		$thumb.data('id', photo.id);
 		$thumb.data('tags', photo.tags);
 
@@ -2654,7 +2654,7 @@ var WIKIVERSE = (function($) {
 			$results.empty();
 			$searchKeyword.empty();
 			$searchKeyword.append( query );	
-			
+
 			switch ($('#source').val()) {
 				case "wikipedia":
 					getWikis($topBrick, query, lang);
