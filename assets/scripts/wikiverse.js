@@ -35,6 +35,7 @@ var WIKIVERSE = (function($) {
 
 	var $packeryContainer = $('.packery');
 	var $results = $('.results');
+	var $searchKeyword = $('#search-keyword');
 	var $sidebar = $('#sidebar');
 
 //	$('#packery').imagesLoaded( function() {
@@ -923,8 +924,8 @@ var WIKIVERSE = (function($) {
 		}
 
 		$results.empty();
-		$('#sidebar').find('h3').empty();
-		$('#sidebar').find('h3').append( topic );
+		$searchKeyword.empty();
+		$searchKeyword.append( topic );		
 
 		switch (source) {
 
@@ -2651,7 +2652,9 @@ var WIKIVERSE = (function($) {
 
 			$sidebar.find('h3').append(query);
 			$results.empty();
-
+			$searchKeyword.empty();
+			$searchKeyword.append( query );	
+			
 			switch ($('#source').val()) {
 				case "wikipedia":
 					getWikis($topBrick, query, lang);
