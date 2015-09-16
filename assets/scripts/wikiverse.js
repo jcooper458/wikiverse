@@ -1123,6 +1123,9 @@ console.log(photo)
 		if (photo.caption) {
 			$thumb.data('title', photo.caption.text);
 		}
+		else{
+			$thumb.data('title', " ");
+		}
 		//maybe re-add later on
 		//$thumb.data('filter', photo.filtér);
 
