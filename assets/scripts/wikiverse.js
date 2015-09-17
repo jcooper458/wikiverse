@@ -2645,6 +2645,7 @@ var WIKIVERSE = (function($) {
 				$("div#searchInput.row").show();
 				$("div#searchButton.row").show();
 			}
+			$('#searchInput input').focus();
 		});
 
 		$("#wv_search").on("click", function() {

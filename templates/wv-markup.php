@@ -4,7 +4,7 @@
 	<div class="search-container center buffer-top-large">
 
 		<div class="row">
-			<h3>First select a source..</h3>
+			<h3>Select a source..</h3>
 			<select id="source" name="searchType" class="selectpicker" data-style="btn btn-default btn-lg" data-width="100%">
 				<option value=""></option>
 				<option value="wikipedia">  <i class="fa fa-wikipedia"></i>wikipedia</option>
