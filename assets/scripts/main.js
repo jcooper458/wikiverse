@@ -27,7 +27,8 @@
           $('#packery').packery();
         });
 
-
+        //the user page needs an own packery instance
+        //so that the imagesloaded can be called conventionally
         $('#packeryUser').imagesLoaded( function() {
           
           // initialize Packery
@@ -38,7 +39,7 @@
             columnWidth: 210
           });
         });
-        
+
       },
       finalize: function() {
 
@@ -63,9 +64,7 @@
       init: function() {
         WIKIVERSE.initSearch();
 
-        var postID = $("#postID").html();
-
-        $.getJSON('/wp-json/posts/' + postID, function(board) {
+        $.getJSON('/wp-json/posts/' + $("#postID").html(), function(board) {
           WIKIVERSE.buildBoard($('#packery'), JSON.parse(board.content_raw));
         });
       },
