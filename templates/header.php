@@ -19,9 +19,9 @@ if ( $current_user->ID == $post->post_author ) {
 <header class="banner" role="banner">
 
   <nav id="sidebar" class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left well well-sm fixed">
-    <div id="searchMeta" class="overlay">
+    <div id="searchMeta" class="well">
       <i id="closeSidebar" class="fa fa-close"></i>
-      <h3 id="search-keyword"></h3> 
+      <h3 id="search-keyword" class=""></h3> 
       <div class="search-ui">
         <ul class="nav nav-pills">
           <li class="">

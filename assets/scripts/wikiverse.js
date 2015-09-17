@@ -410,6 +410,7 @@ var WIKIVERSE = (function($) {
 	function toggleSidebar(){
 		classie.toggle( document.body, 'cbp-spmenu-push-toright' );
 		classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
+		classie.toggle( $('#sidebar')[0], 'hiddenOverflow' );	
 		classie.toggle( $('#searchMeta')[0], 'fixed' );	
 	}
 
@@ -2660,7 +2661,6 @@ var WIKIVERSE = (function($) {
 
 			query = $("#searchInput input").val();
 
-			$sidebar.find('h3').append(query);
 			$results.empty();
 			$searchKeyword.empty();
 			$searchKeyword.append( query );	
