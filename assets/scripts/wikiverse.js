@@ -407,6 +407,17 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
+	function toggleSidebar(){
+		classie.toggle( document.body, 'cbp-spmenu-push-toright' );
+		classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
+		classie.toggle( $('#searchMeta')[0], 'fixed' );	
+	}
+
+	function toggleSearch(){
+		$('#search').addClass('open');
+		$('#search > form > input[type="search"]').focus();
+	}
+
 	function buildGmaps($mapbrick, mapObj, callback) {
 
 		var map;
@@ -919,8 +930,7 @@ var WIKIVERSE = (function($) {
 
 		//Open the sidebar:
 		if(!$('body').hasClass('cbp-spmenu-push-toright')){
-			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
-			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
+			toggleSidebar();
 		}
 
 		$results.empty();
@@ -1110,7 +1120,7 @@ var WIKIVERSE = (function($) {
 	};
 
 	createInstagramBrick = function($parentBrick, photo) {
-console.log(photo)
+
 		var $thumb = $('<img class="img-search" src="' + photo.images.low_resolution.url + '" width="112">');
 
 		$results.append($thumb);
@@ -2502,11 +2512,13 @@ console.log(photo)
 
 	wikiverse.initSearch = function() {
 
-		//open the search if clicked
+		//call it when the startpage is opened
+		toggleSearch();
+
+		//but also open the search if clicked
 		$('.searchButton').on('click', function(event) {
 			event.preventDefault();
-			$('#search').addClass('open');
-			$('#search > form > input[type="search"]').focus();
+			toggleSearch();
 		});
 
 		//close the search
@@ -2645,8 +2657,7 @@ console.log(photo)
 
 			//Open the sidebar:
 			if (!$('body').hasClass('cbp-spmenu-push-toright')) {
-				classie.toggle(document.body, 'cbp-spmenu-push-toright');
-				classie.toggle($('#sidebar')[0], 'cbp-spmenu-open');
+				toggleSidebar();
 			}
 
 			var query, topic, params, sort;
@@ -2754,8 +2765,7 @@ console.log(photo)
 
 		//Close the sidebar if open:
 		if($('body').hasClass('cbp-spmenu-push-toright')){
-			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
-			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
+			toggleSidebar();
 		}
 
 		wikiverse[$(this).attr('id')](wpnonce);
@@ -2777,19 +2787,20 @@ console.log(photo)
 	//----------------GENERAL STUFF----------------------------
 
 	//----------------EVENTS----------------------------
-	
+	//
+	$('#sidebar').bind("mousewheel",function(ev, delta) {
+	    var scrollTop = $(this).scrollTop();
+	    $(this).scrollTop(scrollTop-Math.round(delta * 20));
+	});
 
 	$('.otherSource').change(function(event) {
 		getConnections($(this).val(), $(this).parents('#sidebar').find('h3').html());
 	});
 
-	//
-	//
 	//close sidebar
 	$('#closeSidebar').click(function(){
 
-		classie.toggle( document.body, 'cbp-spmenu-push-toright' );
-		classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );
+		toggleSidebar();
 
 		if($(this).hasClass('fa-close')){
 			$(this).removeClass('fa-close');	
@@ -2858,8 +2869,7 @@ console.log(photo)
 
 		//Open the sidebar:
 		if(!$('body').hasClass('cbp-spmenu-push-toright')){
-			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
-			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
+			toggleSidebar();	
 		}
 
 		getFlickrs($flickrSearchBrick, $(this).parents(".brick").data("position"), "relevance", "geoQuery");
@@ -2872,8 +2882,7 @@ console.log(photo)
 
 		//Open the sidebar:
 		if(!$('body').hasClass('cbp-spmenu-push-toright')){
-			classie.toggle( document.body, 'cbp-spmenu-push-toright' );
-			classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
+			toggleSidebar();	
 		}
 		getInstagrams($instagramSearchBrick, $(this).parents(".brick").data("position"), "coordinates");
 	});

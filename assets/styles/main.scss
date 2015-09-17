@@ -71,12 +71,15 @@ h2, .h2 {
         max-height: none!important;
     }
   }
-  
   .btn{width:100%;}
 }
 
-#sidebar{  
+.fixed{
   position: fixed;
+}
+
+#sidebar{  
+  overflow: hidden; 
   margin-top: 70px;
   h1, h2, h3, h4{
     margin-top:5px;
@@ -393,6 +396,7 @@ content: "VV"; letter-spacing:-0.45em; margin-right:0.5em; }
 .brick:hover .handle{visibility: visible;}
 
 
+
 table tr, .result, #clear, .results img, .cursor{cursor: pointer;} 
 
 .results img {
@@ -404,6 +408,11 @@ table tr, .result, #clear, .results img, .cursor{cursor: pointer;}
     opacity: 0.8;
     filter: alpha(opacity=80); /* For IE8 and earlier */
 } 
+
+.results{
+  
+  margin-top:100px;
+}
 
 .brick .table-hover {
   > tbody {
