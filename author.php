@@ -1,4 +1,4 @@
-<div id="packery" class="packery">
+<div id="packeryUser" class="packeryUser">
 
 	<?php 
 	$fotoURL = "";
@@ -33,3 +33,9 @@
 
 <?php endif; ?>
 </div>
+
+<script type="text/javascript">
+
+
+
+</script>

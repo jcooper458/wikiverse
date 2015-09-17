@@ -26,6 +26,19 @@
           $('body').data('theme', theme_name);
           $('#packery').packery();
         });
+
+
+        $('#packeryUser').imagesLoaded( function() {
+          
+          // initialize Packery
+          $('#packeryUser').packery({
+            itemSelector: '.brick',
+            gutter: 10,
+            transitionDuration: 0,
+            columnWidth: 210
+          });
+        });
+        
       },
       finalize: function() {
 
