@@ -2788,6 +2788,7 @@ var WIKIVERSE = (function($) {
 	$('#sidebar').bind("mousewheel",function(ev, delta) {
 	    var scrollTop = $(this).scrollTop();
 	    $(this).scrollTop(scrollTop-Math.round(delta * 20));
+	    
 	});
 
 	$('.otherSource').change(function(event) {
