@@ -2514,7 +2514,7 @@ var WIKIVERSE = (function($) {
 		//but also open the search if clicked
 		$('.searchButton').on('click', function(event) {
 			event.preventDefault();
-			toggleSearch();
+			wikiverse.toggleSearch();
 		});
 
 		//close the search
