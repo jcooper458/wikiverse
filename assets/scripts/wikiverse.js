@@ -413,11 +413,6 @@ var WIKIVERSE = (function($) {
 		classie.toggle( $('#searchMeta')[0], 'fixed' );	
 	}
 
-	function toggleSearch(){
-		$('#search').addClass('open');
-		$('#search > form > input[type="search"]').focus();
-	}
-
 	function buildGmaps($mapbrick, mapObj, callback) {
 
 		var map;
@@ -2003,7 +1998,11 @@ var WIKIVERSE = (function($) {
 		}, 'fast');
 		return false;
 	};
-
+	
+	wikiverse.toggleSearch = function(){
+		$('#search').addClass('open');
+		$('#search > form > input[type="search"]').focus();
+	};
 
 	wikiverse.forkBoard = function(wpnonce) {
 		var forkedTitle = $('#wvTitle h1').html();
@@ -2511,9 +2510,6 @@ var WIKIVERSE = (function($) {
 	};
 
 	wikiverse.initSearch = function() {
-
-		//call it when the startpage is opened
-		toggleSearch();
 
 		//but also open the search if clicked
 		$('.searchButton').on('click', function(event) {
