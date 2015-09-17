@@ -165,7 +165,7 @@ var WIKIVERSE = (function($) {
 				q: topic,
 				key: 'AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8',
 				part: 'snippet',
-				maxResults: 25
+				maxResults: 50
 			},
 			dataType: 'jsonp',
 			success: function(data) {
@@ -620,7 +620,7 @@ var WIKIVERSE = (function($) {
 				photo_id: photoObj.id,
 				format: 'json',
 				nojsoncallback: 1,
-				per_page: 40
+				per_page: 50
 			},
 			success: function(data) {
 				callback(data.photo.tags.tag);
@@ -1189,7 +1189,7 @@ var WIKIVERSE = (function($) {
 
 		SC.get('/tracks', {
 			q: query,
-			limit: 40
+			limit: 50
 		}, function(tracks) {
 		
 		$results.append(resultsTable);
@@ -1433,7 +1433,7 @@ var WIKIVERSE = (function($) {
 				list: 'search',
 				srsearch: topic,
 				format: 'json',
-				srlimit: 40
+				srlimit: 50
 			},
 			dataType: 'jsonp',
 			success: function(data) {
