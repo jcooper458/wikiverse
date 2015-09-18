@@ -92,6 +92,7 @@ h2, .h2 {
 }
 
 #sidebar{  
+  overflow:auto;
   margin-top: 70px;
   h1, h2, h3, h4{
     margin-top:5px;
@@ -104,7 +105,7 @@ h2, .h2 {
   }
   .well{
     z-index:100;
-    width:340px;
+    width:353px;
   }
 }
 
@@ -471,7 +472,7 @@ padding: 1px 10px;
 /* Orientation-dependent styles for the content of the menu */
 
 .cbp-spmenu-vertical {
-  width: 340px;
+  width: 353px;
   height: 100%;
   top: 0;
   z-index: 1000;
@@ -481,7 +482,7 @@ padding: 1px 10px;
 /* Vertical menu that slides from the left or right */
 
 .cbp-spmenu-left {
-  left: -340px;
+  left: -353px;
 }
 
 
@@ -499,7 +500,7 @@ padding: 1px 10px;
 }
 
 .cbp-spmenu-push-toright {
-  left: 340px;
+  left: 353px;
 }
 
 /* Transitions */
