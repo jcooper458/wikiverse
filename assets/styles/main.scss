@@ -63,6 +63,10 @@ h2, .h2 {
 
 }
 
+.tooltip{
+  width: 400px;
+}
+
 .brick{ 
   outline: 0;
   opacity: .1;
@@ -432,7 +436,7 @@ table tr, .result, #clear, .results img, .cursor{cursor: pointer;}
 
 .results{
   
-  margin-top:110px;
+  margin-top:130px;
 }
 
 .brick .table-hover {
