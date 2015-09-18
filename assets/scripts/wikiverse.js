@@ -410,7 +410,7 @@ var WIKIVERSE = (function($) {
 	function toggleSidebar(){
 		classie.toggle( document.body, 'cbp-spmenu-push-toright' );
 		classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
-		classie.toggle( $('#sidebar')[0], 'hiddenOverflow' );	
+		classie.toggle( $('#sidebar')[0], 'autoOverflow' );	
 		classie.toggle( $('#searchMeta')[0], 'fixed' );	
 	}
 

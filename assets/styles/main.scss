@@ -87,12 +87,11 @@ h2, .h2 {
   position: fixed;
 }
 
-.hiddenOverflow{
-  overflow: hidden; 
+.autoOverflow{
+  overflow: auto; 
 }
 
 #sidebar{  
-  overflow:auto;
   margin-top: 70px;
   h1, h2, h3, h4{
     margin-top:5px;
