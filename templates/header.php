@@ -26,7 +26,15 @@ if ( $current_user->ID == $post->post_author ) {
         <ul class="nav nav-pills">
           <li class="">
             <button class="btn btn-xs btn-primary searchButton cursor">search for something else</button>
-            <select class="selectpicker pull-left otherSource show-menu-arrow" data-style="btn btn-default btn-xs" data-width="50%" data-size="20"><option selected="">try another source..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-wikipedia wikipedia-icon icon"></i>wikipedia</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>
+            <select class="selectpicker pull-left otherSource show-menu-arrow" data-style="btn btn-default btn-xs" data-width="50%" data-size="20">
+              <option selected="">try another source..</option>
+              <option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option>
+              <option><i class="fa fa-wikipedia wikipedia-icon icon"></i>wikipedia</option>
+              <option><i class="fa fa-twitter twitter-icon icon"></i>twitter</option>
+              <option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option>
+              <option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option>
+              <option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option>
+            </select>
           </li>
         </ul>
       </div>
