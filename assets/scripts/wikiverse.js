@@ -2785,11 +2785,11 @@ var WIKIVERSE = (function($) {
 
 	//----------------EVENTS----------------------------
 	//
-	$('#sidebar').bind("mousewheel",function(ev, delta) {
+	/*$('#sidebar').mousewheel(function(ev, delta) {
 	    var scrollTop = $(this).scrollTop();
 	    $(this).scrollTop(scrollTop-Math.round(delta * 20));
 	    
-	});
+	});*/
 
 	$('.otherSource').change(function(event) {
 		getConnections($(this).val(), $(this).parents('#sidebar').find('h3').html());
