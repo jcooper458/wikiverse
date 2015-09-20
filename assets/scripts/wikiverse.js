@@ -38,19 +38,19 @@ var WIKIVERSE = (function($) {
 	var $searchKeyword = $('#search-keyword');
 	var $sidebar = $('#sidebar');
 
-//	$('#packery').imagesLoaded( function() {
-		// initialize Packery
-		var packery = $packeryContainer.packery({
-			itemSelector: '.brick',
-			stamp: '.search',
-			gutter: 10,
-			transitionDuration: 0,
-			columnWidth: 210,
-			//  columnWidth: '.brick',
-			//  rowHeight: 60,
-			//  isInitLayout: false
-		});
-//	});
+	//	$('#packery').imagesLoaded( function() {
+	// initialize Packery
+	var packery = $packeryContainer.packery({
+		itemSelector: '.brick',
+		stamp: '.search',
+		gutter: 10,
+		transitionDuration: 0,
+		columnWidth: 210,
+		//  columnWidth: '.brick',
+		//  rowHeight: 60,
+		//  isInitLayout: false
+	});
+	//	});
 
 	// --------FUNCTION DEFINITIONS
 	var createFlickrBrick,
@@ -92,13 +92,13 @@ var WIKIVERSE = (function($) {
 				thisBrickData.size = 'large';
 			}
 			//if foto is portrait
-			else if ( $brick.hasClass('foto') && $brick.hasClass('portrait')) {
+			else if ($brick.hasClass('foto') && $brick.hasClass('portrait')) {
 				$brick.removeClass('w2');
 				$brick.addClass('w1');
 				thisBrickData.size = 'small';
 			}
 			//if medium youtube 
-			else if ($brick.hasClass("w2") && $brick.hasClass('youtube') ) {
+			else if ($brick.hasClass("w2") && $brick.hasClass('youtube')) {
 				$brick.removeClass('w2');
 				$brick.addClass('w1');
 				thisBrickData.size = 'small';
@@ -249,7 +249,7 @@ var WIKIVERSE = (function($) {
 		$gmapsSearchBrick.addClass('w3-fix visible');
 
 		$gmapsSearchBrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">');
-		$gmapsSearchBrick.append('<div id="map_canvas"></div>');		
+		$gmapsSearchBrick.append('<div id="map_canvas"></div>');
 
 		var mapOptions = {
 			center: {
@@ -407,11 +407,11 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
-	function toggleSidebar(){
-		classie.toggle( document.body, 'cbp-spmenu-push-toright' );
-		classie.toggle( $('#sidebar')[0], 'cbp-spmenu-open' );	
-		classie.toggle( $('#sidebar')[0], 'autoOverflow' );	
-		classie.toggle( $('#searchMeta')[0], 'fixed' );	
+	function toggleSidebar() {
+		classie.toggle(document.body, 'cbp-spmenu-push-toright');
+		classie.toggle($('#sidebar')[0], 'cbp-spmenu-open');
+		classie.toggle($('#sidebar')[0], 'autoOverflow');
+		classie.toggle($('#searchMeta')[0], 'fixed');
 	}
 
 	function buildGmaps($mapbrick, mapObj, callback) {
@@ -652,7 +652,7 @@ var WIKIVERSE = (function($) {
 	function getFlickrs($parentBrick, topic, sort, type) {
 
 		type = type || "textQuery";
-		
+
 		//if query is coordinates (bounds)
 		if (type === "geoQuery") {
 
@@ -925,40 +925,40 @@ var WIKIVERSE = (function($) {
 	function getConnections(source, topic) {
 
 		//Open the sidebar:
-		if(!$('body').hasClass('cbp-spmenu-push-toright')){
+		if (!$('body').hasClass('cbp-spmenu-push-toright')) {
 			toggleSidebar();
 		}
 
 		$results.empty();
 		$searchKeyword.empty();
-		$searchKeyword.append( topic );		
+		$searchKeyword.append(topic);
 
 		switch (source) {
 
 			case "flickr":
 				getFlickrs($(defaultBrick), topic, "relevance", "textQuery");
-			break;
+				break;
 
 			case "instagram":
 				//remove whitespace from instagram query
 				getInstagrams($(defaultBrick), topic.replace(/ /g, ''), "hashtag");
-			break;
+				break;
 
 			case "youtube":
 				getYoutubes($(defaultBrick), topic);
-			break;
+				break;
 
 			case "soundcloud":
 				getSoundcloud($(defaultBrick), topic);
-			break;
+				break;
 
 			case "twitter":
 				getTweets($(defaultBrick), topic);
-			break;
+				break;
 
 			case "wikipedia":
 				getWikis($(defaultBrick), topic, "en");
-			break;
+				break;
 		}
 	}
 
@@ -1128,8 +1128,7 @@ var WIKIVERSE = (function($) {
 
 		if (photo.caption) {
 			$thumb.data('title', photo.caption.text);
-		}
-		else{
+		} else {
 			$thumb.data('title', " ");
 		}
 		//maybe re-add later on
@@ -1191,8 +1190,8 @@ var WIKIVERSE = (function($) {
 			q: query,
 			limit: 50
 		}, function(tracks) {
-		
-		$results.append(resultsTable);
+
+			$results.append(resultsTable);
 
 			tracks.forEach(function(track, index) {
 
@@ -1223,7 +1222,7 @@ var WIKIVERSE = (function($) {
 					buildSoundcloud($thisBrick, soundcloudObj, APIsContentLoaded);
 
 					$(this).tooltip('destroy');
-					$(this).remove();	
+					$(this).remove();
 
 					return false;
 
@@ -1244,7 +1243,7 @@ var WIKIVERSE = (function($) {
 
 				$results.append(resultsTable);
 				//append row to sidebar-results-table
-				
+
 				if (tweet) {
 
 					$results.find('.table').append('<tr text="' + text + '" user="' + tweet.user.name + '"><td class="twitterThumb col-md-2"><img src="' + userThumb + '"></td><td class="result col-md-10" ><strong>' + tweet.user.name + '</strong><br>' + text + '</td></tr>');
@@ -1653,7 +1652,7 @@ var WIKIVERSE = (function($) {
 				redirects: true
 					/*disableeditsection: true,
 					disablepp: true,
-      
+					 
 					sectionprevue: true,            
 					disabletoc: true,
 					mobileformat:true*/
@@ -1917,8 +1916,8 @@ var WIKIVERSE = (function($) {
 
 		if (typeof board.theme === 'undefined') board.theme = "superhero";
 
-        $('link[title="main"]').attr('href', "//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/" + board.theme + "/bootstrap.min.css");
-        $('body').data('theme', board.theme);
+		$('link[title="main"]').attr('href', "//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/" + board.theme + "/bootstrap.min.css");
+		$('body').data('theme', board.theme);
 
 		$('#wvTitle > h1').append(board.title);
 		$('#boardDescription').append(board.description);
@@ -1999,8 +1998,8 @@ var WIKIVERSE = (function($) {
 		}, 'fast');
 		return false;
 	};
-	
-	wikiverse.toggleSearch = function(){
+
+	wikiverse.toggleSearch = function() {
 		$('#search').addClass('open');
 		$('#search > form > input[type="search"]').focus();
 	};
@@ -2012,7 +2011,7 @@ var WIKIVERSE = (function($) {
 		wikiverse.createBoard(wpnonce, forkedTitle, newAuthor);
 	};
 
-	wikiverse.collectBricks = function(){
+	wikiverse.collectBricks = function() {
 
 		var wikiverseParsed = {};
 
@@ -2041,9 +2040,9 @@ var WIKIVERSE = (function($) {
 				Parent: parent
 			};
 			tabindex++;
-		});		
+		});
 
-		return board; 
+		return board;
 	};
 
 	wikiverse.saveBoard = function(wpnonce) {
@@ -2095,7 +2094,7 @@ var WIKIVERSE = (function($) {
 		$('#myModal').on('shown.bs.modal', function() {
 
 			//if its being forked
-			if(forkedTitle){
+			if (forkedTitle) {
 				$('#saveThisBoard').addClass('invisible');
 				$('#copyThisBoard').removeClass('invisible');
 				$('#copyThisBoardDescription').removeClass('invisible');
@@ -2149,7 +2148,7 @@ var WIKIVERSE = (function($) {
 
 						//update the browser history and the new url
 						history.pushState('', 'wikiverse', url);
-						
+
 						//update the Post ID
 						$('#postID').html(ID);
 
@@ -2160,13 +2159,12 @@ var WIKIVERSE = (function($) {
 						$('#wvAuthor h2').html('by ' + '<a href="/user/' + board.author + '">' + board.author + '</a>');
 
 						var $buttonToSwap;
-						var PNotifyMessage; 
+						var PNotifyMessage;
 
-						if(forkedTitle){							
+						if (forkedTitle) {
 							$buttonToSwap = $('#forkBoard');
 							PNotifyMessage = "This board now is owned by you. Go enhance it!";
-						}
-						else{
+						} else {
 							$buttonToSwap = $('#createBoard');
 							PNotifyMessage = "board created successfully!";
 						}
@@ -2664,7 +2662,7 @@ var WIKIVERSE = (function($) {
 
 			$results.empty();
 			$searchKeyword.empty();
-			$searchKeyword.append( query );	
+			$searchKeyword.append(query);
 
 			switch ($('#source').val()) {
 				case "wikipedia":
@@ -2761,7 +2759,7 @@ var WIKIVERSE = (function($) {
 	$('.board-pilot').click(function() {
 
 		//Close the sidebar if open:
-		if($('body').hasClass('cbp-spmenu-push-toright')){
+		if ($('body').hasClass('cbp-spmenu-push-toright')) {
 			toggleSidebar();
 		}
 
@@ -2796,21 +2794,21 @@ var WIKIVERSE = (function($) {
 	});
 
 	//close sidebar
-	$('#closeSidebar').click(function(){
+	$('#closeSidebar').click(function() {
 
 		toggleSidebar();
 
-		if($(this).hasClass('fa-close')){
-			$(this).removeClass('fa-close');	
-			$(this).addClass('fa-plus');	
-			$(this).css('right', -30);			
-		}else{
-			$(this).removeClass('fa-plus');	
-			$(this).addClass('fa-close');	
-			$(this).css('right', 20);	
+		if ($(this).hasClass('fa-close')) {
+			$(this).removeClass('fa-close');
+			$(this).addClass('fa-plus');
+			$(this).css('right', -30);
+		} else {
+			$(this).removeClass('fa-plus');
+			$(this).addClass('fa-close');
+			$(this).css('right', 20);
 		}
 
-	});		
+	});
 
 	// REMOVE ITEM
 	$packeryContainer.on("click", ".brick .cross", function() {
@@ -2842,7 +2840,7 @@ var WIKIVERSE = (function($) {
 	//detect if user is interacting with a board of somebody else
 	$packeryContainer.one('click', '.brick', function() {
 
-		if($('#author').attr('data-isVisitorAuthor') !== "true"){
+		if ($('#author').attr('data-isVisitorAuthor') !== "true") {
 
 			var message = "You are interacting with someone else's board. If you want to save your changes to your own board, click on 'fork board', in the menu. Otherwise you can just play around but your changes won't be saved";
 			new PNotify({
@@ -2866,8 +2864,8 @@ var WIKIVERSE = (function($) {
 	$packeryContainer.on("click", ".gmaps .fa-flickr", function() {
 
 		//Open the sidebar:
-		if(!$('body').hasClass('cbp-spmenu-push-toright')){
-			toggleSidebar();	
+		if (!$('body').hasClass('cbp-spmenu-push-toright')) {
+			toggleSidebar();
 		}
 
 		getFlickrs($flickrSearchBrick, $(this).parents(".brick").data("position"), "relevance", "geoQuery");
@@ -2879,8 +2877,8 @@ var WIKIVERSE = (function($) {
 	$packeryContainer.on("click", ".gmaps .fa-instagram", function() {
 
 		//Open the sidebar:
-		if(!$('body').hasClass('cbp-spmenu-push-toright')){
-			toggleSidebar();	
+		if (!$('body').hasClass('cbp-spmenu-push-toright')) {
+			toggleSidebar();
 		}
 		getInstagrams($instagramSearchBrick, $(this).parents(".brick").data("position"), "coordinates");
 	});
