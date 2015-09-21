@@ -2840,11 +2840,10 @@ var WIKIVERSE = (function($) {
 	//detect if user is interacting with a board of somebody else
 	$packeryContainer.one('click', '.brick', function() {
 
-		if ($('#author').attr('data-isVisitorAuthor') !== "true") {
+		if ($('#author').attr('data-isVisitorAuthor') === "false") {
 
-			var message = "You are interacting with someone else's board. If you want to save your changes to your own board, click on 'fork board', in the menu. Otherwise you can just play around but your changes won't be saved";
 			new PNotify({
-				text: message,
+				text: $('#author').attr('data-message'),
 				type: 'info',
 				styling: 'fontawesome',
 				shadow: false,
