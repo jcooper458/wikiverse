@@ -2839,22 +2839,17 @@ var WIKIVERSE = (function($) {
 
 	//detect if user is interacting with a board of somebody else
 	$packeryContainer.one('click', '.brick', function() {
-
-		if ($('#author').attr('data-isVisitorAuthor') === "false") {
-
-			new PNotify({
-				text: $('#author').attr('data-message'),
-				type: 'info',
-				styling: 'fontawesome',
-				shadow: false,
-				animation: 'fade',
-				nonblock: {
-					nonblock: true,
-					nonblock_opacity: 0.2
-				}
-			});
-		}
-
+		new PNotify({
+			text: $('#author').attr('data-message'),
+			type: 'info',
+			styling: 'fontawesome',
+			shadow: false,
+			animation: 'fade',
+			nonblock: {
+				nonblock: true,
+				nonblock_opacity: 0.2
+			}
+		});
 	});
 
 	//create images interconnection and trigger getFlickrs()

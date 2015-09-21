@@ -5,23 +5,28 @@ get_currentuserinfo();
 
 $nonce = wp_create_nonce( 'board' );
 
-$author = "false";  
-
-//this is used to store in the HTML if the user is the author
+//if user is not logged in: 
 if ( !is_user_logged_in() ) {
   $msg = "Hi! we noticed you are not logged in and are interacting with someone else's board. Your changes won't be saved unless you sign-up."; 
+
 }
+//if user is logged in:
 else{
-  //this is used to store in the HTML if the user is the author
-  if ( $current_user->ID !== $post->post_author ) { 
-    $author = "false";
-    $msg = "You are interacting with someone else's board. If you want to save your changes to your own board, click on 'fork board', in the menu. Otherwise you can just play around but your changes won't be saved"; 
+  //but is not author
+  if ( $current_user->ID == $post->post_author ) { 
+
+    $msg = "Welcome back " . $current_user->user_nicename . "!";   
+
   } 
+  //else, user is logged in, and also author
+  else{
+    $msg = "You are interacting with someone else's board. If you want to save your changes to your own board, click on 'fork board', in the menu. Otherwise you can just play around but your changes won't be saved"; 
+  }
 }
 ?>
 
 <div id="nonce" class="invisible"><?php echo $nonce ?></div>  
-<div id="author" data-isVisitorAuthor="<?php echo $author ?>" data-message="<?php echo $msg ?>" class="invisible"></div>  
+<div id="author" data-message="<?php echo $msg ?>" class="invisible"></div>  
 
 <header class="banner" role="banner">
 
