@@ -158,6 +158,11 @@ var WIKIVERSE = (function($) {
 	};
 
 	getRelatedYoutubes = function(videoID) {
+		
+		//Open the sidebar:
+		if (!$('body').hasClass('cbp-spmenu-push-toright')) {
+			toggleSidebar();
+		}
 
 		$results.empty();
 
