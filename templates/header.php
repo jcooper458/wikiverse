@@ -69,10 +69,10 @@ else{
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">     
 
         <ul class="nav navbar-nav">    
-
+        <li>&nbsp;&nbsp;&nbsp;&nbsp;</li> 
         <?php if ( is_singular("board") && ( $current_user->ID == $post->post_author ) || ( is_page('start'))) { ?>    
-        
-        <li><a class="searchButton" href="#">add content</a></li>              
+
+        <li><a class="btn btn-default btn-lg board-pilot invisible searchButton" href="#">add content</a></li>              
 
         <?php }  ?>
       </ul>
@@ -91,8 +91,7 @@ else{
           <li><a href="#" class="board-pilot invisible" id="playBoard"><i class="fa fa-play"></i></i></a></li>    
           <?php if ( $current_user->ID != $post->post_author ) { // if is author ?>
           <li><a href="#" class="board-pilot invisible" id="forkBoard">fork board</a></li> 
-          <?php }  else{ // if is not author?>
-          <li><a href="#" class="board-pilot invisible" id="forkBoard">copy board</a></li>    
+          <?php } else{ // if is not author?>
           <li><a href="#" class="board-pilot" id="saveBoard" >save changes</a></li>
           <li><a href="#" class="board-pilot invisible" id="clearBoard">clear board</a></li> 
           <?php }  ?>
