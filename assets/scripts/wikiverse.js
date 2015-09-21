@@ -244,19 +244,9 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
-	var markers = [];
+	function getGmapsFotos($mapsBrick){
 
-	function getGmapsSearch($gmapsSearchBrick) {
-
-		$gmapsSearchBrick.addClass('w3-fix visible');
-
-		$gmapsSearchBrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">');
-		$gmapsSearchBrick.append(getInstagramsButton);
-		$gmapsSearchBrick.append(getFlickrsButton);
-		$gmapsSearchBrick.append('<div id="map_canvas"></div>');
-
-
-		$gmapsSearchBrick.find('.getFotos').on('click', function() {
+		$mapsBrick.find('.getFotos').on('click', function() {
 
 			var position = $(this).parents(".brick").data("position");
 
@@ -275,6 +265,21 @@ var WIKIVERSE = (function($) {
 				getFlickrs($(defaultBrick), position, "relevance", "geoQuery");			
 			}
 		});
+	}
+
+	var markers = [];
+
+	function getGmapsSearch($gmapsSearchBrick) {
+
+		$gmapsSearchBrick.addClass('w3-fix visible');
+
+		$gmapsSearchBrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">');
+		$gmapsSearchBrick.append(getInstagramsButton);
+		$gmapsSearchBrick.append(getFlickrsButton);
+		$gmapsSearchBrick.append('<div id="map_canvas"></div>');
+
+		//call the event for the Fotosearch on click
+		getGmapsFotos($gmapsSearchBrick);
 
 		var mapOptions = {
 			center: {
@@ -465,25 +470,8 @@ var WIKIVERSE = (function($) {
 		$packeryContainer.packery();
 
 
-		$mapbrick.find('.getFotos').on('click', function() {
-
-			var position = $(this).parents(".brick").data("position");
-
-			$results.empty();
-			$searchKeyword.empty();
-			$searchKeyword.append(position);
-
-			//Open the sidebar:
-			if (!$('body').hasClass('cbp-spmenu-push-toright')) {
-				toggleSidebar();
-			}
-			if($(this).attr('id') === "getInstagrams"){
-				getInstagrams($(defaultBrick), position, "coordinates");
-			}
-			else {
-				getFlickrs($(defaultBrick), position, "relevance", "geoQuery");			
-			}
-		});
+		//call the event for the Fotosearch on click
+		getGmapsFotos($mapbrick);
 
 
 		if (mapObj.maptype.toLowerCase() === "roadmap") {
@@ -637,25 +625,8 @@ var WIKIVERSE = (function($) {
 
 		$packeryContainer.packery();
 
-		$mapbrick.find('.getFotos').on('click', function() {
-
-			var position = $(this).parents(".brick").data("position");
-
-			$results.empty();
-			$searchKeyword.empty();
-			$searchKeyword.append(position);
-
-			//Open the sidebar:
-			if (!$('body').hasClass('cbp-spmenu-push-toright')) {
-				toggleSidebar();
-			}
-			if($(this).attr('id') === "getInstagrams"){
-				getInstagrams($(defaultBrick), position, "coordinates");
-			}
-			else {
-				getFlickrs($(defaultBrick), position, "relevance", "geoQuery");			
-			}
-		});
+		//call the event for the Fotosearch on click
+		getGmapsFotos($mapbrick);
 
 		var myCenter = new google.maps.LatLng(streetObj.center.split(",")[0], streetObj.center.split(",")[1]);
 		//store position and bounds into the data container (for later use of getFlickrs/Instagrams)
