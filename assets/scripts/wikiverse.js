@@ -233,8 +233,8 @@ var WIKIVERSE = (function($) {
 				language: lang
 			};
 
-			var y = parseInt($brick.css('top'));
-			var x = parseInt($brick.css('left'));
+			var y = parseInt($brick.css('top') + 500);
+			var x = parseInt($brick.css('left') + 500);
 
 			var $thisBrick = buildBrick($packeryContainer, x, y);
 
@@ -1596,6 +1596,8 @@ var WIKIVERSE = (function($) {
 						//create the section object and trigger the creation of a section brick
 						$tableSectionResults.find(".result").on('click', function() {
 
+							$packeryContainer.packery('stamp', $brick);
+
 							var section = {
 
 								title: topic.title,
@@ -1612,6 +1614,7 @@ var WIKIVERSE = (function($) {
 							var $thisBrick = buildBrick($packeryContainer, newX, newY);
 							buildSection($thisBrick, section, $brick.attr("tabindex"), APIsContentLoaded);
 
+							$packeryContainer.packery('unstamp', $brick);
 						});
 					}
 					$packeryContainer.packery();
@@ -1704,6 +1707,8 @@ var WIKIVERSE = (function($) {
 					infobox.find('.reference').remove();
 					infobox.find('.references').remove();
 					infobox.find('.org').remove();
+					infobox.find('.external').remove();
+					infobox.find('#coordinates').remove();
 					//infobox.find('*').css('max-width', '290px');
 					infobox.find('img').unwrap();
 
@@ -1778,6 +1783,8 @@ var WIKIVERSE = (function($) {
 				wholeSection.find('table').remove();
 				//sectionHTML.find('*').css('max-width', '290px');
 				wholeSection.find('img').unwrap();
+				wholeSection.find('.external').remove();
+				wholeSection.find('#coordinates').remove();
 
 				//if image is bigger than 290, shrink it
 				if (wholeSection.find('img').width() > 250 || wholeSection.find('img').attr("width") > 250) {
@@ -1794,20 +1801,12 @@ var WIKIVERSE = (function($) {
 
 				//check if there is Geolocations
 
+				/*
 				if ($brick.find('.geo-dms').length) {
-
-					var geoPosition = $brick.find('.geo-nondefault .geo').html();
-
-					$brick.find('.wikiverse-nav').prepend('<i class="fa fa-map-marker gmaps-icon icon"></i>&nbsp;');
-
-					//if click on gmaps interconnection
-					$brick.find(".wikiverse-nav .gmaps-icon").on("click", function() {
-
-						getGmapsSearch();
-
-					});
-				} // end if geo
-
+						var geoPosition = $brick.find('.geo-nondefault .geo').html();
+						console.log(geoPosition);
+					} // end if geo
+				*/
 				//enable to create new bricks out of links
 				buildNextTopic($brick, section.language);
 				if (!is_root) {
