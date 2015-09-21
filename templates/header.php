@@ -72,7 +72,7 @@ else{
         <li>&nbsp;&nbsp;&nbsp;&nbsp;</li> 
         <?php if ( is_singular("board") && ( $current_user->ID == $post->post_author ) || ( is_page('start'))) { ?>    
 
-        <li><a class="btn btn-default btn-lg board-pilot invisible searchButton" href="#">add content</a></li>              
+        <li><a class="btn btn-default btn-lg board-pilot invisible searchButton" href="#"><i class="fa fa-plus"></i>      add content</a></li>              
 
         <?php }  ?>
       </ul>
