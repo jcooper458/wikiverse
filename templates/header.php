@@ -62,7 +62,7 @@ else{
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="<?= esc_url(home_url('/')); ?>"><?php bloginfo('name'); ?></a> <p id="beta">beta</p>
+        <a class="navbar-brand" href="<?= esc_url(home_url('/')); ?>"><?php bloginfo('name'); ?></a> <span id="beta">beta</span>
       </div>         
 
       <!-- Collect the nav links, forms, and other content for toggling -->
@@ -72,7 +72,7 @@ else{
         <li>&nbsp;&nbsp;&nbsp;&nbsp;</li> 
         <?php if ( is_singular("board") && ( $current_user->ID == $post->post_author ) || ( is_page('start'))) { ?>    
 
-        <li><a class="btn btn-default btn-lg board-pilot invisible searchButton" href="#"><i class="fa fa-plus"></i>      add content</a></li>              
+        <li><a class="invisible searchButton" href="#"><i class="fa fa-plus"></i>&nbsp;&nbsp;add content</a></li>              
 
         <?php }  ?>
       </ul>

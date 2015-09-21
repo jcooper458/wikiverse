@@ -2871,7 +2871,7 @@ var WIKIVERSE = (function($) {
 	$packeryContainer.packery('on', 'layoutComplete', function(pckryInstance, laidOutItems) {
 
 		//cant use show() or fadeIn() coz it messes up the bootstrap nav
-		$(".board-pilot").removeClass('invisible');
+		$(".board-pilot, .searchButton").removeClass('invisible');
 
 	});
 
