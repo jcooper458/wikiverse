@@ -244,12 +244,19 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
+	function toggleSidebar() {
+		classie.toggle(document.body, 'cbp-spmenu-push-toright');
+		classie.toggle($('#sidebar')[0], 'cbp-spmenu-open');
+		classie.toggle($('#sidebar')[0], 'autoOverflow');
+		classie.toggle($('#searchMeta')[0], 'fixed');
+	}
+
 	function getGmapsFotos($mapsBrick){
 
 		$mapsBrick.find('.getFotos').on('click', function() {
 
 			var position = $(this).parents(".brick").data("position");
-
+			console.log(position)
 			$results.empty();
 			$searchKeyword.empty();
 			$searchKeyword.append(position);
@@ -414,12 +421,6 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
-	function toggleSidebar() {
-		classie.toggle(document.body, 'cbp-spmenu-push-toright');
-		classie.toggle($('#sidebar')[0], 'cbp-spmenu-open');
-		classie.toggle($('#sidebar')[0], 'autoOverflow');
-		classie.toggle($('#searchMeta')[0], 'fixed');
-	}
 
 	function buildGmaps($mapbrick, mapObj, callback) {
 
