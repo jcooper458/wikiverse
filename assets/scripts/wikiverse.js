@@ -1201,7 +1201,7 @@ var WIKIVERSE = (function($) {
 				//create the tooltips
 				$('tr').tooltip({
 					animation: true,
-					placement: 'right'
+					placement: 'bottom'
 				});
 
 
@@ -1454,7 +1454,7 @@ var WIKIVERSE = (function($) {
 						//create the tooltips
 						$('tr').tooltip({
 							animation: false,
-							placement: 'right'
+							placement: 'bottom'
 						});
 						//bind event to every row -> so you can start the wikiverse
 						$results.find('tr').unbind('click').click(function(e) {
@@ -1805,7 +1805,7 @@ var WIKIVERSE = (function($) {
 				//create the tooltips
 				$('tr').tooltip({
 					animation: true,
-					placement: 'right'
+					placement: 'bottom'
 				});
 
 				//bind event to every row -> so you can start the wikiverse
