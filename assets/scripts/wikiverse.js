@@ -5,30 +5,11 @@ var WIKIVERSE = (function($) {
 	var close_icon = '<span class="cross control-buttons"><i class="fa fa-close"></i></span>';
 	var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 	var loadingIcon = '<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate pull-right"></span>';
-	var wikiverse_nav = '<select class="selectpicker pull-left connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="50%" data-size="20"><option selected="">other sources..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>';
+	var wikiverse_nav = '<select class="selectpicker connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="100%" data-size="20"><option selected="">try another source..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>';
 	var defaultBrick = '<div class="brick well well-sm">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
 	var resultsTable = '<table class="table table-hover"></table>';
 	var getInstagramsButton = '<button id="getInstagrams" class="btn btn-default btn-xs getFotos" type="button">get instragram fotos of this location</button>';
 	var getFlickrsButton = '<button id="getFlickrs" class="btn btn-default btn-xs getFotos" type="button">get flickr fotos of this location</button>';
-
-	var rmOptions = {
-		speed: 700,
-		moreLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> more </button>',
-		lessLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> less </button>',
-		afterToggle: function() {
-			$packeryContainer.packery();
-		}
-	};
-
-	var rmSectionOptions = {
-		speed: 700,
-		collapsedHeight: 0,
-		moreLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> sections </button>',
-		lessLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> close sections </button>',
-		afterToggle: function() {
-			$packeryContainer.packery();
-		}
-	};
 
 	var is_root = location.pathname === "/";
 
@@ -1535,7 +1516,85 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
+	function getWikiSections($brick, topic){
 
+		$.ajax({
+			url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
+			data: {
+				action: 'parse',
+				page: topic.title,
+				format: 'json',
+				prop: 'sections',
+				mobileformat: true
+					/*disableeditsection: true,
+					disablepp: true,
+					//preview: true,
+					sectionprevue: true,
+					section:0,
+					disabletoc: true,
+					mobileformat:true*/
+			},
+			dataType: 'jsonp',
+			success: function(data) {
+				//if there is sections, append them
+				
+				var $sectionResults = $('<div class="sections"></div>');
+				
+				if (typeof data.parse.sections !== 'undefined' && data.parse.sections.length > 0) {		
+
+					
+
+					$brick.append($sectionResults);
+
+					data.parse.sections.forEach(function(section) {
+						
+						//if not any of those, add the resulting sections
+						if ((section.line !== "References") && (section.line !== "Notes") && (section.line !== "External links") && (section.line !== "Citations") && (section.line !== "Bibliography") && (section.line !== "Notes and references")) {
+							$sectionResults.append(' <button type="button" class="list-group-item result" title="' + section.anchor + '" index="' + section.index + '">' + section.line + '</button>');
+						}						
+					});
+					
+					$packeryContainer.packery();
+
+					//create the section object and trigger the creation of a section brick
+					$sectionResults.find(".result").on('click', function() {
+
+						$packeryContainer.packery('stamp', $brick);
+
+						var section = {
+
+							title: topic.title,
+							language: topic.language,
+							name: $(this).html(),
+							index: $(this).attr("index")
+						};
+
+						$(this).remove();
+
+						var newY = parseInt($brick.css('top'));
+						var newX = parseInt($brick.css('left'));
+
+						var $thisBrick = buildBrick($packeryContainer, newX, newY);
+						buildSection($thisBrick, section, $brick.attr("tabindex"), APIsContentLoaded);
+
+						$packeryContainer.packery('unstamp', $brick);
+					});
+				}
+				else{
+					$sectionResults.append('No Sections found for this Wikipedia article..');
+				}
+			}
+		});
+	}
+
+	var rmOptions = {
+		speed: 700,
+		moreLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> more </button>',
+		lessLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> less </button>',
+		afterToggle: function() {
+			$packeryContainer.packery();
+		}
+	};
 
 	buildWikipedia = function($brick, topic, parent, callback) {
 
@@ -1558,67 +1617,14 @@ var WIKIVERSE = (function($) {
 		}
 
 		if (!is_root) {
-			$.ajax({
-				url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
-				data: {
-					action: 'parse',
-					page: topic.title,
-					format: 'json',
-					prop: 'sections',
-					mobileformat: true
-						/*disableeditsection: true,
-						disablepp: true,
-						//preview: true,
-						sectionprevue: true,
-						section:0,
-						disabletoc: true,
-						mobileformat:true*/
-				},
-				dataType: 'jsonp',
-				success: function(data) {
-					//if there is sections, append them
-					if (typeof data.parse.sections !== 'undefined' && data.parse.sections.length > 0) {
 
-						$tableSectionResults = $('<div class="wiki sections"></div>');
-						$brick.append($tableSectionResults);
+			var $sectionsButton = $('<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> sections </button>');
 
-						data.parse.sections.forEach(function(section) {
+			$brick.append($sectionsButton);
 
-							//if not any of those, add the resulting sections
-							if ((section.line !== "References") && (section.line !== "Notes") && (section.line !== "External links") && (section.line !== "Citations") && (section.line !== "Bibliography") && (section.line !== "Notes and references")) {
-								$tableSectionResults.append(' <button type="button" class="list-group-item result" title="' + section.anchor + '" index="' + section.index + '">' + section.line + '</button>');
-							}
-							$('.sections').readmore(rmSectionOptions);
-						});
-
-						$packeryContainer.packery();
-
-						//create the section object and trigger the creation of a section brick
-						$tableSectionResults.find(".result").on('click', function() {
-
-							$packeryContainer.packery('stamp', $brick);
-
-							var section = {
-
-								title: topic.title,
-								language: topic.language,
-								name: $(this).html(),
-								index: $(this).attr("index")
-							};
-
-							$(this).remove();
-
-							var newY = parseInt($brick.css('top'));
-							var newX = parseInt($brick.css('left'));
-
-							var $thisBrick = buildBrick($packeryContainer, newX, newY);
-							buildSection($thisBrick, section, $brick.attr("tabindex"), APIsContentLoaded);
-
-							$packeryContainer.packery('unstamp', $brick);
-						});
-					}
-					$packeryContainer.packery();
-				}
+			$sectionsButton.on('click', function(){
+				getWikiSections($brick, topic);
+				$sectionsButton.remove();
 			});
 		}
 
@@ -1729,9 +1735,9 @@ var WIKIVERSE = (function($) {
 					//enable to create new bricks out of links
 					buildNextTopic($brick, topic.language);
 
-					if (!is_root) {
+					/*if (!is_root) {
 						getWikiLanguages(topic.title, topic.language, $brick);
-					}
+					}*/
 					callback($brick);
 				}
 			}
@@ -1749,9 +1755,17 @@ var WIKIVERSE = (function($) {
 
 		$brick.prepend('<p><h2>' + section.title + '</h2></p>');
 
+		//search another source menu: 
 		if (!is_root) {
-			$brick.prepend(wikiverse_nav);
-			$brick.find('.selectpicker').selectpicker();
+
+			var $connections = $(wikiverse_nav);
+			$brick.prepend($connections);
+			$connections.selectpicker();
+
+			$connections.change(function(event) {
+				getConnections($(this).find("option:selected").text(), section.title);
+			});
+
 		}
 
 		$.ajax({
@@ -1807,11 +1821,14 @@ var WIKIVERSE = (function($) {
 						console.log(geoPosition);
 					} // end if geo
 				*/
+			
 				//enable to create new bricks out of links
 				buildNextTopic($brick, section.language);
-				if (!is_root) {
+
+				/*if (!is_root) {
 					getInterWikiLinks(section, $brick);
-				}
+				}*/
+
 				callback($brick);
 				$packeryContainer.packery();
 			}
