@@ -249,7 +249,30 @@ var WIKIVERSE = (function($) {
 		$gmapsSearchBrick.addClass('w3-fix visible');
 
 		$gmapsSearchBrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">');
+		$gmapsSearchBrick.append('<button id="getInsagrams" class="btn btn-default btn-xs getFotos" type="button">get instragram fotos</button>');
+		$gmapsSearchBrick.append('<button id="getFlickrs" class="btn btn-default btn-xs getFotos" type="button">get flickr fotos</button>');
 		$gmapsSearchBrick.append('<div id="map_canvas"></div>');
+
+
+		$gmapsSearchBrick.find('.getFotos').on('click', function() {
+
+			var position = $(this).parents(".brick").data("position");
+
+			$results.empty();
+			$searchKeyword.empty();
+			$searchKeyword.append(position);
+
+			//Open the sidebar:
+			if (!$('body').hasClass('cbp-spmenu-push-toright')) {
+				toggleSidebar();
+			}
+			if($(this).attr('id') === "getInsagrams"){
+				getInstagrams($(defaultBrick), position, "coordinates");
+			}
+			else {
+				getFlickrs($(defaultBrick), position, "relevance", "geoQuery");			
+			}
+		});
 
 		var mapOptions = {
 			center: {
@@ -292,21 +315,11 @@ var WIKIVERSE = (function($) {
 				map: map
 			});
 
-			infowindow.setContent('get photos around this Pin: <br><br>' +
-				'<span class="instagram"><i class="fa fa-instagram"></i></span>' +
-				'<span class="flickr-search"><i class="fa fa-flickr"></i></span>');
-
 			infowindow.open(map, droppedMarker);
 			markers.push(droppedMarker);
 
 			//find the location of the marker
 			var positionUrlString = droppedMarker.getPosition().toUrlValue();
-
-			//store position and bounds into the data container (for later use of getFlickrs/Instagrams)
-			$gmapsSearchBrick.data('position', positionUrlString);
-			$gmapsSearchBrick.data('bounds', map.getBounds().toUrlValue());
-
-			//$gmapsSearchBrick.find(".fa-instagram, .fa-flickr").fadeIn("slow");
 
 		});
 
@@ -333,14 +346,7 @@ var WIKIVERSE = (function($) {
 			});
 			marker.setVisible(true);
 
-			//store position and bounds into the data container (for later use of getFlickrs/Instagrams)
-			$gmapsSearchBrick.data('position', marker.place.location.toUrlValue());
-			$gmapsSearchBrick.data('bounds', map.getBounds().toUrlValue());
-
-			infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + place.formatted_address +
-				'<br><br>get photos around this Pin: ' +
-				'<span class="instagram"><i class="fa fa-instagram"></i></span>' +
-				'<span class="flickr-search"><i class="fa fa-flickr"></i></span>');
+			infowindow.setContent('<div><strong>' + place.name + '</strong>');
 
 			infowindow.open(map, marker);
 		});
@@ -358,6 +364,10 @@ var WIKIVERSE = (function($) {
 
 			$gmapsSearchBrick.data("type", "gmaps");
 			$gmapsSearchBrick.data("topic", currentMap);
+
+			//store position and bounds into the data container (for later use of getFlickrs/Instagrams)
+			$gmapsSearchBrick.data('position',  map.getCenter().toUrlValue());
+			$gmapsSearchBrick.data('bounds', map.getBounds().toUrlValue());
 
 		});
 
@@ -421,6 +431,10 @@ var WIKIVERSE = (function($) {
 		var currentMap;
 		var currentStreetMap;
 
+		//$mapbrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">');
+		$mapbrick.append('<button id="getInsagrams" class="btn btn-default btn-xs getFotos" type="button">get instragram fotos</button>');
+		$mapbrick.append('<button id="getFlickrs" class="btn btn-default btn-xs getFotos" type="button">get flickr fotos</button>');
+		
 		var $mapcanvas = $('<div id="map_canvas"></div>');
 
 		$mapbrick.data('type', 'gmaps');
@@ -431,8 +445,31 @@ var WIKIVERSE = (function($) {
 			.addClass('w3-fix')
 			.addClass('gmaps');
 
-		$mapbrick.prepend($mapcanvas);
+		$mapbrick.append($mapcanvas);
+
 		$packeryContainer.packery();
+
+
+		$mapbrick.find('.getFotos').on('click', function() {
+
+			var position = $(this).parents(".brick").data("position");
+
+			$results.empty();
+			$searchKeyword.empty();
+			$searchKeyword.append(position);
+
+			//Open the sidebar:
+			if (!$('body').hasClass('cbp-spmenu-push-toright')) {
+				toggleSidebar();
+			}
+			if($(this).attr('id') === "getInsagrams"){
+				getInstagrams($(defaultBrick), position, "coordinates");
+			}
+			else {
+				getFlickrs($(defaultBrick), position, "relevance", "geoQuery");			
+			}
+		});
+
 
 		if (mapObj.maptype.toLowerCase() === "roadmap") {
 			myMaptypeID = google.maps.MapTypeId.ROADMAP;
@@ -564,11 +601,12 @@ var WIKIVERSE = (function($) {
 		var currentStreetMap;
 
 		var $mapcanvas = $('<div id="map_canvas"></div>');
-
+		
 		$mapbrick.data('type', 'streetview');
 		$mapbrick.addClass('w3-fix');
 
 		$mapbrick.prepend($mapcanvas);
+
 		$packeryContainer.packery();
 
 		var myCenter = new google.maps.LatLng(streetObj.center.split(",")[0], streetObj.center.split(",")[1]);
@@ -821,8 +859,6 @@ var WIKIVERSE = (function($) {
 	function getInstagrams($parentBrick, query, type) {
 
 		type = type || "hashtag";
-
-		$('#instagram-search .results').empty();
 
 		var client_id = "db522e56e7574ce9bb70fa5cc760d2e7";
 
@@ -1558,8 +1594,6 @@ var WIKIVERSE = (function($) {
 						//create the section object and trigger the creation of a section brick
 						$tableSectionResults.find(".result").on('click', function() {
 
-							$packeryContainer.packery('stamp', $brick);
-
 							var section = {
 
 								title: topic.title,
@@ -1576,7 +1610,6 @@ var WIKIVERSE = (function($) {
 							var $thisBrick = buildBrick($packeryContainer, newX, newY);
 							buildSection($thisBrick, section, $brick.attr("tabindex"), APIsContentLoaded);
 
-							//$packeryContainer.packery( 'unstamp', $brick );
 						});
 					}
 					$packeryContainer.packery();
@@ -1840,7 +1873,7 @@ var WIKIVERSE = (function($) {
 
 	buildYoutube = function($brick, youtubeObj, callback) {
 
-		var relatedButton = '<button class="btn btn-default btn-xs related" type="button">Related Videos</button>';
+		var relatedButton = '<button class="btn btn-default btn-xs related" type="button">get related videos</button>';
 		var youtubeThumb = '<img class="" id="ytplayer" type="text/html" src="' + youtubeObj.thumbnailURL + '">';
 
 		//stop all other players
@@ -2852,30 +2885,6 @@ var WIKIVERSE = (function($) {
 		});
 	});
 
-	//create images interconnection and trigger getFlickrs()
-	//This time for the gmaps brick, in thise case we only want the bounds passed in to getFlickrs
-	//
-	$packeryContainer.on("click", ".gmaps .fa-flickr", function() {
-
-		//Open the sidebar:
-		if (!$('body').hasClass('cbp-spmenu-push-toright')) {
-			toggleSidebar();
-		}
-
-		getFlickrs($flickrSearchBrick, $(this).parents(".brick").data("position"), "relevance", "geoQuery");
-
-	});
-
-	//create images interconnection and trigger getFlickrs()
-	//This time for the gmaps brick, in thise case we only want the bounds passed in to getFlickrs
-	$packeryContainer.on("click", ".gmaps .fa-instagram", function() {
-
-		//Open the sidebar:
-		if (!$('body').hasClass('cbp-spmenu-push-toright')) {
-			toggleSidebar();
-		}
-		getInstagrams($instagramSearchBrick, $(this).parents(".brick").data("position"), "coordinates");
-	});
 
 	//Toggle Size of Images on click
 	$packeryContainer.on('click', 'img', toggleImageSize);
