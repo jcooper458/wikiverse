@@ -290,8 +290,7 @@ var WIKIVERSE = (function($) {
 			//scrollwheel: false,
 		};
 
-		var map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-
+		var map = new google.maps.Map($gmapsSearchBrick.find('#map_canvas')[0], mapOptions);
 		var input = document.getElementById('pac-input');
 
 		var autocomplete = new google.maps.places.Autocomplete(input);
@@ -306,28 +305,6 @@ var WIKIVERSE = (function($) {
 		});
 		google.maps.event.addListener(marker, 'click', function() {
 			infowindow.open(map, marker);
-		});
-
-		google.maps.event.addListener(map, 'rightclick', function(event) {
-
-			marker.setVisible(false);
-			infowindow.close();
-
-			markers.forEach(function(marker) {
-				marker.setMap(null);
-			});
-
-			var droppedMarker = new google.maps.Marker({
-				position: event.latLng,
-				map: map
-			});
-
-			infowindow.open(map, droppedMarker);
-			markers.push(droppedMarker);
-
-			//find the location of the marker
-			var positionUrlString = droppedMarker.getPosition().toUrlValue();
-
 		});
 
 		google.maps.event.addListener(autocomplete, 'place_changed', function() {
@@ -2658,9 +2635,12 @@ var WIKIVERSE = (function($) {
 				$("div#searchInput.row").show();
 				$("div#searchButton.row").show();
 			} else if (selected === "gmaps") {
+
+				var $mabDefaultBrick = $(defaultBrick);
 				$('#search').removeClass('open');
-				var $thisBrick = buildBrick($packeryContainer, parseInt($topBrick.css('left')), parseInt($topBrick.css('top')));
+				var $thisBrick = buildBrick($packeryContainer, parseInt($mabDefaultBrick.css('left')), parseInt($mabDefaultBrick.css('top')));
 				getGmapsSearch($thisBrick);
+			
 			} else if (selected === "youtube") {
 
 				//YOUTUBE AUTOCOMPLETE	        
