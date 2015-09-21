@@ -7,7 +7,7 @@ $nonce = wp_create_nonce( 'board' );
 
 //if user is not logged in: 
 if ( !is_user_logged_in() ) {
-  $msg = "Hi! we noticed you are not logged in and are interacting with someone else's board. Your changes won't be saved unless you sign-up."; 
+  $msg = "Hi! we noticed you are not logged in and are interacting with someone else's board. Your changes won't be saved unless you sign-up.";
 }
 //if user is logged in:
 else{
