@@ -71,7 +71,7 @@ else{
         <ul class="nav navbar-nav">    
 
         <?php if ( is_singular("board") && ( $current_user->ID == $post->post_author ) || ( is_page('start'))) { ?>    
-
+        
         <li><a class="searchButton" href="#">add content</a></li>              
 
         <?php }  ?>

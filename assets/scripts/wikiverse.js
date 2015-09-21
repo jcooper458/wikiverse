@@ -2891,7 +2891,7 @@ var WIKIVERSE = (function($) {
 		} else {
 			$(this).removeClass('fa-plus');
 			$(this).addClass('fa-close');
-			$(this).css('right', 20);
+			$(this).css('right', 25);
 		}
 
 	});
