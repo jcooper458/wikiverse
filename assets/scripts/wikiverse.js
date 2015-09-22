@@ -55,58 +55,29 @@ var WIKIVERSE = (function($) {
 		destroyBoard,
 		getLanguage;
 
-	function toggleImageSize(event) {
+	function toggleImageSize( event ) {
+		
+				var $brick = $(event.target).parents('.brick');
+				var tempDataObj = $brick.data('topic');
 
-		var $brick = $(event.target).parents('.brick');
-		var thisBrickData = $brick.data('topic');
-		var widthClass;
+	     // toggle the size for images
+	     if($( event.target ).is('img.img-result, .youtube img')){
 
-		// toggle the size for images
-		if ($(event.target).is('img.img-result, .youtube img')) {
+	      //make it large
+	       $brick.toggleClass("w2");
 
-			//if it is large, update the dataObj so it saves the state
-			if ($brick.hasClass("w1")) {
-				$brick.removeClass('w1');
-				$brick.addClass('w2');
-				thisBrickData.size = 'medium';
-			}
-			//if medium image and not portrait
-			else if ($brick.hasClass("w2") && $brick.hasClass('foto') && !($brick.hasClass('portrait'))) {
-				console.log("medium image")
-				$brick.removeClass('w2');
-				$brick.addClass('w3');
-				thisBrickData.size = 'large';
-			}
-			//if foto is portrait
-			else if ($brick.hasClass('foto') && $brick.hasClass('portrait')) {
-				$brick.removeClass('w2');
-				$brick.addClass('w1');
-				thisBrickData.size = 'small';
-			}
-			//if medium youtube
-			else if ($brick.hasClass("w2") && $brick.hasClass('youtube')) {
-				$brick.removeClass('w2');
-				$brick.addClass('w1');
-				thisBrickData.size = 'small';
-			}
-			//if large image (coz youtube never gets large)
-			else if ($brick.hasClass("w3")) {
-				$brick.removeClass('w3');
-				$brick.addClass('w1');
-				thisBrickData.size = 'small';
-			}
-			//else if theres no class at all
-			else {
-				console.log("else")
-				$brick.removeClass('w1');
-				$brick.addClass('w2');
-				thisBrickData.size = 'medium';
-			}
+	       //if it is large, update the dataObj so it saves the state
+	       if($brick.hasClass("w2")){
+	       		tempDataObj.size = 'large';
+	       }else{
+	       		tempDataObj.size = 'small';
+	       }
+	       //set the dataObj to data topic
+	       $brick.data('topic', tempDataObj);
 
-			$brick.data('topic', thisBrickData);
-			$packeryContainer.packery();
-		}
-	}
+	       $packeryContainer.packery();
+	   }
+	 }
 
 	function orderItems(packery, items) {
 
@@ -1091,11 +1062,10 @@ var WIKIVERSE = (function($) {
 			}
 			if (photoObj.size === "small") {
 				$brick.addClass('w1');
-			} else if (photoObj.size === "medium") {
-				$brick.addClass('w2');
 			} else if (photoObj.size === "large") {
-				$brick.addClass('w3');
+				$brick.addClass('w2');
 			}
+
 			$packeryContainer.packery();
 			callback($brick);
 
@@ -1919,7 +1889,7 @@ var WIKIVERSE = (function($) {
 		//$brick.addClass('w2-fix');
 		$brick.addClass('youtube');
 
-		if (youtubeObj.size === "medium") {
+		if (youtubeObj.size === "large") {
 			$brick.addClass('w2');
 		}
 
