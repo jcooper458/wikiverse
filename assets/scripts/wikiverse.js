@@ -2888,6 +2888,8 @@ var WIKIVERSE = (function($) {
 			styling: 'fontawesome',
 			shadow: false,
 			animation: 'fade',
+			addclass: "stack-topright",
+			stack: myStack,
 			nonblock: {
 				nonblock: true,
 				nonblock_opacity: 0.2
