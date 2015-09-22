@@ -11,6 +11,9 @@ var WIKIVERSE = (function($) {
 	var getInstagramsButton = '<button id="getInstagrams" class="btn btn-default btn-xs getFotos" type="button">get instragram fotos of this location</button>';
 	var getFlickrsButton = '<button id="getFlickrs" class="btn btn-default btn-xs getFotos" type="button">get flickr fotos of this location</button>';
 
+	//used for pNotify
+	var myStack = {"dir1":"down", "dir2":"left", "push":"top"};
+
 	var is_root = location.pathname === "/";
 
 	var wpnonce = $('#nonce').html();
@@ -28,7 +31,7 @@ var WIKIVERSE = (function($) {
 		stamp: '.search',
 		gutter: 10,
 		transitionDuration: 0,
-		columnWidth: 210,
+		columnWidth: 225,
 		//  columnWidth: '.brick',
 		//  rowHeight: 60,
 		//  isInitLayout: false
@@ -80,7 +83,7 @@ var WIKIVERSE = (function($) {
 				$brick.addClass('w1');
 				thisBrickData.size = 'small';
 			}
-			//if medium youtube 
+			//if medium youtube
 			else if ($brick.hasClass("w2") && $brick.hasClass('youtube')) {
 				$brick.removeClass('w2');
 				$brick.addClass('w1');
@@ -158,7 +161,7 @@ var WIKIVERSE = (function($) {
 	};
 
 	getRelatedYoutubes = function(videoID) {
-		
+
 		//Open the sidebar:
 		if (!$('body').hasClass('cbp-spmenu-push-toright')) {
 			toggleSidebar();
@@ -255,7 +258,7 @@ var WIKIVERSE = (function($) {
 				getInstagrams($(defaultBrick), position, "coordinates");
 			}
 			else {
-				getFlickrs($(defaultBrick), position, "relevance", "geoQuery");			
+				getFlickrs($(defaultBrick), position, "relevance", "geoQuery");
 			}
 		});
 	}
@@ -268,7 +271,7 @@ var WIKIVERSE = (function($) {
 
 		if(!is_root){
 			$gmapsSearchBrick.append(getInstagramsButton);
-			$gmapsSearchBrick.append(getFlickrsButton);	
+			$gmapsSearchBrick.append(getFlickrsButton);
 		}
 
 		$gmapsSearchBrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">');
@@ -421,7 +424,7 @@ var WIKIVERSE = (function($) {
 		//$mapbrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">');
 		if(!is_root){
 			$mapbrick.append(getInstagramsButton);
-			$mapbrick.append(getFlickrsButton);	
+			$mapbrick.append(getFlickrsButton);
 		}
 
 		var $mapcanvas = $('<div id="map_canvas"></div>');
@@ -584,7 +587,7 @@ var WIKIVERSE = (function($) {
 		var currentStreetMap;
 
 		var $mapcanvas = $('<div id="map_canvas"></div>');
-		
+
 		$mapbrick.data('type', 'streetview');
 		$mapbrick.addClass('w3-fix');
 
@@ -592,7 +595,7 @@ var WIKIVERSE = (function($) {
 
 		if(!is_root){
 			$mapbrick.prepend(getInstagramsButton);
-			$mapbrick.prepend(getFlickrsButton);	
+			$mapbrick.prepend(getFlickrsButton);
 		}
 
 		$packeryContainer.packery();
@@ -1550,23 +1553,23 @@ var WIKIVERSE = (function($) {
 			dataType: 'jsonp',
 			success: function(data) {
 				//if there is sections, append them
-				
-				var $sectionResults = $('<div class="sections"></div>');
-				
-				if (typeof data.parse.sections !== 'undefined' && data.parse.sections.length > 0) {		
 
-					
+				var $sectionResults = $('<div class="sections"></div>');
+
+				if (typeof data.parse.sections !== 'undefined' && data.parse.sections.length > 0) {
+
+
 
 					$brick.append($sectionResults);
 
 					data.parse.sections.forEach(function(section) {
-						
+
 						//if not any of those, add the resulting sections
 						if ((section.line !== "References") && (section.line !== "Notes") && (section.line !== "External links") && (section.line !== "Citations") && (section.line !== "Bibliography") && (section.line !== "Notes and references")) {
 							$sectionResults.append(' <button type="button" class="list-group-item result" title="' + section.anchor + '" index="' + section.index + '">' + section.line + '</button>');
-						}						
+						}
 					});
-					
+
 					$packeryContainer.packery();
 
 					//create the section object and trigger the creation of a section brick
@@ -1709,8 +1712,8 @@ var WIKIVERSE = (function($) {
 				redirects: true
 					/*disableeditsection: true,
 					disablepp: true,
-					 
-					sectionprevue: true,            
+
+					sectionprevue: true,
 					disabletoc: true,
 					mobileformat:true*/
 			},
@@ -1768,7 +1771,7 @@ var WIKIVERSE = (function($) {
 
 		$brick.prepend('<p><h2>' + section.title + '</h2></p>');
 
-		//search another source menu: 
+		//search another source menu:
 		if (!is_root) {
 
 			var $connections = $(wikiverse_nav);
@@ -1790,7 +1793,7 @@ var WIKIVERSE = (function($) {
 				prop: 'text',
 				disableeditsection: true,
 				disablepp: true,
-				//preview: true,    
+				//preview: true,
 				//sectionprevue: true,
 				section: section.index,
 				disabletoc: true,
@@ -1834,7 +1837,7 @@ var WIKIVERSE = (function($) {
 						console.log(geoPosition);
 					} // end if geo
 				*/
-			
+
 				//enable to create new bricks out of links
 				buildNextTopic($brick, section.language);
 
@@ -2136,6 +2139,8 @@ var WIKIVERSE = (function($) {
 					styling: 'fontawesome',
 					shadow: false,
 					animation: 'fade',
+					addclass: "stack-topright",
+					stack: myStack,
 					nonblock: {
 						nonblock: true,
 						nonblock_opacity: 0.2
@@ -2244,6 +2249,8 @@ var WIKIVERSE = (function($) {
 							styling: 'fontawesome',
 							shadow: false,
 							animation: 'fade',
+							addclass: "stack-topright",
+							stack: myStack,
 							nonblock: {
 								nonblock: true,
 								nonblock_opacity: 0.2
@@ -2587,7 +2594,7 @@ var WIKIVERSE = (function($) {
 			}
 		});
 
-		//adding escape functionality for closing search		
+		//adding escape functionality for closing search
 		$(document).keyup(function(e) {
 			if ($('#search').hasClass('open') && e.keyCode === 27) { // escape key maps to keycode `27`
 				$('#search').removeClass('open');
@@ -2670,10 +2677,10 @@ var WIKIVERSE = (function($) {
 				$('#search').removeClass('open');
 				var $thisBrick = buildBrick($packeryContainer, parseInt($mabDefaultBrick.css('left')), parseInt($mabDefaultBrick.css('top')));
 				getGmapsSearch($thisBrick);
-			
+
 			} else if (selected === "youtube") {
 
-				//YOUTUBE AUTOCOMPLETE	        
+				//YOUTUBE AUTOCOMPLETE
 				$('#searchInput input').typeahead('destroy');
 
 				$('#searchInput input').typeahead({
@@ -2853,7 +2860,7 @@ var WIKIVERSE = (function($) {
 	/*$('#sidebar').mousewheel(function(ev, delta) {
 	    var scrollTop = $(this).scrollTop();
 	    $(this).scrollTop(scrollTop-Math.round(delta * 20));
-	    
+
 	});*/
 
 	$('.otherSource').change(function(event) {
