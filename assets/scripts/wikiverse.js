@@ -267,8 +267,8 @@ var WIKIVERSE = (function($) {
 		$gmapsSearchBrick.addClass('w3-fix visible');
 
 		if(!is_root){
-			$mapbrick.append(getInstagramsButton);
-			$mapbrick.append(getFlickrsButton);	
+			$gmapsSearchBrick.append(getInstagramsButton);
+			$gmapsSearchBrick.append(getFlickrsButton);	
 		}
 
 		$gmapsSearchBrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">');
