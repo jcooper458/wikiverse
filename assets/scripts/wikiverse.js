@@ -634,7 +634,7 @@ var WIKIVERSE = (function($) {
 
 			$mapbrick.data("topic", currentStreetMap);
 			//store position and bounds into the data container (for later use of getFlickrs/Instagrams)
-			$mapbrick.data('position',  myCenter);
+			$mapbrick.data('position',  myCenter.toUrlValue());
 
 
 		});
