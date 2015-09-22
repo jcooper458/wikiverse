@@ -267,7 +267,7 @@ var WIKIVERSE = (function($) {
 
 	function getGmapsSearch($gmapsSearchBrick) {
 
-		$gmapsSearchBrick.addClass('w3-fix visible');
+		$gmapsSearchBrick.addClass('w2-fix visible');
 
 		if(!is_root){
 			$gmapsSearchBrick.append(getInstagramsButton);
@@ -434,7 +434,7 @@ var WIKIVERSE = (function($) {
 		$mapbrick.data('bounds', mapObj.bounds.southWest + "," + mapObj.bounds.northEast);
 
 		$mapbrick
-			.addClass('w3-fix')
+			.addClass('w2-fix')
 			.addClass('gmaps');
 
 		$mapbrick.append($mapcanvas);
@@ -589,7 +589,7 @@ var WIKIVERSE = (function($) {
 		var $mapcanvas = $('<div id="map_canvas"></div>');
 
 		$mapbrick.data('type', 'streetview');
-		$mapbrick.addClass('w3-fix');
+		$mapbrick.addClass('w2-fix');
 
 		$mapbrick.prepend($mapcanvas);
 
@@ -1204,7 +1204,7 @@ var WIKIVERSE = (function($) {
 
 	function buildSoundcloud($brick, soundcloudObj, callback) {
 
-		$brick.addClass('w3-fix');
+		$brick.addClass('w2-fix');
 
 		var $soundcloudIframe = $('<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=' + soundcloudObj.uri + '&color=0066cc"></iframe>');
 

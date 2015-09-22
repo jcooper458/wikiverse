@@ -20,7 +20,7 @@
 
 
 #mindmap{
-  
+
   width: 100%;
   height:1000px;
 }
@@ -54,8 +54,13 @@ h2, .h2 {
   padding-right:0px;
 }
 
+.stack-topright{
+  top: 70px;
+  position:absolute;
+}
+
 .single{
-  
+
   h1{
     margin-top: -20px;
     margin-bottom: 10px;
@@ -68,16 +73,16 @@ h2, .h2 {
   max-width: 400px;
 }
 
-.brick{ 
+.brick{
   outline: 0;
   opacity: .1;
-  width: 210px;
+  width: 225px;
   #map_canvas {
     height: 400px;
     margin: 0px;
     padding: 0px;
     img {
-        max-width: none!important; 
+        max-width: none!important;
         max-height: none!important;
     }
   }
@@ -96,10 +101,10 @@ h2, .h2 {
 }
 
 .autoOverflow{
-  overflow: auto; 
+  overflow: auto;
 }
 
-#sidebar{  
+#sidebar{
   margin-top: 70px;
   h1, h2, h3, h4{
     margin-top:5px;
@@ -117,7 +122,7 @@ h2, .h2 {
 }
 
 .searchButton{
-  
+
   font-size:16px;
 }
 
@@ -128,7 +133,7 @@ h2, .h2 {
   padding:10px;
 }
 
-.twitter-typeahead { width: 100%; } 
+.twitter-typeahead { width: 100%; }
 
 .well-sm, #sidebar.well-sm {
     padding: 0px!important;
@@ -140,12 +145,12 @@ h2, .h2 {
 }
 
 .brick p {
-  overflow: hidden; 
+  overflow: hidden;
   /*font-family: 'Open Sans', sans-serif!important;*/
 }
 
-.wiki p{ 
-  margin-left:5px; 
+.wiki p{
+  margin-left:5px;
   margin-right: 5px;
 }
 
@@ -219,29 +224,29 @@ h2, .h2 {
   z-index: 2;
 }
 
-.w1 { 
+.w1 {
   width: auto;
-  max-width: 210px;
+  max-width: 225px;
   height:auto;
 }
 
-.w2 { 
+.w2 {
   width: auto;
-  max-width: 430px;
+  max-width: 460px;
   height:auto;
 }
 
-.w3 { 
+.w3 {
   width: auto;
-  max-width: 660px;
+  max-width: 705px;
   height:auto;
 }
 
-.w2-fix { 
-  width: 430px;
+.w2-fix {
+  width: 460px;
 }
 
-.w3-fix { 
+.w3-fix {
   width: 650px;
 }
 
@@ -270,7 +275,7 @@ h2, .h2 {
 .brick{
     img{
       max-width:100%;
-      max-height:100%;  
+      max-height:100%;
     }
     .fa{
         font-size: 20px;
@@ -296,9 +301,9 @@ nav {
 }
 
 .foto img, .youtube img{
-    cursor: -moz-zoom-in; 
-    cursor: -webkit-zoom-in; 
-    cursor: zoom-in; 
+    cursor: -moz-zoom-in;
+    cursor: -webkit-zoom-in;
+    cursor: zoom-in;
 }
 
 .sources-menu {
@@ -318,7 +323,7 @@ nav {
 
 .brick .container {padding:0;}
 
-.cross { 
+.cross {
   visibility: hidden;
     cursor: pointer;
     top: -11px;
@@ -326,7 +331,7 @@ nav {
     position: absolute;
     z-index: 2;
 }
-.handle { 
+.handle {
     visibility: hidden;
     cursor: move;
     font-size: 19px;
@@ -413,7 +418,7 @@ nav {
   border-color: #4d90fe;
 }
 
-.fa-wikipedia:before { font-family: "Times New Roman", Times, serif; font-weight: 400; 
+.fa-wikipedia:before { font-family: "Times New Roman", Times, serif; font-weight: 400;
 content: "VV"; letter-spacing:-0.45em; margin-right:0.5em; }
 
 .youtubePlayButton{
@@ -425,18 +430,18 @@ content: "VV"; letter-spacing:-0.45em; margin-right:0.5em; }
 }
 
 
-.wiki select, 
+.wiki select,
 .wiki .btn{visibility: hidden;}
 
-.search:hover .cross, 
+.search:hover .cross,
 .brick:hover .cross,
-.wiki:hover select, 
-.wiki:hover .btn, 
+.wiki:hover select,
+.wiki:hover .btn,
 .brick:hover .handle{visibility: visible;}
 
 
 
-table tr, .result, #clear, .results img, .cursor{cursor: pointer;} 
+table tr, .result, #clear, .results img, .cursor{cursor: pointer;}
 
 .results img {
     opacity: 1;
@@ -446,10 +451,10 @@ table tr, .result, #clear, .results img, .cursor{cursor: pointer;}
 .results img:hover {
     opacity: 0.8;
     filter: alpha(opacity=80); /* For IE8 and earlier */
-} 
+}
 
 .results{
-  
+
   margin-top:130px;
 }
 
@@ -535,7 +540,7 @@ padding: 1px 10px;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
-    
+
     -webkit-transition: all 0.5s ease-in-out;
   -moz-transition: all 0.5s ease-in-out;
   -o-transition: all 0.5s ease-in-out;
@@ -547,7 +552,7 @@ padding: 1px 10px;
   -o-transform: translate(0px, -100%) scale(0, 0);
   -ms-transform: translate(0px, -100%) scale(0, 0);
   transform: translate(0px, -100%) scale(0, 0);
-    
+
     opacity: 0;
 
     h1, h2, h3, h4{
@@ -560,7 +565,7 @@ padding: 1px 10px;
     -moz-transform: translate(0px, 0px) scale(1, 1);
   -o-transform: translate(0px, 0px) scale(1, 1);
   -ms-transform: translate(0px, 0px) scale(1, 1);
-  transform: translate(0px, 0px) scale(1, 1); 
+  transform: translate(0px, 0px) scale(1, 1);
     opacity: 1;
 }
 
@@ -587,7 +592,7 @@ padding: 1px 10px;
   font-size: 27px;
 }
 
-.search-container{  
+.search-container{
   width:800px;
   padding:20px;
 }
