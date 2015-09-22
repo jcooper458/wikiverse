@@ -589,8 +589,11 @@ var WIKIVERSE = (function($) {
 		$mapbrick.addClass('w3-fix');
 
 		$mapbrick.prepend($mapcanvas);
-		$mapbrick.prepend(getInstagramsButton);
-		$mapbrick.prepend(getFlickrsButton);
+
+		if(!is_root){
+			$mapbrick.prepend(getInstagramsButton);
+			$mapbrick.prepend(getFlickrsButton);	
+		}
 
 		$packeryContainer.packery();
 
