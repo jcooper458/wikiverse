@@ -266,12 +266,15 @@ var WIKIVERSE = (function($) {
 
 		$gmapsSearchBrick.addClass('w3-fix visible');
 
+		if(!is_root){
+			$mapbrick.append(getInstagramsButton);
+			$mapbrick.append(getFlickrsButton);	
+		}
+
 		$gmapsSearchBrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">');
-		$gmapsSearchBrick.append(getInstagramsButton);
-		$gmapsSearchBrick.append(getFlickrsButton);
 		$gmapsSearchBrick.append('<div id="map_canvas"></div>');
 
-		//call the event for the Fotosearch on click
+		//getGmapsFOtos includes click event to fetch fotos
 		getGmapsFotos($gmapsSearchBrick);
 
 		var mapOptions = {
@@ -416,9 +419,11 @@ var WIKIVERSE = (function($) {
 		var currentStreetMap;
 
 		//$mapbrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">');
-		$mapbrick.append(getInstagramsButton);
-		$mapbrick.append(getFlickrsButton);
-		
+		if(!is_root){
+			$mapbrick.append(getInstagramsButton);
+			$mapbrick.append(getFlickrsButton);	
+		}
+
 		var $mapcanvas = $('<div id="map_canvas"></div>');
 
 		$mapbrick.data('type', 'gmaps');
