@@ -1903,7 +1903,6 @@ var WIKIVERSE = (function($) {
 
 		$brick.append('<i class="fa youtubePlayButton fa-youtube-play"></i>');
 
-
 		imagesLoaded('#packery .youtube', function() {
 			$packeryContainer.packery();
 		});
@@ -1929,7 +1928,7 @@ var WIKIVERSE = (function($) {
 
 		$brick.addClass('w2-fix');
 
-		var iframe = '<iframe class="" id="ytplayer" type="text/html" width="430" height="250" src="http://www.youtube.com/embed/' + youtubeObj.youtubeID + '?autoplay=1" webkitallowfullscreen autoplay mozallowfullscreen allowfullscreen frameborder="0"/>';
+		var iframe = '<iframe class="" id="ytplayer" type="text/html" width="460" height="260" src="http://www.youtube.com/embed/' + youtubeObj.youtubeID + '?autoplay=1" webkitallowfullscreen autoplay mozallowfullscreen allowfullscreen frameborder="0"/>';
 
 		$brick.find('img').hide();
 		$brick.find('.youtubePlayButton').hide();
