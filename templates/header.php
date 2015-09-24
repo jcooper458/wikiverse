@@ -99,8 +99,7 @@ else{
           <?php }  ?>
 
           <?php } else {?> 
-          <!--<button class="btn btn-default pull-right" id="editboard" type="button"><a href="/login" >Login</a></button>
-          <button class="btn btn-default pull-right" id="editboard" type="button"><a href="/wp-login.php?action=register" >Register</a></button>-->
+          
           <?php }  ?>   
           <?php if ( is_user_logged_in() ) { ?>
 
@@ -131,7 +130,7 @@ else{
           </li>
           <?php } else { ?>
           <li><a href="/login">login</a></li>
-          <li><a href="/login?action=register">sign up</a></li>
+          <li><a href="/login">sign up</a></li>
           <?php } ?> 
         </ul>
 
