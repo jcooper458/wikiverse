@@ -124,7 +124,7 @@ else{
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo esc_html($current_user->display_name); ?> <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="/start">create board</a></li>
-              <li><a href="/user/<?php echo esc_html($current_user->display_name); ?>">my boards</a></li>
+              <li><a href="/user/<?php echo esc_html($current_user->user_login); ?>">my boards</a></li>
               <li role="separator" class="divider"></li>         
               <li><a href="<?php echo wp_logout_url( home_url() ); ?>">logout</a></li>
             </ul>
