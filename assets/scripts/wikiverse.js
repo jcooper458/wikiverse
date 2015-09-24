@@ -1255,7 +1255,6 @@ var WIKIVERSE = (function($) {
 
 	//stack the twitter search results in the sidebar
 	function buildTwitterSearchResults($parentBrick, apiData) {
-		console.log(apiData)
 
 		if (typeof apiData.statuses !== 'undefined' && apiData.statuses.length > 0) {
 
