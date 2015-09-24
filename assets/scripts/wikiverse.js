@@ -1267,9 +1267,7 @@ var WIKIVERSE = (function($) {
 				//append row to sidebar-results-table
 
 				if (tweet) {
-
 					$results.find('.table').append('<tr text="' + text + '" user="' + tweet.user.name + '"><td class="twitterThumb col-md-2"><img src="' + userThumb + '"></td><td class="result col-md-10" ><strong>' + tweet.user.name + '</strong><br>' + text + '</td></tr>');
-
 				}
 
 				//bind event to every row -> so you can start the wikiverse
@@ -2683,6 +2681,11 @@ var WIKIVERSE = (function($) {
 		$('.searchButton').on('click', function(event) {
 			event.preventDefault();
 			wikiverse.toggleSearch();
+
+			//Close the sidebar, if open:
+			if ($('body').hasClass('cbp-spmenu-push-toright')) {
+				toggleSidebar();
+			}
 		});
 
 		//close the search
@@ -2696,6 +2699,10 @@ var WIKIVERSE = (function($) {
 		$(document).keyup(function(e) {
 			if ($('#search').hasClass('open') && e.keyCode === 27) { // escape key maps to keycode `27`
 				$('#search').removeClass('open');
+			}
+			//make enter save the board
+			if (e.keyCode === 13) {
+				$("#wv_search").trigger('click');
 			}
 		});
 
@@ -2884,7 +2891,7 @@ var WIKIVERSE = (function($) {
 	//----------------keyboard shortcuts----------------------------
 
 
-
+	//CTRL-S for save board
 	document.addEventListener("keydown", function(e) {
 		if (e.keyCode === 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
 			e.preventDefault();
