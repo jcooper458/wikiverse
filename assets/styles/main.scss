@@ -413,6 +413,9 @@ content: "VV"; letter-spacing:-0.45em; margin-right:0.5em; }
   color: red;
 }
 
+.note{
+  word-wrap: break-word;
+}
 
 .wiki select,
 .wiki .btn{visibility: hidden;}

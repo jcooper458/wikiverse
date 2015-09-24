@@ -1294,7 +1294,7 @@ var WIKIVERSE = (function($) {
 			//nothing has been found on youtube
 		} else {
 			//append row to searchbox-table: NO RESULTS
-			$results.find('.table').append('<tr class="no-results"><td>No Tweets found .. </td></tr>');
+			$results.append('<tr class="no-results"><td>No Tweets found .. </td></tr>');
 
 		}
 	}
@@ -1307,7 +1307,15 @@ var WIKIVERSE = (function($) {
 				"search": query
 			},
 			success: function(data) {
-				buildTwitterSearchResults($parentBrick, JSON.parse(data));
+				var $data = JSON.parse(data);
+
+				console.log($data);
+				if($data.statuses.length === 0){
+					$results.append('<tr class="no-results"><td>No Tweets found for ' + query + ' .. </td></tr>');
+				}
+				else {
+					buildTwitterSearchResults($parentBrick, $data);
+				}
 			}
 		});
 	}
@@ -1391,10 +1399,10 @@ var WIKIVERSE = (function($) {
 		$brick.addClass('twitter');
 
 		//replace hashtags with links
-		var repl = twitterObj.text.replace(/(^|\W)(#[a-z\d][\w-]*)/ig, '$1<a hashtag="$2" href="#">$2</a>');
-		repl = repl.replace(/(^|\W)(@[a-z\d][\w-]*)/ig, '$1<a hashtag="$2" href="#">$2</a>');
+		var tweet = twitterObj.text.replace(/(^|\W)(#[a-z\d][\w-]*)/ig, '$1<a hashtag="$2" href="#">$2</a>');
+			tweet = tweet.replace(/(^|\W)(@[a-z\d][\w-]*)/ig, '$1<a hashtag="$2" href="#">$2</a>');
 
-		var $tweetContainer = $('<div class="col-md-2"><img class="twitterUserThumb" src="' + twitterObj.userThumb + '"></div><div class="col-md-10"><strong>' + twitterObj.user + '</strong><br><p>' + repl + '</p></div>');
+		var $tweetContainer = $('<div class="col-md-2"><img class="twitterUserThumb" src="' + twitterObj.userThumb + '"></div><div class="col-md-10"><strong>' + twitterObj.user + '</strong><br><p>' + tweet + '</p></div>');
 
 		$tweetContainer.on('click', 'a', function(event) {
 			event.preventDefault();
@@ -1575,7 +1583,7 @@ var WIKIVERSE = (function($) {
 					//nothing has been found on Wikipedia
 				} else {
 					//append row to searchbox-table: NO RESULTS
-					$results.find('.results').append('<tr class="no-results"><td>No Wikipedia articles found for "' + topic + '"</td></tr>');
+					$results.append('<tr class="no-results"><td>No Wikipedia articles found for "' + topic + '"</td></tr>');
 				}
 			},
 			error: function(data) {
@@ -1619,8 +1627,6 @@ var WIKIVERSE = (function($) {
 				var $sectionResults = $('<div class="sections"></div>');
 
 				if (typeof data.parse.sections !== 'undefined' && data.parse.sections.length > 0) {
-
-
 
 					$brick.append($sectionResults);
 
@@ -1963,7 +1969,7 @@ var WIKIVERSE = (function($) {
 			//nothing has been found on youtube
 		} else {
 			//append row to searchbox-table: NO RESULTS
-			$results.find('table').append('<tr class="no-results"><td>No Youtube Videos found .. </td></tr>');
+			$results.append('<tr class="no-results"><td>No Youtube Videos found .. </td></tr>');
 		}
 	};
 
