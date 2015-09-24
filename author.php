@@ -2,7 +2,7 @@
 $curauth = (isset($_GET['author_name'])) ? get_user_by('slug', $author_name) : get_userdata(intval($author));
 ?>
 
-<div id="" class="text-center"><h1><?php echo $curauth->data->user_login; ?>'s boards</h1></div>
+
 
 <div id="packerySite" class="packerySite">
 
@@ -10,7 +10,11 @@ $curauth = (isset($_GET['author_name'])) ? get_user_by('slug', $author_name) : g
 	$fotoURL = "";
 
 	if ( have_posts() ) : while ( have_posts() ) : the_post(); 
-
+	?>
+	
+	<div id="" class="text-center"><h1><?php echo $curauth->data->user_login; ?>'s boards</h1></div>
+	
+	<?php
 	$the_title = get_the_title();
 	$the_permalink = get_the_permalink();
 	$the_content = get_the_content();
