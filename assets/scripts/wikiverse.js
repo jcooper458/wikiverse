@@ -1392,6 +1392,16 @@ var WIKIVERSE = (function($) {
 		callback($brick);
 	}
 
+	//find URLs in tweets/wikis,etc and replace them with clickable link 
+	function urlify(text) {
+	    var urlRegex = /(https?:\/\/[^\s]+)/g;
+	    return text.replace(urlRegex, function(url) {
+	        return '<a class="externalLink" target="_blank" href="' + url + '">' + url + '</a>';
+	    })
+	    // or alternatively
+	    // return text.replace(urlRegex, '<a href="$1">$1</a>')
+	}
+
 	//build a tweet
 	buildTweet = function($brick, twitterObj, callback) {
 
@@ -1401,10 +1411,11 @@ var WIKIVERSE = (function($) {
 		//replace hashtags with links
 		var tweet = twitterObj.text.replace(/(^|\W)(#[a-z\d][\w-]*)/ig, '$1<a hashtag="$2" href="#">$2</a>');
 			tweet = tweet.replace(/(^|\W)(@[a-z\d][\w-]*)/ig, '$1<a hashtag="$2" href="#">$2</a>');
+			tweet = urlify(tweet);
 
 		var $tweetContainer = $('<div class="col-md-2"><img class="twitterUserThumb" src="' + twitterObj.userThumb + '"></div><div class="col-md-10"><strong>' + twitterObj.user + '</strong><br><p>' + tweet + '</p></div>');
 
-		$tweetContainer.on('click', 'a', function(event) {
+		$tweetContainer.on('click', 'a:not(.externalLink)', function(event) {
 			event.preventDefault();
 			getConnections("twitter", $(this).attr('hashtag'))
 			$(this).contents().unwrap();
