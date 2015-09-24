@@ -601,6 +601,10 @@ var WIKIVERSE = (function($) {
 
 		var thePanorama = new google.maps.StreetViewPanorama($mapcanvas[0], panoramaOptions);
 
+		//store the featured image in the brick itself (there are no imgs within street views, we have to explicitely grab it)
+		
+		$mapbrick.data('featuredImage', 'https://maps.googleapis.com/maps/api/streetview?size=600x300&location=' + myCenter.toUrlValue() + '&heading=' + panoramaOptions.pov.heading + '&pitch=' + panoramaOptions.pov.pitch + '&key=AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8')
+
 		callback($mapbrick);
 
 		google.maps.event.addListener(thePanorama, 'pov_changed', function() { //detect if entering Streetview
@@ -2173,12 +2177,23 @@ var WIKIVERSE = (function($) {
 	wikiverse.collectBricks = function() {
 
 		var wikiverseParsed = {};
+		var $firstBrick = $packeryContainer.find('.brick[tabindex=0]'); 
+		var featuredImage; 
+
+		if($firstBrick.data('type') === "streetview"){
+			featuredImage = $firstBrick.data('featuredImage');
+			console.log(featuredImage)
+		}
+		else {
+			featuredImage = $firstBrick.find('img').attr('src');
+		}
+		 
 
 		var board = {
 			"title": "",
 			"author": $('#wvAuthor').attr('data-author'),
 			"theme": $('body').data('theme'),
-			"featured_image": $packeryContainer.find('.brick[tabindex=0] img').attr('src'),
+			"featured_image": featuredImage,
 			"bricks": wikiverseParsed
 		};
 
