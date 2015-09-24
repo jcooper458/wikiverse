@@ -7,8 +7,26 @@
   <?php get_search_form(); ?>
 <?php endif; ?>
 
-<?php while (have_posts()) : the_post(); ?>
-  <?php get_template_part('templates/content', 'search'); ?>
-<?php endwhile; ?>
+
+<div id="packerySite" class="packerySite">
+
+	<?php while (have_posts()) : the_post();
+	
+		$the_title = get_the_title();
+		$the_permalink = get_the_permalink();
+		$the_content = get_the_content();
+		$the_content_Array = json_decode($the_content);
+
+	 ?>
+	  	<div class="brick well well-sm visible">
+
+			<?php if(isset($the_content_Array->featured_image)){ echo '<a href="'. $the_permalink . '"><img src="' . $the_content_Array->featured_image . '"></a>'; }?>
+			<?php echo '<a href="'. $the_permalink . '">' . $the_title . '</a>'; ?>	
+
+		</div>
+
+	<?php endwhile; ?>
+
+</div>
 
 <?php the_posts_navigation(); ?>

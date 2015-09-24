@@ -42,7 +42,7 @@ msgid "Latest Posts"
 msgstr ""
 
 #: lib/titles.php:18
-msgid "Search Results for %s"
+msgid "search results for %s"
 msgstr ""
 
 #: lib/titles.php:20

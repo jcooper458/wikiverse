@@ -32,7 +32,7 @@
         $('#packeryUser').imagesLoaded( function() {
           
           // initialize Packery
-          $('#packeryUser').packery({
+          $('#packerySite').packery({
             itemSelector: '.brick',
             gutter: 10,
             transitionDuration: 0,
