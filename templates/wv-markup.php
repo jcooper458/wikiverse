@@ -4,7 +4,7 @@
 	<div class="search-container center buffer-top-large">
 
 		<div class="row">
-			<h3>Add content from any of the following..</h3>
+			<h3>Add content from any of the following sources..</h3>
 			<select id="source" name="searchType" class="selectpicker" data-style="btn btn-default btn-lg" data-width="100%">
 				<option value="">select a source</option>
 				<option value="wikipedia">  <i class="fa fa-wikipedia"></i>wikipedia</option>
