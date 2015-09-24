@@ -2158,6 +2158,7 @@ var WIKIVERSE = (function($) {
 
 		$('#search').addClass('open');
 		$('#search > form > input[type="search"]').focus();
+
 	};
 
 	//fork the board, copy it to your boards
@@ -2700,11 +2701,9 @@ var WIKIVERSE = (function($) {
 			if ($('#search').hasClass('open') && e.keyCode === 27) { // escape key maps to keycode `27`
 				$('#search').removeClass('open');
 			}
-			//make enter save the board
-			if (e.keyCode === 13) {
-				$("#wv_search").trigger('click');
-			}
 		});
+
+
 
 		//topbrick is the toppest brick in regards to the scroll position
 		//this is used to insert bricks at the same height of the scroll position
