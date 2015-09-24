@@ -23,10 +23,10 @@ $curauth = (isset($_GET['author_name'])) ? get_user_by('slug', $author_name) : g
 
 	?>
 	<div class="brick well well-sm visible">
-
+		<?php if ($post->post_author == $current_user->ID) { ?><span class="cross control-buttons"><a onclick="return confirm('Are you SURE you want to delete this board?')" href="<?php echo get_delete_post_link( $post->ID ) ?>"><i class="fa fa-close"></i></a></span><?php } ?>
 		<?php if(isset($the_content_Array->featured_image)){ echo '<a href="'. $the_permalink . '"><img src="' . $the_content_Array->featured_image . '"></a>'; }?>
 		<?php echo '<a href="'. $the_permalink . '"><h3>' . $the_title . '</h3></a>'; ?>	
-		<?php if ($post->post_author == $current_user->ID) { ?><p class="pull-right"><a onclick="return confirm('Are you SURE you want to delete this board?')" href="<?php echo get_delete_post_link( $post->ID ) ?>">delete board</a></p><?php } ?>
+
 		<?php 
 		echo '</div>';
 
