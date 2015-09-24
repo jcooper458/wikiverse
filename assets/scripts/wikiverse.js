@@ -57,6 +57,7 @@ var WIKIVERSE = (function($) {
 		destroyBoard,
 		getLanguage;
 
+	//toggles the image size on click (works also for youtube)
 	function toggleImageSize( event ) {
 		
 				var $brick = $(event.target).parents('.brick');
@@ -81,6 +82,7 @@ var WIKIVERSE = (function($) {
 	   }
 	 }
 
+	 //item ordering for saving of the bricks order
 	function orderItems(packery, items) {
 
 		var itemElems = $packeryContainer.packery('getItemElements');
@@ -100,22 +102,12 @@ var WIKIVERSE = (function($) {
 		}
 	}
 
-
-	function inrange(min, number, max) {
-		if (!isNaN(number) && (number >= min) && (number <= max)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-
 	function APIsContentLoaded($brick) {
 		$brick.fadeTo('slow', 1);
 		$packeryContainer.packery();
 	}
 
-
+	//search youtube videos
 	getYoutubes = function($parentBrick, topic) {
 
 		$.ajax({
@@ -133,6 +125,7 @@ var WIKIVERSE = (function($) {
 		});
 	};
 
+	//search for related youtube videos
 	getRelatedYoutubes = function(videoID) {
 
 		//Open the sidebar:
@@ -158,7 +151,15 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
-
+	//function used within validate coordinates
+	function inrange(min, number, max) {
+		if (!isNaN(number) && (number >= min) && (number <= max)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	//validate if it is a coordinate
 	function valid_coords(number_lat, number_lng) {
 		if (inrange(-90, number_lat, 90) && inrange(-180, number_lng, 180)) {
 			$("#btnSaveResort").removeAttr("disabled");
@@ -168,7 +169,7 @@ var WIKIVERSE = (function($) {
 			return false;
 		}
 	}
-
+	//build an empty brick
 	function buildBrick($packeryContainer, x, y) {
 
 		var $brick = $(defaultBrick);
@@ -180,6 +181,7 @@ var WIKIVERSE = (function($) {
 		return $brick;
 	}
 
+	//for Wikipedia, trigger the next brick on click of links
 	function buildNextTopic($brick, lang) {
 
 		$brick.find(".article a, .section a").unbind('click').click(function(e) {
@@ -205,7 +207,7 @@ var WIKIVERSE = (function($) {
 			$packeryContainer.packery('unstamp', $brick);
 		});
 	}
-
+	//toggle the sidebar
 	function toggleSidebar() {
 		classie.toggle(document.body, 'cbp-spmenu-push-toright');
 		classie.toggle($('#sidebar')[0], 'cbp-spmenu-open');
@@ -213,6 +215,7 @@ var WIKIVERSE = (function($) {
 		classie.toggle($('#searchMeta')[0], 'fixed');
 	}
 
+	//get the pictures for given location of a map (instagram and flickr)
 	function getGmapsFotos($mapsBrick){
 
 		$mapsBrick.find('.getFotos').on('click', function() {
@@ -238,6 +241,7 @@ var WIKIVERSE = (function($) {
 
 	var markers = [];
 
+	//create the gmaps brick (first time creation)
 	function getGmapsSearch($gmapsSearchBrick) {
 
 		$gmapsSearchBrick.addClass('w2-fix visible');
@@ -386,7 +390,7 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
-
+	//build the gmaps brick (coming from database)
 	function buildGmaps($mapbrick, mapObj, callback) {
 
 		var map;
@@ -555,6 +559,7 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
+	//build the streetmap map brick (from database)
 	function buildStreetMap($mapbrick, streetObj, callback) {
 
 		var currentStreetMap;
@@ -619,6 +624,7 @@ var WIKIVERSE = (function($) {
 		$mapbrick.data("topic", streetObj);
 	}
 
+	//search for flickr tags
 	function getFlickrTags(photoObj, callback) {
 
 		$.ajax({
@@ -638,6 +644,7 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
+	//get the username for any given flickr picture 
 	function getFlickrUsername(user_id, callback) {
 
 		$.ajax({
@@ -659,6 +666,7 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
+	//search for flickrs
 	function getFlickrs($parentBrick, topic, sort, type) {
 
 		type = type || "textQuery";
@@ -828,6 +836,7 @@ var WIKIVERSE = (function($) {
 		}
 	}
 
+	//search for instagrams
 	function getInstagrams($parentBrick, query, type) {
 
 		type = type || "hashtag";
@@ -930,6 +939,7 @@ var WIKIVERSE = (function($) {
 		}
 	}
 
+	//for search query, trigger the search to other sources
 	function getConnections(source, topic) {
 
 		//Open the sidebar:
@@ -970,6 +980,7 @@ var WIKIVERSE = (function($) {
 		}
 	}
 
+	//for twitter/flickr/instagram tags, when clicked, search those'in same source
 	function onTagClickedDoSearch($brick, type) {
 		$brick.find('.tag').on('click', function(e) {
 			e.preventDefault();
@@ -977,6 +988,7 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
+	//build a foto brick, either flickr or instagram
 	buildFoto = function($brick, photoObj, type, callback) {
 
 		$brick.addClass('foto');
@@ -1079,6 +1091,7 @@ var WIKIVERSE = (function($) {
 
 	};
 
+	//create the flickr brick
 	createFlickrBrick = function($parentBrick, apiData, photoObj) {
 
 		if (typeof apiData.sizes.size !== 'undefined' && apiData.sizes.size.length > 0 && typeof apiData.sizes.size[6] !== 'undefined') {
@@ -1122,6 +1135,7 @@ var WIKIVERSE = (function($) {
 		}
 	};
 
+	//create the instragram brick 
 	createInstagramBrick = function($parentBrick, photo) {
 
 		var $thumb = $('<img class="img-search" src="' + photo.images.low_resolution.url + '" width="112">');
@@ -1166,14 +1180,14 @@ var WIKIVERSE = (function($) {
 	}
 
 
-
+	//strip html from given text
 	function strip(html) {
 		var tmp = document.createElement("DIV");
 		tmp.innerHTML = html;
 		return tmp.textContent || tmp.innerText || "";
 	}
 
-
+	//build the soundcloud brick
 	function buildSoundcloud($brick, soundcloudObj, callback) {
 
 		$brick.addClass('w2-fix');
@@ -1187,6 +1201,7 @@ var WIKIVERSE = (function($) {
 		callback($brick);
 	}
 
+	//search for soundclouds
 	getSoundcloud = function($parentBrick, query, params) {
 
 		SC.initialize({
@@ -1238,7 +1253,7 @@ var WIKIVERSE = (function($) {
 		});
 	};
 
-
+	//stack the twitter search results in the sidebar
 	function buildTwitterSearchResults($parentBrick, apiData) {
 
 		if (typeof apiData.statuses !== 'undefined' && apiData.statuses.length > 0) {
@@ -1283,7 +1298,7 @@ var WIKIVERSE = (function($) {
 
 		}
 	}
-
+	//search the Twitter API for tweets
 	function getTweets($parentBrick, query) {
 
 		$.ajax({
@@ -1297,6 +1312,7 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
+	//build a note 
 	function buildNote($brick, topic, callback){
 
 		$brick.addClass('note');
@@ -1308,7 +1324,7 @@ var WIKIVERSE = (function($) {
 
 		callback($brick);
 	}
-
+	//create a note
 	function createNote($brick, callback){
 
 		$brick.addClass('note');
@@ -1368,7 +1384,7 @@ var WIKIVERSE = (function($) {
 		callback($brick);
 	}
 
-
+	//build a tweet
 	buildTweet = function($brick, twitterObj, callback) {
 
 		$brick.addClass('w2-fix');
@@ -1395,7 +1411,7 @@ var WIKIVERSE = (function($) {
 	};
 
 
-
+	//gets the wikilanguages for any given article - not used at the moment
 	function getWikiLanguages(topic, lang, $brick) {
 
 		$.ajax({
@@ -1449,6 +1465,7 @@ var WIKIVERSE = (function($) {
 
 	}
 
+	//get the Interwikilinks for any given Wiki article
 	function getInterWikiLinks(section, $brick) {
 
 		$.ajax({
@@ -1501,6 +1518,7 @@ var WIKIVERSE = (function($) {
 
 	}
 
+	//search for wikis
 	function getWikis($parentBrick, topic, lang) {
 
 		$.ajax({
@@ -1575,6 +1593,7 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
+	//search for sections of a wiki article
 	function getWikiSections($brick, topic){
 
 		$.ajax({
@@ -1654,7 +1673,7 @@ var WIKIVERSE = (function($) {
 			$packeryContainer.packery();
 		}
 	};
-
+	//build a wiki Brick
 	buildWikipedia = function($brick, topic, parent, callback) {
 
 		$brick.data('type', 'wiki');
@@ -1803,7 +1822,7 @@ var WIKIVERSE = (function($) {
 		});
 	};
 
-
+	//build a section brick 
 	buildSection = function($brick, section, parent, callback) {
 
 		$brick.data('type', 'wikiSection');
@@ -1894,7 +1913,7 @@ var WIKIVERSE = (function($) {
 		});
 	};
 
-
+	//stack the youtube search results in the sidebar
 	buildYoutubeSearchResults = function($parentBrick, apiData) {
 
 		if (typeof apiData.items !== 'undefined' && apiData.items.length > 0) {
@@ -1948,6 +1967,7 @@ var WIKIVERSE = (function($) {
 		}
 	};
 
+	//build a youtube brick 
 	buildYoutube = function($brick, youtubeObj, callback) {
 
 		var relatedButton = '<button class="btn btn-default btn-xs related" type="button">get related videos</button>';
@@ -1991,6 +2011,7 @@ var WIKIVERSE = (function($) {
 		callback($brick);
 	};
 
+	//play a youtube video
 	playYoutube = function($brick, youtubeObj) {
 
 		//stop all other players
@@ -2011,7 +2032,7 @@ var WIKIVERSE = (function($) {
 		$packeryContainer.packery();
 	};
 
-
+	//make each brick draggable 
 	makeEachDraggable = function(i, itemElem) {
 		// make element draggable with Draggabilly
 		var draggie = new Draggabilly(itemElem, {
@@ -2021,6 +2042,7 @@ var WIKIVERSE = (function($) {
 		$packeryContainer.packery('bindDraggabillyEvents', draggie);
 	};
 
+	//build a board
 	wikiverse.buildBoard = function($packeryContainer, board) {
 
 		if (typeof board.theme === 'undefined') board.theme = "superhero";
@@ -2081,7 +2103,7 @@ var WIKIVERSE = (function($) {
 		});
 
 	}
-
+	//play the board - slow scrolling and fade
 	wikiverse.playBoard = function(wpnonce) {
 		$('#playBoard').fadeOut();
 		//stop scrolling
@@ -2097,7 +2119,7 @@ var WIKIVERSE = (function($) {
 		}, 50000);
 		return false;
 	};
-
+	//stop the playing board
 	wikiverse.stopBoard = function(wpnonce) {
 		$('#playBoard').fadeIn();
 		$('html, body').stop(true);
@@ -2112,6 +2134,7 @@ var WIKIVERSE = (function($) {
 		return false;
 	};
 
+	//toggle the search overlay
 	wikiverse.toggleSearch = function() {
 		
 		$('.sourceParams').hide();
@@ -2124,6 +2147,7 @@ var WIKIVERSE = (function($) {
 		$('#search > form > input[type="search"]').focus();
 	};
 
+	//fork the board, copy it to your boards
 	wikiverse.forkBoard = function(wpnonce) {
 		var forkedTitle = $('#wvTitle h1').html();
 		var newAuthor = $('#wvAuthor').attr('data-currentUser');
@@ -2131,6 +2155,7 @@ var WIKIVERSE = (function($) {
 		wikiverse.createBoard(wpnonce, forkedTitle, newAuthor);
 	};
 
+	//collect the bricks for saveboard/createboard/forkboard
 	wikiverse.collectBricks = function() {
 
 		var wikiverseParsed = {};
@@ -2165,6 +2190,7 @@ var WIKIVERSE = (function($) {
 		return board;
 	};
 
+	//save a board when modified
 	wikiverse.saveBoard = function(wpnonce) {
 
 		var board = wikiverse.collectBricks();
@@ -2206,6 +2232,7 @@ var WIKIVERSE = (function($) {
 		});
 	};
 
+	//create a new board
 	wikiverse.createBoard = function(wpnonce, forkedTitle, newAuthor) {
 
 		var board = wikiverse.collectBricks();
@@ -2326,6 +2353,7 @@ var WIKIVERSE = (function($) {
 
 	};
 
+	//clear a board from all bricks
 	wikiverse.clearBoard = function(wpnonce) {
 		if (confirm('Are you sure you want to clear this board?')) {
 			var elements = $packeryContainer.packery('getItemElements');
@@ -2335,6 +2363,7 @@ var WIKIVERSE = (function($) {
 
 
 
+	//get the wiki languages
 	getLanguage = function(langCode) {
 
 		var langarray = {
@@ -2632,6 +2661,7 @@ var WIKIVERSE = (function($) {
 
 	};
 
+	//initiate the wikiverse search functionality
 	wikiverse.initSearch = function() {
 
 		//but also open the search if clicked
