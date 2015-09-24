@@ -59,6 +59,10 @@ h2, .h2 {
   position:absolute;
 }
 
+blockquote{
+  border-left:0px!important;
+}
+
 .single{
 
   h1{
@@ -279,6 +283,9 @@ h2, .h2 {
         margin: 8px 0px 0px 8px;
         font-size: 25px;
       }
+    }
+    textarea{
+      margin: 0px;
     }
 }
 

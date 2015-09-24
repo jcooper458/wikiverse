@@ -36,7 +36,7 @@
             itemSelector: '.brick',
             gutter: 10,
             transitionDuration: 0,
-            columnWidth: 210
+            columnWidth: 225
           });
         });
 

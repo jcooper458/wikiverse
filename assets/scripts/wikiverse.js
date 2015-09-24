@@ -11,6 +11,8 @@ var WIKIVERSE = (function($) {
 	var getInstagramsButton = '<button id="getInstagrams" class="btn btn-default btn-xs getFotos" type="button">get instragram fotos of this location</button>';
 	var getFlickrsButton = '<button id="getFlickrs" class="btn btn-default btn-xs getFotos" type="button">get flickr fotos of this location</button>';
 
+	var note = '<textarea id="note" class="form-control" placeholder="add your own infos.." rows="3"></textarea>';
+
 	//used for pNotify
 	var myStack = {"dir1":"down", "dir2":"left", "push":"top"};
 
@@ -1295,6 +1297,77 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
+	function buildNote($brick, topic, callback){
+
+		$brick.addClass('note');
+		$brick.addClass('transparent');
+		$brick.removeClass('well');
+		$brick.removeClass('well-sm');
+
+		$brick.append('<blockquote>' + topic.note + '</blockquote>');
+
+		callback($brick);
+	}
+
+	function createNote($brick, callback){
+
+		$brick.addClass('note');
+		$brick.addClass('transparent');
+		$brick.removeClass('well');
+		$brick.removeClass('well-sm');
+
+		$brick.append(note);
+		$brick.append('<button id="saveNote" type="button" style="display: block; width: 100%;" class="btn btn-xs btn-default">save this note</button>');
+
+		//instantiate for furher multiple use
+		var $saveNotebutton = $('#saveNote');
+		
+		//scroll to textarea
+		$('html, body').animate({
+		    scrollTop: $brick.offset().top - 50
+		}, 1000, function(){
+			//when finished scrolling
+			
+			//focus textarea
+			$brick.find('#note').focus();
+
+			//fade for highlight functionality
+			$brick.fadeTo('fast', 0.1).fadeTo('fast', 1.0);
+
+		});
+
+
+
+		//prepare object for note
+		var noteObj = {
+			note: ""
+		};
+
+		//on savenote click, swap the textarea with a blockquote
+		$saveNotebutton.on('click', function(event) {
+			event.preventDefault();
+			/* Act on the event */
+
+			var $textarea = $brick.find('#note'); 
+			var text = $textarea.val();
+
+			noteObj.note = text;
+
+			$textarea.remove();
+			$saveNotebutton.remove();
+
+			$brick.prepend('<blockquote>' + text + '</blockquote>');
+
+			$packeryContainer.packery();
+		});
+
+		//store the note temporarly
+		$brick.data('type', 'note');
+		$brick.data('topic', noteObj);
+
+		callback($brick);
+	}
+
 
 	buildTweet = function($brick, twitterObj, callback) {
 
@@ -1999,6 +2072,10 @@ var WIKIVERSE = (function($) {
 				case "twitter":
 					buildTweet($thisBrick, brick.Topic, APIsContentLoaded);
 					break;
+
+				case "note":
+					buildNote($thisBrick, brick.Topic, APIsContentLoaded);
+					break;
 			}
 
 		});
@@ -2036,6 +2113,13 @@ var WIKIVERSE = (function($) {
 	};
 
 	wikiverse.toggleSearch = function() {
+		
+		$('.sourceParams').hide();
+		$('#addNote').show();
+
+		$('#source').val($("#source option:first").val());
+		$('#source').selectpicker('refresh');
+
 		$('#search').addClass('open');
 		$('#search > form > input[type="search"]').focus();
 	};
@@ -2126,10 +2210,10 @@ var WIKIVERSE = (function($) {
 
 		var board = wikiverse.collectBricks();
 
-		$("#myModal").modal('show');
+		$("#saveBoardModal").modal('show');
 
 		//Focus MOdal Input and trigger enter save
-		$('#myModal').on('shown.bs.modal', function() {
+		$('#saveBoardModal').on('shown.bs.modal', function() {
 
 			//if its being forked
 			if (forkedTitle) {
@@ -2231,7 +2315,7 @@ var WIKIVERSE = (function($) {
 					}
 				});
 
-				$("#myModal").modal('hide');
+				$("#saveBoardModal").modal('hide');
 
 
 			} else {
@@ -2601,6 +2685,9 @@ var WIKIVERSE = (function($) {
 
 			var selected = $('#source option:selected').val();
 
+			//hide add a note
+			$("div#addNote.row").hide();
+
 			if (selected === "instagram") {
 				$('div.sourceParams').hide();
 				$("div#instagramType.row").show();
@@ -2684,7 +2771,7 @@ var WIKIVERSE = (function($) {
 			} else {
 				$('div.sourceParams').hide();
 				$("div#searchInput.row").show();
-				$("div#searchButton.row").show();
+				$("div#searchButton.row").show();				
 			}
 			$('#searchInput input').focus();
 		});
@@ -2736,6 +2823,16 @@ var WIKIVERSE = (function($) {
 					break;
 			}
 		});
+
+		$("#addNoteButton").on("click", function() {
+			//close the search
+			$('#search').removeClass('open');
+
+			var $noteBrick = buildBrick($packeryContainer);
+
+			createNote($noteBrick, APIsContentLoaded);
+		});
+
 	};
 
 
