@@ -221,7 +221,7 @@ var WIKIVERSE = (function($) {
 		$mapsBrick.find('.getFotos').on('click', function() {
 
 			var position = $(this).parents(".brick").data("position");
-			console.log(position)
+
 			$results.empty();
 			$searchKeyword.empty();
 			$searchKeyword.append(position);
@@ -1255,6 +1255,7 @@ var WIKIVERSE = (function($) {
 
 	//stack the twitter search results in the sidebar
 	function buildTwitterSearchResults($parentBrick, apiData) {
+		console.log(apiData)
 
 		if (typeof apiData.statuses !== 'undefined' && apiData.statuses.length > 0) {
 
@@ -1309,7 +1310,6 @@ var WIKIVERSE = (function($) {
 			success: function(data) {
 				var $data = JSON.parse(data);
 
-				console.log($data);
 				if($data.statuses.length === 0){
 					$results.append('<tr class="no-results"><td>No Tweets found for ' + query + ' .. </td></tr>');
 				}
@@ -2096,7 +2096,6 @@ var WIKIVERSE = (function($) {
 					break;
 
 				case "gmaps":
-					console.log(brick.Topic)
 					buildGmaps($thisBrick, brick.Topic, APIsContentLoaded);
 					break;
 
@@ -2712,7 +2711,7 @@ var WIKIVERSE = (function($) {
 				if ($(this).offset().top > cutoff) {
 					$topBrick = $(this);
 					$topBrick.addClass('top');
-					console.log($topBrick.find('h2').html());
+
 					return false; // stops the iteration after the first one on screen
 				}
 			});
