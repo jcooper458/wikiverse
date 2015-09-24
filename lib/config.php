@@ -57,8 +57,7 @@ function display_sidebar() {
         'is_single',
         'is_archive',
         'is_page',
-        ['is_page', 'search'],
-        ['is_tax', ['board']]
+        'is_search'
       ]
     );
 

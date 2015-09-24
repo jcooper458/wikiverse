@@ -1,6 +1,13 @@
-<?php get_search_form(); ?>
+<div class="col-md-10 col-md-offset-5">
+	<?php get_search_form(); ?>
+</div>
 
-<?php get_template_part('templates/page', 'header'); ?>
+<br>
+<br>
+<br>
+<br>
+
+<?php // get_template_part('templates/page', 'header'); ?>
 
 
 <?php if (!have_posts()) : ?>
