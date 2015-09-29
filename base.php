@@ -14,10 +14,24 @@ use Roots\Sage\Wrapper;
         <?php _e('You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.', 'sage'); ?>
       </div>
     <![endif]-->
-    <?php      
+    <?php  
+      do_action('get_header');  
+
+      //for everything that is not the frontpage: 
       if(!is_front_page()) {
-        do_action('get_header');
+        
         get_template_part('templates/header');
+        get_template_part('templates/wv-markup'); 
+
+      //else for the frontpage
+      }else{
+
+        get_template_part('templates/headerHomepage');
+        ?>
+
+
+
+     <?php   
       }
     ?>
     <div class="container-fluid" role="document">
@@ -32,13 +46,14 @@ use Roots\Sage\Wrapper;
         <?php endif; ?>
       </div><!-- /.content -->
     </div><!-- /.wrap -->
+
     <?php
       do_action('get_footer');
       get_template_part('templates/footer');
       wp_footer();
     ?>
 
-    <?php get_template_part('templates/wv-markup'); ?>
+
 
   </body>
 
