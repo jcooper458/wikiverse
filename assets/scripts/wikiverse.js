@@ -217,6 +217,15 @@ var WIKIVERSE = (function($) {
 		classie.toggle($('#sidebar')[0], 'cbp-spmenu-open');
 		classie.toggle($('#sidebar')[0], 'autoOverflow');
 		classie.toggle($('#searchMeta')[0], 'fixed');
+
+
+		//close and plus button logic 
+		//if sidebar open, hide the plus
+		if($('#sidebar').hasClass('cbp-spmenu-open')){
+			$('#openSidebar').addClass('invisible');
+		}else{
+			$('#openSidebar').removeClass('invisible');
+		}
 	}
 
 	//get the pictures for given location of a map (instagram and flickr)
@@ -3010,20 +3019,8 @@ var WIKIVERSE = (function($) {
 	});
 
 	//close sidebar
-	$('#closeSidebar').click(function() {
-
+	$('#sidebar .fa').click(function() {
 		toggleSidebar();
-
-		if ($(this).hasClass('fa-close')) {
-			$(this).removeClass('fa-close');
-			$(this).addClass('fa-plus');
-			$(this).css('right', -30);
-		} else {
-			$(this).removeClass('fa-plus');
-			$(this).addClass('fa-close');
-			$(this).css('right', 25);
-		}
-
 	});
 
 	// REMOVE ITEM
