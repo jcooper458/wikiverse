@@ -46,7 +46,7 @@ $homePosts = get_posts( $args )
 <div class="container buffer-bottom" role="document">
   <h1><a href="/login">Sign up</a>  or <a href="/start">try it out</a> by building your own demo board!</h1>
   <h3>wikiverse is 100% free and open source.</h3>
-  <h5>&nbsp;contribute to the development of wikiverse by <a href="https://github.com/kubante/wikiverse">forking it</a> on Github</h5>
+  <h5>&nbsp;Contribute to the development of wikiverse by <a href="https://github.com/kubante/wikiverse">forking it</a> on Github</h5>
 </div>
 
 
