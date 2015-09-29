@@ -124,7 +124,9 @@ blockquote{
   padding:10px;
 }
 
-.twitter-typeahead { width: 100%; }
+.typeahead {
+  width: 800px;
+}
 
 .well-sm, #sidebar.well-sm {
     padding: 0px!important;
@@ -599,4 +601,8 @@ padding: 1px 10px;
 .search-container{
   width:800px;
   padding:20px;
+}
+
+#video{
+    opacity: 0.8;
 }
