@@ -120,13 +120,13 @@ var WIKIVERSE = (function($) {
 			},
 			dataType: 'jsonp',
 			success: function(data) {
-				buildYoutubeSearchResults($parentBrick, data);
+				buildYoutubeSearchResults($parentBrick, data, topic);
 			}
 		});
 	};
 
 	//search for related youtube videos
-	getRelatedYoutubes = function(videoID) {
+	getRelatedYoutubes = function(videoID, origQuery) {
 
 		//Open the sidebar:
 		if (!$('body').hasClass('cbp-spmenu-push-toright')) {
@@ -134,6 +134,8 @@ var WIKIVERSE = (function($) {
 		}
 
 		$results.empty();
+		$searchKeyword.empty();
+		$searchKeyword.append(origQuery);
 
 		$.ajax({
 			url: 'https://www.googleapis.com/youtube/v3/search',
@@ -146,7 +148,7 @@ var WIKIVERSE = (function($) {
 			},
 			dataType: 'jsonp',
 			success: function(data) {
-				buildYoutubeSearchResults($(defaultBrick), data);
+				buildYoutubeSearchResults($(defaultBrick), data, origQuery);
 			}
 		});
 	}
@@ -1939,7 +1941,7 @@ var WIKIVERSE = (function($) {
 	};
 
 	//stack the youtube search results in the sidebar
-	buildYoutubeSearchResults = function($parentBrick, apiData) {
+	buildYoutubeSearchResults = function($parentBrick, apiData, origQuery) {
 
 		if (typeof apiData.items !== 'undefined' && apiData.items.length > 0) {
 
@@ -1974,6 +1976,7 @@ var WIKIVERSE = (function($) {
 					var $thisBrick = buildBrick($packeryContainer, parseInt($parentBrick.css('left')) + 50, parseInt($parentBrick.css('top')) + 10);
 
 					var youtubeObj = {
+						query: origQuery,
 						youtubeID: $(this).attr('youtubeID'),
 						size: 'small',
 						thumbnailURL: $(this).find('img').attr('src')
@@ -2030,7 +2033,7 @@ var WIKIVERSE = (function($) {
 		});
 
 		$brick.find('.related').on('click', function() {
-			getRelatedYoutubes(youtubeObj.youtubeID);
+			getRelatedYoutubes(youtubeObj.youtubeID, youtubeObj.query);
 		});
 
 		callback($brick);
@@ -2189,7 +2192,6 @@ var WIKIVERSE = (function($) {
 
 		if($firstBrick.data('type') === "streetview"){
 			featuredImage = $firstBrick.data('featuredImage');
-			console.log(featuredImage)
 		}
 		else {
 			featuredImage = $firstBrick.find('img').attr('src');
