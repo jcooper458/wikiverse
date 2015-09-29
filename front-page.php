@@ -44,9 +44,15 @@ $homePosts = get_posts( $args )
 </div>	-->
 
 <div class="container buffer-bottom" role="document">
-  <h1><a href="/login">Sign up</a>  or <a href="/start">try it out</a> by building your own boards!</h1>
+  <h1><a href="/login">Sign up</a>  or <a href="/start">try it out</a> and start building your own boards!</h1>
+  <h3>Enjoy serendipity. Create some crazy connections.</h3>
+  <h5>&nbsp;y serendipity. Create some crazy connections. </h5>
+</div>
+
+<div class="container buffer-bottom" role="document">
+  <h1><a href="/login">Sign up</a>  or <a href="/start">try it out</a> and start building your own boards!</h1>
   <h3>wikiverse is 100% free and open source.</h3>
-  <h5>&nbsp;Developers wanted! Contribute to the development of wikiverse by <a href="https://github.com/kubante/wikiverse">forking it</a> on Github</h5>
+  <h5>&nbsp;For developers: contribute to the development of wikiverse by <a href="https://github.com/kubante/wikiverse">forking it</a> on Github</h5>
 </div>
 
 
