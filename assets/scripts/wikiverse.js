@@ -297,6 +297,7 @@ var WIKIVERSE = (function($) {
 		var marker = new google.maps.Marker({
 			map: map
 		});
+
 		google.maps.event.addListener(marker, 'click', function() {
 			infowindow.open(map, marker);
 		});
@@ -346,6 +347,8 @@ var WIKIVERSE = (function($) {
 			//store position and bounds into the data container (for later use of getFlickrs/Instagrams)
 			$gmapsSearchBrick.data('position',  map.getCenter().toUrlValue());
 			$gmapsSearchBrick.data('bounds', map.getBounds().toUrlValue());
+
+			$packeryContainer.packery();
 
 		});
 
