@@ -30,7 +30,7 @@ var WIKIVERSE = (function($) {
 	// initialize Packery
 	var packery = $packeryContainer.packery({
 		itemSelector: '.brick',
-		stamp: '.search',
+		//stamp: '.search',
 		gutter: 10,
 		transitionDuration: 0,
 		columnWidth: 225,
@@ -178,6 +178,8 @@ var WIKIVERSE = (function($) {
 		$brick.each(makeEachDraggable);
 
 		$packeryContainer.packery('fit', $brick[0], x, y);
+		$packeryContainer.packery();
+
 		return $brick;
 	}
 
@@ -250,9 +252,12 @@ var WIKIVERSE = (function($) {
 			$gmapsSearchBrick.append(getInstagramsButton);
 			$gmapsSearchBrick.append(getFlickrsButton);
 		}
+		//build a search input
+		var $input = $('<input class="controls" type="text" placeholder="Enter a location">');
 
-		$gmapsSearchBrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">');
+		//append some markup to the gmaps brick
 		$gmapsSearchBrick.append('<div id="map_canvas"></div>');
+		$gmapsSearchBrick.append($input);		
 
 		//getGmapsFOtos includes click event to fetch fotos
 		getGmapsFotos($gmapsSearchBrick);
@@ -267,7 +272,9 @@ var WIKIVERSE = (function($) {
 		};
 
 		var map = new google.maps.Map($gmapsSearchBrick.find('#map_canvas')[0], mapOptions);
-		var input = document.getElementById('pac-input');
+
+		//get the vanilla input, gmaps needs it like that
+		var input = $input[0];
 
 		var autocomplete = new google.maps.places.Autocomplete(input);
 
@@ -2798,6 +2805,7 @@ var WIKIVERSE = (function($) {
 				var $mabDefaultBrick = $(defaultBrick);
 				$('#search').removeClass('open');
 				var $thisBrick = buildBrick($packeryContainer, parseInt($mabDefaultBrick.css('left')), parseInt($mabDefaultBrick.css('top')));
+
 				getGmapsSearch($thisBrick);
 
 			} else if (selected === "youtube") {
