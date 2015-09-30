@@ -45,7 +45,7 @@ $homePosts = get_posts( $args )
 
 <div class="container buffer-bottom" role="document">
   <h1><a href="/login">Sign up</a>  or <a href="/start">try it out</a> and start building your own boards!</h1>
-  <h3>Enjoy serendipity and create some crazy connections.</h3>
+  <h3>Enjoy serendipity by creating some crazy connections.</h3>
   <h3>Or gather well-thought-out topics into one handpicked infoboard.</h3>
 </div>
 
