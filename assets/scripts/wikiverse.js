@@ -257,6 +257,15 @@ var WIKIVERSE = (function($) {
 	//create the gmaps brick (first time creation)
 	function getGmapsSearch($gmapsSearchBrick) {
 
+		var mapOptions = {
+			center: {
+				lat: 35,
+				lng: 0
+			},
+			zoom: 1,
+			//scrollwheel: false,
+		};
+		
 		$gmapsSearchBrick.addClass('w2-fix visible');
 
 		if(!is_root){
@@ -273,14 +282,6 @@ var WIKIVERSE = (function($) {
 		//getGmapsFOtos includes click event to fetch fotos
 		getGmapsFotos($gmapsSearchBrick);
 
-		var mapOptions = {
-			center: {
-				lat: 35,
-				lng: 0
-			},
-			zoom: 1,
-			//scrollwheel: false,
-		};
 
 		var map = new google.maps.Map($gmapsSearchBrick.find('#map_canvas')[0], mapOptions);
 
