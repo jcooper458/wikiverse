@@ -51,12 +51,3 @@ $homePosts = get_posts( $args )
 
 <div class="container buffer-bottom" role="document">
 </div>
-
-
-
-
-peanutbutter
-
-
-
-
