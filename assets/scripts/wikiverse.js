@@ -275,7 +275,20 @@ var WIKIVERSE = (function($) {
 	//create the gmaps brick (first time creation)
 	function getGmapsSearch($gmapsSearchBrick) {
 
+		$gmapsSearchBrick.addClass('w2-fix visible');
+
+		$gmapsSearchBrick.append(getInstagramsButton);
+		$gmapsSearchBrick.append(getFlickrsButton);
+		
+		//build a search input
 		var $input = $('<input class="controls" type="text" placeholder="Enter a location">');
+
+		//append some markup to the gmaps brick
+		$gmapsSearchBrick.append('<div id="map_canvas"></div>');
+		$gmapsSearchBrick.append($input);		
+
+		//getGmapsFOtos includes click event to fetch fotos
+		getGmapsFotos($gmapsSearchBrick);
 
 		var mapOptions = {
 			center: {
@@ -293,26 +306,14 @@ var WIKIVERSE = (function($) {
 
 		var autocomplete = new google.maps.places.Autocomplete(input);
 
-		var infowindow = new google.maps.InfoWindow();
-		var marker = new google.maps.Marker({
-			map: map
-		});
-
-		$gmapsSearchBrick.addClass('w2-fix visible');	
-
-		//append some markup to the gmaps brick
-		$gmapsSearchBrick.append(getInstagramsButton);
-		$gmapsSearchBrick.append(getFlickrsButton)
-		$gmapsSearchBrick.append('<div id="map_canvas"></div>');
-		$gmapsSearchBrick.append($input);		
-
-		//getGmapsFOtos includes click event to fetch fotos
-		getGmapsFotos($gmapsSearchBrick);
-
 		autocomplete.bindTo('bounds', map);
 
 		map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
+		var infowindow = new google.maps.InfoWindow();
+		var marker = new google.maps.Marker({
+			map: map
+		});
 
 		google.maps.event.addListener(marker, 'click', function() {
 			infowindow.open(map, marker);
@@ -426,7 +427,6 @@ var WIKIVERSE = (function($) {
 
 		});
 	}
-
 	//build the gmaps brick (coming from database)
 	function buildGmaps($mapbrick, mapObj, callback) {
 
