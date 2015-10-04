@@ -28,7 +28,8 @@ else{
 <header class="banner" role="banner">
 
   <nav id="sidebar" class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left well well-sm fixed">
-    <div id="searchMeta" class="well">
+   
+    <div id="searchMeta" class="well">      
       <i id="closeSidebar" class="fa fa-close"></i>
       <i id="openSidebar" class="fa fa-plus invisible"></i>
       <h3 id="search-keyword" class=""></h3> 
@@ -54,7 +55,7 @@ else{
 
   <nav id="wv_nav" class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
-
+      
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">

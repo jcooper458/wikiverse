@@ -340,9 +340,10 @@ nav {
 /*Loading Icon */
 
 .glyphicon-refresh-animate {
-    margin-right:10px;
-    -animation: spin .7s infinite linear;
-    -webkit-animation: spin2 .7s infinite linear;
+  margin-left:100px;
+  -animation: spin .7s infinite linear;
+  -webkit-animation: spin2 .7s infinite linear;
+  font-size: 20px;
 }
 
 @-webkit-keyframes spin2 {
@@ -354,6 +355,7 @@ nav {
     from { transform: scale(1) rotate(0deg);}
     to { transform: scale(1) rotate(360deg);}
 }
+/*Loading Icon */
 
 .brick.foto:hover .overlay{opacity:.7;}
 
