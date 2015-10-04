@@ -1301,14 +1301,14 @@ var WIKIVERSE = (function($) {
 
 		if (typeof apiData.statuses !== 'undefined' && apiData.statuses.length > 0) {
 
+			$results.append(resultsTable);
+
 			apiData.statuses.map(function(tweet, index) {
 
 				var text = tweet.text;
-				var userThumb = tweet.user.profile_image_url;
+				var userThumb = tweet.user.profile_image_url;				
 
-				$results.append(resultsTable);
 				//append row to sidebar-results-table
-
 				if (tweet) {
 					$results.find('.table').append('<tr text="' + text + '" user="' + tweet.user.name + '"><td class="twitterThumb col-md-2"><img src="' + userThumb + '"></td><td class="result col-md-10" ><strong>' + tweet.user.name + '</strong><br>' + text + '</td></tr>');
 				}
@@ -1595,6 +1595,8 @@ var WIKIVERSE = (function($) {
 
 				if (data.query.search.length > 0) {
 
+					$results.append(resultsTable);
+					
 					$.each(data.query.search, function() {
 
 						var title = this.title;
@@ -1602,8 +1604,7 @@ var WIKIVERSE = (function($) {
 
 						//stop loading glyph
 						$('.glyphicon').addClass('invisible');
-
-						$results.append(resultsTable);
+						
 						//append row to sidebar-results-table
 						$results.find('.table').append('<tr data-toggle="tooltip" title="' + strip(snippet) + '"><td><el class="result">' + title + '</el></td></tr>');
 					
