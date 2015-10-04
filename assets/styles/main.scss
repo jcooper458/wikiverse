@@ -422,13 +422,15 @@ content: "VV"; letter-spacing:-0.45em; margin-right:0.5em; }
 }
 
 .wiki select,
-.wiki .btn{visibility: hidden;}
+.wiki .btn,
+.brick .getFotos{visibility: hidden;}
 
 .search:hover .cross,
 .brick:hover .cross,
 .wiki:hover select,
 .wiki:hover .btn,
-.brick:hover .handle{visibility: visible;}
+.brick:hover .handle,
+.brick:hover .getFotos{visibility: visible;}
 
 
 

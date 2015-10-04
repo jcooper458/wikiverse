@@ -347,6 +347,11 @@ var WIKIVERSE = (function($) {
 			infowindow.open(map, marker);
 		});
 
+		 // do something only the first time the map is loaded
+		google.maps.event.addListenerOnce(map, 'idle', function(){
+			$packeryContainer.packery();
+		});
+
 		google.maps.event.addListener(map, 'idle', function() {
 
 			currentMap = {
@@ -364,8 +369,6 @@ var WIKIVERSE = (function($) {
 			//store position and bounds into the data container (for later use of getFlickrs/Instagrams)
 			$gmapsSearchBrick.data('position',  map.getCenter().toUrlValue());
 			$gmapsSearchBrick.data('bounds', map.getBounds().toUrlValue());
-
-			$packeryContainer.packery();
 
 		});
 
@@ -427,7 +430,7 @@ var WIKIVERSE = (function($) {
 
 		});
 	}
-	
+
 	//build the gmaps brick (coming from database)
 	function buildGmaps($mapbrick, mapObj, callback) {
 
