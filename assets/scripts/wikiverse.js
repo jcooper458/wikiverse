@@ -427,6 +427,7 @@ var WIKIVERSE = (function($) {
 
 		});
 	}
+	
 	//build the gmaps brick (coming from database)
 	function buildGmaps($mapbrick, mapObj, callback) {
 
@@ -434,11 +435,14 @@ var WIKIVERSE = (function($) {
 		var myMaptypeID;
 		var currentMap;
 		var currentStreetMap;
-		
-		var $mapcanvas = $('<div id="map_canvas"></div>');
 
-		$mapbrick.append(getInstagramsButton);
-		$mapbrick.append(getFlickrsButton);
+		//$mapbrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">');
+		if(!is_root){
+			$mapbrick.append(getInstagramsButton);
+			$mapbrick.append(getFlickrsButton);
+		}
+
+		var $mapcanvas = $('<div id="map_canvas"></div>');
 
 		$mapbrick.data('type', 'gmaps');
 		$mapbrick.data('position', mapObj.center);
@@ -592,7 +596,6 @@ var WIKIVERSE = (function($) {
 			}
 		});
 	}
-
 	//build the streetmap map brick (from database)
 	function buildStreetMap($mapbrick, streetObj, callback) {
 
