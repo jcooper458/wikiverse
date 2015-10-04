@@ -16,7 +16,7 @@ var WIKIVERSE = (function($) {
 	//used for pNotify
 	var myStack = {"dir1":"down", "dir2":"left", "push":"top"};
 
-	var is_root = location.pathname === "/";
+	//var is_root = location.pathname === "/";
 
 	var wpnonce = $('#nonce').html();
 
@@ -41,6 +41,7 @@ var WIKIVERSE = (function($) {
 	//	});
 
 	// --------FUNCTION DEFINITIONS
+	// These are defined here for JSHint function order checking
 	var buildFlickrSearchResults,
 		buildInstagramSearchResults,
 		buildFoto,
@@ -83,12 +84,14 @@ var WIKIVERSE = (function($) {
 	function orderItems(packery, items) {
 
 		var itemElems = $packeryContainer.packery('getItemElements');
+
 		for (var i = 0, len = itemElems.length; i < len; i++) {
 			var elem = itemElems[i];
 			$(elem).attr("tabindex", i);
 		}
 	}
 
+	//clean up the sidebar navbar for the new search
 	function prepareSearchNavbar(query){
 
 		//empty the search results
@@ -104,6 +107,11 @@ var WIKIVERSE = (function($) {
 
 	}
 
+	//callback for when search results are loaded
+	function searchResultsLoaded(){
+		$sidebar.find("#loading").remove();
+	}
+
 	function isPortrait(imgElement) {
 
 		if (imgElement.width() < imgElement.height()) {
@@ -113,6 +121,7 @@ var WIKIVERSE = (function($) {
 		}
 	}
 
+	//callback foor content loaded into brick
 	function APIsContentLoaded($brick) {
 		$brick.fadeTo('slow', 1);
 		$packeryContainer.packery();
@@ -170,6 +179,7 @@ var WIKIVERSE = (function($) {
 			return false;
 		}
 	}
+
 	//validate if it is a coordinate
 	function valid_coords(number_lat, number_lng) {
 		if (inrange(-90, number_lat, 90) && inrange(-180, number_lng, 180)) {
@@ -180,6 +190,7 @@ var WIKIVERSE = (function($) {
 			return false;
 		}
 	}
+
 	//build an empty brick
 	function buildBrick($packeryContainer, x, y) {
 
@@ -264,21 +275,7 @@ var WIKIVERSE = (function($) {
 	//create the gmaps brick (first time creation)
 	function getGmapsSearch($gmapsSearchBrick) {
 
-		$gmapsSearchBrick.addClass('w2-fix visible');
-
-		if(!is_root){
-			$gmapsSearchBrick.append(getInstagramsButton);
-			$gmapsSearchBrick.append(getFlickrsButton);
-		}
-		//build a search input
 		var $input = $('<input class="controls" type="text" placeholder="Enter a location">');
-
-		//append some markup to the gmaps brick
-		$gmapsSearchBrick.append('<div id="map_canvas"></div>');
-		$gmapsSearchBrick.append($input);		
-
-		//getGmapsFOtos includes click event to fetch fotos
-		getGmapsFotos($gmapsSearchBrick);
 
 		var mapOptions = {
 			center: {
@@ -296,14 +293,26 @@ var WIKIVERSE = (function($) {
 
 		var autocomplete = new google.maps.places.Autocomplete(input);
 
-		autocomplete.bindTo('bounds', map);
-
-		map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
 		var infowindow = new google.maps.InfoWindow();
 		var marker = new google.maps.Marker({
 			map: map
 		});
+
+		$gmapsSearchBrick.addClass('w2-fix visible');	
+
+		//append some markup to the gmaps brick
+		$gmapsSearchBrick.append(getInstagramsButton);
+		$gmapsSearchBrick.append(getFlickrsButton)
+		$gmapsSearchBrick.append('<div id="map_canvas"></div>');
+		$gmapsSearchBrick.append($input);		
+
+		//getGmapsFOtos includes click event to fetch fotos
+		getGmapsFotos($gmapsSearchBrick);
+
+		autocomplete.bindTo('bounds', map);
+
+		map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
 
 		google.maps.event.addListener(marker, 'click', function() {
 			infowindow.open(map, marker);
@@ -425,14 +434,11 @@ var WIKIVERSE = (function($) {
 		var myMaptypeID;
 		var currentMap;
 		var currentStreetMap;
-
-		//$mapbrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">');
-		if(!is_root){
-			$mapbrick.append(getInstagramsButton);
-			$mapbrick.append(getFlickrsButton);
-		}
-
+		
 		var $mapcanvas = $('<div id="map_canvas"></div>');
+
+		$mapbrick.append(getInstagramsButton);
+		$mapbrick.append(getFlickrsButton);
 
 		$mapbrick.data('type', 'gmaps');
 		$mapbrick.data('position', mapObj.center);
@@ -598,11 +604,8 @@ var WIKIVERSE = (function($) {
 		$mapbrick.addClass('w2-fix');
 
 		$mapbrick.prepend($mapcanvas);
-
-		if(!is_root){
-			$mapbrick.prepend(getInstagramsButton);
-			$mapbrick.prepend(getFlickrsButton);
-		}
+		$mapbrick.prepend(getInstagramsButton);
+		$mapbrick.prepend(getFlickrsButton);		
 
 		$packeryContainer.packery();
 
@@ -1237,11 +1240,6 @@ var WIKIVERSE = (function($) {
 		callback($brick);
 	}
 
-	//callback for when search results are loaded
-	function searchResultsLoaded(){
-		$sidebar.find("#loading").remove();
-	}
-
 	//search for soundclouds
 	function getSoundcloud($parentBrick, query, callback) {
 
@@ -1596,7 +1594,7 @@ var WIKIVERSE = (function($) {
 				if (data.query.search.length > 0) {
 
 					$results.append(resultsTable);
-					
+
 					$.each(data.query.search, function() {
 
 						var title = this.title;
@@ -1736,6 +1734,9 @@ var WIKIVERSE = (function($) {
 	};
 	//build a wiki Brick
 	buildWikipedia = function($brick, topic, parent, callback) {
+		
+		var $connections = $(wikiverse_nav);
+		var $sectionsButton = $('<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> sections </button>');
 
 		$brick.data('type', 'wiki');
 		$brick.data('parent', parent);
@@ -1744,28 +1745,20 @@ var WIKIVERSE = (function($) {
 		$brick.addClass('wiki');
 
 		$brick.prepend('<h2>' + topic.title + '</h2>');
+		
+		$brick.prepend($connections);
+		$connections.selectpicker();
 
-		if (!is_root) {
-			var $connections = $(wikiverse_nav);
-			$brick.prepend($connections);
-			$connections.selectpicker();
+		$connections.change(function(event) {
+			getConnections($(this).find("option:selected").text(), topic.title);
+		});	
 
-			$connections.change(function(event) {
-				getConnections($(this).find("option:selected").text(), topic.title);
-			});
-		}
+		$brick.append($sectionsButton);
 
-		if (!is_root) {
-
-			var $sectionsButton = $('<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> sections </button>');
-
-			$brick.append($sectionsButton);
-
-			$sectionsButton.on('click', function(){
-				getWikiSections($brick, topic);
-				$sectionsButton.remove();
-			});
-		}
+		$sectionsButton.on('click', function(){
+			getWikiSections($brick, topic);
+			$sectionsButton.remove();
+		});		
 
 		//Go get the Main Image - 2 API Calls necessairy.. :(
 		$.ajax({
@@ -1874,9 +1867,6 @@ var WIKIVERSE = (function($) {
 					//enable to create new bricks out of links
 					buildNextTopic($brick, topic.language);
 
-					/*if (!is_root) {
-						getWikiLanguages(topic.title, topic.language, $brick);
-					}*/
 					callback($brick);
 				}
 			}
@@ -1895,17 +1885,13 @@ var WIKIVERSE = (function($) {
 		$brick.prepend('<p><h2>' + section.title + '</h2></p>');
 
 		//search another source menu:
-		if (!is_root) {
+		var $connections = $(wikiverse_nav);
+		$brick.prepend($connections);
+		$connections.selectpicker();
 
-			var $connections = $(wikiverse_nav);
-			$brick.prepend($connections);
-			$connections.selectpicker();
-
-			$connections.change(function(event) {
-				getConnections($(this).find("option:selected").text(), section.title);
-			});
-
-		}
+		$connections.change(function(event) {
+			getConnections($(this).find("option:selected").text(), section.title);
+		});	
 
 		$.ajax({
 			url: 'http://' + section.language + '.wikipedia.org/w/api.php',
@@ -1963,10 +1949,6 @@ var WIKIVERSE = (function($) {
 
 				//enable to create new bricks out of links
 				buildNextTopic($brick, section.language);
-
-				/*if (!is_root) {
-					getInterWikiLinks(section, $brick);
-				}*/
 
 				callback($brick);
 				$packeryContainer.packery();
@@ -2051,9 +2033,8 @@ var WIKIVERSE = (function($) {
 		$brick.data('type', 'youtube');
 		$brick.data('topic', youtubeObj);
 
-		if (!is_root) {
-			$brick.append(relatedButton);
-		}
+		$brick.append(relatedButton);
+		
 		$brick.append(youtubeThumb);
 
 		$brick.append('<i class="fa youtubePlayButton fa-youtube-play"></i>');
@@ -3053,16 +3034,12 @@ var WIKIVERSE = (function($) {
 		$packeryContainer.packery();
 	});
 
-
-	if (!is_root) {
-		// Stop PLAY when click anywhere
-		$(document).on("click", function(e) {
-			if (!$('#playBoard').is(":visible")) {
-				wikiverse.stopBoard();
-			}
-		});
-	}
-
+	// Stop PLAY when click anywhere
+	$(document).on("click", function(e) {
+		if (!$('#playBoard').is(":visible")) {
+			wikiverse.stopBoard();
+		}
+	});
 
 	//show save board button on packery change (needs work)
 	$packeryContainer.packery('on', 'layoutComplete', function(pckryInstance, laidOutItems) {
