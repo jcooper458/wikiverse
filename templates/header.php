@@ -85,12 +85,10 @@ else{
            ?>   
 
           <?php if ( is_page('start') ) { ?>
-          <li><a href="#" class="board-pilot invisible" id="playBoard" ><i class="fa fa-play"></i></i></a></li> 
           <li><a href="#" class="board-pilot invisible" id="clearBoard">clear board</a></li> 
           <li><a href="#" class="board-pilot invisible" id="createBoard" >save board</a></li>
           <?php }  ?>
           <?php if ( is_singular("board")) { ?>            
-          <li><a href="#" class="board-pilot invisible" id="playBoard"><i class="fa fa-play"></i></i></a></li>    
           <?php if ( $current_user->ID != $post->post_author ) { // if is author ?>
           <li><a href="#" class="board-pilot invisible" id="forkBoard">fork board</a></li> 
           <?php } else{ // if is not author?>

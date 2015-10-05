@@ -2150,38 +2150,6 @@ var WIKIVERSE = (function($) {
 		});
 
 	}
-	//play the board - slow scrolling and fade
-	wikiverse.playBoard = function(wpnonce) {
-		$('#playBoard').fadeOut();
-		//stop scrolling
-		//$('html, body').stop(true);
-
-		//fadeout elems
-		$('.brick .fa').fadeOut();
-		$('nav').fadeTo('slow', 0.3);
-		$('.wikiverse-nav').fadeOut();
-		$('.selectpicker').css('visibility', 'hidden');
-		$('html, body').animate({
-			scrollTop: $(document).height()
-		}, 50000);
-		return false;
-	};
-	//stop the playing board
-	wikiverse.stopBoard = function(wpnonce) {
-		$('#playBoard').fadeIn();
-		$('html, body').stop(true);
-		$('.brick .fa').fadeIn();
-		$('nav').fadeTo('slow', 1);
-		$('.wikiverse-nav').fadeIn();
-		$('.selectpicker').css('visibility', 'visible');
-		//$('.selectpicker').selectpicker('refresh');
-		
-		$('html, body').animate({
-			scrollTop: 0
-		}, 'fast');
-
-		return false;
-	};
 
 	//toggle the search overlay
 	wikiverse.toggleSearch = function() {
@@ -3039,13 +3007,6 @@ var WIKIVERSE = (function($) {
 		//$thisBrick.fadeOut('slow').remove();
 		$packeryContainer.packery('remove', $thisBrick);
 		$packeryContainer.packery();
-	});
-
-	// Stop PLAY when click anywhere
-	$(document).not(".home").on("click", function(e) {
-		if (!$('#playBoard').is(":visible")) {
-			wikiverse.stopBoard();
-		}
 	});
 
 	//show save board button on packery change (needs work)
