@@ -434,8 +434,22 @@ function wsl_use_fontawesome_icons( $provider_id, $provider_name, $authenticate_
         </a>
     <?php
 }
-  
+ 
+ /**
+ * Redirect back to homepage and not allow access to 
+ * WP admin for Subscribers.
+ */
+function themeblvd_redirect_admin(){
+    if ( ! defined('DOING_AJAX') && ! current_user_can('edit_posts') ) {
+        wp_redirect( "/");
+        exit;       
+    }
+}
+
+
 add_filter( 'wsl_render_auth_widget_alter_provider_icon_markup', 'wsl_use_fontawesome_icons', 10, 3 );
+
+add_action( 'admin_init', 'themeblvd_redirect_admin' );
 
 // creating Ajax call for WordPress  
 add_action( 'wp_ajax_nopriv_apf_addpost', 'apf_addpost' );  
