@@ -2890,30 +2890,30 @@ var WIKIVERSE = (function($) {
 			switch ($('#source').val()) {
 				case "wikipedia":					
 					getWikis($topBrick, query, lang, searchResultsLoaded);
-					break;
+				break;
 
 				case "flickr":
 					var flickrType = $("#flickrType select").val();
 					sort = $("#flickrSort select").val();
 					getFlickrs($topBrick, query, sort, flickrType, searchResultsLoaded);
-					break;
+				break;
 
 				case "instagram":
 					var instagramType = $("#instagramType select").val();
 					getInstagrams($topBrick, query, instagramType, searchResultsLoaded);
-					break;
+				break;
 
 				case "youtube":
 					getYoutubes($topBrick, query, searchResultsLoaded);
-					break;
+				break;
 
 				case "soundcloud":
 					getSoundcloud($topBrick, query, searchResultsLoaded);
-					break;
+				break;
 
 				case "twitter":
 					getTweets($topBrick, query, searchResultsLoaded);
-					break;
+				break;
 			}
 		});
 
