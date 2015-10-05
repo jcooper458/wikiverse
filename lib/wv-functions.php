@@ -419,6 +419,24 @@ function apf_editpost() {
   die($meta." ".$postID);  
 } 
 
+function wsl_use_fontawesome_icons( $provider_id, $provider_name, $authenticate_url )
+{
+    ?>
+        <a 
+           rel           = "nofollow"
+           href          = "<?php echo $authenticate_url; ?>"
+           data-provider = "<?php echo $provider_id ?>"
+           class         = "btn btn-block btn-social btn-<?php echo strtolower( $provider_id ); ?>" 
+         >
+       
+                <i class="fa fa-<?php echo strtolower( $provider_id ); ?>"></i> Sign in with <?php echo $provider_name; ?>
+ 
+        </a>
+    <?php
+}
+  
+add_filter( 'wsl_render_auth_widget_alter_provider_icon_markup', 'wsl_use_fontawesome_icons', 10, 3 );
+
 // creating Ajax call for WordPress  
 add_action( 'wp_ajax_nopriv_apf_addpost', 'apf_addpost' );  
 add_action( 'wp_ajax_nopriv_apf_clonepost', 'apf_clonepost' );  
@@ -426,3 +444,5 @@ add_action( 'wp_ajax_nopriv_apf_clonepost', 'apf_clonepost' );
 add_action( 'wp_ajax_apf_addpost', 'apf_addpost' );
 add_action( 'wp_ajax_apf_clonepost', 'apf_clonepost' );
 add_action( 'wp_ajax_apf_editpost', 'apf_editpost' );
+
+
