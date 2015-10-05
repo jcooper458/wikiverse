@@ -39,7 +39,6 @@
             columnWidth: 225
           });
         });
-
       },
       finalize: function() {
 

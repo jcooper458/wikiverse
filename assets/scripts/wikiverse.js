@@ -378,7 +378,6 @@ var WIKIVERSE = (function($) {
 
 			$gmapsSearchBrick.data("topic", currentMap);
 
-
 			//store position and bounds into the data container (for later use of getFlickrs/Instagrams)
 			$gmapsSearchBrick.data('position',  map.getCenter().toUrlValue());
 			$gmapsSearchBrick.data('bounds', map.getBounds().toUrlValue());
@@ -440,10 +439,10 @@ var WIKIVERSE = (function($) {
 		var currentStreetMap;
 
 		//$mapbrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">');
-		if(!is_root){
-			$mapbrick.append(getInstagramsButton);
-			$mapbrick.append(getFlickrsButton);
-		}
+		
+		$mapbrick.append(getInstagramsButton);
+		$mapbrick.append(getFlickrsButton);
+		
 
 		var $mapcanvas = $('<div id="map_canvas"></div>');
 
@@ -3078,7 +3077,6 @@ var WIKIVERSE = (function($) {
 
 	$packeryContainer.packery('on', 'layoutComplete', orderItems);
 	$packeryContainer.packery('on', 'dragItemPositioned', orderItems);
-
 
 	return wikiverse;
 
