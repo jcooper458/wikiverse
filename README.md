@@ -29,7 +29,6 @@ To install the theme, follow Bedrocks's documentation. In a nutshell, the needed
 Links to Bedrock/Sage: 
 # [Bedrock](https://roots.io/bedrock/)
 
-Link to Sage: 
 # [Sage](https://roots.io/sage/)
 
 
