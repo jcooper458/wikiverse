@@ -2175,9 +2175,11 @@ var WIKIVERSE = (function($) {
 		$('.wikiverse-nav').fadeIn();
 		$('.selectpicker').css('visibility', 'visible');
 		//$('.selectpicker').selectpicker('refresh');
+		
 		$('html, body').animate({
 			scrollTop: 0
 		}, 'fast');
+
 		return false;
 	};
 
@@ -3040,7 +3042,7 @@ var WIKIVERSE = (function($) {
 	});
 
 	// Stop PLAY when click anywhere
-	$(document).on("click", function(e) {
+	$(document).not(".home").on("click", function(e) {
 		if (!$('#playBoard').is(":visible")) {
 			wikiverse.stopBoard();
 		}
