@@ -320,26 +320,16 @@ function boardCScripts(){
 }
 add_action('wp_enqueue_scripts', 'boardCScripts');
 
-
-
-
 function apf_addpost() { 
 
     $nonce = $_REQUEST['nonce'];
     if (! wp_verify_nonce($nonce, 'board') ) die("Security Check");
      
     $results = '';  
-    $title = $_POST['boardtitle'];   
+    $title = sanitize_text_field($_POST['boardtitle']);   
     $meta = $_POST['boardmeta']; 
     $user_id = get_current_user_id();
     
-   /*foreach ($meta as $m){//build the tags
-       
-       $tags .= $m.", ";
-   }
-    
-    $metaserialized = serialize($meta);
-*/
     $post_id = wp_insert_post( array(  
     
         'post_title'        => $title,  
@@ -360,7 +350,7 @@ function apf_addpost() {
      array_push($response, $permalink, $post_id);
 
   die(json_encode($response)); 
-    //die($permalink); 
+
 
 } 
 
