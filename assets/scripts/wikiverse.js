@@ -2282,7 +2282,6 @@ var WIKIVERSE = (function($) {
 				board.author = newAuthor;
 			}
 
-
 			$("#boardTitle").focus();
 
 			$('#boardTitle').keyup(function(e) {
@@ -2388,8 +2387,6 @@ var WIKIVERSE = (function($) {
 			$packeryContainer.packery('remove', elements);
 		}
 	};
-
-
 
 	//get the wiki languages
 	getLanguage = function(langCode) {
