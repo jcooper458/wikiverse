@@ -603,7 +603,7 @@ video {
 
 /* Search Modal */
 
-#search {
+.search {
     position: fixed;
     top: 0px;
     left: 0px;
@@ -630,7 +630,7 @@ video {
     }
 }
 
-#search.open {
+.search.open {
     -webkit-transform: translate(0px, 0px) scale(1, 1);
     -moz-transform: translate(0px, 0px) scale(1, 1);
   -o-transform: translate(0px, 0px) scale(1, 1);
@@ -640,7 +640,7 @@ video {
     z-index:9999999;
 }
 
-#search input[type="search"] {
+.search input[type="search"] {
 
     color: rgb(255, 255, 255);
     background: rgba(0, 0, 0, 0);
@@ -651,7 +651,7 @@ video {
     outline: none;
 }
 
-#search .close {
+.search .close {
   position: fixed;
   top: 60px;
   right: 15px;

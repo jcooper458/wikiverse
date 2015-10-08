@@ -1,4 +1,32 @@
-<div id="search">
+<div id="global-search" class="search">
+	<button type="button" class="close">×</button>
+
+	<div class="search-container center buffer-top-large">
+
+		<div class="row sourceParams" id="searchInput" >
+			<input type="search" value="" placeholder="type any keyword here.." />
+		</div>        
+
+		<div class="row sourceParams" id="searchButton" >
+			<button id="wv_search" type="submit" class="btn btn-primary btn-lg">Search</button>
+		</div>
+		<div class="row" id="searchResults" >
+			<h3>wikiverse found content from following sources: </h3>
+			<div class="resultsCount">
+				<button id="wikis" 			fn="getWikis" 		type="submit"  	class="btn btn-primary source">wikis</button>
+				<button id="flickrs"  		fn="getFlickrs" 	type="submit" 	class="btn btn-primary source"></button>
+				<button id="instagrams" 	fn="getInstagrams" 	type="submit" 	class="btn btn-primary source"> </button>
+				<button id="youtubes" 		fn="getYoutubes" 	type="submit" 	class="btn btn-primary source"> </button>
+				<button id="twitters" 		fn="getTweets" 		type="submit" 	class="btn btn-primary source"> </button>
+				<button id="soundclouds" 	fn="getSoundclouds" type="submit" 	class="btn btn-primary source"> </button>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<!--
+<div id="advanced-search" class="search">
 	<button type="button" class="close">×</button>
 
 	<div class="search-container center buffer-top-large">
@@ -24,7 +52,7 @@
 
 		<div class="row sourceParams" id="wikipediaType" >
 			<h4>Wikipedia, fine! Which language do you want?</h4>
-			<?php get_template_part('templates/languages'); ?>
+			<?php //get_template_part('templates/languages'); ?>
 		</div>  
 
 		<div class="row sourceParams" id="instagramType" >
@@ -63,7 +91,7 @@
 
 	</div>
 
-</div>
+</div>-->
 
 <!-- Button trigger modal -->
 

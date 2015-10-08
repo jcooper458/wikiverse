@@ -108,8 +108,21 @@ var WIKIVERSE = (function($) {
 	}
 
 	//callback for when search results are loaded
-	function searchResultsLoaded(){
-		$sidebar.find("#loading").remove();
+	function searchResultsLoaded(results, source){
+
+		//$sidebar.find("#loading").remove();		
+		
+		$('#' + source).show();
+		$('#searchResults h3').show();
+
+		var number = 0;
+		var interval = setInterval(function() {
+	       $('#' + source).text(source + " " + number);
+	        if (number >= results.length) clearInterval(interval);
+	        number++;
+	    }, 30);	
+
+	    $results.data(source, results);	
 	}
 
 	function isPortrait(imgElement) {
@@ -122,7 +135,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//callback foor content loaded into brick
-	function APIsContentLoaded($brick) {
+	function brickDataLoaded($brick) {
 		$brick.fadeTo('slow', 1);
 		$packeryContainer.packery();
 	}
@@ -227,7 +240,7 @@ var WIKIVERSE = (function($) {
 			var $thisBrick = buildBrick($packeryContainer, x, y);
 
 			//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
-			buildWikipedia($thisBrick, brickData, $brick.attr("tabindex") - 1, APIsContentLoaded);
+			buildWikipedia($thisBrick, brickData, $brick.attr("tabindex") - 1, brickDataLoaded);
 			$packeryContainer.packery('unstamp', $brick);
 		});
 	}
@@ -1011,7 +1024,7 @@ var WIKIVERSE = (function($) {
 			break;
 
 			case "soundcloud":
-				getSoundcloud($(defaultBrick), topic, searchResultsLoaded);
+				getSoundclouds($(defaultBrick), topic, searchResultsLoaded);
 			break;
 
 			case "twitter":
@@ -1019,7 +1032,7 @@ var WIKIVERSE = (function($) {
 			break;
 
 			case "wikipedia":
-				getWikis($(defaultBrick), topic, "en", searchResultsLoaded);
+				getWikis(topic, "en", searchResultsLoaded);
 			break;
 		}
 	}
@@ -1171,7 +1184,7 @@ var WIKIVERSE = (function($) {
 
 				var $thisBrick = buildBrick($packeryContainer, parseInt($parentBrick.css('left')) + 450, parseInt($parentBrick.css('top')) + 100);
 
-				buildFoto($thisBrick, thisPhoto, "flickr", APIsContentLoaded);
+				buildFoto($thisBrick, thisPhoto, "flickr", brickDataLoaded);
 				$(this).remove();
 
 			});
@@ -1217,7 +1230,7 @@ var WIKIVERSE = (function($) {
 
 			var $thisBrick = buildBrick($packeryContainer, parseInt($parentBrick.css('left')) + 450, parseInt($parentBrick.css('top')) + 10);
 
-			buildFoto($thisBrick, thisPhoto, "instagram", APIsContentLoaded);
+			buildFoto($thisBrick, thisPhoto, "instagram", brickDataLoaded);
 			$(this).remove();
 
 		});
@@ -1246,7 +1259,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//search for soundclouds
-	function getSoundcloud($parentBrick, query, callback) {
+	function getSoundclouds($parentBrick, query, callback) {
 
 		SC.initialize({
 			client_id: '15bc70bcd9762ddca2e82ee99de9e2e7'
@@ -1284,7 +1297,7 @@ var WIKIVERSE = (function($) {
 
 					var $thisBrick = buildBrick($packeryContainer, parseInt($parentBrick.css('left')) + 50, parseInt($parentBrick.css('top')) + 10);
 
-					buildSoundcloud($thisBrick, soundcloudObj, APIsContentLoaded);
+					buildSoundcloud($thisBrick, soundcloudObj, brickDataLoaded);
 
 					$(this).tooltip('destroy');
 					$(this).remove();
@@ -1329,7 +1342,7 @@ var WIKIVERSE = (function($) {
 						userThumb: $(this).find('img').attr('src')
 					};
 
-					buildTweet($thisBrick, twitterObj, APIsContentLoaded);
+					buildTweet($thisBrick, twitterObj, brickDataLoaded);
 
 					return false;
 				});
@@ -1519,7 +1532,7 @@ var WIKIVERSE = (function($) {
 						};
 						var $thisBrick = buildBrick($packeryContainer, thisX, thisY);
 						//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
-						buildWikipedia($thisBrick, thisTopic, $brick.attr("tabindex"), APIsContentLoaded);
+						buildWikipedia($thisBrick, thisTopic, $brick.attr("tabindex"), brickDataLoaded);
 					});
 					$packeryContainer.packery();
 				}
@@ -1571,7 +1584,7 @@ var WIKIVERSE = (function($) {
 							language: section.language
 						};
 						var $thisBrick = buildBrick($packeryContainer, thisX, thisY);
-						buildWikipedia($thisBrick, thisTopic, $brick.attr("tabindex"), APIsContentLoaded);
+						buildWikipedia($thisBrick, thisTopic, $brick.attr("tabindex"), brickDataLoaded);
 					});
 
 					$packeryContainer.packery();
@@ -1582,7 +1595,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//search for wikis
-	function getWikis($parentBrick, topic, lang, callback) {
+	wikiverse.getWikis = function(topic, lang, dataLoaded) {
 
 		$.ajax({
 			url: 'http://' + lang + '.wikipedia.org/w/api.php',
@@ -1595,67 +1608,47 @@ var WIKIVERSE = (function($) {
 			},
 			dataType: 'jsonp',
 			success: function(data) {
+				console.log(data);
+				//build a homogenic array here (equally looking for all sources)
+				dataLoaded(data.query.search, "wikis");	
+			}
+		});
+	}
 
-				if (data.query.search.length > 0) {
+	function buildSearchResults(results){
 
-					$results.append(resultsTable);
+		$results.append(resultsTable);
 
-					$.each(data.query.search, function() {
+		$.each(results, function() {
 
-						var title = this.title;
-						var snippet = this.snippet;
+			var title = this.title;
+			var snippet = this.snippet;
+			
+			//append row to sidebar-results-table
+			$results.find('.table').append('<tr data-toggle="tooltip" title="' + strip(snippet) + '"><td><el class="result">' + title + '</el></td></tr>');
+		
+			//create the tooltips
+			$('tr').tooltip({ 
+				animation: false,
+				placement: 'bottom'
+			});
+			//bind event to every row -> so you can start the wikiverse
+			$results.find('tr').unbind('click').click(function(e) {
 
-						//stop loading glyph
-						$('.glyphicon').addClass('invisible');
-						
-						//append row to sidebar-results-table
-						$results.find('.table').append('<tr data-toggle="tooltip" title="' + strip(snippet) + '"><td><el class="result">' + title + '</el></td></tr>');
-					
-						//create the tooltips
-						$('tr').tooltip({
-							animation: false,
-							placement: 'bottom'
-						});
-						//bind event to every row -> so you can start the wikiverse
-						$results.find('tr').unbind('click').click(function(e) {
+				var topic = {
+					title: $(this).find('.result').html(),
+					language: lang
+				};
+				var $thisBrick = buildBrick($packeryContainer, parseInt($parentBrick.css('left')), parseInt($parentBrick.css('top')));
 
-							var topic = {
-								title: $(this).find('.result').html(),
-								language: lang
-							};
-							var $thisBrick = buildBrick($packeryContainer, parseInt($parentBrick.css('left')), parseInt($parentBrick.css('top')));
+				//build the wikis next to the search brick
+				buildWikipedia($thisBrick, topic, -1, brickDataLoaded);
 
-							//build the wikis next to the search brick
-							buildWikipedia($thisBrick, topic, -1, APIsContentLoaded);
-
-							$(this).tooltip('destroy');
-							$(this).remove();
-
-							return false;
-						});
-
-					});
-
-					callback();
-
-					//nothing has been found on Wikipedia
-				} else {
-					//append row to searchbox-table: NO RESULTS
-					$results.append('<tr class="no-results"><td>No Wikipedia articles found for "' + topic + '"</td></tr>');
-				}
-			},
-			error: function(data) {
-
-				var $packeryContainer = $('#packery');
-				var content = "Wikipedia seems to have the hickup..";
-				var $box = $('<p></p>').append(content);
-				$box = $('<div class="brick "></div>').append($box);
-
-				$packeryContainer.append($box).packery('appended', $box);
-
+				$(this).tooltip('destroy');
+				$(this).remove();
 
 				return false;
-			}
+			});
 		});
 	}
 
@@ -1717,7 +1710,7 @@ var WIKIVERSE = (function($) {
 						var newX = parseInt($brick.css('left'));
 
 						var $thisBrick = buildBrick($packeryContainer, newX, newY);
-						buildSection($thisBrick, section, $brick.attr("tabindex"), APIsContentLoaded);
+						buildSection($thisBrick, section, $brick.attr("tabindex"), brickDataLoaded);
 
 						$packeryContainer.packery('unstamp', $brick);
 					});
@@ -2003,7 +1996,7 @@ var WIKIVERSE = (function($) {
 						thumbnailURL: $(this).find('img').attr('src')
 					};
 
-					buildYoutube($thisBrick, youtubeObj, APIsContentLoaded);
+					buildYoutube($thisBrick, youtubeObj, brickDataLoaded);
 
 					return false;
 				});
@@ -2107,43 +2100,43 @@ var WIKIVERSE = (function($) {
 
 			switch (brick.Type) {
 				case "wiki":
-					buildWikipedia($thisBrick, brick.Topic, brick.Parent, APIsContentLoaded);
+					buildWikipedia($thisBrick, brick.Topic, brick.Parent, brickDataLoaded);
 					break;
 
 				case "wikiSection":
-					buildSection($thisBrick, brick.Topic, brick.Parent, APIsContentLoaded);
+					buildSection($thisBrick, brick.Topic, brick.Parent, brickDataLoaded);
 					break;
 
 				case "flickr":
-					buildFoto($thisBrick, brick.Topic, "flickr", APIsContentLoaded);
+					buildFoto($thisBrick, brick.Topic, "flickr", brickDataLoaded);
 					break;
 
 				case "instagram":
-					buildFoto($thisBrick, brick.Topic, "instagram", APIsContentLoaded);
+					buildFoto($thisBrick, brick.Topic, "instagram", brickDataLoaded);
 					break;
 
 				case "youtube":
-					buildYoutube($thisBrick, brick.Topic, APIsContentLoaded);
+					buildYoutube($thisBrick, brick.Topic, brickDataLoaded);
 					break;
 
 				case "gmaps":
-					buildGmaps($thisBrick, brick.Topic, APIsContentLoaded);
+					buildGmaps($thisBrick, brick.Topic, brickDataLoaded);
 					break;
 
 				case "streetview":
-					buildStreetMap($thisBrick, brick.Topic, APIsContentLoaded);
+					buildStreetMap($thisBrick, brick.Topic, brickDataLoaded);
 					break;
 
 				case "soundcloud":
-					buildSoundcloud($thisBrick, brick.Topic, APIsContentLoaded);
+					buildSoundcloud($thisBrick, brick.Topic, brickDataLoaded);
 					break;
 
 				case "twitter":
-					buildTweet($thisBrick, brick.Topic, APIsContentLoaded);
+					buildTweet($thisBrick, brick.Topic, brickDataLoaded);
 					break;
 
 				case "note":
-					buildNote($thisBrick, brick.Topic, APIsContentLoaded);
+					buildNote($thisBrick, brick.Topic, brickDataLoaded);
 					break;
 			}
 
@@ -2154,14 +2147,17 @@ var WIKIVERSE = (function($) {
 	//toggle the search overlay
 	wikiverse.toggleSearch = function() {
 		
-		$('.sourceParams').hide();
-		$('#addNote').show();
+		$('.source').hide();
+		$('#searchResults h3').hide();
 
-		$('#source').val($("#source option:first").val());
-		$('#source').selectpicker('refresh');
+		//$('.sourceParams').hide();
+		//$('#addNote').show();
 
-		$('#search').addClass('open');
-		$('#search > form > input[type="search"]').focus();
+		//$('#source').val($("#source option:first").val());
+		//$('#source').selectpicker('refresh');
+
+		$('.search').addClass('open');
+		$('.search > form > input[type="search"]').focus();
 
 	};
 
@@ -2701,7 +2697,7 @@ var WIKIVERSE = (function($) {
 		});
 
 		//close the search
-		$('#search, #search button.close').on('click', function(event) {
+		$('.search, .search button.close').on('click', function(event) {
 			if (event.target.className === 'close') {
 				$(this).removeClass('open');
 			}
@@ -2709,8 +2705,8 @@ var WIKIVERSE = (function($) {
 
 		//adding escape functionality for closing search
 		$(document).keyup(function(e) {
-			if ($('#search').hasClass('open') && e.keyCode === 27) { // escape key maps to keycode `27`
-				$('#search').removeClass('open');
+			if ($('.search').hasClass('open') && e.keyCode === 27) { // escape key maps to keycode `27`
+				$('.search').removeClass('open');
 			}
 		});
 
@@ -2731,6 +2727,34 @@ var WIKIVERSE = (function($) {
 			});
 		});
 
+		$("#wv_search").on("click", function() {
+
+			//get the query from the search div
+			var query = $("#searchInput input").val();
+
+			window["WIKIVERSE"]["getWikis"](query, "en", searchResultsLoaded);
+
+		});
+
+		$(".source").on("click", function() {
+			
+			var query = $("#searchInput input").val();
+			
+			//close the search
+			$('.search').removeClass('open');
+
+			//if not already open, open the sidebar:
+			if (!$('body').hasClass('cbp-spmenu-push-toright')) {
+				toggleSidebar();
+			}
+			
+			prepareSearchNavbar(query);
+			
+			buildSearchResults($results.data($(this).attr('id')));
+
+		});
+
+		/*
 		//set default lang to english
 		var lang = "en";
 
@@ -2835,9 +2859,9 @@ var WIKIVERSE = (function($) {
 				$("div#searchButton.row").show();				
 			}
 			$('#searchInput input').focus();
-		});
+		});*/
 
-		$("#wv_search").on("click", function() {
+		/*$("#wv_search").on("click", function() {
 
 			var query, topic, sort;
 
@@ -2882,7 +2906,7 @@ var WIKIVERSE = (function($) {
 					getTweets($topBrick, query, searchResultsLoaded);
 				break;
 			}
-		});
+		});*/
 
 		$("#addNoteButton").on("click", function() {
 			//close the search
@@ -2890,7 +2914,7 @@ var WIKIVERSE = (function($) {
 
 			var $noteBrick = buildBrick($packeryContainer);
 
-			createNote($noteBrick, APIsContentLoaded);
+			createNote($noteBrick, brickDataLoaded);
 		});
 
 	};
