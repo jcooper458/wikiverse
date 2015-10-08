@@ -78,6 +78,7 @@ blockquote{
 }
 
 .brick{
+  cursor: move;
   outline: 0;
   opacity: .1;
   width: 225px;
@@ -263,13 +264,6 @@ blockquote{
     .fa{
         font-size: 20px;
       }
-    .handle{
-      .fa{
-        cursor: move;
-        margin: 8px 0px 0px 8px;
-        font-size: 25px;
-      }
-    }
     textarea{
       margin: 0px;
     }
@@ -317,19 +311,7 @@ nav {
     position: absolute;
     z-index: 2;
 }
-.handle {
-    visibility: hidden;
-    cursor: move;
-    font-size: 19px;
-    right: -20px;
-    position: absolute;
-    top: -20px;
-    width:40px;
-    height:40px;
-   /* background:#F8F8F8;*/
-    /*border-radius: 20px;*/
-    z-index: 2;
-}
+
 .fa{
 
   cursor: pointer;
@@ -472,7 +454,6 @@ content: "VV"; letter-spacing:-0.45em; margin-right:0.5em; }
 .brick:hover .cross,
 .wiki:hover select,
 .wiki:hover .btn,
-.brick:hover .handle,
 .brick:hover .getFotos{visibility: visible;}
 
 

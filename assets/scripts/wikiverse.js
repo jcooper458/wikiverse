@@ -6,7 +6,7 @@ var WIKIVERSE = (function($) {
 	var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 	var loadingIcon = '<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate pull-right"></span>';
 	var wikiverse_nav = '<select class="selectpicker connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="100%" data-size="20"><option selected="">try another source..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-twitter twitter-icon icon"></i>twitter</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>';
-	var defaultBrick = '<div class="brick well well-sm">' + close_icon + '<span class="handle control-buttons"> <i class="fa fa-arrows"></i></span></div>';
+	var defaultBrick = '<div class="brick well well-sm">' + close_icon + '</div>';
 	var resultsTable = '<table class="table table-hover"></table>';
 	var getInstagramsButton = '<button id="getInstagrams" class="btn btn-default btn-xs getFotos" type="button">get instragram fotos of this location</button>';
 	var getFlickrsButton = '<button id="getFlickrs" class="btn btn-default btn-xs getFotos" type="button">get flickr fotos of this location</button>';
@@ -2082,10 +2082,10 @@ var WIKIVERSE = (function($) {
 
 	//make each brick draggable 
 	makeEachDraggable = function(i, itemElem) {
+		
 		// make element draggable with Draggabilly
-		var draggie = new Draggabilly(itemElem, {
-			handle: '.handle'
-		});
+		var draggie = new Draggabilly(itemElem);
+
 		// bind Draggabilly events to Packery
 		$packeryContainer.packery('bindDraggabillyEvents', draggie);
 	};
@@ -3033,7 +3033,7 @@ var WIKIVERSE = (function($) {
 
 
 	//Toggle Size of Images on click
-	$packeryContainer.on('click', 'img', toggleImageSize);
+	$packeryContainer.on('dblclick', 'img', toggleImageSize);
 
 	$packeryContainer.packery('on', 'layoutComplete', orderItems);
 	$packeryContainer.packery('on', 'dragItemPositioned', orderItems);
