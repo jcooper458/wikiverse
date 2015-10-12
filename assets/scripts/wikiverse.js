@@ -491,43 +491,43 @@ var WIKIVERSE = (function($) {
 			mapTypeId: myMaptypeID
 		};
 
-		window.map = new google.maps.Map($mapcanvas[0], mapOptions);
+		map = new google.maps.Map($mapcanvas[0], mapOptions);
 
-		window.map.fitBounds(myBounds);
+		map.fitBounds(myBounds);
 
 		callback($mapbrick);
 
-		google.maps.event.addListener(window.map, 'idle', function() {
+		google.maps.event.addListener(map, 'idle', function() {
 
 			currentMap = {
-				center: window.map.getCenter().toUrlValue(),
+				center: map.getCenter().toUrlValue(),
 				bounds: {
-					southWest: window.map.getBounds().getSouthWest().toUrlValue(),
-					northEast: window.map.getBounds().getNorthEast().toUrlValue()
+					southWest: map.getBounds().getSouthWest().toUrlValue(),
+					northEast: map.getBounds().getNorthEast().toUrlValue()
 				},
-				maptype: window.map.getMapTypeId()
+				maptype: map.getMapTypeId()
 			};
 
 			$mapbrick.data("topic", currentMap);
 
 			//store position and bounds into the data container (for later use of getFlickrs/Instagrams)
-			$mapbrick.data('position',  window.map.getCenter().toUrlValue());
-			$mapbrick.data('bounds', window.map.getBounds().toUrlValue());
+			$mapbrick.data('position',  map.getCenter().toUrlValue());
+			$mapbrick.data('bounds', map.getBounds().toUrlValue());
 		});
 
-		google.maps.event.addListener(window.map, 'maptypeid_changed', function() {
+		google.maps.event.addListener(map, 'maptypeid_changed', function() {
 
-			currentMap.maptype = window.map.getMapTypeId();
+			currentMap.maptype = map.getMapTypeId();
 
 			$mapbrick.data("topic", currentMap);
 
 			//store position and bounds into the data container (for later use of getFlickrs/Instagrams)
-			$mapbrick.data('position',  window.map.getCenter().toUrlValue());
-			$mapbrick.data('bounds', window.map.getBounds().toUrlValue());
+			$mapbrick.data('position',  map.getCenter().toUrlValue());
+			$mapbrick.data('bounds', map.getBounds().toUrlValue());
 
 		});
 
-		/*google.maps.event.addListener(map, 'click', function(event) {
+		google.maps.event.addListener(map, 'click', function(event) {
 
 			markers.forEach(function(marker) {
 				marker.setMap(null);
@@ -550,9 +550,9 @@ var WIKIVERSE = (function($) {
 			//store position and bounds into the data container (for later use of getFlickrs/Instagrams)
 			$mapbrick.data('position',  map.getCenter().toUrlValue());
 			$mapbrick.data('bounds', map.getBounds().toUrlValue());
-		});*/
+		});
 
-		var thePanorama = window.map.getStreetView(); //get the streetview object
+		var thePanorama = map.getStreetView(); //get the streetview object
 
 		google.maps.event.addDomListener(window, 'idle', function() {
 			$packeryContainer.packery();
@@ -573,8 +573,8 @@ var WIKIVERSE = (function($) {
 				$mapbrick.data("type", "streetview");
 				$mapbrick.data("topic", currentStreetMap);
 				//store position and bounds into the data container (for later use of getFlickrs/Instagrams)
-				$mapbrick.data('position',  window.map.getCenter().toUrlValue());
-				$mapbrick.data('bounds', window.map.getBounds().toUrlValue());
+				$mapbrick.data('position',  map.getCenter().toUrlValue());
+				$mapbrick.data('bounds', map.getBounds().toUrlValue());
 			}
 
 		});
@@ -593,8 +593,8 @@ var WIKIVERSE = (function($) {
 				};
 				$mapbrick.data("topic", currentStreetMap);
 				//store position and bounds into the data container (for later use of getFlickrs/Instagrams)
-				$mapbrick.data('position',  window.map.getCenter().toUrlValue());
-				$mapbrick.data('bounds', window.map.getBounds().toUrlValue());
+				$mapbrick.data('position',  map.getCenter().toUrlValue());
+				$mapbrick.data('bounds', map.getBounds().toUrlValue());
 			}
 		});
 	}
@@ -2086,12 +2086,6 @@ var WIKIVERSE = (function($) {
 		// make element draggable with Draggabilly
 		var draggie = new Draggabilly(itemElem);
 
-		draggie.on( 'dragStart', function( event, pointer ) {
-
-			window.map.setOptions({draggable: false});
-			
-		});
-
 		// bind Draggabilly events to Packery
 		$packeryContainer.packery('bindDraggabillyEvents', draggie);
 	};
@@ -3036,6 +3030,7 @@ var WIKIVERSE = (function($) {
 			}
 		});
 	});
+
 
 	//Toggle Size of Images on click
 	$packeryContainer.on('dblclick', 'img', toggleImageSize);
