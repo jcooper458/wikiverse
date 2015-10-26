@@ -20,8 +20,10 @@ var WIKIVERSE = (function($) {
 
 	var wpnonce = $('#nonce').html();
 
+	//topbrick is the toppest brick in regards to the scroll position
+	//this is used to insert bricks at the same height of the scroll position
+	var $topBrick = $(defaultBrick);	var $packeryContainer = $('.packery');
 
-	var $packeryContainer = $('.packery');
 	var $results = $('.results');
 	var $searchKeyword = $('#search-keyword');
 	var $sidebar = $('#sidebar');
@@ -92,7 +94,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//clean up the sidebar navbar for the new search
-	function prepareSearchNavbar(query, lang){
+	function prepareSearchNavbar(query){
 
 		//empty the search results
 		$results.empty();
@@ -102,16 +104,12 @@ var WIKIVERSE = (function($) {
 		$searchKeyword.empty();
 		$searchKeyword.append(query);
 
-		if(lang){
-			$searchKeyword.data("lang", lang);
-		}
-
 		//create a loading icon
 		$sidebar.append(loadingIcon);
 
 	}
 
-	//callback for when search results are loaded
+	//callback for when API search results are loaded
 	function searchResultsLoaded(results, source){
 
 		//$sidebar.find("#loading").remove();		
@@ -119,14 +117,18 @@ var WIKIVERSE = (function($) {
 		$('#' + source).show();
 		$('#searchResults h3').show();
 
+		//create the incrementing number animation
 		var number = 0;
 		var interval = setInterval(function() {
+
 	       $('#' + source).text(source + " " + number);
+
 	        if (number >= results.length) clearInterval(interval);
 	        number++;
 	    }, 30);	
 
-	    $results.data(source, results);	
+		//store the results inside the source-button
+	    $('#' + source).data("results", results);	
 	}
 
 	function isPortrait(imgElement) {
@@ -244,7 +246,7 @@ var WIKIVERSE = (function($) {
 			var $thisBrick = buildBrick($packeryContainer, x, y);
 
 			//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
-			buildWikipedia($thisBrick, brickData, $brick.attr("tabindex") - 1, brickDataLoaded);
+			buildWikipedia($thisBrick, brickData, brickDataLoaded);
 			$packeryContainer.packery('unstamp', $brick);
 		});
 	}
@@ -1028,7 +1030,7 @@ var WIKIVERSE = (function($) {
 			break;
 
 			case "soundcloud":
-				getSoundclouds($(defaultBrick), topic, searchResultsLoaded);
+				getSoundclouds(topic, searchResultsLoaded);
 			break;
 
 			case "twitter":
@@ -1263,7 +1265,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//search for soundclouds
-	function getSoundclouds($parentBrick, query, callback) {
+	function getSoundclouds(query, dataLoaded) {
 
 		SC.initialize({
 			client_id: '15bc70bcd9762ddca2e82ee99de9e2e7'
@@ -1274,46 +1276,49 @@ var WIKIVERSE = (function($) {
 			limit: 50
 		}, function(tracks) {
 
-			$results.append(resultsTable);
+			//build a homogenic array here (equally looking for all sources: topic and type)
+			var resultsArray = [];
 
-			tracks.forEach(function(track, index) {
-				
-				//append row to searchbox-table
-				$results.find('table').append('<tr data-toggle="tooltip" title="' + track.title + '" uri="' + track.uri + '" genre="' + track.genre + '"><td><el class="result">' + track.title + '</el></td></tr>');
-				
-				//create the tooltips
-				$('tr').tooltip({
-					animation: true,
-					placement: 'bottom'
-				});
+			tracks.forEach(function(item, index){
 
-				var y = parseInt($parentBrick.css('top'));
-				var x = parseInt($parentBrick.css('left'));
+				var result = {
+					Topic: {
+						title: item.title,
+						uri: item.uri
+					},
+					Type: "soundcloud"
+				}
 
-				//bind event to every row
-				$results.find('tr').unbind('click').click(function(e) {
-
-					var soundcloudObj = {
-						title: $(this).attr('title'),
-						uri: $(this).attr('uri'),
-						genre: $(this).attr('genre')
-					};
-
-					var $thisBrick = buildBrick($packeryContainer, parseInt($parentBrick.css('left')) + 50, parseInt($parentBrick.css('top')) + 10);
-
-					buildSoundcloud($thisBrick, soundcloudObj, brickDataLoaded);
-
-					$(this).tooltip('destroy');
-					$(this).remove();
-
-					return false;
-
-				});
+				resultsArray.push(result);
 			});
 
-			callback();
+			dataLoaded(resultsArray, "soundclouds");
 		
 		});
+	}
+
+	wikiverse.buildListResults = function(results, resultsBuilt){
+
+		$results.append(resultsTable);
+
+		results.forEach(function(result, index) {	
+
+			var $result = $('<tr class="result" data-toggle="tooltip" title="' + strip(result.Topic.snippet) + '"><td>' + result.Topic.title + '</td></tr>');
+			$result.data("topic", result);
+
+			//append row to sidebar-results-table
+			$results.find('.table').append($result);
+
+			//create the tooltips
+			$('tr').tooltip({ 
+				animation: false,
+				placement: 'bottom'
+			});
+
+		});
+
+		resultsBuilt($results);
+
 	}
 
 	//stack the twitter search results in the sidebar
@@ -1360,7 +1365,7 @@ var WIKIVERSE = (function($) {
 		}
 	}
 	//search the Twitter API for tweets
-	function getTweets($parentBrick, query, callback) {
+	function getTweets(query, dataLoaded) {
 
 		$.ajax({
 			url: '/app/plugins/wp-twitter-api/api.php',
@@ -1368,15 +1373,26 @@ var WIKIVERSE = (function($) {
 				"search": query
 			},
 			success: function(data) {
-				var $data = JSON.parse(data);
 
-				if($data.statuses.length === 0){
-					$results.append('<tr class="no-results"><td>No Tweets found for ' + query + ' .. </td></tr>');
-				}
-				else {
-					buildTwitterSearchResults($parentBrick, $data);
-					callback();
-				}
+				var data = JSON.parse(data);
+				
+				var resultsArray = [];
+
+				data.statuses.forEach(function(item, index){
+
+					var result = {
+						Topic: {							
+							text: item.text,
+							user: item.user,
+							userThumb: item.user.profile_image_url						
+						},
+						Type: "twitter"
+					}
+					resultsArray.push(result);
+				});
+
+				dataLoaded(resultsArray, "twitters");
+
 			}
 		});
 	}
@@ -1598,8 +1614,8 @@ var WIKIVERSE = (function($) {
 
 	}
 
-	//search for wikis
-	wikiverse.getWikis = function(topic, lang, dataLoaded) {
+	//"get" functions always do query the respective APIs and built an equally looking (wikiverse)results array for all sources 
+	function getWikis(topic, lang, dataLoaded) {
 
 		$.ajax({
 			url: 'http://' + lang + '.wikipedia.org/w/api.php',
@@ -1611,54 +1627,76 @@ var WIKIVERSE = (function($) {
 				srlimit: 50
 			},
 			dataType: 'jsonp',
-			success: function(data) {
-				console.log(data);
-				//build a homogenic array here (equally looking for all sources)
-				dataLoaded(data.query.search, "wikis");	
+			success: function(data) {		
+				
+				//build a homogenic array here (equally looking for all sources: topic and type)
+				var resultsArray = [];
+
+				data.query.search.forEach(function(item, index){
+
+					var result = {
+						Topic: {
+							title: item.title,
+							snippet: item.snippet,
+							language: lang
+						},
+						Type: "wiki"
+					}
+					resultsArray.push(result);
+				});
+
+				dataLoaded(resultsArray, "wikis");	
 			}
 		});
 	}
 
-	function buildSearchResults(results){
-		
-		console.log(results);
+	function buildSearchResults(results, type){
 
-		$results.append(resultsTable);
+		if(type === "foto"){
 
-		$.each(results, function() {
+			//buildFotoResults();
+		}
+		else{
 
-			var title = this.title;
-			var snippet = this.snippet;
-			
-			//append row to sidebar-results-table
-			$results.find('.table').append('<tr data-toggle="tooltip" title="' + strip(snippet) + '"><td><el class="result">' + title + '</el></td></tr>');
-		
-			//create the tooltips
-			$('tr').tooltip({ 
-				animation: false,
-				placement: 'bottom'
-			});
+			buildListResults(results);
+		}
 
-			//bind event to every row -> so you can start the wikiverse
-			$results.find('tr').unbind('click').click(function(e) {
-
-				var topic = {
-					title: $(this).find('.result').html(),
-					language: $searchKeyword.data("lang")
-				};
-
-				var $thisBrick = buildBrick($packeryContainer, parseInt($parentBrick.css('left')), parseInt($parentBrick.css('top')));
-
-				//build the wikis next to the search brick
-				buildWikipedia($thisBrick, topic, -1, brickDataLoaded);
-
-				$(this).tooltip('destroy');
-				$(this).remove();
-
-				return false;
-			});
-		});
 	}
+
+	function resultsBuilt($results){		
+
+		//bind event to every row -> so you can start the wikiverse
+		$results.find('.result').unbind('click').on('click', function(event) {	
+
+			var $thisBrick = buildBrick($packeryContainer, parseInt($topBrick.css('left')), parseInt($topBrick.css('top')));
+			var result = $(this).data("topic");
+
+			switch (result.Type) {
+
+				case "wiki":
+					buildWikipedia($thisBrick, result.Topic, brickDataLoaded);
+				break;
+
+				case "soundcloud":
+					buildSoundcloud($thisBrick, result.Topic, brickDataLoaded);
+				break;
+
+				case "twitter":
+					buildTweet($thisBrick, brick.Topic, brickDataLoaded);
+				break;
+
+			}
+
+			$(this).tooltip('destroy');
+			$(this).remove();
+
+			return false;
+		});
+
+	}
+
+
+
 
 	//search for sections of a wiki article
 	function getWikiSections($brick, topic){
@@ -1739,13 +1777,12 @@ var WIKIVERSE = (function($) {
 		}
 	};
 	//build a wiki Brick
-	buildWikipedia = function($brick, topic, parent, callback) {
+	buildWikipedia = function($brick, topic, callback) {
 		
 		var $connections = $(wikiverse_nav);
 		var $sectionsButton = $('<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> sections </button>');
 
 		$brick.data('type', 'wiki');
-		$brick.data('parent', parent);
 		$brick.data('topic', topic);
 
 		$brick.addClass('wiki');
@@ -1880,10 +1917,9 @@ var WIKIVERSE = (function($) {
 	};
 
 	//build a section brick 
-	buildSection = function($brick, section, parent, callback) {
+	buildSection = function($brick, section, callback) {
 
 		$brick.data('type', 'wikiSection');
-		$brick.data('parent', parent);
 		$brick.data('topic', section);
 
 		$brick.addClass('wiki');
@@ -2108,11 +2144,11 @@ var WIKIVERSE = (function($) {
 
 			switch (brick.Type) {
 				case "wiki":
-					buildWikipedia($thisBrick, brick.Topic, brick.Parent, brickDataLoaded);
+					buildWikipedia($thisBrick, brick.Topic, brickDataLoaded);
 					break;
 
 				case "wikiSection":
-					buildSection($thisBrick, brick.Topic, brick.Parent, brickDataLoaded);
+					buildSection($thisBrick, brick.Topic, brickDataLoaded);
 					break;
 
 				case "flickr":
@@ -2208,13 +2244,12 @@ var WIKIVERSE = (function($) {
 
 			var type = $(this).data('type');
 			var topic = $(this).data('topic');
-			var parent = $(this).data('parent');
 
 			wikiverseParsed[tabindex] = {
 
 				Type: type,
-				Topic: topic,
-				Parent: parent
+				Topic: topic
+
 			};
 			tabindex++;
 		});
@@ -2718,10 +2753,6 @@ var WIKIVERSE = (function($) {
 			}
 		});
 
-		//topbrick is the toppest brick in regards to the scroll position
-		//this is used to insert bricks at the same height of the scroll position
-		var $topBrick = $(defaultBrick);
-
 		//detect top element
 		$(document).scroll(function() {
 			var cutoff = $(window).scrollTop();
@@ -2738,9 +2769,11 @@ var WIKIVERSE = (function($) {
 		$("#wv_search").on("click", function() {
 
 			//get the query from the search div
-			var query = $("#searchInput input").val();
-
-			window["WIKIVERSE"]["getWikis"](query, "en", searchResultsLoaded);
+			var query = $("#searchInput input").val();	
+			
+			getWikis(query, "en", searchResultsLoaded);
+			getSoundclouds(query, searchResultsLoaded);
+			getTweets(query, searchResultsLoaded);
 
 		});
 
@@ -2762,10 +2795,11 @@ var WIKIVERSE = (function($) {
 				toggleSidebar();
 			}
 			
-			prepareSearchNavbar(query, lang);
+			prepareSearchNavbar(query);
+			var thisResultsArray = $(this).data("results");
+			var functionToBuildSearchResults = $(this).attr("fn");
 
-			var source = $(this).attr('source'); 
-			buildSearchResults($results.data(source));
+			wikiverse[functionToBuildSearchResults](thisResultsArray, resultsBuilt);
 
 		});
 
