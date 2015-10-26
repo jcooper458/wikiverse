@@ -92,7 +92,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//clean up the sidebar navbar for the new search
-	function prepareSearchNavbar(query){
+	function prepareSearchNavbar(query, lang){
 
 		//empty the search results
 		$results.empty();
@@ -101,6 +101,10 @@ var WIKIVERSE = (function($) {
 		//empty the searchkeyword and re-fill it with new search query
 		$searchKeyword.empty();
 		$searchKeyword.append(query);
+
+		if(lang){
+			$searchKeyword.data("lang", lang);
+		}
 
 		//create a loading icon
 		$sidebar.append(loadingIcon);
@@ -1616,6 +1620,8 @@ var WIKIVERSE = (function($) {
 	}
 
 	function buildSearchResults(results){
+		
+		console.log(results);
 
 		$results.append(resultsTable);
 
@@ -1632,13 +1638,15 @@ var WIKIVERSE = (function($) {
 				animation: false,
 				placement: 'bottom'
 			});
+
 			//bind event to every row -> so you can start the wikiverse
 			$results.find('tr').unbind('click').click(function(e) {
 
 				var topic = {
 					title: $(this).find('.result').html(),
-					language: lang
+					language: $searchKeyword.data("lang")
 				};
+
 				var $thisBrick = buildBrick($packeryContainer, parseInt($parentBrick.css('left')), parseInt($parentBrick.css('top')));
 
 				//build the wikis next to the search brick
@@ -2736,6 +2744,12 @@ var WIKIVERSE = (function($) {
 
 		});
 
+		var lang = "en";
+
+		/*$('#langselect').live('change', function() {
+			lang = $(this).val();
+		});*/
+
 		$(".source").on("click", function() {
 			
 			var query = $("#searchInput input").val();
@@ -2748,9 +2762,10 @@ var WIKIVERSE = (function($) {
 				toggleSidebar();
 			}
 			
-			prepareSearchNavbar(query);
-			
-			buildSearchResults($results.data($(this).attr('id')));
+			prepareSearchNavbar(query, lang);
+
+			var source = $(this).attr('source'); 
+			buildSearchResults($results.data(source));
 
 		});
 
