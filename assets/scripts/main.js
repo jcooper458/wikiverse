@@ -76,6 +76,7 @@
       init: function() {
         WIKIVERSE.initSearch();
         WIKIVERSE.toggleSearch();
+        $('.source').hide();
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS      

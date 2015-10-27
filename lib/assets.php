@@ -81,7 +81,7 @@ function assets() {
 
   wp_enqueue_script('wikiverse', get_template_directory_uri() . '/assets/scripts/wikiverse.js', [], null, true);
   
-  wp_enqueue_style('font_awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', false, null, false);
+  wp_enqueue_style('font_awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css', false, null, false);
   wp_enqueue_style('google_font', 'http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,600', false, null, false);
 
 }
