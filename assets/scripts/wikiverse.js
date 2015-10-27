@@ -6,13 +6,14 @@ var WIKIVERSE = (function($) {
 	var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 	var loadingIcon = '<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate pull-right"></span>';
 	var wikiverse_nav = '<select class="selectpicker connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="100%" data-size="20"><option selected="">try another source..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option><option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option><option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option></select>';
+	var handle = '<div class="row handle"><p class="text-center">grab me here</p></div>';
 	var defaultBrick = '<div class="brick well well-sm">' + close_icon + '</div>';
+	var defaultMapBrick = '<div class="brick gmaps well well-sm">' + handle + close_icon + '</div>';
 	var resultsTable = '<table class="table table-hover"></table>';
 	var getInstagramsButton = '<button id="getInstagrams" class="btn btn-default btn-xs getFotos" type="button">get instragram fotos of this location</button>';
 	var getFlickrsButton = '<button id="getFlickrs" class="btn btn-default btn-xs getFotos" type="button">get flickr fotos of this location</button>';
 	var loadingIcon = '<span id="loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate">';
 	var note = '<textarea id="note" class="form-control" placeholder="add your own infos.." rows="3"></textarea>';
-	var handle = '<div class="row"><p class="text-center">grab me here</p></div>';
 
 	//used for pNotify
 	var myStack = {"dir1":"down", "dir2":"left", "push":"top"};
@@ -92,6 +93,28 @@ var WIKIVERSE = (function($) {
 			var elem = itemElems[i];
 			$(elem).attr("tabindex", i);
 		}
+	}
+
+	//get the username for any given flickr picture 
+	function getFlickrUsername(user_id, callback) {
+
+		$.ajax({
+			url: 'https://api.flickr.com/services/rest',
+			data: {
+
+				method: 'flickr.people.getInfo',
+				api_key: '1a7d3826d58da8a6285ef7062f670d30',
+				user_id: user_id,
+				format: 'json',
+				nojsoncallback: 1,
+				per_page: 40
+			},
+			success: function(data) {
+				if (data.stat === "ok") {
+					callback(data.person.username._content);
+				}
+			}
+		});
 	}
 
 	//clean up the sidebar navbar for the new search
@@ -267,6 +290,20 @@ var WIKIVERSE = (function($) {
 		return $brick;
 	}
 
+	//build an empty brick
+	function buildGmapsBrick($packeryContainer, x, y) {
+
+		var $brick = $(defaultMapBrick);
+
+		$packeryContainer.append($brick).packery('appended', $brick);
+		$brick.each(makeEachDraggable);
+
+		$packeryContainer.packery('fit', $brick[0], x, y);
+		$packeryContainer.packery();
+
+		return $brick;
+	}
+
 	//for Wikipedia, trigger the next brick on click of links
 	function buildNextTopic($brick, lang) {
 
@@ -339,8 +376,6 @@ var WIKIVERSE = (function($) {
 
 		$gmapsSearchBrick.addClass('w2-fix visible');
 
-		$gmapsSearchBrick.append(getInstagramsButton);
-		$gmapsSearchBrick.append(getFlickrsButton);
 		$gmapsSearchBrick.prepend(handle);
 		
 		//build a search input
@@ -350,6 +385,8 @@ var WIKIVERSE = (function($) {
 		$gmapsSearchBrick.append('<div id="map_canvas"></div>');
 		$gmapsSearchBrick.append($input);		
 
+		$gmapsSearchBrick.append(getInstagramsButton);
+		$gmapsSearchBrick.append(getFlickrsButton);
 		//getGmapsFOtos includes click event to fetch fotos
 		getGmapsFotos($gmapsSearchBrick);
 
@@ -360,6 +397,9 @@ var WIKIVERSE = (function($) {
 			},
 			zoom: 1,
 			//scrollwheel: false,
+			draggable: false, 
+			zoomControl: false,
+			scaleControl: true
 		};
 
 		var map = new google.maps.Map($gmapsSearchBrick.find('#map_canvas')[0], mapOptions);
@@ -501,13 +541,11 @@ var WIKIVERSE = (function($) {
 		var currentMap;
 		var currentStreetMap;
 
-		//$mapbrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">');
-		
-		$mapbrick.append(getInstagramsButton);
-		$mapbrick.append(getFlickrsButton);
-		
+		//$mapbrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">')
 
 		var $mapcanvas = $('<div id="map_canvas"></div>');
+
+		//$mapbrick.prepend(handle);
 
 		$mapbrick.data('type', 'gmaps');
 		$mapbrick.data('position', mapObj.center);
@@ -518,6 +556,9 @@ var WIKIVERSE = (function($) {
 			.addClass('gmaps');
 
 		$mapbrick.append($mapcanvas);
+
+		$mapbrick.append(getInstagramsButton);
+		$mapbrick.append(getFlickrsButton);
 
 		$packeryContainer.packery();
 
@@ -1136,7 +1177,24 @@ var WIKIVERSE = (function($) {
 				$brick.find('.foto-tags').append('#<strong><a class="instaTag tag" href="#">' + tag + '</a></strong>');
 			});
 		} 
-		console.log(type);
+
+		if(type === "Flickr"){
+
+			getFlickrUsername(photoObj.owner, function(username) {
+
+				$brick.find('.foto-owner').empty();
+				$brick.find('.foto-owner').append(username);
+
+				//store the tags and re-assign them to the foto data (for later save)
+				var thisPhoto = $brick.data('topic');
+				thisPhoto.owner = username;
+
+				$brick.data('topic', thisPhoto);
+
+			});
+
+		}
+
 		//search for tags on click
 		onTagClickedDoSearch($brick, type);
 
@@ -1967,7 +2025,20 @@ var WIKIVERSE = (function($) {
 	makeEachDraggable = function(i, itemElem) {
 		
 		// make element draggable with Draggabilly
-		var draggie = new Draggabilly(itemElem);
+		var draggie; 
+		
+		if($(itemElem).hasClass('gmaps')){
+
+			draggie = new Draggabilly(itemElem, {
+		      handle: '.handle'
+		    });
+			
+		}
+		else{
+
+			draggie = new Draggabilly(itemElem);
+		}
+		
 
 		// bind Draggabilly events to Packery
 		$packeryContainer.packery('bindDraggabillyEvents', draggie);
@@ -2010,7 +2081,8 @@ var WIKIVERSE = (function($) {
 				break;
 
 				case "gmaps":
-					buildGmaps($thisBrick, brick.Topic, brickDataLoaded);
+					var $thisGmapsBrick = buildGmapsBrick($packeryContainer);
+					buildGmaps($thisGmapsBrick, brick.Topic, brickDataLoaded);
 				break;
 
 				case "streetview":
@@ -2651,14 +2723,16 @@ var WIKIVERSE = (function($) {
 			wikiverse[functionToBuildSearchResults](thisResultsArray, searchResultsListBuilt);
 
 		});
-/*
-		var $mabDefaultBrick = $(defaultBrick);
-		$('#search').removeClass('open');
-		var $thisBrick = buildBrick($packeryContainer, parseInt($mabDefaultBrick.css('left')), parseInt($mabDefaultBrick.css('top')));
 
-		getGmapsSearch($thisBrick);
+		$("#addMap").on("click", function() {
+			
+			var $mapDefaultBrick = $(defaultBrick);
+			var $thisBrick = buildBrick($packeryContainer, parseInt($mapDefaultBrick.css('left')), parseInt($mapDefaultBrick.css('top')));
 
-	*/	
+			getGmapsSearch($thisBrick);
+
+		});
+
 		$("#addNoteButton").on("click", function() {
 			//close the search
 			$('#search').removeClass('open');

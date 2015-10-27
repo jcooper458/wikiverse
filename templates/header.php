@@ -76,6 +76,7 @@ else{
 
         <li><a class="searchButton" href="#"><i class="fa fa-plus"></i>&nbsp;&nbsp;add content</a></li>              
         <li><a id="addNoteButton"  href="#"><i class="fa fa-pencil"></i>&nbsp;&nbsp;add a note</a></li>              
+        <li><a id="addMap"  href="#"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;add a map</a></li>              
 
         <?php }  ?>
       </ul>
