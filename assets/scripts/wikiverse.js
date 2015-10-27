@@ -176,7 +176,7 @@ var WIKIVERSE = (function($) {
 					resultsArray.push(result);
 				});
 
-				dataLoaded(resultsArray, "youtubes");
+				dataLoaded(resultsArray, "Youtube");
 
 			}
 		});
@@ -700,48 +700,6 @@ var WIKIVERSE = (function($) {
 		$mapbrick.data("topic", streetObj);
 	}
 
-	//search for flickr tags
-	function getFlickrTags(photoObj, callback) {
-
-		$.ajax({
-			url: 'https://api.flickr.com/services/rest',
-			data: {
-
-				method: 'flickr.photos.getInfo',
-				api_key: '1a7d3826d58da8a6285ef7062f670d30',
-				photo_id: photoObj.id,
-				format: 'json',
-				nojsoncallback: 1,
-				per_page: 50
-			},
-			success: function(data) {
-				callback(data.photo.tags.tag);
-			}
-		});
-	}
-
-	//get the username for any given flickr picture 
-	function getFlickrUsername(user_id, callback) {
-
-		$.ajax({
-			url: 'https://api.flickr.com/services/rest',
-			data: {
-
-				method: 'flickr.people.getInfo',
-				api_key: '1a7d3826d58da8a6285ef7062f670d30',
-				user_id: user_id,
-				format: 'json',
-				nojsoncallback: 1,
-				per_page: 40
-			},
-			success: function(data) {
-				if (data.stat === "ok") {
-					callback(data.person.username._content);
-				}
-			}
-		});
-	}
-
 	//search for flickrs
 	function getFlickrs(topic, sort, type, dataLoaded) {
 
@@ -753,79 +711,64 @@ var WIKIVERSE = (function($) {
 			var latitude = topic.split(',')[0];
 			var longitude = topic.split(',')[1];
 
-			if (valid_coords(latitude, longitude)) {
 
-				$.ajax({
-					url: 'https://api.flickr.com/services/rest',
-					data: {
+			$.ajax({
+				url: 'https://api.flickr.com/services/rest',
+				data: {
 
-						method: 'flickr.places.findByLatLon',
-						api_key: '1a7d3826d58da8a6285ef7062f670d30',
-						lat: latitude,
-						lon: longitude,
-						format: 'json',
-						nojsoncallback: 1
-					},
-					success: function(data) {
+					method: 'flickr.places.findByLatLon',
+					api_key: '1a7d3826d58da8a6285ef7062f670d30',
+					lat: latitude,
+					lon: longitude,
+					format: 'json',
+					nojsoncallback: 1
+				},
+				success: function(data) {
 
-						
-						$.ajax({
-							url: 'https://api.flickr.com/services/rest',
-							data: {
+					
+					$.ajax({
+						url: 'https://api.flickr.com/services/rest',
+						data: {
 
-								method: 'flickr.photos.search',
-								api_key: '1a7d3826d58da8a6285ef7062f670d30',
-								place_id: data.places.place[0].woeid,
-								format: 'json',
-								nojsoncallback: 1,
-								per_page: 40,
-								sort: sort
-							},
-							success: function(data) {
+							method: 'flickr.photos.search',
+							api_key: '1a7d3826d58da8a6285ef7062f670d30',
+							place_id: data.places.place[0].woeid,
+							format: 'json',
+							nojsoncallback: 1,
+							per_page: 40,
+							extras: "url_sq,url_z,tags,owner_name,geo",
+							sort: sort
+						},
+						success: function(data) {
+
+							var resultsArray = [];
+
+							data.photos.photo.forEach(function(photoObj, index) {
 								
-								data.photos.photo.forEach(function(photoObj, index) {
+								var result = {
+									Topic: {		
 
-									$.ajax({
-										url: 'https://api.flickr.com/services/rest',
-										data: {
+										owner: photoObj.owner,
+										id: photoObj.id,	
+										title: photoObj.title,
+										thumbURL: photoObj.url_q,
+										mediumURL: photoObj.url_z,
+										tags: photoObj.tags.split(" ")
 
-											method: 'flickr.photos.getSizes',
-											api_key: '1a7d3826d58da8a6285ef7062f670d30',
-											photo_id: photoObj.id,
-											format: 'json',
-											nojsoncallback: 1
-										},
-										success: function(data) {
+									},
+									Type: "Flickr"
+								};
+								resultsArray.push(result);
+							});
 
-											var resultsArray = [];
+							dataLoaded(resultsArray, "Flickr");
+					
+						}
+					});
 
-											data.sizes.size.forEach(function(item, index){
+				}
+			});
 
-												var result = {
-													Topic: {							
-														thumbURL: item.size[1].source,
-														mediumURL: item.size[6].source,
-														owner: photoObj.owner,
-														id: photoObj.id,	
-														title: photoObj.title		
-													},
-													Type: "Flickr"
-												};
-												resultsArray.push(result);
-											});
-
-											dataLoaded(resultsArray, "flickrs");
-										}
-									});
-								});
-							}
-						});
-
-					}
-				});
-			} else {
-				$results.append('<div class="no-results">"' + topic + '" is not a coordinate .. :( </div>');
-			}
 		} else if (type === "textQuery") { // is textQuery
 
 			$.ajax({
@@ -837,7 +780,8 @@ var WIKIVERSE = (function($) {
 					text: topic,
 					format: 'json',
 					nojsoncallback: 1,
-					per_page: 40,
+					per_page: 100,
+					extras: "url_q,url_z,tags,owner_name,geo",
 					sort: sort
 				},
 				success: function(data) {
@@ -851,40 +795,22 @@ var WIKIVERSE = (function($) {
 
 								owner: photoObj.owner,
 								id: photoObj.id,	
-								title: photoObj.title		
+								title: photoObj.title,
+								thumbURL: photoObj.url_q,
+								mediumURL: photoObj.url_z,
+								tags: photoObj.tags.split(" ")
+
 							},
 							Type: "Flickr"
 						};
-
-						$.ajax({
-							url: 'https://api.flickr.com/services/rest',
-							data: {
-								method: 'flickr.photos.getSizes',
-								api_key: '1a7d3826d58da8a6285ef7062f670d30',
-								photo_id: photoObj.id,
-								format: 'json',
-								nojsoncallback: 1
-							},
-							success: function(data) {
-								
-								console.log(data);
-								
-								result.Topic.thumbURL: item.size[1].source,
-								result.Topic.mediumURL: item.size[6].source,
-								
-								resultsArray.push(result);
-								
-								//dataLoaded(resultsArray, "flickrs");
-							}
-
-						});
-
-
+						resultsArray.push(result);
 					});
-					console.log(resultsArray);
+
+					dataLoaded(resultsArray, "Flickr");
 			
 				}
 			});
+
 		} else if (type === "userQuery") {
 
 			$.ajax({
@@ -911,46 +837,32 @@ var WIKIVERSE = (function($) {
 								format: 'json',
 								nojsoncallback: 1,
 								per_page: 40,
+								extras: "url_q,url_z,tags,owner_name,geo",
 								sort: sort
 							},
 							success: function(data) {
 								
+								var resultsArray = [];
+
 								data.photos.photo.forEach(function(photoObj, index) {
+									
+									var result = {
+										Topic: {		
 
-									$.ajax({
-										url: 'https://api.flickr.com/services/rest',
-										data: {
+											owner: photoObj.owner,
+											id: photoObj.id,	
+											title: photoObj.title,
+											thumbURL: photoObj.url_q,
+											mediumURL: photoObj.url_z,
+											tags: photoObj.tags.split(" ")
 
-											method: 'flickr.photos.getSizes',
-											api_key: '1a7d3826d58da8a6285ef7062f670d30',
-											photo_id: photoObj.id,
-											format: 'json',
-											nojsoncallback: 1
 										},
-										success: function(data) {
-											
-											var resultsArray = [];
-
-											data.sizes.size.forEach(function(item, index){
-
-												var result = {
-													Topic: {							
-														thumbURL: item.size[1].source,
-														mediumURL: item.size[6].source,
-														owner: photoObj.owner,
-														id: photoObj.id,	
-														title: photoObj.title		
-													},
-													Type: "Flickr"
-												};
-												resultsArray.push(result);
-											});
-
-											dataLoaded(resultsArray, "flickrs");
-
-										}
-									});
+										Type: "Flickr"
+									};
+									resultsArray.push(result);
 								});
+
+								dataLoaded(resultsArray, "Flickr");
 							
 							}
 						});
@@ -963,7 +875,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//search for instagrams
-	function getInstagrams($parentBrick, query, type, callback) {
+	function getInstagrams($parentBrick, query, type, dataLoaded) {
 
 		type = type || "hashtag";
 
@@ -997,7 +909,7 @@ var WIKIVERSE = (function($) {
 						if (typeof data.data !== 'undefined' && data.data.length > 0) {
 							data.data.forEach(function(photo, index) {
 								buildInstagramSearchResults($parentBrick, photo);
-								callback();
+								dataLoaded();
 							});
 						} else {
 							$results.append('<div class="no-results">No pictures found at this location:  "' + query + '"</div>');
@@ -1017,7 +929,7 @@ var WIKIVERSE = (function($) {
 				if (typeof data.data !== 'undefined' && data.data.length > 0) {
 					data.data.forEach(function(photo, index) {
 						buildInstagramSearchResults($parentBrick, photo);
-						callback();
+						dataLoaded();
 					});
 				} else {
 					$results.append('<div class="no-results">No pictures found for "' + query + '"</div>');
@@ -1048,7 +960,7 @@ var WIKIVERSE = (function($) {
 									if (data.meta.code !== 400) {
 										data.data.forEach(function(photo, index) {
 											buildInstagramSearchResults($parentBrick, photo);
-											callback();
+											dataLoaded();
 										});
 									} else {
 										$results.append('<div class="no-results">Search failed with error message: ' + data.meta.error_message + '</div>');
@@ -1115,13 +1027,13 @@ var WIKIVERSE = (function($) {
 		});
 	}
 
-	wikiverse.buildFlickr = function($brick, photoObj, type, callback){
+	wikiverse.buildFlickr = function($brick, photoObj, callback){
 
 		buildFoto($brick, photoObj, "Flickr", callback);
 
 	}
 
-	wikiverse.buildInstagram = function($brick, photoObj, type, callback){
+	wikiverse.buildInstagram = function($brick, photoObj, callback){
 
 		buildFoto($brick, photoObj, "Instagram", callback);
 		
@@ -1154,55 +1066,12 @@ var WIKIVERSE = (function($) {
 		$brick.append($titleOverlay);
 		$brick.find('.foto-owner').append(photoObj.owner);
 
-		if (type === "instagram") {
-			if (photoObj.tags) {
-				photoObj.tags.map(function(tag, index) {
-					$brick.find('.foto-tags').append('#<strong><a class="instaTag tag" href="#">' + tag + '</a></strong>');
-				});
-			}
-		} else if (type === "flickr") {
+		if (photoObj.tags) {
+			photoObj.tags.map(function(tag, index) {
+				$brick.find('.foto-tags').append('#<strong><a class="instaTag tag" href="#">' + tag + '</a></strong>');
+			});
+		} 
 
-			if (!photoObj.tags) {
-				//because this needs more time we are doing it on click, and not inside getFlickrs
-				getFlickrTags(photoObj, function(tags) {
-					//to store only the tag name and save only that
-					var tempTagArray = [];
-
-					if (tags) {
-						tags.map(function(tag, index) {
-							$brick.find('.foto-tags').append('#<strong><a class="flickrTag tag" href="#">' + tag.raw + '</a></strong>');
-							tempTagArray.push(tag.raw);
-						});
-
-						//store the tags and re-assign them to the foto data (for later save)
-						var thisPhoto = $brick.data('topic');
-						thisPhoto.tags = tempTagArray;
-
-						$brick.data('topic', thisPhoto);
-
-						//search for tags on click
-						onTagClickedDoSearch($brick, type);
-					}
-				});
-				getFlickrUsername(photoObj.owner, function(username) {
-
-					$brick.find('.foto-owner').empty();
-					$brick.find('.foto-owner').append(username);
-
-					//store the tags and re-assign them to the foto data (for later save)
-					var thisPhoto = $brick.data('topic');
-					thisPhoto.owner = username;
-
-					$brick.data('topic', thisPhoto);
-
-				});
-			} else {
-
-				photoObj.tags.map(function(tag, index) {
-					$brick.find('.foto-tags').append('#<strong><a class="flickrTag tag" href="#">' + tag + '</a></strong>');
-				});
-			}
-		}
 		//search for tags on click
 		onTagClickedDoSearch($brick, type);
 
@@ -1218,8 +1087,8 @@ var WIKIVERSE = (function($) {
 				$brick.addClass('w2');
 			}
 
-			$packeryContainer.packery();
 			callback($brick);
+			$packeryContainer.packery();
 
 			//add class if is Portrait
 			if (isPortrait($brick.find('img'))) {
@@ -1234,7 +1103,7 @@ var WIKIVERSE = (function($) {
 
 		results.forEach(function(result, index) {
 
-			var $result = $('<img width="112" src="' + result.Topic.thumbURL + '">');
+			var $result = $('<img class="result" width="112" src="' + result.Topic.thumbURL + '">');
 			$result.data("topic", result);
 
 			//append row to sidebar-results-table
@@ -1338,7 +1207,7 @@ var WIKIVERSE = (function($) {
 				resultsArray.push(result);
 			});
 
-			dataLoaded(resultsArray, "soundclouds");
+			dataLoaded(resultsArray, "Soundcloud");
 		
 		});
 	}
@@ -1412,7 +1281,7 @@ var WIKIVERSE = (function($) {
 					resultsArray.push(result);
 				});
 
-				dataLoaded(resultsArray, "twitters");
+				dataLoaded(resultsArray, "Twitter");
 
 			}
 		});
@@ -1666,7 +1535,7 @@ var WIKIVERSE = (function($) {
 					resultsArray.push(result);
 				});
 
-				dataLoaded(resultsArray, "wikis");	
+				dataLoaded(resultsArray, "Wikipedia");	
 			}
 		});
 	}
@@ -2760,160 +2629,6 @@ var WIKIVERSE = (function($) {
 			wikiverse[functionToBuildSearchResults](thisResultsArray, searchResultsListBuilt);
 
 		});
-
-		/*
-		//set default lang to english
-		var lang = "en";
-
-		$('#langselect').live('change', function() {
-			lang = $(this).val();
-		});
-
-		$('div.sourceParams').hide();
-
-		//first dropdown (source), on change, conditionally open the others
-		$('#source').on('change', function() {
-
-			var selected = $('#source option:selected').val();
-
-			//hide add a note
-			$("div#addNote.row").hide();
-
-			if (selected === "instagram") {
-				$('div.sourceParams').hide();
-				$("div#instagramType.row").show();
-				$("div#searchInput.row").show();
-				$("div#searchButton.row").show();
-			} else if (selected === "wikipedia") {
-				//WIKIPEDIA AUTOCOMPLETE
-				$('#searchInput input').typeahead('destroy');
-				$('#searchInput input').typeahead({
-					source: function(query, process) {
-						return $.ajax({
-							url: 'http://' + lang + '.wikipedia.org/w/api.php',
-							dataType: "jsonp",
-							data: {
-								'action': "opensearch",
-								'format': "json",
-								'search': query
-							},
-							success: function(json) {
-								process(json[1]);
-							}
-						});
-					},
-					matcher: function(item) {
-						if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
-							return true;
-						}
-					}
-				});
-				$('div.sourceParams').hide();
-				$("div#wikipediaType.row").show();
-				$("div#searchInput.row").show();
-				$("div#searchButton.row").show();
-			} else if (selected === "flickr") {
-				$('div.sourceParams').hide();
-				$("div#flickrType.row").show();
-				$("div#flickrSort.row").show();
-				$("div#searchInput.row").show();
-				$("div#searchButton.row").show();
-			} else if (selected === "gmaps") {
-
-				var $mabDefaultBrick = $(defaultBrick);
-				$('#search').removeClass('open');
-				var $thisBrick = buildBrick($packeryContainer, parseInt($mabDefaultBrick.css('left')), parseInt($mabDefaultBrick.css('top')));
-
-				getGmapsSearch($thisBrick);
-
-			} else if (selected === "youtube") {
-
-				//YOUTUBE AUTOCOMPLETE
-				$('#searchInput input').typeahead('destroy');
-
-				$('#searchInput input').typeahead({
-
-					source: function(query, process) {
-						return $.ajax({
-							url: "http://suggestqueries.google.com/complete/search",
-							dataType: "jsonp",
-							data: {
-								'client': "youtube",
-								'ds': "yt",
-								'q': query
-							},
-							success: function(json) {
-								var resultArray = [];
-								$.each(json[1], function() {
-									resultArray.push(this[0]);
-								});
-								process(resultArray);
-							}
-						});
-					},
-					matcher: function(item) {
-						if (item.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1) {
-							return true;
-						}
-					}
-				});
-				$('div.sourceParams').hide();
-				$("div#searchInput.row").show();
-				$("div#searchButton.row").show();
-			} else {
-				$('div.sourceParams').hide();
-				$("div#searchInput.row").show();
-				$("div#searchButton.row").show();				
-			}
-			$('#searchInput input').focus();
-		});*/
-
-		/*$("#wv_search").on("click", function() {
-
-			var query, topic, sort;
-
-			//close the search
-			$('#search').removeClass('open');
-
-			//if not already open, open the sidebar:
-			if (!$('body').hasClass('cbp-spmenu-push-toright')) {
-				toggleSidebar();
-			}
-
-			//get the query from the search div
-			query = $("#searchInput input").val();
-
-			prepareSearchNavbar(query);
-
-			switch ($('#source').val()) {
-				case "wikipedia":					
-					getWikis($topBrick, query, lang, searchResultsLoaded);
-				break;
-
-				case "flickr":
-					var flickrType = $("#flickrType select").val();
-					sort = $("#flickrSort select").val();
-					getFlickrs($topBrick, query, sort, flickrType, searchResultsLoaded);
-				break;
-
-				case "instagram":
-					var instagramType = $("#instagramType select").val();
-					getInstagrams($topBrick, query, instagramType, searchResultsLoaded);
-				break;
-
-				case "youtube":
-					getYoutubes($topBrick, query, searchResultsLoaded);
-				break;
-
-				case "soundcloud":
-					getSoundcloud($topBrick, query, searchResultsLoaded);
-				break;
-
-				case "twitter":
-					getTweets($topBrick, query, searchResultsLoaded);
-				break;
-			}
-		});*/
 
 		$("#addNoteButton").on("click", function() {
 			//close the search
