@@ -906,24 +906,24 @@ var WIKIVERSE = (function($) {
 					success: function(data) {
 						
 						data.data.forEach(function(photoObj, index) {
-							console.log(photoObj);
-							var result = {
-								Topic: {		
 
-									owner: photoObj.owner,
-									id: photoObj.id,	
-									title: photoObj.title,
-									thumbURL: photoObj.url_q,
-									mediumURL: photoObj.url_z,
-									tags: photoObj.tags.split(" ")
+						var result = {
+							Topic: {		
 
-								},
-								Type: "Instagram"
-							};
-							resultsArray.push(result);
-						});
+								owner: photoObj.user.username,
+								id: photoObj.id,	
+								title: photoObj.caption.text,
+								thumbURL: photoObj.images.low_resolution.url,
+								mediumURL: photoObj.images.standard_resolution.url,
+								tags: photoObj.tags
 
-						dataLoaded(resultsArray, "Instagram");	
+							},
+							Type: "Instagram"
+						};
+						resultsArray.push(result);
+					});
+
+					dataLoaded(resultsArray, "Instagram");	
 				
 					}
 				});
@@ -937,16 +937,18 @@ var WIKIVERSE = (function($) {
 
 			$.getJSON(instagramUrl, access_parameters, function(data) {
 
+				var resultsArray = [];
+
 				data.data.forEach(function(photoObj, index) {
-					console.log(photoObj);
+
 					var result = {
 						Topic: {		
 
-							owner: photoObj.owner,
+							owner: photoObj.user.username,
 							id: photoObj.id,	
-							title: photoObj.title,
-							thumbURL: photoObj.url_q,
-							mediumURL: photoObj.url_z,
+							title: photoObj.caption.text,
+							thumbURL: photoObj.images.low_resolution.url,
+							mediumURL: photoObj.images.standard_resolution.url,
 							tags: photoObj.tags
 
 						},
@@ -980,14 +982,27 @@ var WIKIVERSE = (function($) {
 								var getUserUrl = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?callback=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
 
 								$.getJSON(getUserUrl, access_parameters, function(data) {
-									if (data.meta.code !== 400) {
-										data.data.forEach(function(photo, index) {
-											buildInstagramSearchResults($parentBrick, photo);
-											dataLoaded();
-										});
-									} else {
-										$results.append('<div class="no-results">Search failed with error message: ' + data.meta.error_message + '</div>');
-									}
+								
+									data.data.forEach(function(photoObj, index) {
+
+										var result = {
+											Topic: {		
+
+												owner: photoObj.user.username,
+												id: photoObj.id,	
+												title: photoObj.caption.text,
+												thumbURL: photoObj.images.low_resolution.url,
+												mediumURL: photoObj.images.standard_resolution.url,
+												tags: photoObj.tags
+
+											},
+											Type: "Instagram"
+										};
+										resultsArray.push(result);
+									});
+
+									dataLoaded(resultsArray, "Instagram");	
+					
 								});
 								return;
 							}
