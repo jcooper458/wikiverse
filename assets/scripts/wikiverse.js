@@ -361,10 +361,10 @@ var WIKIVERSE = (function($) {
 				toggleSidebar();
 			}
 			if($(this).attr('id') === "getInstagrams"){
-				getInstagrams($(defaultBrick), position, "coordinates");
+				getInstagrams(position, "coordinates", searchResultsLoaded, "buildFotoSearchResults");
 			}
 			else {
-				getFlickrs($(defaultBrick), position, "relevance", "geoQuery");
+				getFlickrs(position, "relevance", "geoQuery", searchResultsLoaded, "buildFotoSearchResults");
 			}
 		});
 	}
@@ -385,6 +385,7 @@ var WIKIVERSE = (function($) {
 
 		$gmapsSearchBrick.append(getInstagramsButton);
 		$gmapsSearchBrick.append(getFlickrsButton);
+		
 		//getGmapsFOtos includes click event to fetch fotos
 		getGmapsFotos($gmapsSearchBrick);
 
@@ -785,7 +786,7 @@ var WIKIVERSE = (function($) {
 					nojsoncallback: 1
 				},
 				success: function(data) {
-					
+					console.log(data)
 					$.ajax({
 						url: 'https://api.flickr.com/services/rest',
 						data: {
@@ -796,7 +797,7 @@ var WIKIVERSE = (function($) {
 							format: 'json',
 							nojsoncallback: 1,
 							per_page: 40,
-							extras: "url_sq,url_z,tags,owner_name,geo",
+							extras: "url_q,url_z,tags,owner_name,geo",
 							sort: sort
 						},
 						success: function(data) {
@@ -965,26 +966,32 @@ var WIKIVERSE = (function($) {
 					},
 					dataType: 'jsonp',
 					success: function(data) {
-						
+		
+						var resultsArray = [];
+
 						data.data.forEach(function(photoObj, index) {
 
-						var result = {
-							Topic: {		
+							if(photoObj.caption){
+								var title = photoObj.caption.text;
+							}
 
-								owner: photoObj.user.username,
-								id: photoObj.id,	
-								title: photoObj.caption.text,
-								thumbURL: photoObj.images.low_resolution.url,
-								mediumURL: photoObj.images.standard_resolution.url,
-								tags: photoObj.tags
+							var result = {
+								Topic: {		
 
-							},
-							Type: "Instagram"
-						};
-						resultsArray.push(result);
-					});
+									owner: photoObj.user.username,
+									id: photoObj.id,	
+									title: title,
+									thumbURL: photoObj.images.low_resolution.url,
+									mediumURL: photoObj.images.standard_resolution.url,
+									tags: photoObj.tags
 
-					dataLoaded(resultsArray, "Instagram", triggerSearchResultsFunction);	
+								},
+								Type: "Instagram"
+							};
+							resultsArray.push(result);
+						});
+
+						dataLoaded(resultsArray, "Instagram", triggerSearchResultsFunction);	
 				
 					}
 				});
@@ -1043,7 +1050,9 @@ var WIKIVERSE = (function($) {
 								var getUserUrl = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?callback=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
 
 								$.getJSON(getUserUrl, access_parameters, function(data) {
-								
+									
+									var resultsArray = [];
+
 									data.data.forEach(function(photoObj, index) {
 
 										var result = {
@@ -1051,7 +1060,7 @@ var WIKIVERSE = (function($) {
 
 												owner: photoObj.user.username,
 												id: photoObj.id,	
-												title: photoObj.caption.text,
+												//title: photoObj.caption.text,
 												thumbURL: photoObj.images.low_resolution.url,
 												mediumURL: photoObj.images.standard_resolution.url,
 												tags: photoObj.tags
