@@ -111,7 +111,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//callback for when API search results are loaded
-	function searchResultsLoaded(results, source){
+	function searchResultsLoaded(results, source, triggerSearchResultsFunction){
 
 		//$sidebar.find("#loading").remove();		
 		
@@ -129,7 +129,12 @@ var WIKIVERSE = (function($) {
 	    }, 30);	
 
 		//store the results inside the source-button
-	    $('#' + source).data("results", results);	
+	    $('#' + source).data("results", results);
+
+	    //this is used in order to fire the searchresults in the sidebar
+	    if(triggerSearchResultsFunction){
+	    	wikiverse[triggerSearchResultsFunction](results, searchResultsListBuilt);
+	    }	
 	}
 
 	function isPortrait(imgElement) {
@@ -148,7 +153,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//search youtube videos
-	function getYoutubes(topic, dataLoaded) {
+	function getYoutubes(topic, dataLoaded, triggerFunction) {
 
 		$.ajax({
 			url: 'https://www.googleapis.com/youtube/v3/search',
@@ -177,7 +182,7 @@ var WIKIVERSE = (function($) {
 					resultsArray.push(result);
 				});
 
-				dataLoaded(resultsArray, "Youtube");
+				dataLoaded(resultsArray, "Youtube", triggerFunction);
 
 			}
 		});
@@ -202,7 +207,7 @@ var WIKIVERSE = (function($) {
 			},
 			dataType: 'jsonp',
 			success: function(data) {
-				buildYoutubeSearchResults($(defaultBrick), data, origQuery);
+				buildYoutubeSearchResults(data, origQuery);
 				callback();
 			}
 		});
@@ -703,7 +708,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//search for flickrs
-	function getFlickrs(topic, sort, type, dataLoaded) {
+	function getFlickrs(topic, sort, type, dataLoaded, triggerSearchResultsFunction) {
 
 		type = type || "textQuery";
 
@@ -762,7 +767,7 @@ var WIKIVERSE = (function($) {
 								resultsArray.push(result);
 							});
 
-							dataLoaded(resultsArray, "Flickr");	
+							dataLoaded(resultsArray, "Flickr", triggerSearchResultsFunction);	
 
 						}
 					});
@@ -807,7 +812,7 @@ var WIKIVERSE = (function($) {
 						resultsArray.push(result);
 					});
 
-					dataLoaded(resultsArray, "Flickr");
+					dataLoaded(resultsArray, "Flickr", triggerSearchResultsFunction);
 			
 				}
 			});
@@ -863,7 +868,7 @@ var WIKIVERSE = (function($) {
 									resultsArray.push(result);
 								});
 
-								dataLoaded(resultsArray, "Flickr");
+								dataLoaded(resultsArray, "Flickr", triggerSearchResultsFunction);
 							
 							}
 						});
@@ -876,7 +881,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//search for instagrams
-	function getInstagrams(query, type, dataLoaded) {
+	function getInstagrams(query, type, dataLoaded, triggerSearchResultsFunction) {
 
 		type = type || "hashtag";
 
@@ -925,7 +930,7 @@ var WIKIVERSE = (function($) {
 						resultsArray.push(result);
 					});
 
-					dataLoaded(resultsArray, "Instagram");	
+					dataLoaded(resultsArray, "Instagram", triggerSearchResultsFunction);	
 				
 					}
 				});
@@ -1033,28 +1038,28 @@ var WIKIVERSE = (function($) {
 		switch (source) {
 
 			case "flickr":
-				getFlickrs(topic, "relevance", "textQuery", searchResultsLoaded);
+				getFlickrs(topic, "relevance", "textQuery", searchResultsLoaded, "buildFotoSearchResults");
 			break;
 
 			case "instagram":
 				//remove whitespace from instagram query
-				getInstagrams($(defaultBrick), topic.replace(/ /g, ''), "hashtag", searchResultsLoaded);
+				getInstagrams(topic.replace(/ /g, ''), "hashtag", searchResultsLoaded, "buildFotoSearchResults");
 			break;
 
 			case "youtube":
-				getYoutubes(topic, searchResultsLoaded);
+				getYoutubes(topic, searchResultsLoaded, "buildYoutubeSearchResults");
 			break;
 
 			case "soundcloud":
-				getSoundclouds(topic, searchResultsLoaded);
+				getSoundclouds(topic, searchResultsLoaded, "buildListResults");
 			break;
 
 			case "twitter":
-				getTweets(topic, searchResultsLoaded);
+				getTweets(topic, searchResultsLoaded, "buildTwitterSearchResults");
 			break;
 
 			case "wikipedia":
-				getWikis(topic, "en", searchResultsLoaded);
+				getWikis(topic, "en", searchResultsLoaded, "buildListResults");
 			break;
 		}
 	}
@@ -1177,7 +1182,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//search for soundclouds
-	function getSoundclouds(query, dataLoaded) {
+	function getSoundclouds(query, dataLoaded, triggerSearchResultsFunction) {
 
 		SC.initialize({
 			client_id: '15bc70bcd9762ddca2e82ee99de9e2e7'
@@ -1204,7 +1209,7 @@ var WIKIVERSE = (function($) {
 				resultsArray.push(result);
 			});
 
-			dataLoaded(resultsArray, "Soundcloud");
+			dataLoaded(resultsArray, "Soundcloud", triggerSearchResultsFunction);
 		
 		});
 	}
@@ -1252,7 +1257,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//search the Twitter API for tweets
-	function getTweets(query, dataLoaded) {
+	function getTweets(query, dataLoaded, triggerSearchResultsFunction) {
 
 		$.ajax({
 			url: '/app/plugins/wp-twitter-api/api.php',
@@ -1278,7 +1283,7 @@ var WIKIVERSE = (function($) {
 					resultsArray.push(result);
 				});
 
-				dataLoaded(resultsArray, "Twitter");
+				dataLoaded(resultsArray, "Twitter", triggerSearchResultsFunction);
 
 			}
 		});
@@ -1502,7 +1507,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//"get" functions always do query the respective APIs and built an equally looking (wikiverse)results array for all sources 
-	function getWikis(topic, lang, dataLoaded) {
+	function getWikis(topic, lang, dataLoaded, triggerSearchResultsFunction) {
 
 		$.ajax({
 			url: 'http://' + lang + '.wikipedia.org/w/api.php',
@@ -1532,7 +1537,7 @@ var WIKIVERSE = (function($) {
 					resultsArray.push(result);
 				});
 
-				dataLoaded(resultsArray, "Wikipedia");	
+				dataLoaded(resultsArray, "Wikipedia", triggerSearchResultsFunction);	
 			}
 		});
 	}
@@ -1856,8 +1861,8 @@ var WIKIVERSE = (function($) {
 	};
 
 	//stack the youtube search results in the sidebar
-	wikiverse.buildYoutubeSearchResults = function(results, origQuery) {
-	
+	wikiverse.buildYoutubeSearchResults = function(results) {
+
 		$results.append(resultsTable);
 
 		results.forEach(function(result, index) {
@@ -2012,7 +2017,6 @@ var WIKIVERSE = (function($) {
 	//toggle the search overlay
 	wikiverse.toggleSearch = function() {
 		
-		//$('.source').hide();
 		$('#searchResults h3').hide();
 
 		//$('.sourceParams').hide();
@@ -2627,11 +2631,14 @@ var WIKIVERSE = (function($) {
 			wikiverse[functionToBuildSearchResults](thisResultsArray, searchResultsListBuilt);
 
 		});
-
+/*
+		var $mabDefaultBrick = $(defaultBrick);
+		$('#search').removeClass('open');
 		var $thisBrick = buildBrick($packeryContainer, parseInt($mabDefaultBrick.css('left')), parseInt($mabDefaultBrick.css('top')));
 
 		getGmapsSearch($thisBrick);
-		
+
+	*/	
 		$("#addNoteButton").on("click", function() {
 			//close the search
 			$('#search').removeClass('open');
