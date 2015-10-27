@@ -14,9 +14,9 @@
 			<h3>wikiverse found content from following sources: </h3>
 			<div class="resultsCount">
 				<button id="wikis" 			source="wikis" 			fn="buildListResults" 		type="submit"  	class="btn btn-primary source">wikis</button>
-				<button id="flickrs"  		source="flickrs"  		fn="getFlickrs" 	type="submit" 	class="btn btn-primary source"></button>
+				<button id="flickrs"  		source="flickrs"  		fn="buildFotoSearchResults" 	type="submit" 	class="btn btn-primary source"></button>
 				<button id="instagrams" 	source="instagrams" 	fn="getInstagrams" 	type="submit" 	class="btn btn-primary source"> </button>
-				<button id="youtubes" 		source="youtubes" 		fn="getYoutubes" 	type="submit" 	class="btn btn-primary source"> </button>
+				<button id="youtubes" 		source="youtubes" 		fn="buildYoutubeSearchResults" 	type="submit" 	class="btn btn-primary source"> </button>
 				<button id="twitters" 		source="twitters" 		fn="buildTwitterSearchResults" 		type="submit" 	class="btn btn-primary source"> </button>
 				<button id="soundclouds" 	source="soundclouds" 	fn="buildListResults" type="submit" 	class="btn btn-primary source"> </button>
 			</div>
