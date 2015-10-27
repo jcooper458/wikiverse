@@ -724,7 +724,6 @@ var WIKIVERSE = (function($) {
 					nojsoncallback: 1
 				},
 				success: function(data) {
-
 					
 					$.ajax({
 						url: 'https://api.flickr.com/services/rest',
@@ -761,8 +760,8 @@ var WIKIVERSE = (function($) {
 								resultsArray.push(result);
 							});
 
-							dataLoaded(resultsArray, "Flickr");
-					
+							dataLoaded(resultsArray, "Flickr");	
+
 						}
 					});
 
@@ -875,7 +874,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//search for instagrams
-	function getInstagrams($parentBrick, query, type, dataLoaded) {
+	function getInstagrams(query, type, dataLoaded) {
 
 		type = type || "hashtag";
 
@@ -905,15 +904,27 @@ var WIKIVERSE = (function($) {
 					},
 					dataType: 'jsonp',
 					success: function(data) {
+						
+						data.data.forEach(function(photoObj, index) {
+							console.log(photoObj);
+							var result = {
+								Topic: {		
 
-						if (typeof data.data !== 'undefined' && data.data.length > 0) {
-							data.data.forEach(function(photo, index) {
-								buildInstagramSearchResults($parentBrick, photo);
-								dataLoaded();
-							});
-						} else {
-							$results.append('<div class="no-results">No pictures found at this location:  "' + query + '"</div>');
-						}
+									owner: photoObj.owner,
+									id: photoObj.id,	
+									title: photoObj.title,
+									thumbURL: photoObj.url_q,
+									mediumURL: photoObj.url_z,
+									tags: photoObj.tags.split(" ")
+
+								},
+								Type: "Instagram"
+							};
+							resultsArray.push(result);
+						});
+
+						dataLoaded(resultsArray, "Instagram");	
+				
 					}
 				});
 			} else {
@@ -926,14 +937,26 @@ var WIKIVERSE = (function($) {
 
 			$.getJSON(instagramUrl, access_parameters, function(data) {
 
-				if (typeof data.data !== 'undefined' && data.data.length > 0) {
-					data.data.forEach(function(photo, index) {
-						buildInstagramSearchResults($parentBrick, photo);
-						dataLoaded();
-					});
-				} else {
-					$results.append('<div class="no-results">No pictures found for "' + query + '"</div>');
-				}
+				data.data.forEach(function(photoObj, index) {
+					console.log(photoObj);
+					var result = {
+						Topic: {		
+
+							owner: photoObj.owner,
+							id: photoObj.id,	
+							title: photoObj.title,
+							thumbURL: photoObj.url_q,
+							mediumURL: photoObj.url_z,
+							tags: photoObj.tags
+
+						},
+						Type: "Instagram"
+					};
+					resultsArray.push(result);
+				});
+
+				dataLoaded(resultsArray, "Instagram");	
+
 			});
 
 		} else if (type === "username") {
@@ -1114,50 +1137,6 @@ var WIKIVERSE = (function($) {
 		searchResultsListBuilt($results);
 		
 	};
-
-	//create the instragram brick 
-	buildInstagramSearchResults = function($parentBrick, photo) {
-
-		var $thumb = $('<img class="img-search" src="' + photo.images.low_resolution.url + '" width="112">');
-
-		$results.append($thumb);
-
-		$thumb.data('mediumURL', photo.images.standard_resolution.url);
-		$thumb.data('owner', photo.user.username);
-		$thumb.data('id', photo.id);
-		$thumb.data('tags', photo.tags);
-
-		if (photo.caption) {
-			$thumb.data('title', photo.caption.text);
-		} else {
-			$thumb.data('title', " ");
-		}
-		//maybe re-add later on
-		//$thumb.data('filter', photo.filtér);
-
-		var y = parseInt($parentBrick.css('top'));
-		var x = parseInt($parentBrick.css('left'));
-
-		$results.find('img').unbind('click').click(function(e) {
-
-			var thisPhoto = {
-
-				mediumURL: $(this).data('mediumURL'),
-				thumbURL: $(this).attr('src'),
-				id: $(this).data('id'),
-				owner: $(this).data('owner'),
-				title: $(this).data('title'),
-				tags: $(this).data('tags'),
-				size: 'small'
-			};
-
-			var $thisBrick = buildBrick($packeryContainer, parseInt($parentBrick.css('left')) + 450, parseInt($parentBrick.css('top')) + 10);
-
-			buildFoto($thisBrick, thisPhoto, "Instagram", brickDataLoaded);
-			$(this).remove();
-
-		});
-	}
 
 	//strip html from given text
 	function strip(html) {
@@ -2600,6 +2579,7 @@ var WIKIVERSE = (function($) {
 			getTweets(query, searchResultsLoaded);
 			getYoutubes(query, searchResultsLoaded);
 			getFlickrs(query, "relevance", "textQuery", searchResultsLoaded);
+			getInstagrams(query, "hashtag", searchResultsLoaded);
 
 		});
 
