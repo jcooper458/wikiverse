@@ -1008,13 +1008,17 @@ var WIKIVERSE = (function($) {
 				var resultsArray = [];
 
 				data.data.forEach(function(photoObj, index) {
+					
+					if(photoObj.caption){
+						var title = photoObj.caption.text;
+					}
 
 					var result = {
 						Topic: {		
 
 							owner: photoObj.user.username,
 							id: photoObj.id,	
-							title: photoObj.caption.text,
+							title: title,
 							thumbURL: photoObj.images.low_resolution.url,
 							mediumURL: photoObj.images.standard_resolution.url,
 							tags: photoObj.tags
