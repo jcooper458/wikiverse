@@ -6,7 +6,7 @@ var WIKIVERSE = (function($) {
 	var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 	var loadingIcon = '<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate pull-right"></span>';
 	var wikiverse_nav = '<select class="selectpicker connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="100%" data-size="20"><option selected="">try another source..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option><option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option><option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option></select>';
-	var handle = '<div class="row handle"><p class="text-center">grab me here</p></div>';
+	var handle = '<div class="row handle"><p class="text-center"><i class="fa fa-hand-rock-o"></i>&nbsp;&nbsp;grab me here</p></div>';
 	var defaultBrick = '<div class="brick well well-sm">' + close_icon + '</div>';
 	var defaultMapBrick = '<div class="brick gmaps well well-sm">' + handle + close_icon + '</div>';
 	var resultsTable = '<table class="table table-hover"></table>';
@@ -375,8 +375,6 @@ var WIKIVERSE = (function($) {
 	function getGmapsSearch($gmapsSearchBrick) {
 
 		$gmapsSearchBrick.addClass('w2-fix visible');
-
-		$gmapsSearchBrick.prepend(handle);
 		
 		//build a search input
 		var $input = $('<input class="controls" type="text" placeholder="Enter a location">');
@@ -397,9 +395,6 @@ var WIKIVERSE = (function($) {
 			},
 			zoom: 1,
 			//scrollwheel: false,
-			draggable: false, 
-			zoomControl: false,
-			scaleControl: true
 		};
 
 		var map = new google.maps.Map($gmapsSearchBrick.find('#map_canvas')[0], mapOptions);
@@ -544,8 +539,6 @@ var WIKIVERSE = (function($) {
 		//$mapbrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">')
 
 		var $mapcanvas = $('<div id="map_canvas"></div>');
-
-		//$mapbrick.prepend(handle);
 
 		$mapbrick.data('type', 'gmaps');
 		$mapbrick.data('position', mapObj.center);
@@ -2726,8 +2719,8 @@ var WIKIVERSE = (function($) {
 
 		$("#addMap").on("click", function() {
 			
-			var $mapDefaultBrick = $(defaultBrick);
-			var $thisBrick = buildBrick($packeryContainer, parseInt($mapDefaultBrick.css('left')), parseInt($mapDefaultBrick.css('top')));
+			var $mapDefaultBrick = $(defaultMapBrick);
+			var $thisBrick = buildGmapsBrick($packeryContainer, parseInt($mapDefaultBrick.css('left')), parseInt($mapDefaultBrick.css('top')));
 
 			getGmapsSearch($thisBrick);
 
