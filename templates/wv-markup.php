@@ -13,7 +13,7 @@
 		<div class="row" id="searchResults" >
 			<h3>wikiverse found content from following sources: </h3>
 			<div class="resultsCount">
-				<button id="Wikipedia" 		source="wikis" 			fn="buildListResults" 			type="submit"  	class="btn btn-primary source">wikis</button>
+				<button id="Wikipedia" 		source="wikis" 			fn="buildListResults" 			type="submit"  	class="btn btn-primary source"></button>
 				<button id="Flickr"  		source="flickrs"  		fn="buildFotoSearchResults" 	type="submit" 	class="btn btn-primary source"></button>
 				<button id="Instagram" 		source="instagrams" 	fn="buildFotoSearchResults" 	type="submit" 	class="btn btn-primary source"> </button>
 				<button id="Youtube" 		source="youtubes" 		fn="buildYoutubeSearchResults" 	type="submit" 	class="btn btn-primary source"> </button>

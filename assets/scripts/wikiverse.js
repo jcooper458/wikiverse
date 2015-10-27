@@ -12,6 +12,7 @@ var WIKIVERSE = (function($) {
 	var getFlickrsButton = '<button id="getFlickrs" class="btn btn-default btn-xs getFotos" type="button">get flickr fotos of this location</button>';
 	var loadingIcon = '<span id="loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate">';
 	var note = '<textarea id="note" class="form-control" placeholder="add your own infos.." rows="3"></textarea>';
+	var handle = '<div class="row"><p class="text-center">grab me here</p></div>';
 
 	//used for pNotify
 	var myStack = {"dir1":"down", "dir2":"left", "push":"top"};
@@ -315,6 +316,7 @@ var WIKIVERSE = (function($) {
 
 		$gmapsSearchBrick.append(getInstagramsButton);
 		$gmapsSearchBrick.append(getFlickrsButton);
+		$gmapsSearchBrick.prepend(handle);
 		
 		//build a search input
 		var $input = $('<input class="controls" type="text" placeholder="Enter a location">');
@@ -1067,17 +1069,17 @@ var WIKIVERSE = (function($) {
 
 	wikiverse.buildFlickr = function($brick, photoObj, callback){
 
-		buildFoto($brick, photoObj, "Flickr", callback);
+		wikiverse.buildFoto($brick, photoObj, "Flickr", callback);
 
 	}
 
 	wikiverse.buildInstagram = function($brick, photoObj, callback){
 
-		buildFoto($brick, photoObj, "Instagram", callback);
+		wikiverse.buildFoto($brick, photoObj, "Instagram", callback);
 		
 	}
 	//build a foto brick, either flickr or instagram
-	buildFoto = function($brick, photoObj, type, callback) {
+	wikiverse.buildFoto = function($brick, photoObj, type, callback) {
 
 		$brick.addClass('foto');
 		$brick.data('type', type);
@@ -1161,7 +1163,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//build the soundcloud brick
-	function buildSoundcloud($brick, soundcloudObj, callback) {
+	wikiverse.buildSoundcloud = function($brick, soundcloudObj, callback) {
 
 		$brick.addClass('w2-fix');
 		$brick.data('type', 'Soundcloud');
@@ -1170,6 +1172,7 @@ var WIKIVERSE = (function($) {
 		var $soundcloudIframe = $('<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=' + soundcloudObj.uri + '&color=0066cc"></iframe>');
 
 		$brick.append($soundcloudIframe);
+		$brick.prepend(handle);
 		callback($brick);
 	}
 
@@ -1195,7 +1198,7 @@ var WIKIVERSE = (function($) {
 						title: item.title,
 						uri: item.uri
 					},
-					Type: "soundcloud"
+					Type: "Soundcloud"
 				}
 
 				resultsArray.push(result);
@@ -1632,7 +1635,7 @@ var WIKIVERSE = (function($) {
 	};
 	//build a wiki Brick
 	wikiverse.buildWikipedia = function($brick, topic, callback) {
-		
+
 		var $connections = $(wikiverse_nav);
 		var $sectionsButton = $('<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> sections </button>');
 
@@ -1961,45 +1964,45 @@ var WIKIVERSE = (function($) {
 			var $thisBrick = buildBrick($packeryContainer);
 
 			switch (brick.Type) {
-				case "wiki":
-					buildWikipedia($thisBrick, brick.Topic, brickDataLoaded);
-					break;
+				case "Wikipedia":
+					wikiverse.buildWikipedia($thisBrick, brick.Topic, brickDataLoaded);
+				break;
 
 				case "wikiSection":
 					buildSection($thisBrick, brick.Topic, brickDataLoaded);
-					break;
+				break;
 
-				case "flickr":
-					buildFoto($thisBrick, brick.Topic, "Flickr", brickDataLoaded);
-					break;
+				case "Flickr":
+					wikiverse.buildFoto($thisBrick, brick.Topic, "Flickr", brickDataLoaded);
+				break;
 
-				case "instagram":
-					buildFoto($thisBrick, brick.Topic, "Instagram", brickDataLoaded);
-					break;
+				case "Instagram":
+					wikiverse.buildFoto($thisBrick, brick.Topic, "Instagram", brickDataLoaded);
+				break;
 
-				case "youtube":
-					buildYoutube($thisBrick, brick.Topic, brickDataLoaded);
-					break;
+				case "Youtube":
+					wikiverse.buildYoutube($thisBrick, brick.Topic, brickDataLoaded);
+				break;
 
 				case "gmaps":
 					buildGmaps($thisBrick, brick.Topic, brickDataLoaded);
-					break;
+				break;
 
 				case "streetview":
 					buildStreetMap($thisBrick, brick.Topic, brickDataLoaded);
-					break;
+				break;
 
-				case "soundcloud":
-					buildSoundcloud($thisBrick, brick.Topic, brickDataLoaded);
-					break;
+				case "Soundcloud":
+					wikiverse.buildSoundcloud($thisBrick, brick.Topic, brickDataLoaded);
+				break;
 
-				case "twitter":
-					buildTwitter($thisBrick, brick.Topic, brickDataLoaded);
-					break;
+				case "Twitter":
+					wikiverse.buildTwitter($thisBrick, brick.Topic, brickDataLoaded);
+				break;
 
 				case "note":
 					buildNote($thisBrick, brick.Topic, brickDataLoaded);
-					break;
+				break;
 			}
 
 		});
@@ -2009,7 +2012,7 @@ var WIKIVERSE = (function($) {
 	//toggle the search overlay
 	wikiverse.toggleSearch = function() {
 		
-		$('.source').hide();
+		//$('.source').hide();
 		$('#searchResults h3').hide();
 
 		//$('.sourceParams').hide();
