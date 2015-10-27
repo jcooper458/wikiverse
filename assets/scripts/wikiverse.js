@@ -5,7 +5,7 @@ var WIKIVERSE = (function($) {
 	var close_icon = '<span class="cross control-buttons"><i class="fa fa-close"></i></span>';
 	var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 	var loadingIcon = '<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate pull-right"></span>';
-	var wikiverse_nav = '<select class="selectpicker connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="100%" data-size="20"><option selected="">try another source..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option><option><i class="fa fa-twitter twitter-icon icon"></i>twitter</option><option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option></select>';
+	var wikiverse_nav = '<select class="selectpicker connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="100%" data-size="20"><option selected="">try another source..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option><option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option><option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option></select>';
 	var defaultBrick = '<div class="brick well well-sm">' + close_icon + '</div>';
 	var resultsTable = '<table class="table table-hover"></table>';
 	var getInstagramsButton = '<button id="getInstagrams" class="btn btn-default btn-xs getFotos" type="button">get instragram fotos of this location</button>';
@@ -175,13 +175,13 @@ var WIKIVERSE = (function($) {
 							title: item.snippet.title,
 							snippet: item.snippet.description,
 							youtubeID: item.id.videoId,
+							query: topic,
 							thumbnailURL: item.snippet.thumbnails.high.url		
 						},
 						Type: "Youtube"
 					}
 					resultsArray.push(result);
 				});
-
 				dataLoaded(resultsArray, "Youtube", triggerFunction);
 
 			}
@@ -189,7 +189,9 @@ var WIKIVERSE = (function($) {
 	}
 
 	//search for related youtube videos
-	function getRelatedYoutubes(videoID, origQuery) {
+	function getRelatedYoutubes(videoID, origQuery, dataLoaded, triggerFunction) {
+
+		prepareSearchNavbar(origQuery);
 
 		//Open the sidebar:
 		if (!$('body').hasClass('cbp-spmenu-push-toright')) {
@@ -207,8 +209,26 @@ var WIKIVERSE = (function($) {
 			},
 			dataType: 'jsonp',
 			success: function(data) {
-				buildYoutubeSearchResults(data, origQuery);
-				callback();
+
+				var resultsArray = [];
+
+				data.items.forEach(function(item, index){
+
+					var result = {
+						Topic: {							
+							title: item.snippet.title,
+							snippet: item.snippet.description,
+							youtubeID: item.id.videoId,
+							query: origQuery,
+							thumbnailURL: item.snippet.thumbnails.high.url		
+						},
+						Type: "Youtube"
+					}
+					resultsArray.push(result);
+				});
+
+				dataLoaded(resultsArray, "Youtube", triggerFunction);
+
 			}
 		});
 	}
@@ -269,7 +289,7 @@ var WIKIVERSE = (function($) {
 			var $thisBrick = buildBrick($packeryContainer, x, y);
 
 			//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
-			buildWikipedia($thisBrick, brickData, brickDataLoaded);
+			wikiverse.buildWikipedia($thisBrick, brickData, brickDataLoaded);
 			$packeryContainer.packery('unstamp', $brick);
 		});
 	}
@@ -964,7 +984,7 @@ var WIKIVERSE = (function($) {
 					resultsArray.push(result);
 				});
 
-				dataLoaded(resultsArray, "Instagram");	
+				dataLoaded(resultsArray, "Instagram", triggerSearchResultsFunction);	
 
 			});
 
@@ -1008,7 +1028,7 @@ var WIKIVERSE = (function($) {
 										resultsArray.push(result);
 									});
 
-									dataLoaded(resultsArray, "Instagram");	
+									dataLoaded(resultsArray, "Instagram", triggerSearchResultsFunction);	
 					
 								});
 								return;
@@ -1037,28 +1057,28 @@ var WIKIVERSE = (function($) {
 
 		switch (source) {
 
-			case "flickr":
+			case "Flickr":
 				getFlickrs(topic, "relevance", "textQuery", searchResultsLoaded, "buildFotoSearchResults");
 			break;
 
-			case "instagram":
+			case "Instagram":
 				//remove whitespace from instagram query
 				getInstagrams(topic.replace(/ /g, ''), "hashtag", searchResultsLoaded, "buildFotoSearchResults");
 			break;
 
-			case "youtube":
+			case "Youtube":
 				getYoutubes(topic, searchResultsLoaded, "buildYoutubeSearchResults");
 			break;
 
-			case "soundcloud":
+			case "Soundcloud":
 				getSoundclouds(topic, searchResultsLoaded, "buildListResults");
 			break;
 
-			case "twitter":
+			case "Twitter":
 				getTweets(topic, searchResultsLoaded, "buildTwitterSearchResults");
 			break;
 
-			case "wikipedia":
+			case "Wikipedia":
 				getWikis(topic, "en", searchResultsLoaded, "buildListResults");
 			break;
 		}
@@ -1116,7 +1136,7 @@ var WIKIVERSE = (function($) {
 				$brick.find('.foto-tags').append('#<strong><a class="instaTag tag" href="#">' + tag + '</a></strong>');
 			});
 		} 
-
+		console.log(type);
 		//search for tags on click
 		onTagClickedDoSearch($brick, type);
 
@@ -1386,7 +1406,7 @@ var WIKIVERSE = (function($) {
 
 		$tweetContainer.on('click', 'a:not(.externalLink)', function(event) {
 			event.preventDefault();
-			getConnections("twitter", $(this).attr('hashtag'))
+			getConnections("Twitter", $(this).attr('hashtag'))
 			$(this).contents().unwrap();
 		});
 
@@ -1618,7 +1638,7 @@ var WIKIVERSE = (function($) {
 						var newX = parseInt($brick.css('left'));
 
 						var $thisBrick = buildBrick($packeryContainer, newX, newY);
-						buildSection($thisBrick, section, $brick.attr("tabindex"), brickDataLoaded);
+						buildSection($thisBrick, section, brickDataLoaded);
 
 						$packeryContainer.packery('unstamp', $brick);
 					});
@@ -1916,7 +1936,7 @@ var WIKIVERSE = (function($) {
 		});
 
 		$brick.find('.related').on('click', function() {
-			getRelatedYoutubes(youtubeObj.youtubeID, youtubeObj.query);
+			getRelatedYoutubes(youtubeObj.youtubeID, youtubeObj.query, searchResultsLoaded, "buildYoutubeSearchResults");
 		});
 
 		callback($brick);

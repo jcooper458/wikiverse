@@ -39,12 +39,12 @@ else{
             <button class="btn btn-xs btn-primary searchButton cursor">search for something else</button>
             <select class="selectpicker pull-left otherSource show-menu-arrow" data-style="btn btn-default btn-xs" data-width="50%" data-size="20">
               <option selected="">try another source..</option>
-              <option><i class="fa fa-youtube-square youtube-icon icon"></i>youtube</option>
-              <option><i class="fa fa-wikipedia wikipedia-icon icon"></i>wikipedia</option>
-              <option><i class="fa fa-twitter twitter-icon icon"></i>twitter</option>
-              <option><i class="fa fa-flickr flickr-icon icon"></i>flickr</option>
-              <option><i class="fa fa-instagram instagram-icon icon"></i></div>instagram</option>
-              <option><i class="fa fa-soundcloud soundcloud-icon icon"></i>soundcloud</option>
+              <option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option>
+              <option><i class="fa fa-wikipedia wikipedia-icon icon"></i>Wikipedia</option>
+              <option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option>
+              <option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option>
+              <option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option>
+              <option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option>
             </select>
           </li>
         </ul>
@@ -75,7 +75,7 @@ else{
         <?php if ( is_singular("board") && ( $current_user->ID == $post->post_author ) || ( is_page('start'))) { ?>    
 
         <li><a class="searchButton" href="#"><i class="fa fa-plus"></i>&nbsp;&nbsp;add content</a></li>              
-        <li><a id="addNoteButton"  href="#"><i class="fa fa-sticky-note-o"></i>&nbsp;&nbsp;add a note</a></li>              
+        <li><a id="addNoteButton"  href="#"><i class="fa fa-pencil"></i>&nbsp;&nbsp;add a note</a></li>              
 
         <?php }  ?>
       </ul>
