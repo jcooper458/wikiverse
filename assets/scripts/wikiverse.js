@@ -2628,6 +2628,10 @@ var WIKIVERSE = (function($) {
 
 		});
 
+		var $thisBrick = buildBrick($packeryContainer, parseInt($mabDefaultBrick.css('left')), parseInt($mabDefaultBrick.css('top')));
+
+		getGmapsSearch($thisBrick);
+		
 		$("#addNoteButton").on("click", function() {
 			//close the search
 			$('#search').removeClass('open');
