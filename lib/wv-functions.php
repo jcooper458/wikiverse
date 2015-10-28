@@ -312,8 +312,6 @@ add_action('validate_password_reset', 'wv_validate_password_reset', 10, 2);
 /**
  * BOARD creator functions
  */
-define('APFSURL', WP_PLUGIN_URL."/".dirname( plugin_basename( __FILE__ ) ) );  
-
 
 function boardCScripts(){  
     wp_localize_script( 'apf', 'apfajax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );

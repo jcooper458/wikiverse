@@ -2017,7 +2017,7 @@ var WIKIVERSE = (function($) {
 
 		$brick.addClass('w2-fix');
 
-		var iframe = '<iframe class="" id="ytplayer" type="text/html" width="460" height="260" src="http://www.youtube.com/embed/' + youtubeObj.youtubeID + '?autoplay=1" webkitallowfullscreen autoplay mozallowfullscreen allowfullscreen frameborder="0"/>';
+		var iframe = '<iframe class="" id="ytplayer" type="text/html" width="460" height="260" src="https://www.youtube.com/embed/' + youtubeObj.youtubeID + '?autoplay=1" webkitallowfullscreen autoplay mozallowfullscreen allowfullscreen frameborder="0"/>';
 
 		$brick.find('img').hide();
 		$brick.find('.youtubePlayButton').hide();
@@ -2269,7 +2269,7 @@ var WIKIVERSE = (function($) {
 
 				$.ajax({
 					type: 'POST',
-					url: "/wp/wp-admin/admin-ajax.php",
+					url: "https://wikiver.se/wp/wp-admin/admin-ajax.php",
 					data: {
 						action: 'apf_addpost',
 						boardtitle: board.title,
@@ -2277,6 +2277,7 @@ var WIKIVERSE = (function($) {
 						nonce: wpnonce
 					},
 					success: function(data, textStatus, XMLHttpRequest) {
+
 						var id = '#apf-response';
 						$(id).html('');
 						$(id).append(data);
