@@ -1882,7 +1882,7 @@ var WIKIVERSE = (function($) {
 		});	
 
 		$.ajax({
-			url: 'http://' + section.language + '.wikipedia.org/w/api.php',
+			url: 'https://' + section.language + '.wikipedia.org/w/api.php',
 			data: {
 				action: 'parse',
 				page: section.title,
