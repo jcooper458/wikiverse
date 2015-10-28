@@ -1487,7 +1487,7 @@ var WIKIVERSE = (function($) {
 	function getWikiLanguages(topic, lang, $brick) {
 
 		$.ajax({
-			url: 'http://' + lang + '.wikipedia.org/w/api.php',
+			url: 'https://' + lang + '.wikipedia.org/w/api.php',
 			data: {
 				action: 'query',
 				titles: topic,
@@ -1541,7 +1541,7 @@ var WIKIVERSE = (function($) {
 	function getInterWikiLinks(section, $brick) {
 
 		$.ajax({
-			url: 'http://' + section.language + '.wikipedia.org/w/api.php',
+			url: 'https://' + section.language + '.wikipedia.org/w/api.php',
 			data: {
 				action: 'parse',
 				page: section.title,
@@ -1594,7 +1594,7 @@ var WIKIVERSE = (function($) {
 	function getWikis(topic, lang, dataLoaded, triggerSearchResultsFunction) {
 
 		$.ajax({
-			url: 'http://' + lang + '.wikipedia.org/w/api.php',
+			url: 'https://' + lang + '.wikipedia.org/w/api.php',
 			data: {
 				action: 'query',
 				list: 'search',
@@ -1648,7 +1648,7 @@ var WIKIVERSE = (function($) {
 	function getWikiSections($brick, topic){
 
 		$.ajax({
-			url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
+			url: 'https://' + topic.language + '.wikipedia.org/w/api.php',
 			data: {
 				action: 'parse',
 				page: topic.title,
