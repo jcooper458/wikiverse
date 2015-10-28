@@ -1751,7 +1751,7 @@ var WIKIVERSE = (function($) {
 
 		//Go get the Main Image - 2 API Calls necessairy.. :(
 		$.ajax({
-			url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
+			url: 'https://' + topic.language + '.wikipedia.org/w/api.php',
 			data: {
 				action: 'parse',
 				page: topic.title,
@@ -1767,7 +1767,7 @@ var WIKIVERSE = (function($) {
 						if (image.indexOf("jpg") > -1) {
 							//Go grab the URL
 							$.ajax({
-								url: 'http://en.wikipedia.org/w/api.php',
+								url: 'https://en.wikipedia.org/w/api.php',
 								data: {
 									action: 'query',
 									titles: 'File:' + image,
@@ -1805,7 +1805,7 @@ var WIKIVERSE = (function($) {
 
 		//Go get the first Paragraph of the article
 		$.ajax({
-			url: 'http://' + topic.language + '.wikipedia.org/w/api.php',
+			url: 'https://' + topic.language + '.wikipedia.org/w/api.php',
 			data: {
 				action: 'parse',
 				page: topic.title,
