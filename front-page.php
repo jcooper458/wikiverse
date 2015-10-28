@@ -51,3 +51,42 @@ $homePosts = get_posts( $args )
 
 <div class="container buffer-bottom" role="document">
 </div>
+
+
+<?php 
+$fotoURL = "";
+
+$query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
+
+?>
+<div class="container buffer-bottom" role="document">
+<h1>Featured boards</h1>
+
+<div id="packerySite" class="packerySite buffer-top">
+
+<?php 
+if ( $query->have_posts() ) : while ( $query->have_posts() ) : $query->the_post(); 
+
+
+  $the_title = get_the_title();
+  $the_permalink = get_the_permalink();
+  $the_content = get_the_content();
+  $the_content_Array = json_decode($the_content);
+
+?>
+  <div class="brick well well-sm visible">
+
+    <?php if(isset($the_content_Array->featured_image)){ echo '<a href="'. $the_permalink . '"><img src="' . $the_content_Array->featured_image . '"></a>'; }?>
+    <?php echo '<a href="'. $the_permalink . '"><h3>' . $the_title . '</h3></a>'; ?>  
+
+    <?php 
+  echo '</div>';
+
+  wp_link_pages(array('before' => '<nav class="pagination">', 'after' => '</nav>'));
+
+  ?>
+<?php endwhile; endif; ?>
+
+
+</div>
+</div>
