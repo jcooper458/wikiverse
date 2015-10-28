@@ -1258,7 +1258,7 @@ var WIKIVERSE = (function($) {
 		$brick.data('type', 'Soundcloud');
 		$brick.data('topic', soundcloudObj);
 
-		var $soundcloudIframe = $('<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=' + soundcloudObj.uri + '&color=0066cc"></iframe>');
+		var $soundcloudIframe = $('<iframe width="100%" height="166" scrolling="no" frameborder="no" src="//w.soundcloud.com/player/?url=' + soundcloudObj.uri + '&color=0066cc"></iframe>');
 
 		$brick.append($soundcloudIframe);
 		$brick.prepend(handle);
@@ -2017,7 +2017,7 @@ var WIKIVERSE = (function($) {
 
 		$brick.addClass('w2-fix');
 
-		var iframe = '<iframe class="" id="ytplayer" type="text/html" width="460" height="260" src="https://www.youtube.com/embed/' + youtubeObj.youtubeID + '?autoplay=1" webkitallowfullscreen autoplay mozallowfullscreen allowfullscreen frameborder="0"/>';
+		var iframe = '<iframe class="" id="ytplayer" type="text/html" width="460" height="260" src="//www.youtube.com/embed/' + youtubeObj.youtubeID + '?autoplay=1" webkitallowfullscreen autoplay mozallowfullscreen allowfullscreen frameborder="0"/>';
 
 		$brick.find('img').hide();
 		$brick.find('.youtubePlayButton').hide();
