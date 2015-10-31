@@ -6,3 +6,5 @@
 <div id="packery" class="packery"></div>
 
 <div id="postID" class="invisible"><?php echo $post->ID; ?></div>
+
+<div class="row" id=""><div class="" id="mindmap"></div></div>    

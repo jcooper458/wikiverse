@@ -287,7 +287,41 @@ var WIKIVERSE = (function($) {
 		$packeryContainer.packery('fit', $brick[0], x, y);
 		$packeryContainer.packery();
 
+		//buildNode('mindmap', topic, id, isNewNode)
+
 		return $brick;
+	}
+
+	function buildNode(sigma, topic, id, isNewNode){
+
+		// Then, let's add some data to display:
+		sigma.graph.addNode({
+		  // Main attributes:
+		  id: id,
+		  label: topic,
+		  // Display attributes:
+		  size: 1,
+		  color: '#f00'
+		}).addNode({
+		  // Main attributes:
+		  id: id,
+		  label: topic,
+		  // Display attributes:
+		  size: 1,
+		  color: '#f00'
+		});
+
+		if(!isNewNode){
+			sigma.addEdge({
+			  id: 'e0',
+			  // Reference extremities:
+			  source: 'n0',
+			  target: 'n1'
+			});
+		}
+
+		// Finally, let's ask our sigma instance to refresh:
+		sigma.refresh();
 	}
 
 	//build an empty brick
@@ -2748,6 +2782,8 @@ var WIKIVERSE = (function($) {
 
 			createNote($noteBrick, brickDataLoaded);
 		});
+
+		wikiverse.s = new sigma('mindmap');
 
 	};
 

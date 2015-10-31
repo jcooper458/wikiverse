@@ -5,5 +5,4 @@
 
 <div id="postID" class="invisible"></div>
 
-
-
+<div class="row" id=""><div class="" id="mindmap"></div></div>     
