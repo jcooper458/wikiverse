@@ -1,4 +1,6 @@
 var WIKIVERSE = (function($) {
+	
+	'use strict';
 
 	var wikiverse = {};
 
