@@ -287,41 +287,7 @@ var WIKIVERSE = (function($) {
 		$packeryContainer.packery('fit', $brick[0], x, y);
 		$packeryContainer.packery();
 
-		//buildNode('mindmap', topic, id, isNewNode)
-
 		return $brick;
-	}
-
-	function buildNode(sigma, topic, id, isNewNode){
-
-		// Then, let's add some data to display:
-		sigma.graph.addNode({
-		  // Main attributes:
-		  id: id,
-		  label: topic,
-		  // Display attributes:
-		  size: 1,
-		  color: '#f00'
-		}).addNode({
-		  // Main attributes:
-		  id: id,
-		  label: topic,
-		  // Display attributes:
-		  size: 1,
-		  color: '#f00'
-		});
-
-		if(!isNewNode){
-			sigma.addEdge({
-			  id: 'e0',
-			  // Reference extremities:
-			  source: 'n0',
-			  target: 'n1'
-			});
-		}
-
-		// Finally, let's ask our sigma instance to refresh:
-		sigma.refresh();
 	}
 
 	//build an empty brick
@@ -359,7 +325,6 @@ var WIKIVERSE = (function($) {
 
 			var $thisBrick = buildBrick($packeryContainer, x, y);
 
-			//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
 			wikiverse.buildWikipedia($thisBrick, brickData, brickDataLoaded);
 			$packeryContainer.packery('unstamp', $brick);
 		});
@@ -1886,7 +1851,7 @@ var WIKIVERSE = (function($) {
 					article.readmore(rmOptions);
 
 					$packeryContainer.packery();
-					//}
+
 					//enable to create new bricks out of links
 					buildNextTopic($brick, topic.language);
 
@@ -2142,8 +2107,35 @@ var WIKIVERSE = (function($) {
 				break;
 			}
 
+			buildNode(wikiverse.mindmap, brick.Topic, index, false);
+
+		});
+		wikiverse.mindmap.refresh();
+		wikiverse.mindmap.graph.nodes();
+	}
+
+	function buildNode(sigma, topic, id, isNewNode){
+
+		// Then, let's add some data to display:
+		sigma.graph.addNode({
+		  // Main attributes:
+		  id: "n" + id,
+		  x: Math.random(),
+		  y: Math.random(),
+		  label: topic.title,
+		  // Display attributes:
+		  size: 1,
+		  color: '#f00'
 		});
 
+		/*if(!isNewNode){
+			sigma.graph.addEdge({
+			  id: 'e0',
+			  // Reference extremities:
+			  source: 'n0',
+			  target: 'n1'
+			});
+		}*/		
 	}
 
 	//toggle the search overlay
@@ -2783,7 +2775,22 @@ var WIKIVERSE = (function($) {
 			createNote($noteBrick, brickDataLoaded);
 		});
 
-		wikiverse.s = new sigma('mindmap');
+		wikiverse.mindmap = new sigma({
+		  renderer: {
+		    container: document.getElementById('mindmap'),
+		    type: 'canvas'
+		  },
+		  settings: {
+		    doubleClickEnabled: false,
+		    minEdgeSize: 0.5,
+		    maxEdgeSize: 4,
+		    enableEdgeHovering: true,
+		    edgeHoverColor: 'edge',
+		    defaultEdgeHoverColor: '#000',
+		    edgeHoverSizeRatio: 1,
+		    edgeHoverExtremities: true,
+		  }
+		});
 
 	};
 
