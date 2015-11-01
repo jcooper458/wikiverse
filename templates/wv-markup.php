@@ -25,17 +25,6 @@
 </div>
 
 
-<!--
-
-
-		<div class="row" id="addNote">
-			<h3>..or write an own text..</h3>
-			<button id="addNoteButton" type="button" style="display: block; width: 100%;" class="btn btn-lg btn-default">add a note</button>
-		</div>    
-
-
-</div>-->
-
 <!-- Button trigger modal -->
 
 <!-- Modal -->

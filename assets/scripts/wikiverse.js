@@ -24,7 +24,8 @@ var WIKIVERSE = (function($) {
 
 	//topbrick is the toppest brick in regards to the scroll position
 	//this is used to insert bricks at the same height of the scroll position
-	var $topBrick = $(defaultBrick);	var $packeryContainer = $('.packery');
+	var $topBrick = $(defaultBrick);	
+	var $packeryContainer = $('.packery');
 
 	var $results = $('.results');
 	var $searchKeyword = $('#search-keyword');
@@ -84,17 +85,6 @@ var WIKIVERSE = (function($) {
 	   }
 	 }
 
-	 //item ordering for saving of the bricks order
-	function orderItems(packery, items) {
-
-		var itemElems = $packeryContainer.packery('getItemElements');
-
-		for (var i = 0, len = itemElems.length; i < len; i++) {
-			var elem = itemElems[i];
-			$(elem).attr("tabindex", i);
-		}
-	}
-
 	//get the username for any given flickr picture 
 	function getFlickrUsername(user_id, callback) {
 
@@ -131,7 +121,18 @@ var WIKIVERSE = (function($) {
 		//create a loading icon
 		$sidebar.append(loadingIcon);
 
+		updateSearchHistory(query, ++wikiverse.id);
 	}
+
+	function updateSearchHistory(query, id){
+
+		id = id || ++wikiverse.id;
+
+		/*wikiverse.searchHistory[id] = {
+			query: query,
+		}*/
+
+	};
 
 	//callback for when API search results are loaded
 	function searchResultsLoaded(results, source, triggerSearchResultsFunction){
@@ -170,7 +171,10 @@ var WIKIVERSE = (function($) {
 	}
 
 	//callback foor content loaded into brick
-	function brickDataLoaded($brick) {
+	function brickDataLoaded($brick, id) {
+
+		id = id || getRand();
+
 		$brick.fadeTo('slow', 1);
 		$packeryContainer.packery();
 	}
@@ -276,15 +280,35 @@ var WIKIVERSE = (function($) {
 		}
 	}
 
-	//build an empty brick
-	function buildBrick($packeryContainer, x, y) {
+	//get new random number not inside the already present IDs
+	function getRand() {
+	    var rand = Math.floor(Math.random() * 200);
+	    if ($.inArray(rand, wikiverse.thisBoardsIDs) === -1) {
+	        return rand;
+	    } else {
+	        return getRand();
+	    }
+	}
 
-		var $brick = $(defaultBrick);
+	//build an empty brick
+	function buildBrick(position, id) {
+
+		//if not provided, set position array (x,y coordinates) to 2 undefined values to omit the packery fit!
+		position = position || [undefined,undefined];
+
+		var $brick = $(defaultBrick);		
+
+		//if no id is passed from backend, get random not in this boards IDs
+		id = id || getRand();
+
+		$brick.data('id', id);
+		//$brick.data('parent', parent);
 
 		$packeryContainer.append($brick).packery('appended', $brick);
 		$brick.each(makeEachDraggable);
 
-		$packeryContainer.packery('fit', $brick[0], x, y);
+		//fit the brick at given position: first is x, second y
+		$packeryContainer.packery('fit', $brick[0], position[0], position[1]);
 		$packeryContainer.packery();
 
 		return $brick;
@@ -320,10 +344,7 @@ var WIKIVERSE = (function($) {
 				language: lang
 			};
 
-			var y = parseInt($brick.css('top') + 500);
-			var x = parseInt($brick.css('left') + 500);
-
-			var $thisBrick = buildBrick($packeryContainer, x, y);
+			var $thisBrick = buildBrick([parseInt($brick.css('left') + 500), parseInt($brick.css('top') + 500)]);
 
 			wikiverse.buildWikipedia($thisBrick, brickData, brickDataLoaded);
 			$packeryContainer.packery('unstamp', $brick);
@@ -785,7 +806,7 @@ var WIKIVERSE = (function($) {
 					nojsoncallback: 1
 				},
 				success: function(data) {
-					console.log(data)
+
 					$.ajax({
 						url: 'https://api.flickr.com/services/rest',
 						data: {
@@ -1515,9 +1536,7 @@ var WIKIVERSE = (function($) {
 					//make it a beautiful dropdown with selectpicker
 					langDropDown.selectpicker();
 
-					var thisTopic = $brick.data('topic');
-					var thisY = parseInt($brick.css('top'));
-					var thisX = parseInt($brick.css('left'));
+					var thisTopic = $brick.data('topic');	
 
 					langDropDown.change(function() {
 
@@ -1525,8 +1544,8 @@ var WIKIVERSE = (function($) {
 							title: $(this).children(":selected").data('topic'),
 							language: $(this).children(":selected").attr('value')
 						};
-						var $thisBrick = buildBrick($packeryContainer, thisX, thisY);
-						//note how this is minus 1 because the first brick will have already a tabindex of 1 whilst when saved in db it will start from 0
+						var $thisBrick = buildBrick([parseInt($brick.css('left')), parseInt($brick.css('top'))]);
+						
 						buildWikipedia($thisBrick, thisTopic, $brick.attr("tabindex"), brickDataLoaded);
 					});
 					$packeryContainer.packery();
@@ -1568,9 +1587,6 @@ var WIKIVERSE = (function($) {
 					$brick.prepend(interWikiDropDown);
 					interWikiDropDown.selectpicker();
 
-					var thisY = parseInt($brick.css('top'));
-					var thisX = parseInt($brick.css('left'));
-
 					interWikiDropDown.change(function() {
 
 						var thisTopic = {
@@ -1578,7 +1594,7 @@ var WIKIVERSE = (function($) {
 							title: $(this).children(":selected").attr('topic'),
 							language: section.language
 						};
-						var $thisBrick = buildBrick($packeryContainer, thisX, thisY);
+						var $thisBrick = buildBrick([parseInt($brick.css('left')), parseInt($brick.css('top'))]);
 						buildWikipedia($thisBrick, thisTopic, $brick.attr("tabindex"), brickDataLoaded);
 					});
 
@@ -1630,7 +1646,7 @@ var WIKIVERSE = (function($) {
 		//bind event to every row -> so you can start the wikiverse
 		$results.find('.result').unbind('click').on('click', function(event) {	
 
-			var $thisBrick = buildBrick($packeryContainer, parseInt($topBrick.css('left')), parseInt($topBrick.css('top')));
+			var $thisBrick = buildBrick([parseInt($topBrick.css('left')), parseInt($topBrick.css('top')) - 200]);
 			var result = $(this).data("topic");
 
 			wikiverse["build" + result.Type]($thisBrick, result.Topic, brickDataLoaded);
@@ -1697,10 +1713,7 @@ var WIKIVERSE = (function($) {
 
 						$(this).remove();
 
-						var newY = parseInt($brick.css('top'));
-						var newX = parseInt($brick.css('left'));
-
-						var $thisBrick = buildBrick($packeryContainer, newX, newY);
+						var $thisBrick = buildBrick([parseInt($brick.css('left')), parseInt($brick.css('top'))]);
 						buildSection($thisBrick, section, brickDataLoaded);
 
 						$packeryContainer.packery('unstamp', $brick);
@@ -2049,10 +2062,15 @@ var WIKIVERSE = (function($) {
 		$packeryContainer.packery('bindDraggabillyEvents', draggie);
 	};
 
-	//build a board
+	//build a board -  this is called only for saved boards (coming from db)
 	wikiverse.buildBoard = function($packeryContainer, board) {
+		
+		wikiverse.thisBoardsIDs = [];
 
 		if (typeof board.theme === 'undefined') board.theme = "superhero";
+
+		//overwrite the searchHistory with the one coming from db
+		wikiverse.searchHistory = board.searchHistory;
 
 		$('link[title="main"]').attr('href', "//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/" + board.theme + "/bootstrap.min.css");
 		$('body').data('theme', board.theme);
@@ -2062,7 +2080,10 @@ var WIKIVERSE = (function($) {
 
 		$.each(board.bricks, function(index, brick) {
 
-			var $thisBrick = buildBrick($packeryContainer);
+			var $thisBrick = buildBrick([undefined,undefined], brick.Id);
+
+			//get all Ids of this board (for later picking different ones)
+			wikiverse.thisBoardsIDs.push(brick.Id);
 
 			switch (brick.Type) {
 				case "Wikipedia":
@@ -2107,11 +2128,11 @@ var WIKIVERSE = (function($) {
 				break;
 			}
 
-			buildNode(wikiverse.mindmap, brick.Topic, index, false);
+			//buildNode(wikiverse.mindmap, brick.Topic, index, false);
 
 		});
-		wikiverse.mindmap.refresh();
-		wikiverse.mindmap.graph.nodes();
+		/*wikiverse.mindmap.refresh();
+		wikiverse.mindmap.graph.nodes();*/
 	}
 
 	function buildNode(sigma, topic, id, isNewNode){
@@ -2191,13 +2212,11 @@ var WIKIVERSE = (function($) {
 
 		$.each(bricks, function() {
 
-			var type = $(this).data('type');
-			var topic = $(this).data('topic');
-
 			wikiverseParsed[tabindex] = {
 
-				Type: type,
-				Topic: topic
+				Type: $(this).data('type'),
+				Topic: $(this).data('topic'),
+				Id: $(this).data('id')
 
 			};
 			tabindex++;
@@ -2676,7 +2695,9 @@ var WIKIVERSE = (function($) {
 	};
 
 	//initiate the wikiverse search functionality
-	wikiverse.initSearch = function() {
+	wikiverse.init = function() {
+
+		wikiverse.searchHistory = {}; 
 
 		//but also open the search if clicked
 		$('.searchButton').on('click', function(event) {
@@ -2705,13 +2726,20 @@ var WIKIVERSE = (function($) {
 
 		//detect top element
 		$(document).scroll(function() {
-			var cutoff = $(window).scrollTop();
-			$('.brick').removeClass('top').each(function() {
-				if ($(this).offset().top > cutoff) {
-					$topBrick = $(this);
-					$topBrick.addClass('top');
+			var scrollTop = $(window).scrollTop();
+			var windowHeight = $(window).height();		
+			var first = false;
+			$(".brick").each( function() {
+				var offset = $(this).offset();
+				if (scrollTop <= offset.top && ($(this).height() + offset.top) < (scrollTop + windowHeight) && first == false) {
+					$(this).addClass("top");
 
-					return false; // stops the iteration after the first one on screen
+					$topBrick = $(this);
+
+					first=true;
+				} else {
+					$(this).removeClass("top");
+					first=false;
 				}
 			});
 		});
@@ -2770,12 +2798,12 @@ var WIKIVERSE = (function($) {
 			//close the search
 			$('#search').removeClass('open');
 
-			var $noteBrick = buildBrick($packeryContainer);
+			var $noteBrick = buildBrick();
 
 			createNote($noteBrick, brickDataLoaded);
 		});
 
-		wikiverse.mindmap = new sigma({
+		/*wikiverse.mindmap = new sigma({
 		  renderer: {
 		    container: document.getElementById('mindmap'),
 		    type: 'canvas'
@@ -2790,7 +2818,7 @@ var WIKIVERSE = (function($) {
 		    edgeHoverSizeRatio: 1,
 		    edgeHoverExtremities: true,
 		  }
-		});
+		});*/
 
 	};
 
@@ -2933,9 +2961,6 @@ var WIKIVERSE = (function($) {
 
 	//Toggle Size of Images on click
 	$packeryContainer.on('dblclick', 'img', toggleImageSize);
-
-	$packeryContainer.packery('on', 'layoutComplete', orderItems);
-	$packeryContainer.packery('on', 'dragItemPositioned', orderItems);
 
 	return wikiverse;
 
