@@ -138,28 +138,37 @@ var WIKIVERSE = (function($) {
 	//callback for when API search results are loaded
 	function searchResultsLoaded(results, source, triggerSearchResultsFunction){
 
-		//$sidebar.find("#loading").remove();		
-		
-		$('#' + source).show();
-		$('#searchResults h3').show();
+		//	
+		if (results.length > 0) {
 
-		//create the incrementing number animation
-		var number = 0;
-		var interval = setInterval(function() {
+			$('#' + source).show();
+			$('#searchResults h3').show();
 
-	       $('#' + source).text(source + " " + number);
+			//create the incrementing number animation
+			var number = 0;
+			var interval = setInterval(function() {
 
-	        if (number >= results.length) clearInterval(interval);
-	        number++;
-	    }, 30);	
+		       $('#' + source).text(source + " " + number);
 
-		//store the results inside the source-button
-	    $('#' + source).data("results", results);
+		        if (number >= results.length) clearInterval(interval);
+		        number++;
+		    }, 30);	
 
-	    //this is used in order to fire the searchresults in the sidebar
-	    if(triggerSearchResultsFunction){
-	    	wikiverse[triggerSearchResultsFunction](results, searchResultsListBuilt);
-	    }	
+			//store the results inside the source-button
+		    $('#' + source).data("results", results);
+
+		    //this is used in order to fire the searchresults in the sidebar
+		    if(triggerSearchResultsFunction){
+		    	wikiverse[triggerSearchResultsFunction](results, searchResultsListBuilt);
+		    }
+		}
+		else{
+			$results.append("Nothing found for " + $searchKeyword.html() + " on " + source);
+			$results.append(". \n\nTry another source or look for something else: ");
+
+			//remove the loading icon when done
+			$sidebar.find("#loading").remove();	
+		}	
 	}
 
 	function isPortrait(imgElement) {
@@ -1644,6 +1653,8 @@ var WIKIVERSE = (function($) {
 			return false;
 		});
 
+		//remove the loading icon when done
+		$sidebar.find("#loading").remove();	
 	}
 
 	//search for sections of a wiki article
@@ -1747,8 +1758,10 @@ var WIKIVERSE = (function($) {
 		$brick.append($sectionsButton);
 
 		$sectionsButton.on('click', function(){
+			$packeryContainer.packery('stamp', $brick);
 			getWikiSections($brick, topic);
 			$sectionsButton.remove();
+			$packeryContainer.packery('unstamp', $brick);
 		});		
 
 		//Go get the Main Image - 2 API Calls necessairy.. :(
