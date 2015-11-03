@@ -24,8 +24,6 @@
 	</div>
 </div>
 
-<div id="global-loading"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></div>
-
 <!-- Button trigger modal -->
 
 <!-- Modal -->
