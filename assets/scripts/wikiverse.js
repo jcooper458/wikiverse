@@ -339,6 +339,22 @@ var WIKIVERSE = (function($) {
 		}
 	}
 
+	//toggle the sidebar
+	function toggleRightSidebar() {
+
+		classie.toggle(document.body, 'cbp-spmenu-push-toleft');
+		classie.toggle($('#rightSidebar')[0], 'cbp-spmenu-open');
+		classie.toggle($('#rightSidebar')[0], 'autoOverflow');
+
+		//close and plus button logic 
+		//if sidebar open, hide the plus
+		if($('#rightSidebar').hasClass('cbp-spmenu-open')){
+			$('#openRightSidebar').addClass('invisible');
+		}else{
+			$('#openRightSidebar').removeClass('invisible');
+		}
+	}
+
 	//get the pictures for given location of a map (instagram and flickr)
 	function getGmapsFotos($mapsBrick){
 
@@ -2149,10 +2165,12 @@ var WIKIVERSE = (function($) {
 		/*wikiverse.mindmap.refresh();
 		wikiverse.mindmap.graph.nodes();*/
 
-		//buildMindmap(board);
+		$('#mindmap').data('mindmap', board);
 	}
 
-	function buildMindmap(board){
+	function buildMindmap(){
+
+		var board = $('#mindmap').data('mindmap');
 
 		var mindmapJSON = {
 
@@ -2955,7 +2973,7 @@ var WIKIVERSE = (function($) {
 		   return neighbors;
 		 });
 
-		/*wikiverse.mindmap = new sigma({
+		wikiverse.mindmap = new sigma({
 		  renderer: {
 		    container: document.getElementById('mindmap'),
 		    type: 'canvas'
@@ -2971,8 +2989,8 @@ var WIKIVERSE = (function($) {
 		    edgeHoverExtremities: true,
 		  }
 		});
-		graphEventHandlers();*/
-	};
+		graphEventHandlers();
+	}
 
 
 	//----------------keyboard shortcuts----------------------------
@@ -3075,6 +3093,12 @@ var WIKIVERSE = (function($) {
 	//close sidebar
 	$('#sidebar .fa').click(function() {
 		toggleSidebar();
+	});
+
+	//close sidebar
+	$('#rightSidebar .fa').click(function() {
+		toggleRightSidebar();
+		buildMindmap();
 	});
 
 	// REMOVE ITEM

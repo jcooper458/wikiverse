@@ -16,7 +16,7 @@
 @import "layouts/_footer";
 @import "layouts/_pages";
 @import "layouts/_posts";
-
+@import url(https://fonts.googleapis.com/css?family=Raleway:400,700,500,100,200,300,600,800,900);
 
 
 #mindmap{
@@ -27,7 +27,17 @@
 
 h1, .h1, h2, .h2, h3, .h3 {
   margin: 30px 5px 15px 5px;
-  /*font-family: 'Open Sans', sans-serif!important;*/
+  font-family: 'Raleway';
+  font-weight: 500!important;
+  color: #c8c8c8; 
+}
+
+.gigante{
+  font-family: 'Raleway', sans-serif!important;
+ /* font-weight: bold;*/
+  font-size: 90px;
+  font-weight: bold;
+  color: #c8c8c8;  
 }
 
 h2, .h2 {
@@ -234,12 +244,6 @@ blockquote{
   width: 460px;
 }
 
-.gigante{
-  font-family: 'Open Sans', sans-serif!important;
- /* font-weight: bold;*/
-  font-size: 90px;
-}
-
 .buffer-top{
   margin-top:30px;
 }
@@ -439,9 +443,6 @@ nav {
   border-color: #4d90fe;
 }
 
-.fa-wikipedia:before { font-family: "Times New Roman", Times, serif; font-weight: 400;
-content: "VV"; letter-spacing:-0.45em; margin-right:0.5em; }
-
 .youtubePlayButton{
   position: absolute;
   top: 44%;
@@ -546,6 +547,22 @@ video {
   }
 }
 
+#rightSidebar{
+  margin-top: 70px;
+
+  .fa-close{
+    font-size: 25px;
+    position: absolute;
+    top: 10px;
+    left: 15px;
+  }
+  .fa-share-alt{
+    font-size: 25px;
+    position: absolute;
+    left: -45px;
+  }
+}
+
 /* Orientation-dependent styles for the content of the menu */
 
 .cbp-spmenu-vertical {
@@ -555,13 +572,29 @@ video {
   z-index: 1000;
 }
 
+.cbp-spmenu-verticalRight {
+  width: 555px;
+  height: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
 
 /* Vertical menu that slides from the left or right */
 
+/*right sidebar*/
+.cbp-spmenu-right {
+  right: -555px;
+}
+.cbp-spmenu-right.cbp-spmenu-open {
+  right: 0px;
+}
+
+
+/*left sidebar*/
 .cbp-spmenu-left {
   left: -355px;
 }
-
 
 .cbp-spmenu-left.cbp-spmenu-open {
   left: 0px;
@@ -574,6 +607,12 @@ video {
   overflow-x: hidden;
   position: relative;
   left: 0;
+  right: 0;
+}
+
+/*right sidebar:*/
+.cbp-spmenu-push-toleft {
+  right: 555px;
 }
 
 .cbp-spmenu-push-toright {

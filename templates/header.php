@@ -27,6 +27,15 @@ else{
 
 <header class="banner" role="banner">
 
+  <nav id="rightSidebar" class="cbp-spmenu cbp-spmenu-verticalRight cbp-spmenu-right well well-sm fixed">
+   
+    <div id="searchMeta" class="navbar navbar-default fixed">      
+      <i id="closeRightSidebar" class="fa fa-close"></i>
+      <i id="openRightSidebar" class="fa fa-share-alt"></i> 
+    </div>
+    <div id="mindmap"></div>
+  </nav>
+
   <nav id="sidebar" class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left well well-sm fixed">
    
     <div id="searchMeta" class="navbar navbar-default fixed">      
@@ -52,6 +61,8 @@ else{
     </div>
     <div class="results"></div>
   </nav>
+
+
 
   <nav id="wv_nav" class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
