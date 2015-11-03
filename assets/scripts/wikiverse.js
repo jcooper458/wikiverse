@@ -116,23 +116,13 @@ var WIKIVERSE = (function($) {
 		
 		//empty the searchkeyword and re-fill it with new search query
 		$searchKeyword.empty();
-		$searchKeyword.append(query);
+		$searchKeyword.append(query.toLowerCase());
 
 		//create a loading icon
 		$sidebar.append(loadingIcon);
 
-		updateSearchHistory(query, ++wikiverse.id);
 	}
 
-	function updateSearchHistory(query, id){
-
-		id = id || ++wikiverse.id;
-
-		/*wikiverse.searchHistory[id] = {
-			query: query,
-		}*/
-
-	};
 
 	//callback for when API search results are loaded
 	function searchResultsLoaded(results, source, triggerSearchResultsFunction){
@@ -173,7 +163,7 @@ var WIKIVERSE = (function($) {
 	//callback foor content loaded into brick
 	function brickDataLoaded($brick, id) {
 
-		id = id || getRand();
+		id = id || getRandomWvID();
 
 		$brick.fadeTo('slow', 1);
 		$packeryContainer.packery();
@@ -280,40 +270,6 @@ var WIKIVERSE = (function($) {
 		}
 	}
 
-	//get new random number not inside the already present IDs
-	function getRand() {
-	    var rand = Math.floor(Math.random() * 200);
-	    if ($.inArray(rand, wikiverse.thisBoardsIDs) === -1) {
-	        return rand;
-	    } else {
-	        return getRand();
-	    }
-	}
-
-	//build an empty brick
-	function buildBrick(position, id) {
-
-		//if not provided, set position array (x,y coordinates) to 2 undefined values to omit the packery fit!
-		position = position || [undefined,undefined];
-
-		var $brick = $(defaultBrick);		
-
-		//if no id is passed from backend, get random not in this boards IDs
-		id = id || getRand();
-
-		$brick.data('id', id);
-		//$brick.data('parent', parent);
-
-		$packeryContainer.append($brick).packery('appended', $brick);
-		$brick.each(makeEachDraggable);
-
-		//fit the brick at given position: first is x, second y
-		$packeryContainer.packery('fit', $brick[0], position[0], position[1]);
-		$packeryContainer.packery();
-
-		return $brick;
-	}
-
 	//build an empty brick
 	function buildGmapsBrick($packeryContainer, x, y) {
 
@@ -334,9 +290,13 @@ var WIKIVERSE = (function($) {
 		$brick.find(".article a, .section a").unbind('click').click(function(e) {
 
 			e.preventDefault();
+			//stamp this brick so it doesnt move around
 			$packeryContainer.packery('stamp', $brick);
 
+			//get the new wikipedia topic from the a element
 			var topic = $(this).attr("title");
+
+			//unwrap the a element
 			$(this).contents().unwrap();
 
 			var brickData = {
@@ -344,9 +304,11 @@ var WIKIVERSE = (function($) {
 				language: lang
 			};
 
-			var $thisBrick = buildBrick([parseInt($brick.css('left') + 500), parseInt($brick.css('top') + 500)]);
+			var $thisBrick = buildBrick([parseInt($brick.css('left') + 500), parseInt($brick.css('top') + 500)], undefined, $brick.data('id'));
 
 			wikiverse.buildWikipedia($thisBrick, brickData, brickDataLoaded);
+
+			//unstamp it after everything is done
 			$packeryContainer.packery('unstamp', $brick);
 		});
 	}
@@ -1628,7 +1590,7 @@ var WIKIVERSE = (function($) {
 					var result = {
 						Topic: {
 							title: item.title,
-							snippet: item.snippet,
+							snippet: strip(item.snippet),
 							language: lang
 						},
 						Type: "Wikipedia"
@@ -1645,18 +1607,32 @@ var WIKIVERSE = (function($) {
 
 		//bind event to every row -> so you can start the wikiverse
 		$results.find('.result').unbind('click').on('click', function(event) {	
+			
+			updateSearchHistory();
 
-			var $thisBrick = buildBrick([parseInt($topBrick.css('left')), parseInt($topBrick.css('top')) - 200]);
+			//set the parent to the searchkeyword, as you are pushing new bricks to the board
+			var parent = wikiverse.searchHistory[$searchKeyword.html().toLowerCase()];
+
+			var $thisBrick = buildBrick([parseInt($topBrick.css('left')), parseInt($topBrick.css('top')) - 200], undefined, parent);
 			var result = $(this).data("topic");
 
+			//concatenate the respective function to push bricks to the board (buildWikis, buildYoutubes, etc)
 			wikiverse["build" + result.Type]($thisBrick, result.Topic, brickDataLoaded);
 
 			$(this).tooltip('destroy');
-			$(this).remove();
+			$(this).remove();			
 
 			return false;
 		});
 
+	}
+
+	function updateSearchHistory(){
+
+		//if search keyword is not already in history, add it
+		if (!wikiverse.searchHistory.hasOwnProperty($searchKeyword.html().toLowerCase())){
+			wikiverse.searchHistory[$searchKeyword.html().toLowerCase()] = getRandomWvID(); 		
+		}
 	}
 
 	//search for sections of a wiki article
@@ -1713,7 +1689,7 @@ var WIKIVERSE = (function($) {
 
 						$(this).remove();
 
-						var $thisBrick = buildBrick([parseInt($brick.css('left')), parseInt($brick.css('top'))]);
+						var $thisBrick = buildBrick([parseInt($brick.css('left')), parseInt($brick.css('top'))], undefined, $brick.data('id'));
 						buildSection($thisBrick, section, brickDataLoaded);
 
 						$packeryContainer.packery('unstamp', $brick);
@@ -2062,15 +2038,10 @@ var WIKIVERSE = (function($) {
 		$packeryContainer.packery('bindDraggabillyEvents', draggie);
 	};
 
-	//build a board -  this is called only for saved boards (coming from db)
-	wikiverse.buildBoard = function($packeryContainer, board) {
-		
-		wikiverse.thisBoardsIDs = [];
+
+	function prepareBoardTitle(board){
 
 		if (typeof board.theme === 'undefined') board.theme = "superhero";
-
-		//overwrite the searchHistory with the one coming from db
-		wikiverse.searchHistory = board.searchHistory;
 
 		$('link[title="main"]').attr('href', "//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/" + board.theme + "/bootstrap.min.css");
 		$('body').data('theme', board.theme);
@@ -2078,9 +2049,61 @@ var WIKIVERSE = (function($) {
 		$('#wvTitle > h1').append(board.title);
 		$('#boardDescription').append(board.description);
 
+	}
+
+	//get new random number not inside the already present IDs
+	function getRandomWvID() {
+	    var rand = Math.floor(Math.random() * 200);
+	    if ($.inArray(rand, wikiverse.thisBoardsIDs) === -1) {
+	    	wikiverse.thisBoardsIDs.push(rand);
+	        return rand;
+	    } else {
+	        return getRandomWvID();
+	    }
+	}
+
+	//build an empty brick
+	function buildBrick(position, id, parent) {
+
+		//if not provided, set position array (x,y coordinates) to 2 undefined values to omit the packery fit!
+		position = position || [undefined,undefined];
+
+		var $brick = $(defaultBrick);		
+
+		//if no id is passed from backend, get random not in this boards IDs
+		id = id || getRandomWvID();
+
+		$brick.data('id', id);
+		$brick.data('parent', parent);
+
+		$packeryContainer.append($brick).packery('appended', $brick);
+		$brick.each(makeEachDraggable);
+
+		//fit the brick at given position: first is x, second y
+		$packeryContainer.packery('fit', $brick[0], position[0], position[1]);
+		$packeryContainer.packery();
+
+		return $brick;
+	}
+
+	//build a board -  this is called only for saved boards (coming from db)
+	wikiverse.buildBoard = function($packeryContainer, board) {
+		
+		prepareBoardTitle(board);	
+
+		//overwrite the searchHistory with the one coming from db
+		wikiverse.searchHistory = board.search_history;
+		var sCount = 0;
+		$.each(board.search_history, function(query, id){
+
+			wikiverse.thisBoardsIDs.push(id);
+			sCount++;
+
+		});		
+		var count = 0;
 		$.each(board.bricks, function(index, brick) {
 
-			var $thisBrick = buildBrick([undefined,undefined], brick.Id);
+			var $thisBrick = buildBrick([undefined,undefined], brick.Id, brick.Parent);
 
 			//get all Ids of this board (for later picking different ones)
 			wikiverse.thisBoardsIDs.push(brick.Id);
@@ -2127,12 +2150,92 @@ var WIKIVERSE = (function($) {
 					buildNote($thisBrick, brick.Topic, brickDataLoaded);
 				break;
 			}
-
+			count++
 			//buildNode(wikiverse.mindmap, brick.Topic, index, false);
 
 		});
+
+		/*console.log("brickslenght " + count)
+		console.log(wikiverse.thisBoardsIDs)
+		console.log("thisboardslenght " + wikiverse.thisBoardsIDs.length)
+		console.log(wikiverse.searchHistory)
+
+		console.log(wikiverse.thisBoardsIDs.length - count + " - " + sCount)*/
+
+
 		/*wikiverse.mindmap.refresh();
 		wikiverse.mindmap.graph.nodes();*/
+
+		buildMindmap(board);
+	}
+
+	function buildMindmap(board){
+
+		var mindmapJSON = {
+
+			nodes: [],
+			edges: []
+
+		}
+
+		$.each(board.search_history, function(query, id){
+
+			var node = {
+				"id": "n" + id.toString(),
+				"label": query,
+				"x": Math.random(),
+				"y": Math.random(),
+				"size": 5
+		    }
+		    mindmapJSON.nodes.push(node);
+		});
+		
+		var edgeId = 0; 
+
+		$.each(board.bricks, function(key, brick){
+
+			var node = {
+				"id": "n" + brick.Id.toString(),
+				"label": brick.Topic.title,
+				"x": Math.random(),
+				"y": Math.random(),
+				"size": 3
+		    }
+
+		    var edgeIDString = ++edgeId; 
+
+	    	var edge = {
+				"id": "e" + edgeIDString.toString(),
+				"source": "n" + brick.Parent.toString(),
+				"target": "n" + brick.Id.toString()
+				//type: ['line', 'curve', 'arrow', 'curvedArrow'][Math.random() * 4 | 0]
+		    }
+
+		    mindmapJSON.nodes.push(node);
+		    mindmapJSON.edges.push(edge);
+		});
+		
+		wikiverse.mindmap.graph.read(mindmapJSON);
+		wikiverse.mindmap.refresh();
+
+		var forceAtlasConfig =  {
+	        linLogMode: false,
+	        outboundAttractionDistribution: false,
+	        adjustSizes: false,
+	        edgeWeightInfluence: 0,
+	        scalingRatio: 1,
+	        strongGravityMode: true,
+	        gravity: 1,
+	        slowDown: 1,
+	        barnesHutOptimize: false,
+	        barnesHutTheta: 0.5,
+	        startingIterations: 1,
+	        iterationsPerRender: 1
+	      }
+
+		wikiverse.mindmap.startForceAtlas2(forceAtlasConfig);
+		//wikiverse.mindmap.killForceAtlas2();
+
 	}
 
 	function buildNode(sigma, topic, id, isNewNode){
@@ -2203,6 +2306,7 @@ var WIKIVERSE = (function($) {
 			"author": $('#wvAuthor').attr('data-author'),
 			"theme": $('body').data('theme'),
 			"featured_image": featuredImage,
+			"search_history": wikiverse.searchHistory,
 			"bricks": wikiverseParsed
 		};
 
@@ -2216,7 +2320,8 @@ var WIKIVERSE = (function($) {
 
 				Type: $(this).data('type'),
 				Topic: $(this).data('topic'),
-				Id: $(this).data('id')
+				Id: $(this).data('id'),
+				Parent: $(this).data('parent')
 
 			};
 			tabindex++;
@@ -2698,6 +2803,7 @@ var WIKIVERSE = (function($) {
 	wikiverse.init = function() {
 
 		wikiverse.searchHistory = {}; 
+		wikiverse.thisBoardsIDs = [];
 
 		//but also open the search if clicked
 		$('.searchButton').on('click', function(event) {
@@ -2803,7 +2909,7 @@ var WIKIVERSE = (function($) {
 			createNote($noteBrick, brickDataLoaded);
 		});
 
-		/*wikiverse.mindmap = new sigma({
+		wikiverse.mindmap = new sigma({
 		  renderer: {
 		    container: document.getElementById('mindmap'),
 		    type: 'canvas'
@@ -2818,7 +2924,7 @@ var WIKIVERSE = (function($) {
 		    edgeHoverSizeRatio: 1,
 		    edgeHoverExtremities: true,
 		  }
-		});*/
+		});
 
 	};
 

@@ -5,7 +5,9 @@
         "scripts/main.js"
       ],
       "vendor": [
-        "assets/scripts/packery.pkgd.min.js"
+        "assets/scripts/packery.pkgd.min.js",
+        "assets/vendor/sigma/build/sigma.min.js",
+        "assets/vendor/sigma/build/plugins/sigma.layout.forceAtlas2.min.js"
       ],
       "main": true
     },
