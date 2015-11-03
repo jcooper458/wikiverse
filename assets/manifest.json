@@ -7,7 +7,8 @@
       "vendor": [
         "assets/scripts/packery.pkgd.min.js",
         "assets/vendor/sigma/build/sigma.min.js",
-        "assets/vendor/sigma/build/plugins/sigma.layout.forceAtlas2.min.js"
+        "assets/vendor/sigma/build/plugins/sigma.plugins.animate.min.js",
+        "assets/vendor/sigma/build/plugins/sigma.layout.fruchtermanReingold.min.js"
       ],
       "main": true
     },

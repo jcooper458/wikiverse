@@ -2077,14 +2077,13 @@ var WIKIVERSE = (function($) {
 
 		//overwrite the searchHistory with the one coming from db
 		wikiverse.searchHistory = board.search_history;
-		var sCount = 0;
+
 		$.each(board.search_history, function(query, id){
 
 			wikiverse.thisBoardsIDs.push(id);
-			sCount++;
 
 		});		
-		var count = 0;
+
 		$.each(board.bricks, function(index, brick) {
 
 			var $thisBrick = buildBrick([undefined,undefined], brick.Id, brick.Parent);
@@ -2134,7 +2133,7 @@ var WIKIVERSE = (function($) {
 					buildNote($thisBrick, brick.Topic, brickDataLoaded);
 				break;
 			}
-			count++
+
 			//buildNode(wikiverse.mindmap, brick.Topic, index, false);
 
 		});
@@ -2150,7 +2149,7 @@ var WIKIVERSE = (function($) {
 		/*wikiverse.mindmap.refresh();
 		wikiverse.mindmap.graph.nodes();*/
 
-		buildMindmap(board);
+		//buildMindmap(board);
 	}
 
 	function buildMindmap(board){
@@ -2169,7 +2168,7 @@ var WIKIVERSE = (function($) {
 				"label": query,
 				"x": Math.random(),
 				"y": Math.random(),
-				"size": 5
+				"size": 8
 		    }
 		    mindmapJSON.nodes.push(node);
 		});
@@ -2202,25 +2201,19 @@ var WIKIVERSE = (function($) {
 		wikiverse.mindmap.graph.read(mindmapJSON);
 		wikiverse.mindmap.refresh();
 
-		var forceAtlasConfig =  {
-	        linLogMode: false,
-	        outboundAttractionDistribution: false,
-	        adjustSizes: false,
-	        edgeWeightInfluence: 0,
-	        scalingRatio: 1,
-	        strongGravityMode: true,
-	        gravity: 1,
-	        slowDown: 1,
-	        barnesHutOptimize: false,
-	        barnesHutTheta: 0.5,
-	        startingIterations: 1,
-	        iterationsPerRender: 1
-	      }
+		var settings = {
+		   autoArea: true,
+		   area: 1,
+		   gravity: 10,
+		   speed: 0.1,
+		   iterations: 1000
+		 };
 
-		wikiverse.mindmap.startForceAtlas2(forceAtlasConfig);
-		//wikiverse.mindmap.killForceAtlas2();
+		//var listener = sigma.layouts.fruchtermanReingold.configure(wikiverse.mindmap, settings);
+		var listener = sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, settings);
 
 	}
+
 
 	function buildNode(sigma, topic, id, isNewNode){
 
@@ -2783,6 +2776,64 @@ var WIKIVERSE = (function($) {
 
 	};
 
+	function graphEventHandlers(){
+
+		// We first need to save the original colors of our
+		// nodes and edges, like this:
+		wikiverse.mindmap.graph.nodes().forEach(function(n) {
+		  n.originalColor = n.color;
+		});
+		wikiverse.mindmap.graph.edges().forEach(function(e) {
+		  e.originalColor = e.color;
+		});
+
+		// When a node is clicked, we check for each node
+		// if it is a neighbor of the clicked one. If not,
+		// we set its color as grey, and else, it takes its
+		// original color.
+		// We do the same for the edges, and we only keep
+		// edges that have both extremities colored.
+		wikiverse.mindmap.bind('clickNode', function(e) {
+		  var nodeId = e.data.node.id,
+		      toKeep = wikiverse.mindmap.graph.neighbors(nodeId);
+		  toKeep[nodeId] = e.data.node;
+
+		  wikiverse.mindmap.graph.nodes().forEach(function(n) {
+		    if (toKeep[n.id])
+		      n.color = n.originalColor;
+		    else
+		      n.color = '#eee';
+		  });
+
+		  wikiverse.mindmap.graph.edges().forEach(function(e) {
+		    if (toKeep[e.source] && toKeep[e.target])
+		      e.color = e.originalColor;
+		    else
+		      e.color = '#eee';
+		  });
+
+		  // Since the data has been modified, we need to
+		  // call the refresh method to make the colors
+		  // update effective.
+		  wikiverse.mindmap.refresh();
+		});
+
+		// When the stage is clicked, we just color each
+		// node and edge with its original color.
+		wikiverse.mindmap.bind('clickStage', function(e) {
+		  wikiverse.mindmap.graph.nodes().forEach(function(n) {
+		    n.color = n.originalColor;
+		  });
+
+		  wikiverse.mindmap.graph.edges().forEach(function(e) {
+		    e.color = e.originalColor;
+		  });
+
+		  // Same as in the previous event:
+		  wikiverse.mindmap.refresh();
+		});
+	}
+
 	//initiate the wikiverse search functionality
 	wikiverse.init = function() {
 
@@ -2893,7 +2944,18 @@ var WIKIVERSE = (function($) {
 			createNote($noteBrick, brickDataLoaded);
 		});
 
-		wikiverse.mindmap = new sigma({
+		sigma.classes.graph.addMethod('neighbors', function(nodeId) {
+		   var k,
+		       neighbors = {},
+		       index = this.allNeighborsIndex[nodeId] || {};
+
+		   for (k in index)
+		     neighbors[k] = this.nodesIndex[k];
+
+		   return neighbors;
+		 });
+
+		/*wikiverse.mindmap = new sigma({
 		  renderer: {
 		    container: document.getElementById('mindmap'),
 		    type: 'canvas'
@@ -2909,7 +2971,7 @@ var WIKIVERSE = (function($) {
 		    edgeHoverExtremities: true,
 		  }
 		});
-
+		graphEventHandlers();*/
 	};
 
 
