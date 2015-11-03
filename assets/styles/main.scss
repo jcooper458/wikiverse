@@ -332,6 +332,19 @@ nav {
     from { transform: scale(1) rotate(0deg);}
     to { transform: scale(1) rotate(360deg);}
 }
+
+
+#global-loading{
+
+  position: fixed; 
+  top:50%; 
+  right:50%; 
+
+  .glyphicon-refresh-animate {
+    font-size: 100px!important;
+  }
+}
+
 /*Loading Icon */
 
 .brick.foto:hover .overlay{opacity:.7;}

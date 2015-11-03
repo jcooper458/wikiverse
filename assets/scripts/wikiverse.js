@@ -6,7 +6,6 @@ var WIKIVERSE = (function($) {
 
 	var close_icon = '<span class="cross control-buttons"><i class="fa fa-close"></i></span>';
 	var youtube_icon = '<i class="fa fa-youtube-square"></i>';
-	var loadingIcon = '<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate pull-right"></span>';
 	var wikiverse_nav = '<select class="selectpicker connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="100%" data-size="20"><option selected="">try another source..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option><option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option><option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option></select>';
 	var handle = '<div class="row handle"><p class="text-center"><i class="fa fa-hand-rock-o"></i>&nbsp;&nbsp;grab me here</p></div>';
 	var defaultBrick = '<div class="brick well well-sm">' + close_icon + '</div>';
@@ -1203,6 +1202,7 @@ var WIKIVERSE = (function($) {
 			if (isPortrait($brick.find('img'))) {
 				$brick.addClass('portrait')
 			}
+			$('#global-loading').remove();
 		});
 
 	};
