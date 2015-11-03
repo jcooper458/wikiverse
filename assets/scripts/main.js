@@ -61,7 +61,7 @@
     // single board page
     'single_board': {
       init: function() {
-        WIKIVERSE.initSearch();
+        WIKIVERSE.init();
 
         $.getJSON('/wp-json/posts/' + $("#postID").html(), function(board) {
           WIKIVERSE.buildBoard($('#packery'), JSON.parse(board.content_raw));
@@ -74,7 +74,7 @@
     // Start page
     'start': {
       init: function() {
-        WIKIVERSE.initSearch();
+        WIKIVERSE.init();
         WIKIVERSE.toggleSearch();
         $('.source').hide();
       },
