@@ -778,6 +778,39 @@ var WIKIVERSE = (function($) {
 
 		type = type || "textQuery";
 
+		var APIextras = "url_q,url_z,tags,owner_name,geo";
+		var APIkey = '1a7d3826d58da8a6285ef7062f670d30';
+
+		function buildResultArray(data, triggerSearchResultsFunction){
+
+			var resultsArray = [];
+
+			data.photos.photo.forEach(function(photoObj, index) {
+
+				if (photoObj.url_z){
+
+					var result = {
+						Topic: {		
+
+							owner: photoObj.owner,
+							id: photoObj.id,	
+							title: photoObj.title,
+							thumbURL: photoObj.url_q,
+							mediumURL: photoObj.url_z,
+							tags: photoObj.tags.split(" ")
+
+						},
+						Type: "Flickr"
+					};
+					resultsArray.push(result);
+					
+				}
+			});
+
+			dataLoaded(resultsArray, "Flickr", triggerSearchResultsFunction);
+		}
+
+
 		//if query is coordinates (bounds)
 		if (type === "geoQuery") {
 
@@ -790,7 +823,7 @@ var WIKIVERSE = (function($) {
 				data: {
 
 					method: 'flickr.places.findByLatLon',
-					api_key: '1a7d3826d58da8a6285ef7062f670d30',
+					api_key: APIkey,
 					lat: latitude,
 					lon: longitude,
 					format: 'json',
@@ -803,37 +836,17 @@ var WIKIVERSE = (function($) {
 						data: {
 
 							method: 'flickr.photos.search',
-							api_key: '1a7d3826d58da8a6285ef7062f670d30',
+							api_key: APIkey,
 							place_id: data.places.place[0].woeid,
 							format: 'json',
 							nojsoncallback: 1,
 							per_page: 40,
-							extras: "url_q,url_z,tags,owner_name,geo",
+							extras: APIextras,
 							sort: sort
 						},
 						success: function(data) {
 
-							var resultsArray = [];
-
-							data.photos.photo.forEach(function(photoObj, index) {
-								
-								var result = {
-									Topic: {		
-
-										owner: photoObj.owner,
-										id: photoObj.id,	
-										title: photoObj.title,
-										thumbURL: photoObj.url_q,
-										mediumURL: photoObj.url_z,
-										tags: photoObj.tags.split(" ")
-
-									},
-									Type: "Flickr"
-								};
-								resultsArray.push(result);
-							});
-
-							dataLoaded(resultsArray, "Flickr", triggerSearchResultsFunction);	
+							buildResultArray(data, triggerSearchResultsFunction);
 
 						}
 					});
@@ -848,37 +861,17 @@ var WIKIVERSE = (function($) {
 				data: {
 
 					method: 'flickr.photos.search',
-					api_key: '1a7d3826d58da8a6285ef7062f670d30',
+					api_key: APIkey,
 					text: topic,
 					format: 'json',
 					nojsoncallback: 1,
 					per_page: 100,
-					extras: "url_q,url_z,tags,owner_name,geo",
+					extras: APIextras,
 					sort: sort
 				},
 				success: function(data) {
 
-					var resultsArray = [];
-
-					data.photos.photo.forEach(function(photoObj, index) {
-						
-						var result = {
-							Topic: {		
-
-								owner: photoObj.owner,
-								id: photoObj.id,	
-								title: photoObj.title,
-								thumbURL: photoObj.url_q,
-								mediumURL: photoObj.url_z,
-								tags: photoObj.tags.split(" ")
-
-							},
-							Type: "Flickr"
-						};
-						resultsArray.push(result);
-					});
-
-					dataLoaded(resultsArray, "Flickr", triggerSearchResultsFunction);
+					buildResultArray(data, triggerSearchResultsFunction);
 			
 				}
 			});
@@ -890,57 +883,33 @@ var WIKIVERSE = (function($) {
 				data: {
 
 					method: 'flickr.people.findByUsername',
-					api_key: '1a7d3826d58da8a6285ef7062f670d30',
+					api_key: APIkey,
 					username: topic,
 					format: 'json',
 					nojsoncallback: 1
 				},
 				success: function(data) {
 
-					if (data.user.id) {
+					$.ajax({
+						url: 'https://api.flickr.com/services/rest',
+						data: {
 
-						$.ajax({
-							url: 'https://api.flickr.com/services/rest',
-							data: {
-
-								method: 'flickr.photos.search',
-								api_key: '1a7d3826d58da8a6285ef7062f670d30',
-								user_id: data.user.id,
-								format: 'json',
-								nojsoncallback: 1,
-								per_page: 40,
-								extras: "url_q,url_z,tags,owner_name,geo",
-								sort: sort
-							},
-							success: function(data) {
-								
-								var resultsArray = [];
-
-								data.photos.photo.forEach(function(photoObj, index) {
-									
-									var result = {
-										Topic: {		
-
-											owner: photoObj.owner,
-											id: photoObj.id,	
-											title: photoObj.title,
-											thumbURL: photoObj.url_q,
-											mediumURL: photoObj.url_z,
-											tags: photoObj.tags.split(" ")
-
-										},
-										Type: "Flickr"
-									};
-									resultsArray.push(result);
-								});
-
-								dataLoaded(resultsArray, "Flickr", triggerSearchResultsFunction);
+							method: 'flickr.photos.search',
+							api_key: APIkey,
+							user_id: data.user.id,
+							format: 'json',
+							nojsoncallback: 1,
+							per_page: 40,
+							extras: APIextras,
+							sort: sort
+						},
+						success: function(data) {
 							
-							}
-						});
-					} else {
-						$results.append('<div class="no-results">No User found with username: "' + topic + '"</div>');
-					}
+							buildResultArray(data, triggerSearchResultsFunction);
+						
+						}
+					});
+			
 				}
 			});
 		}
