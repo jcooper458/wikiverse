@@ -171,9 +171,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//callback foor content loaded into brick
-	function brickDataLoaded($brick, id) {
-
-		id = id || getRandomWvID();
+	function brickDataLoaded($brick) {
 
 		$brick.fadeTo('slow', 1);
 		$packeryContainer.packery();
@@ -925,6 +923,33 @@ var WIKIVERSE = (function($) {
 
 		var instagramUrl;
 
+
+		function buildResultArray(data, triggerSearchResultsFunction){
+
+			var resultsArray = [];
+
+			data.data.forEach(function(photoObj, index) {
+
+				var result = {
+					Topic: {		
+
+						owner: photoObj.user.username,
+						id: photoObj.id,	
+						title: query,
+						thumbURL: photoObj.images.low_resolution.url,
+						mediumURL: photoObj.images.standard_resolution.url,
+						tags: photoObj.tags
+
+					},
+					Type: "Instagram"
+				};
+				resultsArray.push(result);
+			});
+
+			dataLoaded(resultsArray, "Instagram", triggerSearchResultsFunction);	
+		}
+
+
 		// if coordinate
 		if (type === "coordinates") {
 
@@ -944,31 +969,7 @@ var WIKIVERSE = (function($) {
 					dataType: 'jsonp',
 					success: function(data) {
 		
-						var resultsArray = [];
-
-						data.data.forEach(function(photoObj, index) {
-
-							if(photoObj.caption){
-								var title = photoObj.caption.text;
-							}
-
-							var result = {
-								Topic: {		
-
-									owner: photoObj.user.username,
-									id: photoObj.id,	
-									title: title,
-									thumbURL: photoObj.images.low_resolution.url,
-									mediumURL: photoObj.images.standard_resolution.url,
-									tags: photoObj.tags
-
-								},
-								Type: "Instagram"
-							};
-							resultsArray.push(result);
-						});
-
-						dataLoaded(resultsArray, "Instagram", triggerSearchResultsFunction);	
+						buildResultArray(data, triggerSearchResultsFunction);
 				
 					}
 				});
@@ -982,31 +983,7 @@ var WIKIVERSE = (function($) {
 
 			$.getJSON(instagramUrl, access_parameters, function(data) {
 
-				var resultsArray = [];
-
-				data.data.forEach(function(photoObj, index) {
-					
-					if(photoObj.caption){
-						var title = photoObj.caption.text;
-					}
-
-					var result = {
-						Topic: {		
-
-							owner: photoObj.user.username,
-							id: photoObj.id,	
-							title: title,
-							thumbURL: photoObj.images.low_resolution.url,
-							mediumURL: photoObj.images.standard_resolution.url,
-							tags: photoObj.tags
-
-						},
-						Type: "Instagram"
-					};
-					resultsArray.push(result);
-				});
-
-				dataLoaded(resultsArray, "Instagram", triggerSearchResultsFunction);	
+				buildResultArray(data, triggerSearchResultsFunction);
 
 			});
 
@@ -1032,27 +1009,7 @@ var WIKIVERSE = (function($) {
 
 								$.getJSON(getUserUrl, access_parameters, function(data) {
 									
-									var resultsArray = [];
-
-									data.data.forEach(function(photoObj, index) {
-
-										var result = {
-											Topic: {		
-
-												owner: photoObj.user.username,
-												id: photoObj.id,	
-												//title: photoObj.caption.text,
-												thumbURL: photoObj.images.low_resolution.url,
-												mediumURL: photoObj.images.standard_resolution.url,
-												tags: photoObj.tags
-
-											},
-											Type: "Instagram"
-										};
-										resultsArray.push(result);
-									});
-
-									dataLoaded(resultsArray, "Instagram", triggerSearchResultsFunction);	
+									buildResultArray(data, triggerSearchResultsFunction);	
 					
 								});
 								return;
@@ -1161,6 +1118,17 @@ var WIKIVERSE = (function($) {
 			});
 		} 
 
+		if (photoObj.size === "small") {
+			$brick.addClass('w1');
+		} else if (photoObj.size === "large") {
+			$brick.addClass('w2');
+		}
+
+		//add class if is Portrait
+		if (isPortrait($brick.find('img'))) {
+			$brick.addClass('portrait')
+		}
+
 		if(type === "Flickr"){
 
 			getFlickrUsername(photoObj.owner, function(username) {
@@ -1187,19 +1155,9 @@ var WIKIVERSE = (function($) {
 			if (!image.isLoaded) {
 				return;
 			}
-			if (photoObj.size === "small") {
-				$brick.addClass('w1');
-			} else if (photoObj.size === "large") {
-				$brick.addClass('w2');
-			}
-
 			callback($brick);
 			$packeryContainer.packery();
 
-			//add class if is Portrait
-			if (isPortrait($brick.find('img'))) {
-				$brick.addClass('portrait')
-			}
 			$('#global-loading').remove();
 		});
 
@@ -1776,8 +1734,16 @@ var WIKIVERSE = (function($) {
 
 									image.insertAfter($brick.find("h2"));
 
-									imagesLoaded($brick, function() {
+									var imgLoad = imagesLoaded($brick);
+
+									imgLoad.on('progress', function(imgLoad, image) {
+										if (!image.isLoaded) {
+											return;
+										}
+										callback($brick);
 										$packeryContainer.packery();
+
+										$('#global-loading').remove();
 									});
 								}
 							});
@@ -2172,7 +2138,7 @@ var WIKIVERSE = (function($) {
 
 		var board = $('#mindmap').data('mindmap');
 
-		var mindmapJSON = {
+		var mindmapObj = {
 
 			nodes: [],
 			edges: []
@@ -2182,13 +2148,20 @@ var WIKIVERSE = (function($) {
 		$.each(board.search_history, function(query, id){
 
 			var node = {
-				"id": "n" + id.toString(),
-				"label": query,
-				"x": Math.random(),
-				"y": Math.random(),
-				"size": 8
+				id: "n" + id.toString(),
+				label: query,
+				x: Math.random(),
+				y: Math.random(),
+				size: 20,
+				color: '#ccc',
+				icon: {
+					font: 'FontAwesome', // or 'FontAwesome' etc..
+					content: '\uF129', // or custom fontawesome code eg. "\uF129"
+					scale: 0.7, // 70% of node size
+					color: '#ffffff' // foreground color (white)
+				}
 		    }
-		    mindmapJSON.nodes.push(node);
+		    mindmapObj.nodes.push(node);
 		});
 		
 		var edgeId = 0; 
@@ -2196,27 +2169,33 @@ var WIKIVERSE = (function($) {
 		$.each(board.bricks, function(key, brick){
 
 			var node = {
-				"id": "n" + brick.Id.toString(),
-				"label": brick.Topic.title,
-				"x": Math.random(),
-				"y": Math.random(),
-				"size": 3
+				id: "n" + brick.Id.toString(),
+				label: brick.Topic.title,
+				x: Math.random(),
+				y: Math.random(),
+				size: 15,
+				color: '#ccc',
+				icon: {
+					font: 'FontAwesome', // or 'FontAwesome' etc..
+					content: '\uF129', // or custom fontawesome code eg. "\uF129"
+					scale: 0.7, // 70% of node size
+					color: '#ffffff' // foreground color (white)
+				}
 		    }
 
 		    var edgeIDString = ++edgeId; 
 
 	    	var edge = {
-				"id": "e" + edgeIDString.toString(),
-				"source": "n" + brick.Parent.toString(),
-				"target": "n" + brick.Id.toString()
-				//type: ['line', 'curve', 'arrow', 'curvedArrow'][Math.random() * 4 | 0]
+				id: "e" + edgeIDString.toString(),
+				source: "n" + brick.Parent.toString(),
+				target: "n" + brick.Id.toString()
 		    }
 
-		    mindmapJSON.nodes.push(node);
-		    mindmapJSON.edges.push(edge);
+		    mindmapObj.nodes.push(node);
+		    mindmapObj.edges.push(edge);
 		});
 		
-		wikiverse.mindmap.graph.read(mindmapJSON);
+		wikiverse.mindmap.graph.read(mindmapObj);
 		wikiverse.mindmap.refresh();
 
 		var settings = {
@@ -2989,7 +2968,7 @@ var WIKIVERSE = (function($) {
 		    edgeHoverExtremities: true,
 		  }
 		});
-		graphEventHandlers();
+		//graphEventHandlers();
 	}
 
 

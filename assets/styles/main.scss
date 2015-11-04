@@ -29,7 +29,6 @@ h1, .h1, h2, .h2, h3, .h3 {
   margin: 30px 5px 15px 5px;
   font-family: 'Raleway';
   font-weight: 500!important;
-  color: #c8c8c8; 
 }
 
 .gigante{
@@ -37,7 +36,7 @@ h1, .h1, h2, .h2, h3, .h3 {
  /* font-weight: bold;*/
   font-size: 90px;
   font-weight: bold;
-  color: #c8c8c8;  
+  color: #4E5D6C;  
 }
 
 h2, .h2 {
@@ -573,8 +572,8 @@ video {
 }
 
 .cbp-spmenu-verticalRight {
-  width: 555px;
-  height: 100%;
+  width: 49%;
+  height: 60%;
   top: 0;
   z-index: 1000;
 }
@@ -584,7 +583,7 @@ video {
 
 /*right sidebar*/
 .cbp-spmenu-right {
-  right: -555px;
+  right: -50%;;
 }
 .cbp-spmenu-right.cbp-spmenu-open {
   right: 0px;
@@ -612,7 +611,7 @@ video {
 
 /*right sidebar:*/
 .cbp-spmenu-push-toleft {
-  right: 555px;
+  right: 50%;
 }
 
 .cbp-spmenu-push-toright {
