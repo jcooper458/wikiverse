@@ -443,7 +443,7 @@ var WIKIVERSE = (function($) {
 
 		google.maps.event.addListener(map, 'idle', function() {
 
-			currentMap = {
+			var currentMap = {
 				center: map.getCenter().toUrlValue(),
 				bounds: {
 					southWest: map.getBounds().getSouthWest().toUrlValue(),
@@ -1138,12 +1138,16 @@ var WIKIVERSE = (function($) {
 	wikiverse.buildFotoSearchResults = function(results, searchResultsListBuilt) {
 
 		results.forEach(function(result, index) {
+			
+			if(result){
 
-			var $result = $('<img class="result" width="112" src="' + result.Topic.thumbURL + '">');
-			$result.data("topic", result);
+				var $result = $('<img class="result" width="112" src="' + result.Topic.thumbURL + '">');
+				$result.data("topic", result);
 
-			//append row to sidebar-results-table
-			$results.append($result);
+				//append row to sidebar-results-table
+				$results.append($result);
+
+			}
 
 		});
 
@@ -1314,8 +1318,6 @@ var WIKIVERSE = (function($) {
 			$brick.fadeTo('fast', 0.1).fadeTo('fast', 1.0);
 
 		});
-
-
 
 		//prepare object for note
 		var noteObj = {
@@ -2121,31 +2123,35 @@ var WIKIVERSE = (function($) {
 
 		$.each(board.bricks, function(key, brick){
 
-			var node = {
-				id: "n" + brick.Id.toString(),
-				label: brick.Topic.title,
-				x: Math.random(),
-				y: Math.random(),
-				size: 15,
-				color: '#ccc',
-				icon: {
-					font: 'FontAwesome', // or 'FontAwesome' etc..
-					content: '\uF129', // or custom fontawesome code eg. "\uF129"
-					scale: 0.7, // 70% of node size
-					color: '#ffffff' // foreground color (white)
-				}
-		    }
+			if(brick.Id){
 
-		    var edgeIDString = ++edgeId; 
+				var node = {
+					id: "n" + brick.Id.toString(),
+					label: brick.Topic.title,
+					x: Math.random(),
+					y: Math.random(),
+					size: 15,
+					color: '#ccc',
+					icon: {
+						font: 'FontAwesome', // or 'FontAwesome' etc..
+						content: '\uF129', // or custom fontawesome code eg. "\uF129"
+						scale: 0.7, // 70% of node size
+						color: '#ffffff' // foreground color (white)
+					}
+			    }
 
-	    	var edge = {
-				id: "e" + edgeIDString.toString(),
-				source: "n" + brick.Parent.toString(),
-				target: "n" + brick.Id.toString()
-		    }
+			    var edgeIDString = ++edgeId; 
 
-		    mindmapObj.nodes.push(node);
-		    mindmapObj.edges.push(edge);
+		    	var edge = {
+					id: "e" + edgeIDString.toString(),
+					source: "n" + brick.Parent.toString(),
+					target: "n" + brick.Id.toString()
+			    }
+
+			    mindmapObj.nodes.push(node);
+			    mindmapObj.edges.push(edge);
+
+			}
 		});
 		
 		wikiverse.mindmap.graph.read(mindmapObj);
