@@ -177,6 +177,25 @@ var WIKIVERSE = (function($) {
 		$packeryContainer.packery();
 	}
 
+	function buildYoutubeResultArray(data, topic, dataLoaded, triggerFunction){
+
+		var resultsArray = data.items.map(function(item, index){
+
+			return {
+				Topic: {							
+					title: item.snippet.title,
+					snippet: item.snippet.description,
+					youtubeID: item.id.videoId,
+					query: topic,
+					thumbnailURL: item.snippet.thumbnails.high.url		
+				},
+				Type: "Youtube"
+			};			
+		});
+
+		dataLoaded(resultsArray, "Youtube", triggerFunction);
+	}
+
 	//search youtube videos
 	function getYoutubes(topic, dataLoaded, triggerFunction) {
 
@@ -190,25 +209,7 @@ var WIKIVERSE = (function($) {
 			},
 			dataType: 'jsonp',
 			success: function(data) {
-
-				var resultsArray = [];
-
-				data.items.forEach(function(item, index){
-
-					var result = {
-						Topic: {							
-							title: item.snippet.title,
-							snippet: item.snippet.description,
-							youtubeID: item.id.videoId,
-							query: topic,
-							thumbnailURL: item.snippet.thumbnails.high.url		
-						},
-						Type: "Youtube"
-					}
-					resultsArray.push(result);
-				});
-				dataLoaded(resultsArray, "Youtube", triggerFunction);
-
+				buildYoutubeResultArray(data, topic, dataLoaded, triggerFunction);
 			}
 		});
 	}
@@ -234,26 +235,7 @@ var WIKIVERSE = (function($) {
 			},
 			dataType: 'jsonp',
 			success: function(data) {
-
-				var resultsArray = [];
-
-				data.items.forEach(function(item, index){
-
-					var result = {
-						Topic: {							
-							title: item.snippet.title,
-							snippet: item.snippet.description,
-							youtubeID: item.id.videoId,
-							query: origQuery,
-							thumbnailURL: item.snippet.thumbnails.high.url		
-						},
-						Type: "Youtube"
-					}
-					resultsArray.push(result);
-				});
-
-				dataLoaded(resultsArray, "Youtube", triggerFunction);
-
+				buildYoutubeResultArray(data, origQuery, dataLoaded, triggerFunction);
 			}
 		});
 	}
@@ -298,6 +280,7 @@ var WIKIVERSE = (function($) {
 		$brick.find(".article a, .section a").unbind('click').click(function(e) {
 
 			e.preventDefault();
+
 			//stamp this brick so it doesnt move around
 			$packeryContainer.packery('stamp', $brick);
 
@@ -318,6 +301,7 @@ var WIKIVERSE = (function($) {
 
 			//unstamp it after everything is done
 			$packeryContainer.packery('unstamp', $brick);
+
 		});
 	}
 	//toggle the sidebar
@@ -776,15 +760,13 @@ var WIKIVERSE = (function($) {
 		var APIextras = "url_q,url_z,tags,owner_name,geo";
 		var APIkey = '1a7d3826d58da8a6285ef7062f670d30';
 
-		function buildResultArray(data, triggerSearchResultsFunction){
+		function buildFlickrResultArray(data, triggerSearchResultsFunction){
 
-			var resultsArray = [];
-
-			data.photos.photo.forEach(function(photoObj, index) {
+			var resultsArray = data.photos.photo.map(function(photoObj, index) {
 
 				if (photoObj.url_z){
 
-					var result = {
+					return {
 						Topic: {		
 
 							owner: photoObj.owner,
@@ -796,9 +778,7 @@ var WIKIVERSE = (function($) {
 
 						},
 						Type: "Flickr"
-					};
-					resultsArray.push(result);
-					
+					};				
 				}
 			});
 
@@ -840,9 +820,7 @@ var WIKIVERSE = (function($) {
 							sort: sort
 						},
 						success: function(data) {
-
-							buildResultArray(data, triggerSearchResultsFunction);
-
+							buildFlickrResultArray(data, triggerSearchResultsFunction);
 						}
 					});
 
@@ -865,9 +843,7 @@ var WIKIVERSE = (function($) {
 					sort: sort
 				},
 				success: function(data) {
-
-					buildResultArray(data, triggerSearchResultsFunction);
-			
+					buildFlickrResultArray(data, triggerSearchResultsFunction);			
 				}
 			});
 
@@ -898,10 +874,8 @@ var WIKIVERSE = (function($) {
 							extras: APIextras,
 							sort: sort
 						},
-						success: function(data) {
-							
-							buildResultArray(data, triggerSearchResultsFunction);
-						
+						success: function(data) {							
+							buildFlickrResultArray(data, triggerSearchResultsFunction);						
 						}
 					});
 			
@@ -924,13 +898,11 @@ var WIKIVERSE = (function($) {
 		var instagramUrl;
 
 
-		function buildResultArray(data, triggerSearchResultsFunction){
+		function buildInstagramResultArray(data, triggerSearchResultsFunction){
 
-			var resultsArray = [];
+			var resultsArray = data.data.map(function(photoObj, index) {
 
-			data.data.forEach(function(photoObj, index) {
-
-				var result = {
+				return {
 					Topic: {		
 
 						owner: photoObj.user.username,
@@ -943,7 +915,6 @@ var WIKIVERSE = (function($) {
 					},
 					Type: "Instagram"
 				};
-				resultsArray.push(result);
 			});
 
 			dataLoaded(resultsArray, "Instagram", triggerSearchResultsFunction);	
@@ -969,7 +940,7 @@ var WIKIVERSE = (function($) {
 					dataType: 'jsonp',
 					success: function(data) {
 		
-						buildResultArray(data, triggerSearchResultsFunction);
+						buildInstagramResultArray(data, triggerSearchResultsFunction);
 				
 					}
 				});
@@ -983,7 +954,7 @@ var WIKIVERSE = (function($) {
 
 			$.getJSON(instagramUrl, access_parameters, function(data) {
 
-				buildResultArray(data, triggerSearchResultsFunction);
+				buildInstagramResultArray(data, triggerSearchResultsFunction);
 
 			});
 
@@ -1009,7 +980,7 @@ var WIKIVERSE = (function($) {
 
 								$.getJSON(getUserUrl, access_parameters, function(data) {
 									
-									buildResultArray(data, triggerSearchResultsFunction);	
+									buildInstagramResultArray(data, triggerSearchResultsFunction);	
 					
 								});
 								return;
@@ -1214,11 +1185,9 @@ var WIKIVERSE = (function($) {
 		}, function(tracks) {
 
 			//build a homogenic array here (equally looking for all sources: topic and type)
-			var resultsArray = [];
+			var resultsArray = tracks.map(function(item, index){
 
-			tracks.forEach(function(item, index){
-
-				var result = {
+				return {
 					Topic: {
 						title: item.title,
 						uri: item.uri
@@ -1265,7 +1234,7 @@ var WIKIVERSE = (function($) {
 
 		results.forEach(function(result, index) {
 
-			var $result = $('<tr class="result"><td class="twitterThumb col-md-2"><img src="' + result.Topic.userThumb + '"></td><td class="col-md-10" ><strong>' + result.Topic.user + '</strong><br>' + result.Topic.text + '</td></tr>');
+			var $result = $('<tr class="result"><td class="twitterThumb col-md-2"><img src="' + result.Topic.userThumb + '"></td><td class="col-md-10" ><strong>' + result.Topic.user + '</strong><br>' + result.Topic.title + '</td></tr>');
 			$result.data("topic", result);
 
 			//append row to sidebar-results-table
@@ -1288,19 +1257,16 @@ var WIKIVERSE = (function($) {
 
 				var data = JSON.parse(data);
 				
-				var resultsArray = [];
+				var resultsArray = data.statuses.map(function(item, index){
 
-				data.statuses.forEach(function(item, index){
-
-					var result = {
+					return {
 						Topic: {							
-							text: item.text,
+							title: item.text,
 							user: item.user.screen_name,
 							userThumb: item.user.profile_image_url						
 						},
 						Type: "Twitter"
 					}
-					resultsArray.push(result);
 				});
 
 				dataLoaded(resultsArray, "Twitter", triggerSearchResultsFunction);
@@ -1398,7 +1364,7 @@ var WIKIVERSE = (function($) {
 		$brick.addClass('Twitter');
 
 		//replace hashtags with links
-		var tweet = twitterObj.text.replace(/(^|\W)(#[a-z\d][\w-]*)/ig, '$1<a hashtag="$2" href="#">$2</a>');
+		var tweet = twitterObj.title.replace(/(^|\W)(#[a-z\d][\w-]*)/ig, '$1<a hashtag="$2" href="#">$2</a>');
 			tweet = tweet.replace(/(^|\W)(@[a-z\d][\w-]*)/ig, '$1<a hashtag="$2" href="#">$2</a>');
 			tweet = urlify(tweet);
 
@@ -1537,11 +1503,9 @@ var WIKIVERSE = (function($) {
 			success: function(data) {		
 				
 				//build a homogenic array here (equally looking for all sources: topic and type)
-				var resultsArray = [];
+				var resultsArray = data.query.search.map(function(item, index){
 
-				data.query.search.forEach(function(item, index){
-
-					var result = {
+					return {
 						Topic: {
 							title: item.title,
 							snippet: strip(item.snippet),
@@ -1549,7 +1513,6 @@ var WIKIVERSE = (function($) {
 						},
 						Type: "Wikipedia"
 					}
-					resultsArray.push(result);
 				});
 
 				dataLoaded(resultsArray, "Wikipedia", triggerSearchResultsFunction);	
@@ -1574,8 +1537,7 @@ var WIKIVERSE = (function($) {
 			wikiverse["build" + result.Type]($thisBrick, result.Topic, brickDataLoaded);
 
 			$(this).tooltip('destroy');
-			$(this).remove();			
-
+			$(this).remove();
 			return false;
 		});
 
@@ -2064,7 +2026,8 @@ var WIKIVERSE = (function($) {
 
 			wikiverse.thisBoardsIDs.push(id);
 
-		});		
+		});	
+
 
 		$.each(board.bricks, function(index, brick) {
 
@@ -2120,23 +2083,13 @@ var WIKIVERSE = (function($) {
 
 		});
 
-		/*console.log("brickslenght " + count)
-		console.log(wikiverse.thisBoardsIDs)
-		console.log("thisboardslenght " + wikiverse.thisBoardsIDs.length)
-		console.log(wikiverse.searchHistory)
-
-		console.log(wikiverse.thisBoardsIDs.length - count + " - " + sCount)*/
-
-
 		/*wikiverse.mindmap.refresh();
 		wikiverse.mindmap.graph.nodes();*/
 
-		$('#mindmap').data('mindmap', board);
+		buildMindmap(board);
 	}
 
-	function buildMindmap(){
-
-		var board = $('#mindmap').data('mindmap');
+	function buildMindmap(board){
 
 		var mindmapObj = {
 
@@ -2959,13 +2912,15 @@ var WIKIVERSE = (function($) {
 		  },
 		  settings: {
 		    doubleClickEnabled: false,
-		    minEdgeSize: 0.5,
-		    maxEdgeSize: 4,
+		    minEdgeSize: 10,
+		    maxEdgeSize: 10,
+		    minNodeSize: 5,
+		    maxNodeSize: 10,
 		    enableEdgeHovering: true,
 		    edgeHoverColor: 'edge',
 		    defaultEdgeHoverColor: '#000',
 		    edgeHoverSizeRatio: 1,
-		    edgeHoverExtremities: true,
+		    edgeHoverExtremities: true
 		  }
 		});
 		//graphEventHandlers();
@@ -3046,24 +3001,9 @@ var WIKIVERSE = (function($) {
 	//----------------keyboard shortcuts----------------------------
 
 
-	//----------------GENERAL STUFF----------------------------
-
-
-
-	//$packeryContainer.find('div.brick').each( makeEachDraggable );
-
-	//var container = document.querySelector('.packery');
-	//var pckry = Packery.data( container );
-
-	//----------------GENERAL STUFF----------------------------
 
 	//----------------EVENTS----------------------------
 	//
-	/*$('#sidebar').mousewheel(function(ev, delta) {
-	    var scrollTop = $(this).scrollTop();
-	    $(this).scrollTop(scrollTop-Math.round(delta * 20));
-
-	});*/
 
 	$('.otherSource').change(function(event) {
 		getConnections($(this).val(), $(this).parents('#sidebar').find('h3').html());
@@ -3077,12 +3017,24 @@ var WIKIVERSE = (function($) {
 	//close sidebar
 	$('#rightSidebar .fa').click(function() {
 		toggleRightSidebar();
-		buildMindmap();
 	});
+
+	function removeIDfromThisBoardsIds(id){
+
+		//delete item from thisBoardsIds
+		var indexToDelete = wikiverse.thisBoardsIDs.indexOf(id);
+
+		if (indexToDelete > -1) {
+		    wikiverse.thisBoardsIDs.splice(indexToDelete, 1);
+		}		
+	}
 
 	// REMOVE ITEM
 	$packeryContainer.on("click", ".brick .cross", function() {
 		var $thisBrick = jQuery(this).parent(".brick");
+
+		removeIDfromThisBoardsIds($thisBrick.data('id'));
+
 		//$thisBrick.fadeOut('slow').remove();
 		$packeryContainer.packery('remove', $thisBrick);
 		$packeryContainer.packery();
