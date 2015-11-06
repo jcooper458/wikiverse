@@ -1534,8 +1534,9 @@ var WIKIVERSE = (function($) {
 	function searchResultsListBuilt($results){		
 
 		//bind event to every row -> so you can start the wikiverse
-		$results.find('.result').unbind('click').on('click', function(event) {	
-			
+		$results.find('.result').unbind('click').on('click', function(event) {			
+
+			//this need to be called before everything!
 			updateSearchHistory();
 
 			//set the parent to the searchkeyword, as you are pushing new bricks to the board
@@ -1550,8 +1551,8 @@ var WIKIVERSE = (function($) {
 			$(this).tooltip('destroy');
 			$(this).remove();
 
-			//build a node without parent
-			buildNode(wikiverse.mindmap, result.Topic, $thisBrick.data('id'));
+			//build a node with the searchqueryNode as parent
+			buildNode(wikiverse.mindmap, result.Topic, $thisBrick.data('id'), parent);
 
 			return false;
 		});
@@ -1560,11 +1561,18 @@ var WIKIVERSE = (function($) {
 		$sidebar.find("#loading").remove();	
 	}
 
-	function updateSearchHistory(){
+	function updateSearchHistory(id){
 
 		//if search keyword is not already in history, add it
 		if (!wikiverse.searchHistory.hasOwnProperty($searchKeyword.html().toLowerCase())){
-			wikiverse.searchHistory[$searchKeyword.html().toLowerCase()] = getRandomWvID(); 		
+			wikiverse.searchHistory[$searchKeyword.html().toLowerCase()] = getRandomWvID(); 
+
+			var searchQueryNodeData = {
+				title: $searchKeyword.html().toLowerCase()
+			}
+
+			//build a node for the searchquery
+			buildNode(wikiverse.mindmap, searchQueryNodeData, wikiverse.searchHistory[$searchKeyword.html().toLowerCase()], 0);		
 		}
 	}
 
@@ -2124,6 +2132,7 @@ var WIKIVERSE = (function($) {
 				x: Math.random(),
 				y: Math.random(),
 				size: 20,
+				parent: "n0", 
 				color: '#ccc',
 				icon: {
 					font: 'FontAwesome', // or 'FontAwesome' etc..
@@ -2147,6 +2156,7 @@ var WIKIVERSE = (function($) {
 					x: Math.random(),
 					y: Math.random(),
 					size: 15,
+					parent: "n" + brick.Parent,
 					color: '#ccc',
 					icon: {
 						font: 'FontAwesome', // or 'FontAwesome' etc..
@@ -2176,8 +2186,65 @@ var WIKIVERSE = (function($) {
 		//var listener = sigma.layouts.fruchtermanReingold.configure(wikiverse.mindmap, settings);
 		sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
 
+		wikiverse.mindmap.graph.nodes().map(function(node, index){
+			
+			var neighbors = wikiverse.mindmap.graph.neighbors(node.id);
+			delete neighbors[node.parent]
+			node.children = neighbors;
+
+		});
+
 	}
 
+
+	function removeNode(id){
+
+		//update thisBoardsIDs array: 
+		removeIDfromThisBoardsIds(id);
+
+		var nodesObj = wikiverse.mindmap.graph.getNodesById();
+
+		var thisNode = nodesObj["n" + id];
+		var thisNodesParent = thisNode.parent;
+		
+		if(!thisNode.children){
+
+			wikiverse.mindmap.graph.nodes().map(function(node, index){
+				
+				var neighbors = wikiverse.mindmap.graph.neighbors(node.id);
+				delete neighbors[node.parent]
+				node.children = neighbors;
+
+			});
+		}
+		
+		console.log(thisNode.children);
+
+		wikiverse.mindmap.graph.dropNode("n" + id);
+
+		$.each(thisNode.children, function(nodeID, nodeObj){
+
+			//set the new parent for the child nodes
+			nodeObj.parent = thisNodesParent;
+
+			/*var edgesArray = wikiverse.mindmap.graph.edges(); 
+
+	    	//if there are no edges, start with 0
+	    	var lastEdgeId = (edgesArray.length > 0) ? edgesArray[edgesArray.length-1].id : 0;*/
+
+	    	//create new edges for the child nodes to the parent
+	    	wikiverse.mindmap.graph.addEdge({
+	    	  id: "e" + Math.random(),
+	    	  // Reference extremities:
+	    	  source: thisNodesParent,
+	    	  target: nodeID
+	    	});	
+
+		});
+		wikiverse.mindmap.refresh();
+		sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
+
+	}
 
 	function buildNode(sigmaInstance, topic, id, parent){
 
@@ -2188,6 +2255,7 @@ var WIKIVERSE = (function($) {
 			x: Math.random(),
 			y: Math.random(),
 			size: 15,
+			parent: "n" + parent,
 			color: '#ccc',
 			icon: {
 				font: 'FontAwesome', // or 'FontAwesome' etc..
@@ -2212,6 +2280,8 @@ var WIKIVERSE = (function($) {
 			  target: 'n' + id
 			});			
 		}
+
+
 
 		sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
 
@@ -2928,6 +2998,10 @@ var WIKIVERSE = (function($) {
 
 		   return neighbors;
 		 });
+		
+		sigma.classes.graph.addMethod('getNodesById', function() {
+		  return this.nodesIndex;
+		});
 
 		wikiverse.mindmap = new sigma({
 		  renderer: {
@@ -3044,21 +3118,21 @@ var WIKIVERSE = (function($) {
 	});
 
 	function removeIDfromThisBoardsIds(id){
-		console.log(id);
+
 		//delete item from thisBoardsIds
 		var indexToDelete = wikiverse.thisBoardsIDs.indexOf(id);
 
 		if (indexToDelete > -1) {
 		    wikiverse.thisBoardsIDs.splice(indexToDelete, 1);
 		}		
-		console.log(wikiverse.thisBoardsIDs);
+
 	}
 
 	// REMOVE ITEM
 	$packeryContainer.on("click", ".brick .cross", function() {
 		var $thisBrick = jQuery(this).parent(".brick");
 
-		removeIDfromThisBoardsIds($thisBrick.data('id'));
+		removeNode($thisBrick.data('id'));
 
 		//$thisBrick.fadeOut('slow').remove();
 		$packeryContainer.packery('remove', $thisBrick);
@@ -3089,7 +3163,18 @@ var WIKIVERSE = (function($) {
 			}
 		});
 	});
+/*
+	// show item order after layout
+	function orderItems() {
+	  var itemElems = pckry.getItemElements();
+	  for ( var i=0, len = itemElems.length; i < len; i++ ) {
+	    var elem = itemElems[i];
+	    elem.textContent = i + 1;
+	  }
+	  console.log(itemElems);
+	}
 
+	$packeryContainer.on( 'layoutComplete', orderItems );*/
 
 	//Toggle Size of Images on click
 	$packeryContainer.on('dblclick', 'img', toggleImageSize);

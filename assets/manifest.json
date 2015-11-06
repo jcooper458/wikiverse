@@ -9,8 +9,6 @@
         "assets/vendor/linkurious.js/build/sigma.min.js",
         "assets/vendor/linkurious.js/build/plugins/sigma.plugins.animate.min.js",
         "assets/vendor/linkurious.js/build/plugins/sigma.layouts.fruchtermanReingold.min.js",
-        "assets/vendor/linkurious.js/build/plugins/sigma.plugins.design.min.js",
-        "assets/vendor/linkurious.js/build/plugins/sigma.plugins.colorbrewer.min.js",
         "assets/vendor/linkurious.js/build/plugins/sigma.renderers.linkurious.min.js"
       ],
       "main": true
