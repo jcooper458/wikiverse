@@ -19,6 +19,14 @@ var WIKIVERSE = (function($) {
 	//used for pNotify
 	var myStack = {"dir1":"down", "dir2":"left", "push":"top"};
 
+	var fruchtermanReingoldSettings = {
+	   autoArea: true,
+	   area: 1,
+	   gravity: 10,
+	   speed: 0.1,
+	   iterations: 1000
+	 };
+
 	//var is_root = location.pathname === "/";
 
 	var wpnonce = $('#nonce').html();
@@ -295,13 +303,14 @@ var WIKIVERSE = (function($) {
 				language: lang
 			};
 
-			var $thisBrick = buildBrick([parseInt($brick.css('left') + 500), parseInt($brick.css('top') + 500)], undefined, $brick.data('id'));
+			var $nextBrick = buildBrick([parseInt($brick.css('left') + 500), parseInt($brick.css('top') + 500)], undefined, $brick.data('id'));
 
-			wikiverse.buildWikipedia($thisBrick, brickData, brickDataLoaded);
+			wikiverse.buildWikipedia($nextBrick, brickData, brickDataLoaded);
 
 			//unstamp it after everything is done
 			$packeryContainer.packery('unstamp', $brick);
 
+			buildNode(wikiverse.mindmap, brickData, $nextBrick.data('id'), $brick.data('id'));
 		});
 	}
 	//toggle the sidebar
@@ -1260,7 +1269,7 @@ var WIKIVERSE = (function($) {
 			success: function(data) {
 
 				var data = JSON.parse(data);
-				
+	
 				var resultsArray = data.statuses.map(function(item, index){
 
 					return {
@@ -1540,6 +1549,10 @@ var WIKIVERSE = (function($) {
 
 			$(this).tooltip('destroy');
 			$(this).remove();
+
+			//build a node without parent
+			buildNode(wikiverse.mindmap, result.Topic, $thisBrick.data('id'));
+
 			return false;
 		});
 
@@ -1601,16 +1614,18 @@ var WIKIVERSE = (function($) {
 
 						var section = {
 
-							title: topic.title,
+							title: $(this).html(),
 							language: topic.language,
-							name: $(this).html(),
+							name: topic.title,
 							index: $(this).attr("index")
 						};
 
 						$(this).remove();
 
-						var $thisBrick = buildBrick([parseInt($brick.css('left')), parseInt($brick.css('top'))], undefined, $brick.data('id'));
-						buildSection($thisBrick, section, brickDataLoaded);
+						var $nextBrick = buildBrick([parseInt($brick.css('left')), parseInt($brick.css('top'))], undefined, $brick.data('id'));
+						buildSection($nextBrick, section, brickDataLoaded);
+						
+						buildNode(wikiverse.mindmap, section, $nextBrick.data('id'), $brick.data('id'));
 
 						$packeryContainer.packery('unstamp', $brick);
 					});
@@ -1788,7 +1803,7 @@ var WIKIVERSE = (function($) {
 
 		$brick.addClass('wiki');
 
-		$brick.prepend('<p><h2>' + section.title + '</h2></p>');
+		$brick.prepend('<p><h2>' + section.name + '</h2></p>');
 
 		//search another source menu:
 		var $connections = $(wikiverse_nav);
@@ -1796,14 +1811,14 @@ var WIKIVERSE = (function($) {
 		$connections.selectpicker();
 
 		$connections.change(function(event) {
-			getConnections($(this).find("option:selected").text(), section.title);
+			getConnections($(this).find("option:selected").text(), section.name);
 		});	
 
 		$.ajax({
 			url: 'https://' + section.language + '.wikipedia.org/w/api.php',
 			data: {
 				action: 'parse',
-				page: section.title,
+				page: section.name,
 				format: 'json',
 				prop: 'text',
 				disableeditsection: true,
@@ -2004,6 +2019,7 @@ var WIKIVERSE = (function($) {
 		id = id || getRandomWvID();
 
 		$brick.data('id', id);
+		$brick.attr('id', "n"+	id);
 		$brick.data('parent', parent);
 
 		$packeryContainer.append($brick).packery('appended', $brick);
@@ -2103,7 +2119,7 @@ var WIKIVERSE = (function($) {
 		$.each(board.search_history, function(query, id){
 
 			var node = {
-				id: "n" + id.toString(),
+				id: "n" + id,
 				label: query,
 				x: Math.random(),
 				y: Math.random(),
@@ -2126,7 +2142,7 @@ var WIKIVERSE = (function($) {
 			if(brick.Id){
 
 				var node = {
-					id: "n" + brick.Id.toString(),
+					id: "n" + brick.Id,
 					label: brick.Topic.title,
 					x: Math.random(),
 					y: Math.random(),
@@ -2143,9 +2159,9 @@ var WIKIVERSE = (function($) {
 			    var edgeIDString = ++edgeId; 
 
 		    	var edge = {
-					id: "e" + edgeIDString.toString(),
-					source: "n" + brick.Parent.toString(),
-					target: "n" + brick.Id.toString()
+					id: "e" + edgeIDString,
+					source: "n" + brick.Parent,
+					target: "n" + brick.Id
 			    }
 
 			    mindmapObj.nodes.push(node);
@@ -2157,42 +2173,49 @@ var WIKIVERSE = (function($) {
 		wikiverse.mindmap.graph.read(mindmapObj);
 		wikiverse.mindmap.refresh();
 
-		var settings = {
-		   autoArea: true,
-		   area: 1,
-		   gravity: 10,
-		   speed: 0.1,
-		   iterations: 1000
-		 };
-
 		//var listener = sigma.layouts.fruchtermanReingold.configure(wikiverse.mindmap, settings);
-		var listener = sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, settings);
+		sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
 
 	}
 
 
-	function buildNode(sigma, topic, id, isNewNode){
+	function buildNode(sigmaInstance, topic, id, parent){
 
 		// Then, let's add some data to display:
-		sigma.graph.addNode({
-		  // Main attributes:
-		  id: "n" + id,
-		  x: Math.random(),
-		  y: Math.random(),
-		  label: topic.title,
-		  // Display attributes:
-		  size: 1,
-		  color: '#f00'
-		});
+		sigmaInstance.graph.addNode({
+			id: "n" + id,
+			label: topic.title,
+			x: Math.random(),
+			y: Math.random(),
+			size: 15,
+			color: '#ccc',
+			icon: {
+				font: 'FontAwesome', // or 'FontAwesome' etc..
+				content: '\uF129', // or custom fontawesome code eg. "\uF129"
+				scale: 0.7, // 70% of node size
+				color: '#ffffff' // foreground color (white)
+			}
+	    });
 
-		/*if(!isNewNode){
-			sigma.graph.addEdge({
-			  id: 'e0',
+		//if a parent is passed, create an edge
+		if(parent){
+
+			var edgesArray = sigmaInstance.graph.edges(); 
+
+			//if there are no edges, start with 0
+			var lastEdgeId = (edgesArray.length > 0) ? edgesArray[edgesArray.length-1].id : 0;
+
+			sigmaInstance.graph.addEdge({
+			  id: 'e' + lastEdgeId + 1,
 			  // Reference extremities:
-			  source: 'n0',
-			  target: 'n1'
-			});
-		}*/		
+			  source: 'n' + parent,
+			  target: 'n' + id
+			});			
+		}
+
+		sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
+
+		wikiverse.mindmap.refresh();
 	}
 
 	//toggle the search overlay
@@ -2222,7 +2245,6 @@ var WIKIVERSE = (function($) {
 	//collect the bricks for saveboard/createboard/forkboard
 	wikiverse.collectBricks = function() {
 
-		var wikiverseParsed = {};
 		var $firstBrick = $packeryContainer.find('.brick[tabindex=0]'); 
 		var featuredImage; 
 
@@ -2233,6 +2255,18 @@ var WIKIVERSE = (function($) {
 			featuredImage = $firstBrick.find('img').attr('src');
 		}
 		 
+		var bricks = $packeryContainer.packery('getItemElements');
+
+		var wikiverseParsed = bricks.reduce(function(Brick, brick, index){
+
+			Brick[index] = {
+				Type: $(brick).data('type'),
+				Topic: $(brick).data('topic'),
+				Id: $(brick).data('id'),
+				Parent: $(brick).data('parent')				
+			};
+			return Brick;
+		}, {});
 
 		var board = {
 			"title": "",
@@ -2243,22 +2277,6 @@ var WIKIVERSE = (function($) {
 			"bricks": wikiverseParsed
 		};
 
-		var bricks = $packeryContainer.packery('getItemElements');
-
-		var tabindex = 0;
-
-		$.each(bricks, function() {
-
-			wikiverseParsed[tabindex] = {
-
-				Type: $(this).data('type'),
-				Topic: $(this).data('topic'),
-				Id: $(this).data('id'),
-				Parent: $(this).data('parent')
-
-			};
-			tabindex++;
-		});
 
 		return board;
 	};
@@ -3026,13 +3044,14 @@ var WIKIVERSE = (function($) {
 	});
 
 	function removeIDfromThisBoardsIds(id){
-
+		console.log(id);
 		//delete item from thisBoardsIds
 		var indexToDelete = wikiverse.thisBoardsIDs.indexOf(id);
 
 		if (indexToDelete > -1) {
 		    wikiverse.thisBoardsIDs.splice(indexToDelete, 1);
 		}		
+		console.log(wikiverse.thisBoardsIDs);
 	}
 
 	// REMOVE ITEM
