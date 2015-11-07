@@ -2186,14 +2186,6 @@ var WIKIVERSE = (function($) {
 		//var listener = sigma.layouts.fruchtermanReingold.configure(wikiverse.mindmap, settings);
 		sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
 
-		wikiverse.mindmap.graph.nodes().map(function(node, index){
-			
-			var neighbors = wikiverse.mindmap.graph.neighbors(node.id);
-			delete neighbors[node.parent]
-			node.children = neighbors;
-
-		});
-
 	}
 
 
@@ -2202,47 +2194,46 @@ var WIKIVERSE = (function($) {
 		//update thisBoardsIDs array: 
 		removeIDfromThisBoardsIds(id);
 
+		//get the given node by Id
 		var nodesObj = wikiverse.mindmap.graph.getNodesById();
-
 		var thisNode = nodesObj["n" + id];
-		var thisNodesParent = thisNode.parent;
-		
-		if(!thisNode.children){
 
-			wikiverse.mindmap.graph.nodes().map(function(node, index){
-				
-				var neighbors = wikiverse.mindmap.graph.neighbors(node.id);
-				delete neighbors[node.parent]
-				node.children = neighbors;
+		//recreate the children for this node
+		wikiverse.mindmap.graph.nodes().map(function(node, index){
+			
+			var neighbors = wikiverse.mindmap.graph.neighbors(node.id);
+			delete neighbors[node.parent]
+			node.children = neighbors;
 
-			});
-		}
-		
-		console.log(thisNode.children);
-
+		});
+		//drop the given node
 		wikiverse.mindmap.graph.dropNode("n" + id);
 
-		$.each(thisNode.children, function(nodeID, nodeObj){
+		//get the last edge and grab its ID
+		var edgesArray = wikiverse.mindmap.graph.edges(); 
+		//if there are no edges, start with 0
+		var lastEdgeId = (edgesArray.length > 0) ? edgesArray[edgesArray.length-1].id : 0;
+		//remove the leading "e"
+		lastEdgeId =  parseInt(lastEdgeId.replace(/\D/g,''));
+		
 
+		$.each(thisNode.children, function(nodeId, nodeObj){
+			//for each child, create a new edge, thus increment
+			lastEdgeId++;
 			//set the new parent for the child nodes
-			nodeObj.parent = thisNodesParent;
-
-			/*var edgesArray = wikiverse.mindmap.graph.edges(); 
-
-	    	//if there are no edges, start with 0
-	    	var lastEdgeId = (edgesArray.length > 0) ? edgesArray[edgesArray.length-1].id : 0;*/
-
+			nodeObj.parent = thisNode.parent;
 	    	//create new edges for the child nodes to the parent
 	    	wikiverse.mindmap.graph.addEdge({
-	    	  id: "e" + Math.random(),
+	    	  id: "e" + lastEdgeId,
 	    	  // Reference extremities:
-	    	  source: thisNodesParent,
-	    	  target: nodeID
+	    	  source: thisNode.parent,
+	    	  target: nodeId
 	    	});	
 
 		});
-		wikiverse.mindmap.refresh();
+
 		sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
+		wikiverse.mindmap.refresh();
 
 	}
 
@@ -2265,26 +2256,26 @@ var WIKIVERSE = (function($) {
 			}
 	    });
 
-		//if a parent is passed, create an edge
+		//if a parent is passed, create an edge, otherwise its the first node, without parent
 		if(parent){
 
-			var edgesArray = sigmaInstance.graph.edges(); 
-
+			//get the last edge and grab its ID
+			var edgesArray = sigmaInstance.graph.edges();
 			//if there are no edges, start with 0
 			var lastEdgeId = (edgesArray.length > 0) ? edgesArray[edgesArray.length-1].id : 0;
+			lastEdgeId =  parseInt(lastEdgeId.replace(/\D/g,''));
+			lastEdgeId++;
 
 			sigmaInstance.graph.addEdge({
-			  id: 'e' + lastEdgeId + 1,
+			  id: 'e' + lastEdgeId,
 			  // Reference extremities:
 			  source: 'n' + parent,
 			  target: 'n' + id
 			});			
+
 		}
 
-
-
 		sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
-
 		wikiverse.mindmap.refresh();
 	}
 
@@ -3130,6 +3121,7 @@ var WIKIVERSE = (function($) {
 
 	// REMOVE ITEM
 	$packeryContainer.on("click", ".brick .cross", function() {
+
 		var $thisBrick = jQuery(this).parent(".brick");
 
 		removeNode($thisBrick.data('id'));
