@@ -2043,7 +2043,7 @@ var WIKIVERSE = (function($) {
 	//build a board -  this is called only for saved boards (coming from db)
 	wikiverse.buildBoard = function($packeryContainer, board) {
 		
-		prepareBoardTitle(board);	
+		prepareBoardTitle(board);			
 
 		//overwrite the searchHistory with the one coming from db
 		wikiverse.searchHistory = board.search_history;
@@ -2054,62 +2054,68 @@ var WIKIVERSE = (function($) {
 
 		});	
 
+		//if there are bricks in the board
+		if(!jQuery.isEmptyObject(board.bricks)){
 
-		$.each(board.bricks, function(index, brick) {
+			$('#global-loading').removeClass("invisible");
 
-			var $thisBrick = buildBrick([undefined,undefined], brick.Id, brick.Parent);
+			$.each(board.bricks, function(index, brick) {
 
-			//get all Ids of this board (for later picking different ones)
-			wikiverse.thisBoardsIDs.push(brick.Id);
+				//build a brick at position 0,0
+				var $thisBrick = buildBrick([undefined,undefined], brick.Id, brick.Parent);
 
-			switch (brick.Type) {
-				case "Wikipedia":
-					wikiverse.buildWikipedia($thisBrick, brick.Topic, brickDataLoaded);
-				break;
+				//get all Ids of this board (for later picking different ones)
+				wikiverse.thisBoardsIDs.push(brick.Id);
 
-				case "wikiSection":
-					buildSection($thisBrick, brick.Topic, brickDataLoaded);
-				break;
+				switch (brick.Type) {
+					case "Wikipedia":
+						wikiverse.buildWikipedia($thisBrick, brick.Topic, brickDataLoaded);
+					break;
 
-				case "Flickr":
-					wikiverse.buildFoto($thisBrick, brick.Topic, "Flickr", brickDataLoaded);
-				break;
+					case "wikiSection":
+						buildSection($thisBrick, brick.Topic, brickDataLoaded);
+					break;
 
-				case "Instagram":
-					wikiverse.buildFoto($thisBrick, brick.Topic, "Instagram", brickDataLoaded);
-				break;
+					case "Flickr":
+						wikiverse.buildFoto($thisBrick, brick.Topic, "Flickr", brickDataLoaded);
+					break;
 
-				case "Youtube":
-					wikiverse.buildYoutube($thisBrick, brick.Topic, brickDataLoaded);
-				break;
+					case "Instagram":
+						wikiverse.buildFoto($thisBrick, brick.Topic, "Instagram", brickDataLoaded);
+					break;
 
-				case "gmaps":
-					var $thisGmapsBrick = buildGmapsBrick($packeryContainer);
-					buildGmaps($thisGmapsBrick, brick.Topic, brickDataLoaded);
-				break;
+					case "Youtube":
+						wikiverse.buildYoutube($thisBrick, brick.Topic, brickDataLoaded);
+					break;
 
-				case "streetview":
-					buildStreetMap($thisBrick, brick.Topic, brickDataLoaded);
-				break;
+					case "gmaps":
+						var $thisGmapsBrick = buildGmapsBrick($packeryContainer);
+						buildGmaps($thisGmapsBrick, brick.Topic, brickDataLoaded);
+					break;
 
-				case "Soundcloud":
-					wikiverse.buildSoundcloud($thisBrick, brick.Topic, brickDataLoaded);
-				break;
+					case "streetview":
+						buildStreetMap($thisBrick, brick.Topic, brickDataLoaded);
+					break;
 
-				case "Twitter":
-					wikiverse.buildTwitter($thisBrick, brick.Topic, brickDataLoaded);
-				break;
+					case "Soundcloud":
+						wikiverse.buildSoundcloud($thisBrick, brick.Topic, brickDataLoaded);
+					break;
 
-				case "note":
-					buildNote($thisBrick, brick.Topic, brickDataLoaded);
-				break;
-			}
+					case "Twitter":
+						wikiverse.buildTwitter($thisBrick, brick.Topic, brickDataLoaded);
+					break;
 
-			//buildNode(wikiverse.mindmap, brick.Topic, index, false);
+					case "note":
+						buildNote($thisBrick, brick.Topic, brickDataLoaded);
+					break;
+				}
 
-		});
+				//buildNode(wikiverse.mindmap, brick.Topic, index, false);
 
-		buildMindmap(board);
+			});
+
+			buildMindmap(board);
+		}
 	}
 
 	function buildMindmap(board){
