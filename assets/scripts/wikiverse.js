@@ -310,7 +310,7 @@ var WIKIVERSE = (function($) {
 			//unstamp it after everything is done
 			$packeryContainer.packery('unstamp', $brick);
 
-			buildNode(wikiverse.mindmap, brickData, $nextBrick.data('id'), $brick.data('id'));
+			buildNode(brickData, $nextBrick.data('id'), $brick.data('id'));
 		});
 	}
 	//toggle the sidebar
@@ -1551,9 +1551,11 @@ var WIKIVERSE = (function($) {
 			$(this).tooltip('destroy');
 			$(this).remove();
 
+			console.log(wikiverse.mindmap.graph.nodes());
+			console.log(wikiverse.searchHistory);
+			console.log(parent);
 			//build a node with the searchqueryNode as parent
-			buildNode(wikiverse.mindmap, result.Topic, $thisBrick.data('id'), parent);
-
+			buildNode(result.Topic, $thisBrick.data('id'), parent);
 			return false;
 		});
 
@@ -1572,7 +1574,8 @@ var WIKIVERSE = (function($) {
 			}
 
 			//build a node for the searchquery
-			buildNode(wikiverse.mindmap, searchQueryNodeData, wikiverse.searchHistory[$searchKeyword.html().toLowerCase()], 0);		
+			buildNode(searchQueryNodeData, wikiverse.searchHistory[$searchKeyword.html().toLowerCase()], 0);		
+			console.log("updatesearch", wikiverse.mindmap.graph.nodes());
 		}
 	}
 
@@ -1633,7 +1636,7 @@ var WIKIVERSE = (function($) {
 						var $nextBrick = buildBrick([parseInt($brick.css('left')), parseInt($brick.css('top'))], undefined, $brick.data('id'));
 						buildSection($nextBrick, section, brickDataLoaded);
 						
-						buildNode(wikiverse.mindmap, section, $nextBrick.data('id'), $brick.data('id'));
+						buildNode(section, $nextBrick.data('id'), $brick.data('id'));
 
 						$packeryContainer.packery('unstamp', $brick);
 					});
@@ -2109,13 +2112,10 @@ var WIKIVERSE = (function($) {
 						buildNote($thisBrick, brick.Topic, brickDataLoaded);
 					break;
 				}
-
-				//buildNode(wikiverse.mindmap, brick.Topic, index, false);
-
 			});
-
-			buildMindmap(board);
 		}
+		//this always needs to happen, also without any bricks, coz we need the search query nodes in the graph!
+		buildMindmap(board);
 	}
 
 	function buildMindmap(board){
@@ -2186,7 +2186,6 @@ var WIKIVERSE = (function($) {
 		wikiverse.mindmap.graph.read(wikiverse.mindmapObj);
 		wikiverse.mindmap.refresh();
 
-		//var listener = sigma.layouts.fruchtermanReingold.configure(wikiverse.mindmap, settings);
 		sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
 
 	}
@@ -2237,10 +2236,10 @@ var WIKIVERSE = (function($) {
 
 	}
 
-	function buildNode(sigmaInstance, topic, id, parent){
+	function buildNode(topic, id, parent){
 
 		// Then, let's add some data to display:
-		sigmaInstance.graph.addNode({
+		wikiverse.mindmap.graph.addNode({
 			id: "n" + id,
 			label: topic.title,
 			x: Math.random(),
@@ -2260,12 +2259,12 @@ var WIKIVERSE = (function($) {
 		if(parent){
 
 			//get the last edge and grab its ID
-			var edgesArray = sigmaInstance.graph.edges();
+			var edgesArray = wikiverse.mindmap.graph.edges();
 			//if there are no edges, start with 0
 			var lastEdgeId = (edgesArray.length > 0) ? parseInt(edgesArray[edgesArray.length-1].id.replace(/\D/g,'')) : 0;
 			lastEdgeId++;
 
-			sigmaInstance.graph.addEdge({
+			wikiverse.mindmap.graph.addEdge({
 			  id: 'e' + lastEdgeId,
 			  // Reference extremities:
 			  source: 'n' + parent,
