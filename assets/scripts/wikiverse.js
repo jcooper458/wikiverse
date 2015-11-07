@@ -2109,9 +2109,6 @@ var WIKIVERSE = (function($) {
 
 		});
 
-		/*wikiverse.mindmap.refresh();
-		wikiverse.mindmap.graph.nodes();*/
-
 		buildMindmap(board);
 	}
 
@@ -2510,6 +2507,8 @@ var WIKIVERSE = (function($) {
 		if (confirm('Are you sure you want to clear this board?')) {
 			var elements = $packeryContainer.packery('getItemElements');
 			$packeryContainer.packery('remove', elements);
+
+			wikiverse.mindmap.graph.clear();
 		}
 	};
 
