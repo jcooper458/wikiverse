@@ -27,6 +27,15 @@ var WIKIVERSE = (function($) {
 	   iterations: 1000
 	 };
 
+	 var nodeSettings = {
+	 	Wikipedia: 	["\uF266", "#000"],
+	 	Twitter: 	["\uF099", "#2CB8E3"],
+	 	Youtube: 	["\uF167", "#CC181E"],
+	 	Instagram: 	["\uF16d", "#2E5F80"],
+	 	Flickr: 	["\uF16e", "#FF0085"],
+	 	Soundcloud: ["\uF1be", "#FF6700"]
+	 }
+
 	//var is_root = location.pathname === "/";
 
 	var wpnonce = $('#nonce').html();
@@ -2121,10 +2130,8 @@ var WIKIVERSE = (function($) {
 	function buildMindmap(board){
 
 		wikiverse.mindmapObj = {
-
 			nodes: [],
 			edges: []
-
 		}
 
 		$.each(board.search_history, function(query, id){
@@ -2134,12 +2141,12 @@ var WIKIVERSE = (function($) {
 				label: query,
 				x: Math.random(),
 				y: Math.random(),
-				size: 20,
+				size: 15,
 				parent: "n0", 
 				color: '#ccc',
 				icon: {
 					font: 'FontAwesome', // or 'FontAwesome' etc..
-					content: '\uF129', // or custom fontawesome code eg. "\uF129"
+					content: '\uF002', // or custom fontawesome code eg. "\uF129"
 					scale: 0.7, // 70% of node size
 					color: '#ffffff' // foreground color (white)
 				}
@@ -2158,14 +2165,14 @@ var WIKIVERSE = (function($) {
 					label: brick.Topic.title,
 					x: Math.random(),
 					y: Math.random(),
-					size: 15,
+					size: 10,
 					parent: "n" + brick.Parent,
 					color: '#ccc',
 					icon: {
 						font: 'FontAwesome', // or 'FontAwesome' etc..
-						content: '\uF129', // or custom fontawesome code eg. "\uF129"
+						content: nodeSettings[brick.Type][0], // or custom fontawesome code eg. "\uF129"
 						scale: 0.7, // 70% of node size
-						color: '#ffffff' // foreground color (white)
+						color: nodeSettings[brick.Type][1] // foreground color (white)
 					}
 			    }
 
@@ -3026,7 +3033,7 @@ var WIKIVERSE = (function($) {
 		    minEdgeSize: 10,
 		    maxEdgeSize: 10,
 		    minNodeSize: 5,
-		    maxNodeSize: 10,
+		    maxNodeSize: 20,
 		    enableEdgeHovering: true,
 		    edgeHoverColor: 'edge',
 		    defaultEdgeHoverColor: '#000',
