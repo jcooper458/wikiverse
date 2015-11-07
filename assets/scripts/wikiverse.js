@@ -2120,7 +2120,7 @@ var WIKIVERSE = (function($) {
 
 	function buildMindmap(board){
 
-		var mindmapObj = {
+		wikiverse.mindmapObj = {
 
 			nodes: [],
 			edges: []
@@ -2144,7 +2144,7 @@ var WIKIVERSE = (function($) {
 					color: '#ffffff' // foreground color (white)
 				}
 		    }
-		    mindmapObj.nodes.push(node);
+		    wikiverse.mindmapObj.nodes.push(node);
 		});
 		
 		var edgeId = 0; 
@@ -2177,13 +2177,13 @@ var WIKIVERSE = (function($) {
 					target: "n" + brick.Id
 			    }
 
-			    mindmapObj.nodes.push(node);
-			    mindmapObj.edges.push(edge);
+			    wikiverse.mindmapObj.nodes.push(node);
+			    wikiverse.mindmapObj.edges.push(edge);
 
 			}
 		});
 		
-		wikiverse.mindmap.graph.read(mindmapObj);
+		wikiverse.mindmap.graph.read(wikiverse.mindmapObj);
 		wikiverse.mindmap.refresh();
 
 		//var listener = sigma.layouts.fruchtermanReingold.configure(wikiverse.mindmap, settings);
@@ -2215,11 +2215,8 @@ var WIKIVERSE = (function($) {
 		//get the last edge and grab its ID
 		var edgesArray = wikiverse.mindmap.graph.edges(); 
 		//if there are no edges, start with 0
-		var lastEdgeId = (edgesArray.length > 0) ? edgesArray[edgesArray.length-1].id : 0;
-		//remove the leading "e"
-		lastEdgeId =  parseInt(lastEdgeId.replace(/\D/g,''));
+		var lastEdgeId = (edgesArray.length > 0) ? parseInt(edgesArray[edgesArray.length-1].id.replace(/\D/g,'')) : 0;
 		
-
 		$.each(thisNode.children, function(nodeId, nodeObj){
 			//for each child, create a new edge, thus increment
 			lastEdgeId++;
@@ -2265,8 +2262,7 @@ var WIKIVERSE = (function($) {
 			//get the last edge and grab its ID
 			var edgesArray = sigmaInstance.graph.edges();
 			//if there are no edges, start with 0
-			var lastEdgeId = (edgesArray.length > 0) ? edgesArray[edgesArray.length-1].id : 0;
-			lastEdgeId =  parseInt(lastEdgeId.replace(/\D/g,''));
+			var lastEdgeId = (edgesArray.length > 0) ? parseInt(edgesArray[edgesArray.length-1].id.replace(/\D/g,'')) : 0;
 			lastEdgeId++;
 
 			sigmaInstance.graph.addEdge({
@@ -2514,7 +2510,29 @@ var WIKIVERSE = (function($) {
 			var elements = $packeryContainer.packery('getItemElements');
 			$packeryContainer.packery('remove', elements);
 
-			wikiverse.mindmap.graph.clear();
+			//remove all nodes
+			/*wikiverse.mindmap.graph.clear();
+
+			//re-add search nodes
+			$.each(board.search_history, function(query, id){
+
+				var node = {
+					id: "n" + id,
+					label: query,
+					x: Math.random(),
+					y: Math.random(),
+					size: 20,
+					parent: "n0", 
+					color: '#ccc',
+					icon: {
+						font: 'FontAwesome', // or 'FontAwesome' etc..
+						content: '\uF129', // or custom fontawesome code eg. "\uF129"
+						scale: 0.7, // 70% of node size
+						color: '#ffffff' // foreground color (white)
+					}
+			    }
+			    wikiverse.mindmapObj.nodes.push(node);
+			});*/
 		}
 	};
 
