@@ -2505,7 +2505,7 @@ var WIKIVERSE = (function($) {
 	//collect the bricks for saveboard/createboard/forkboard
 	wikiverse.collectBricks = function() {
 
-		var $firstBrick = $packeryContainer.find('.brick[tabindex=0]'); 
+		var $firstBrick = $packeryContainer.find('.brick:first'); 
 		var featuredImage; 
 
 		if($firstBrick.data('type') === "streetview"){
@@ -2514,7 +2514,7 @@ var WIKIVERSE = (function($) {
 		else {
 			featuredImage = $firstBrick.find('img').attr('src');
 		}
-		 
+
 		var bricks = $packeryContainer.packery('getItemElements');
 
 		var wikiverseParsed = bricks.reduce(function(Brick, brick, index){
