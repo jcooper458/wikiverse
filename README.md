@@ -8,6 +8,7 @@ License information will follow asap.
 wikiverse wont work without these two plugins: 
 
 - Edit Author Slug (can be installed via Wordpress - set the slug to "user")
+- My forked version of the WP-API plugin
 - wp-twitter-api (own plugin - needs configuration via the Wordpress backend)
 
 I added my composer.json to automate the installation of these two plugins. Follow the bedrock / composer instruction to install the plugins. 
@@ -23,7 +24,8 @@ To install the theme, follow Bedrocks's documentation. In a nutshell, the needed
 3. composer update
 4. Install the theme-folder found here
 5. Activate and configure the Edit Author Slug plugin to have /user as the slug
-6. Activate WP-API
+6. Activate wp-twitter-api and configure your twitter oauth credentials 
+7. Activate WP-API
 
 
 Links to Bedrock/Sage: 
