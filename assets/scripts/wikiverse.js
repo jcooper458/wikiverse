@@ -515,9 +515,12 @@ var WIKIVERSE = (function($) {
 		//if sidebar open, hide the plus
 		if($('#rightSidebar').hasClass('cbp-spmenu-open')){
 			$('#openRightSidebar').addClass('invisible');
+			sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
+			wikiverse.mindmap.refresh();
 		}else{
 			$('#openRightSidebar').removeClass('invisible');
 		}
+
 	}
 
 	//get the pictures for given location of a map (instagram and flickr)
@@ -1445,7 +1448,7 @@ var WIKIVERSE = (function($) {
 				var data = JSON.parse(data);
 	
 				var resultsArray = data.statuses.map(function(tweet, index){
-					console.log(tweet)
+
 					return {
 						Topic: {							
 							title: tweet.text,
@@ -1455,9 +1458,7 @@ var WIKIVERSE = (function($) {
 						Type: "Twitter"
 					}
 				});
-
 				dataLoaded(resultsArray, "Twitter", triggerSearchResultsFunction);
-
 			}
 		});
 	}
@@ -2425,8 +2426,8 @@ var WIKIVERSE = (function($) {
 
 		});
 
-		sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
-		wikiverse.mindmap.refresh();
+		//sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
+		//wikiverse.mindmap.refresh();
 
 	}
 
@@ -2472,8 +2473,11 @@ var WIKIVERSE = (function($) {
 
 		}
 
-		sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
-		wikiverse.mindmap.refresh();
+		//if sidebar is open do the fruchertmanreingold, if not, dont do anything and save memory!
+		if($('#rightSidebar').hasClass('cbp-spmenu-open')) {			
+			sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
+			wikiverse.mindmap.refresh();
+		}
 	}
 
 	//toggle the search overlay
