@@ -2004,7 +2004,7 @@ var WIKIVERSE = (function($) {
 
 		$brick.addClass('wiki');
 
-		$brick.prepend('<p><h2>' + section.name + '</h2></p>');
+		$brick.prepend('<p><h4>' + section.name + '</h4></p>');
 
 		//search another source menu:
 		var $connections = $(wikiverse_nav);
@@ -2012,7 +2012,7 @@ var WIKIVERSE = (function($) {
 		$connections.selectpicker();
 
 		$connections.change(function(event) {
-			getConnections($(this).find("option:selected").text(), section.name, $brick.data('id'));
+			getConnections($(this).find("option:selected").text(), section.title, $brick.data('id'));
 		});	
 
 		$.ajax({
@@ -2421,7 +2421,7 @@ var WIKIVERSE = (function($) {
 	    	});	
 
 		});
-		
+
 		//if sidebar is open do the fruchertmanreingold, if not, dont do anything and save memory!
 		if($('#rightSidebar').hasClass('cbp-spmenu-open')) {			
 			sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
