@@ -2376,10 +2376,6 @@ var WIKIVERSE = (function($) {
 		});
 		
 		wikiverse.mindmap.graph.read(wikiverse.mindmapObj);
-		wikiverse.mindmap.refresh();
-
-		sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
-
 	}
 
 
@@ -2425,10 +2421,12 @@ var WIKIVERSE = (function($) {
 	    	});	
 
 		});
-
-		//sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
-		//wikiverse.mindmap.refresh();
-
+		
+		//if sidebar is open do the fruchertmanreingold, if not, dont do anything and save memory!
+		if($('#rightSidebar').hasClass('cbp-spmenu-open')) {			
+			sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
+			wikiverse.mindmap.refresh();
+		}
 	}
 
 	function buildNode(brickData, id, parent){
