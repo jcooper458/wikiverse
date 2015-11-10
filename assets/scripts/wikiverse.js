@@ -1444,13 +1444,13 @@ var WIKIVERSE = (function($) {
 
 				var data = JSON.parse(data);
 	
-				var resultsArray = data.statuses.map(function(item, index){
-
+				var resultsArray = data.statuses.map(function(tweet, index){
+					console.log(tweet)
 					return {
 						Topic: {							
-							title: item.text,
-							user: item.user.screen_name,
-							userThumb: item.user.profile_image_url						
+							title: tweet.text,
+							user: tweet.user.screen_name,
+							userThumb: tweet.user.profile_image_url_https						
 						},
 						Type: "Twitter"
 					}
