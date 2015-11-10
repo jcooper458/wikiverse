@@ -215,7 +215,7 @@ var WIKIVERSE = (function($) {
 			$("#addMap").on("click", function() {
 				
 				var $mapDefaultBrick = $(defaultMapBrick);
-				var $thisBrick = buildGmapsBrick($packeryContainer, parseInt($mapDefaultBrick.css('left')), parseInt($mapDefaultBrick.css('top')));
+				var $thisBrick = buildGmapsBrick(parseInt($mapDefaultBrick.css('left')), parseInt($mapDefaultBrick.css('top')));
 
 				getGmapsSearch($thisBrick);
 
@@ -437,7 +437,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//build an empty brick
-	function buildGmapsBrick($packeryContainer, x, y) {
+	function buildGmapsBrick(x, y) {
 
 		var $brick = $(defaultMapBrick);
 
@@ -1463,7 +1463,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//build a note 
-	function buildNote($brick, topic, callback){
+	/*function buildNote($brick, topic, callback){
 
 		$brick.addClass('note');
 		$brick.addClass('transparent');
@@ -1473,7 +1473,7 @@ var WIKIVERSE = (function($) {
 		$brick.append('<blockquote>' + topic.note + '</blockquote>');
 
 		callback($brick);
-	}
+	}*/
 	//create a note
 	function createNote($brick, callback){
 
@@ -2254,7 +2254,7 @@ var WIKIVERSE = (function($) {
 			$.each(board.bricks, function(index, brick) {
 
 				//build a brick at position 0,0
-				var $thisBrick = buildBrick([undefined,undefined], brick.Id, brick.Parent);
+				var $thisBrick = (brick.Type === "gmaps") ? buildGmapsBrick([undefined,undefined]) : buildBrick([undefined,undefined], brick.Id, brick.Parent);
 
 				//get all Ids of this board (for later picking different ones)
 				wikiverse.thisBoardsIDs.push(brick.Id);
@@ -2280,9 +2280,8 @@ var WIKIVERSE = (function($) {
 						wikiverse.buildYoutube($thisBrick, brick.Topic, brickDataLoaded);
 					break;
 
-					case "gmaps":
-						var $thisGmapsBrick = buildGmapsBrick($packeryContainer);
-						buildGmaps($thisGmapsBrick, brick.Topic, brickDataLoaded);
+					case "gmaps":						
+						buildGmaps($thisBrick, brick.Topic, brickDataLoaded);
 					break;
 
 					case "streetview":
@@ -2297,9 +2296,9 @@ var WIKIVERSE = (function($) {
 						wikiverse.buildTwitter($thisBrick, brick.Topic, brickDataLoaded);
 					break;
 
-					case "note":
+					/*case "note":
 						buildNote($thisBrick, brick.Topic, brickDataLoaded);
-					break;
+					break;*/
 				}
 			});
 		}
@@ -3197,9 +3196,9 @@ var WIKIVERSE = (function($) {
 	// REMOVE ITEM
 	$packeryContainer.on("click", ".brick .cross", function() {
 
-		var $thisBrick = jQuery(this).parent(".brick");
+		var $thisBrick = $(this).parent(".brick");
 
-		removeNode($thisBrick.data('id'));
+		if(!$thisBrick.hasClass('gmaps')) removeNode($thisBrick.data('id'));
 
 		//$thisBrick.fadeOut('slow').remove();
 		$packeryContainer.packery('remove', $thisBrick);
