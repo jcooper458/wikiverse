@@ -391,9 +391,9 @@ var WIKIVERSE = (function($) {
 	}
 
 	//search for related youtube videos
-	function getRelatedYoutubes(videoID, origQuery, dataLoaded, triggerFunction) {
+	function getRelatedYoutubes(videoID, origQuery, dataLoaded, triggerFunction, parent) {
 
-		prepareSearchNavbar(origQuery);
+		prepareSearchNavbar(origQuery, parent);
 
 		//Open the sidebar:
 		if (!$('body').hasClass('cbp-spmenu-push-toright')) {
@@ -1223,7 +1223,7 @@ var WIKIVERSE = (function($) {
 	function onTagClickedDoSearch($brick, type) {
 		$brick.find('.tag').on('click', function(e) {
 			e.preventDefault();
-			getConnections(type, $(this).html());
+			getConnections(type, $(this).html(), $brick.data('id'));
 		});
 	}
 
@@ -1557,7 +1557,7 @@ var WIKIVERSE = (function($) {
 
 		$tweetContainer.on('click', 'a:not(.externalLink)', function(event) {
 			event.preventDefault();
-			getConnections("Twitter", $(this).attr('hashtag'))
+			getConnections("Twitter", $(this).attr('hashtag'), $brick.data('id'));
 			$(this).contents().unwrap();
 		});
 
@@ -2011,7 +2011,7 @@ var WIKIVERSE = (function($) {
 		$connections.selectpicker();
 
 		$connections.change(function(event) {
-			getConnections($(this).find("option:selected").text(), section.name);
+			getConnections($(this).find("option:selected").text(), section.name, $brick.data('id'));
 		});	
 
 		$.ajax({
@@ -2133,7 +2133,7 @@ var WIKIVERSE = (function($) {
 		});
 
 		$brick.find('.related').on('click', function() {
-			getRelatedYoutubes(youtubeObj.youtubeID, youtubeObj.query, searchResultsLoaded, "buildYoutubeSearchResults");
+			getRelatedYoutubes(youtubeObj.youtubeID, youtubeObj.query, searchResultsLoaded, "buildYoutubeSearchResults", $brick.data('id'));
 		});
 
 		callback($brick);
@@ -3169,7 +3169,7 @@ var WIKIVERSE = (function($) {
 	//
 
 	$('.otherSource').change(function(event) {
-		getConnections($(this).val(), $(this).parents('#sidebar').find('h3').html());
+		getConnections($(this).val(), $(this).parents('#sidebar').find('h3').html(), $searchKeyword.data('parent'));
 	});
 
 	//close sidebar
