@@ -7,9 +7,7 @@
       "vendor": [
         "assets/scripts/packery.pkgd.min.js",
         "assets/vendor/linkurious.js/build/sigma.min.js",
-        "assets/vendor/linkurious.js/build/plugins/sigma.plugins.animate.min.js",
-        "assets/vendor/linkurious.js/build/plugins/sigma.layouts.fruchtermanReingold.min.js",
-        "assets/vendor/linkurious.js/build/plugins/sigma.renderers.linkurious.min.js"
+        "assets/vendor/linkurious.js/build/plugins.min.js"
       ],
       "main": true
     },

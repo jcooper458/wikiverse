@@ -29,11 +29,13 @@ var WIKIVERSE = (function($) {
 
 	 var nodeSettings = {
 	 	Wikipedia: 	["\uF266", "#000"],
+	 	wikiSection:["\uF266", "#000"],
 	 	Twitter: 	["\uF099", "#2CB8E3"],
 	 	Youtube: 	["\uF167", "#CC181E"],
 	 	Instagram: 	["\uF16d", "#2E5F80"],
 	 	Flickr: 	["\uF16e", "#FF0085"],
-	 	Soundcloud: ["\uF1be", "#FF6700"]
+	 	Soundcloud: ["\uF1be", "#FF6700"],
+	 	searchQuery: ["\uF002", "#000"],
 	 }
 
 	//var is_root = location.pathname === "/";
@@ -126,7 +128,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//clean up the sidebar navbar for the new search
-	function prepareSearchNavbar(query){
+	function prepareSearchNavbar(query, parent){
 
 		//empty the search results
 		$results.empty();
@@ -135,6 +137,11 @@ var WIKIVERSE = (function($) {
 		//empty the searchkeyword and re-fill it with new search query
 		$searchKeyword.empty();
 		$searchKeyword.append(query.toLowerCase());
+
+		//store the parent in case it is passed, in case we are getting a connection from the board
+		if(parent){
+			$searchKeyword.data('parent', parent);
+		}
 
 		//create a loading icon
 		$sidebar.append(loadingIcon);
@@ -307,14 +314,20 @@ var WIKIVERSE = (function($) {
 			//unwrap the a element
 			$(this).contents().unwrap();
 
-			var brickData = {
+			var wikiData = {
 				title: topic,
 				language: lang
 			};
 
 			var $nextBrick = buildBrick([parseInt($brick.css('left') + 500), parseInt($brick.css('top') + 500)], undefined, $brick.data('id'));
 
-			wikiverse.buildWikipedia($nextBrick, brickData, brickDataLoaded);
+			wikiverse.buildWikipedia($nextBrick, wikiData, brickDataLoaded);
+
+			var brickData = {
+				Topic: wikiData,
+				Type: "Wikipedia",
+				Id: $nextBrick.data('id')
+			}
 
 			//unstamp it after everything is done
 			$packeryContainer.packery('unstamp', $brick);
@@ -1016,14 +1029,14 @@ var WIKIVERSE = (function($) {
 	}
 
 	//for search query, trigger the search to other sources
-	function getConnections(source, topic) {
+	function getConnections(source, topic, parent) {
 
 		//Open the sidebar:
 		if (!$('body').hasClass('cbp-spmenu-push-toright')) {
 			toggleSidebar();
 		}
 
-		prepareSearchNavbar(topic);
+		prepareSearchNavbar(topic, parent);
 
 		switch (source) {
 
@@ -1545,11 +1558,19 @@ var WIKIVERSE = (function($) {
 		//bind event to every row -> so you can start the wikiverse
 		$results.find('.result').unbind('click').on('click', function(event) {			
 
-			//this need to be called before everything!
-			updateSearchHistory();
+			//if there is no parent saved in the searchkeyword, you are searching for soemthign new, thus 
+			//updatethesearchistory and use that searchquery for a fresh parent node in the mindmap
+			if(!$searchKeyword.data('parent')){
+				updateSearchHistory();				
+			}
 
-			//set the parent to the searchkeyword, as you are pushing new bricks to the board
-			var parent = wikiverse.searchHistory[$searchKeyword.html().toLowerCase()];
+			//if there is a searchkeyword parent, we are using the search to continue a topic, take that as parent
+			//if not, it means we are pushing a topic to the board for the first time, take the searchquery id as parent
+			//
+			//not that updateSearchhistory is emptying the searchkeyword.data(parent) in case something is added to the searchhistory, 
+			//thus forcing the second (if not) state!
+			var parent = $searchKeyword.data('parent') || wikiverse.searchHistory[$searchKeyword.html().toLowerCase()];
+
 
 			var $thisBrick = buildBrick([parseInt($topBrick.css('left')), parseInt($topBrick.css('top')) - 200], undefined, parent);
 			var result = $(this).data("topic");
@@ -1560,11 +1581,8 @@ var WIKIVERSE = (function($) {
 			$(this).tooltip('destroy');
 			$(this).remove();
 
-			console.log(wikiverse.mindmap.graph.nodes());
-			console.log(wikiverse.searchHistory);
-			console.log(parent);
 			//build a node with the searchqueryNode as parent
-			buildNode(result.Topic, $thisBrick.data('id'), parent);
+			buildNode(result, $thisBrick.data('id'), parent);
 			return false;
 		});
 
@@ -1572,19 +1590,24 @@ var WIKIVERSE = (function($) {
 		$sidebar.find("#loading").remove();	
 	}
 
-	function updateSearchHistory(id){
+	function updateSearchHistory(){
 
 		//if search keyword is not already in history, add it
 		if (!wikiverse.searchHistory.hasOwnProperty($searchKeyword.html().toLowerCase())){
 			wikiverse.searchHistory[$searchKeyword.html().toLowerCase()] = getRandomWvID(); 
 
+			//empty the $searchkeyword parent id so that a new searchquery parent is created
+			
 			var searchQueryNodeData = {
-				title: $searchKeyword.html().toLowerCase()
+				Topic: {
+					title: $searchKeyword.html()				
+				},
+				Type: "searchQuery",
+				Id: wikiverse.searchHistory[$searchKeyword.html().toLowerCase()]
 			}
 
 			//build a node for the searchquery
-			buildNode(searchQueryNodeData, wikiverse.searchHistory[$searchKeyword.html().toLowerCase()], 0);		
-			console.log("updatesearch", wikiverse.mindmap.graph.nodes());
+			buildNode(searchQueryNodeData, wikiverse.searchHistory[$searchKeyword.html().toLowerCase()]);
 		}
 	}
 
@@ -1632,7 +1655,7 @@ var WIKIVERSE = (function($) {
 
 						$packeryContainer.packery('stamp', $brick);
 
-						var section = {
+						var sectionData = {
 
 							title: $(this).html(),
 							language: topic.language,
@@ -1643,9 +1666,15 @@ var WIKIVERSE = (function($) {
 						$(this).remove();
 
 						var $nextBrick = buildBrick([parseInt($brick.css('left')), parseInt($brick.css('top'))], undefined, $brick.data('id'));
-						buildSection($nextBrick, section, brickDataLoaded);
+						buildSection($nextBrick, sectionData, brickDataLoaded);
 						
-						buildNode(section, $nextBrick.data('id'), $brick.data('id'));
+						var brickData = {
+							Type: "wikiSection",
+							Topic: sectionData,
+							Id: $nextBrick.data('id')
+						}
+
+						buildNode(brickData, $nextBrick.data('id'), $brick.data('id'));
 
 						$packeryContainer.packery('unstamp', $brick);
 					});
@@ -1682,7 +1711,7 @@ var WIKIVERSE = (function($) {
 		$connections.selectpicker();
 
 		$connections.change(function(event) {
-			getConnections($(this).find("option:selected").text(), topic.title);
+			getConnections($(this).find("option:selected").text(), topic.title, $brick.data('id'));
 		});	
 
 		$brick.append($sectionsButton);
@@ -2143,12 +2172,12 @@ var WIKIVERSE = (function($) {
 				y: Math.random(),
 				size: 15,
 				parent: "n0", 
-				color: '#ccc',
+				color: '#f8f8f8',
 				icon: {
 					font: 'FontAwesome', // or 'FontAwesome' etc..
 					content: '\uF002', // or custom fontawesome code eg. "\uF129"
 					scale: 0.7, // 70% of node size
-					color: '#ffffff' // foreground color (white)
+					color: '#000' // foreground color (white)
 				}
 		    }
 		    wikiverse.mindmapObj.nodes.push(node);
@@ -2167,11 +2196,13 @@ var WIKIVERSE = (function($) {
 					y: Math.random(),
 					size: 10,
 					parent: "n" + brick.Parent,
-					color: '#ccc',
+					color: '#f8f8f8',
+					border_size: 2,
+					border_color: "#000",
 					icon: {
 						font: 'FontAwesome', // or 'FontAwesome' etc..
 						content: nodeSettings[brick.Type][0], // or custom fontawesome code eg. "\uF129"
-						scale: 0.7, // 70% of node size
+						scale: 0.8, // 70% of node size
 						color: nodeSettings[brick.Type][1] // foreground color (white)
 					}
 			    }
@@ -2181,7 +2212,10 @@ var WIKIVERSE = (function($) {
 		    	var edge = {
 					id: "e" + edgeIDString,
 					source: "n" + brick.Parent,
-					target: "n" + brick.Id
+					target: "n" + brick.Id,
+					size: 2,
+					color: "#f8f8f8",
+					type: "curvedArrow"
 			    }
 
 			    wikiverse.mindmapObj.nodes.push(node);
@@ -2233,7 +2267,10 @@ var WIKIVERSE = (function($) {
 	    	  id: "e" + lastEdgeId,
 	    	  // Reference extremities:
 	    	  source: thisNode.parent,
-	    	  target: nodeId
+	    	  target: nodeId,
+	    	  size: 2,
+	    	  color: "#f8f8f8",
+	    	  type: "curvedArrow"
 	    	});	
 
 		});
@@ -2243,22 +2280,24 @@ var WIKIVERSE = (function($) {
 
 	}
 
-	function buildNode(topic, id, parent){
+	function buildNode(brickData, id, parent){
 
 		// Then, let's add some data to display:
 		wikiverse.mindmap.graph.addNode({
 			id: "n" + id,
-			label: topic.title,
+			label: brickData.Topic.title,
 			x: Math.random(),
 			y: Math.random(),
 			size: 15,
 			parent: "n" + parent,
-			color: '#ccc',
+			color: '#f8f8f8',
+			border_size: 2,
+			border_color: "#000",
 			icon: {
 				font: 'FontAwesome', // or 'FontAwesome' etc..
-				content: '\uF129', // or custom fontawesome code eg. "\uF129"
-				scale: 0.7, // 70% of node size
-				color: '#ffffff' // foreground color (white)
+				content: nodeSettings[brickData.Type][0], // or custom fontawesome code eg. "\uF129"
+				scale: 0.8, // 70% of node size
+				color: nodeSettings[brickData.Type][1] // foreground color (white)
 			}
 	    });
 
@@ -2275,7 +2314,10 @@ var WIKIVERSE = (function($) {
 			  id: 'e' + lastEdgeId,
 			  // Reference extremities:
 			  source: 'n' + parent,
-			  target: 'n' + id
+			  target: 'n' + id,
+			  size: 2,
+			  color: "#f8f8f8",
+			  type: "curvedArrow"
 			});			
 
 		}
@@ -2904,6 +2946,43 @@ var WIKIVERSE = (function($) {
 		wikiverse.searchHistory = {}; 
 		wikiverse.thisBoardsIDs = [];
 
+		sigma.classes.graph.addMethod('neighbors', function(nodeId) {
+		   var k,
+		       neighbors = {},
+		       index = this.allNeighborsIndex[nodeId] || {};
+
+		   for (k in index)
+		     neighbors[k] = this.nodesIndex[k];
+
+		   return neighbors;
+		 });
+		
+		sigma.classes.graph.addMethod('getNodesById', function() {
+		  return this.nodesIndex;
+		});
+
+		wikiverse.mindmap = new sigma({
+		  renderer: {
+		    container: document.getElementById('mindmap'),
+		    type: 'canvas'
+		  },
+		  settings: {
+		    doubleClickEnabled: false,
+		    minEdgeSize: 1,
+		    maxEdgeSize: 3,
+		    minNodeSize: 5,
+		    maxNodeSize: 15,
+		    enableEdgeHovering: true,
+		    edgeHoverColor: 'edge',
+		    defaultEdgeHoverColor: '#000',
+		    edgeHoverSizeRatio: 1,
+		    edgeHoverExtremities: true
+		  }
+		});
+
+		//graphEventHandlers();
+
+
 		//but also open the search if clicked
 		$('.searchButton').on('click', function(event) {
 			event.preventDefault();
@@ -2961,6 +3040,9 @@ var WIKIVERSE = (function($) {
 			getFlickrs(query, "relevance", "textQuery", searchResultsLoaded);
 			getInstagrams(query, "hashtag", searchResultsLoaded);
 
+			//reset the searchkeyword parent so that there is no parent, and thus a new searhquery node is created
+			$searchKeyword.removeData('parent');
+
 		});
 
 		var lang = "en";
@@ -3008,40 +3090,6 @@ var WIKIVERSE = (function($) {
 			createNote($noteBrick, brickDataLoaded);
 		});
 
-		sigma.classes.graph.addMethod('neighbors', function(nodeId) {
-		   var k,
-		       neighbors = {},
-		       index = this.allNeighborsIndex[nodeId] || {};
-
-		   for (k in index)
-		     neighbors[k] = this.nodesIndex[k];
-
-		   return neighbors;
-		 });
-		
-		sigma.classes.graph.addMethod('getNodesById', function() {
-		  return this.nodesIndex;
-		});
-
-		wikiverse.mindmap = new sigma({
-		  renderer: {
-		    container: document.getElementById('mindmap'),
-		    type: 'canvas'
-		  },
-		  settings: {
-		    doubleClickEnabled: false,
-		    minEdgeSize: 10,
-		    maxEdgeSize: 10,
-		    minNodeSize: 5,
-		    maxNodeSize: 20,
-		    enableEdgeHovering: true,
-		    edgeHoverColor: 'edge',
-		    defaultEdgeHoverColor: '#000',
-		    edgeHoverSizeRatio: 1,
-		    edgeHoverExtremities: true
-		  }
-		});
-		//graphEventHandlers();
 	}
 
 
