@@ -80,6 +80,158 @@ var WIKIVERSE = (function($) {
 		destroyBoard,
 		getLanguage;
 
+		//initiate the wikiverse search functionality
+		wikiverse.init = function() {
+
+			wikiverse.searchHistory = {}; 
+			wikiverse.thisBoardsIDs = [];
+
+			sigma.classes.graph.addMethod('neighbors', function(nodeId) {
+			   var k,
+			       neighbors = {},
+			       index = this.allNeighborsIndex[nodeId] || {};
+
+			   for (k in index)
+			     neighbors[k] = this.nodesIndex[k];
+
+			   return neighbors;
+			 });
+			
+			sigma.classes.graph.addMethod('getNodesById', function() {
+			  return this.nodesIndex;
+			});
+
+			wikiverse.mindmap = new sigma({
+			  renderer: {
+			    container: document.getElementById('mindmap'),
+			    type: 'canvas'
+			  },
+			  settings: {
+			    doubleClickEnabled: false,
+			    minEdgeSize: 1,
+			    maxEdgeSize: 3,
+			    minNodeSize: 5,
+			    maxNodeSize: 15,
+			    enableEdgeHovering: true,
+			    edgeHoverColor: 'edge',
+			    defaultEdgeHoverColor: '#000',
+			    edgeHoverSizeRatio: 1,
+			    edgeHoverExtremities: true
+			  }
+			});
+
+			//graphEventHandlers();
+
+
+			//but also open the search if clicked
+			$('.searchButton').on('click', function(event) {
+				event.preventDefault();
+				wikiverse.toggleSearch();
+
+				//Close the sidebar, if open:
+				if ($('body').hasClass('cbp-spmenu-push-toright')) {
+					toggleSidebar();
+				}
+			});
+
+			//close the search
+			$('.search, .search button.close').on('click', function(event) {
+				if (event.target.className === 'close') {
+					$(this).removeClass('open');
+				}
+			});
+
+			//adding escape functionality for closing search
+			$(document).keyup(function(e) {
+				if ($('.search').hasClass('open') && e.keyCode === 27) { // escape key maps to keycode `27`
+					$('.search').removeClass('open');
+				}
+			});
+
+			//detect top element
+			$(document).scroll(function() {
+				var scrollTop = $(window).scrollTop();
+				var windowHeight = $(window).height();		
+				var first = false;
+				$(".brick").each( function() {
+					var offset = $(this).offset();
+					if (scrollTop <= offset.top && ($(this).height() + offset.top) < (scrollTop + windowHeight) && first == false) {
+						$(this).addClass("top");
+
+						$topBrick = $(this);
+
+						first=true;
+					} else {
+						$(this).removeClass("top");
+						first=false;
+					}
+				});
+			});
+
+			$("#wv_search").on("click", function() {
+
+				//get the query from the search div
+				var query = $("#searchInput input").val();	
+				
+				getWikis(query, "en", searchResultsLoaded);
+				getSoundclouds(query, searchResultsLoaded);
+				getTweets(query, searchResultsLoaded);
+				getYoutubes(query, searchResultsLoaded);
+				getFlickrs(query, "relevance", "textQuery", searchResultsLoaded);
+				getInstagrams(query, "hashtag", searchResultsLoaded);
+
+				//reset the searchkeyword parent so that there is no parent, and thus a new searhquery node is created
+				$searchKeyword.removeData('parent');
+
+			});
+
+			var lang = "en";
+
+			/*$('#langselect').live('change', function() {
+				lang = $(this).val();
+			});*/
+
+			$(".source").on("click", function() {
+				
+				var query = $("#searchInput input").val();
+				
+				//close the search
+				$('.search').removeClass('open');
+
+				//if not already open, open the sidebar:
+				if (!$('body').hasClass('cbp-spmenu-push-toright')) {
+					toggleSidebar();
+				}
+				
+				prepareSearchNavbar(query);
+
+				var thisResultsArray = $(this).data("results");
+				var functionToBuildSearchResults = $(this).attr("fn");
+
+				wikiverse[functionToBuildSearchResults](thisResultsArray, searchResultsListBuilt);
+
+			});
+
+			$("#addMap").on("click", function() {
+				
+				var $mapDefaultBrick = $(defaultMapBrick);
+				var $thisBrick = buildGmapsBrick($packeryContainer, parseInt($mapDefaultBrick.css('left')), parseInt($mapDefaultBrick.css('top')));
+
+				getGmapsSearch($thisBrick);
+
+			});
+
+			/*$("#addNoteButton").on("click", function() {
+				//close the search
+				$('#search').removeClass('open');
+
+				var $noteBrick = buildBrick();
+
+				createNote($noteBrick, brickDataLoaded);
+			});*/
+
+		}
+
 	//toggles the image size on click (works also for youtube)
 	function toggleImageSize( event ) {
 		
@@ -1571,7 +1723,6 @@ var WIKIVERSE = (function($) {
 			//thus forcing the second (if not) state!
 			var parent = $searchKeyword.data('parent') || wikiverse.searchHistory[$searchKeyword.html().toLowerCase()];
 
-
 			var $thisBrick = buildBrick([parseInt($topBrick.css('left')), parseInt($topBrick.css('top')) - 200], undefined, parent);
 			var result = $(this).data("topic");
 
@@ -2939,159 +3090,6 @@ var WIKIVERSE = (function($) {
 		  wikiverse.mindmap.refresh();
 		});
 	}
-
-	//initiate the wikiverse search functionality
-	wikiverse.init = function() {
-
-		wikiverse.searchHistory = {}; 
-		wikiverse.thisBoardsIDs = [];
-
-		sigma.classes.graph.addMethod('neighbors', function(nodeId) {
-		   var k,
-		       neighbors = {},
-		       index = this.allNeighborsIndex[nodeId] || {};
-
-		   for (k in index)
-		     neighbors[k] = this.nodesIndex[k];
-
-		   return neighbors;
-		 });
-		
-		sigma.classes.graph.addMethod('getNodesById', function() {
-		  return this.nodesIndex;
-		});
-
-		wikiverse.mindmap = new sigma({
-		  renderer: {
-		    container: document.getElementById('mindmap'),
-		    type: 'canvas'
-		  },
-		  settings: {
-		    doubleClickEnabled: false,
-		    minEdgeSize: 1,
-		    maxEdgeSize: 3,
-		    minNodeSize: 5,
-		    maxNodeSize: 15,
-		    enableEdgeHovering: true,
-		    edgeHoverColor: 'edge',
-		    defaultEdgeHoverColor: '#000',
-		    edgeHoverSizeRatio: 1,
-		    edgeHoverExtremities: true
-		  }
-		});
-
-		//graphEventHandlers();
-
-
-		//but also open the search if clicked
-		$('.searchButton').on('click', function(event) {
-			event.preventDefault();
-			wikiverse.toggleSearch();
-
-			//Close the sidebar, if open:
-			if ($('body').hasClass('cbp-spmenu-push-toright')) {
-				toggleSidebar();
-			}
-		});
-
-		//close the search
-		$('.search, .search button.close').on('click', function(event) {
-			if (event.target.className === 'close') {
-				$(this).removeClass('open');
-			}
-		});
-
-		//adding escape functionality for closing search
-		$(document).keyup(function(e) {
-			if ($('.search').hasClass('open') && e.keyCode === 27) { // escape key maps to keycode `27`
-				$('.search').removeClass('open');
-			}
-		});
-
-		//detect top element
-		$(document).scroll(function() {
-			var scrollTop = $(window).scrollTop();
-			var windowHeight = $(window).height();		
-			var first = false;
-			$(".brick").each( function() {
-				var offset = $(this).offset();
-				if (scrollTop <= offset.top && ($(this).height() + offset.top) < (scrollTop + windowHeight) && first == false) {
-					$(this).addClass("top");
-
-					$topBrick = $(this);
-
-					first=true;
-				} else {
-					$(this).removeClass("top");
-					first=false;
-				}
-			});
-		});
-
-		$("#wv_search").on("click", function() {
-
-			//get the query from the search div
-			var query = $("#searchInput input").val();	
-			
-			getWikis(query, "en", searchResultsLoaded);
-			getSoundclouds(query, searchResultsLoaded);
-			getTweets(query, searchResultsLoaded);
-			getYoutubes(query, searchResultsLoaded);
-			getFlickrs(query, "relevance", "textQuery", searchResultsLoaded);
-			getInstagrams(query, "hashtag", searchResultsLoaded);
-
-			//reset the searchkeyword parent so that there is no parent, and thus a new searhquery node is created
-			$searchKeyword.removeData('parent');
-
-		});
-
-		var lang = "en";
-
-		/*$('#langselect').live('change', function() {
-			lang = $(this).val();
-		});*/
-
-		$(".source").on("click", function() {
-			
-			var query = $("#searchInput input").val();
-			
-			//close the search
-			$('.search').removeClass('open');
-
-			//if not already open, open the sidebar:
-			if (!$('body').hasClass('cbp-spmenu-push-toright')) {
-				toggleSidebar();
-			}
-			
-			prepareSearchNavbar(query);
-
-			var thisResultsArray = $(this).data("results");
-			var functionToBuildSearchResults = $(this).attr("fn");
-
-			wikiverse[functionToBuildSearchResults](thisResultsArray, searchResultsListBuilt);
-
-		});
-
-		$("#addMap").on("click", function() {
-			
-			var $mapDefaultBrick = $(defaultMapBrick);
-			var $thisBrick = buildGmapsBrick($packeryContainer, parseInt($mapDefaultBrick.css('left')), parseInt($mapDefaultBrick.css('top')));
-
-			getGmapsSearch($thisBrick);
-
-		});
-
-		$("#addNoteButton").on("click", function() {
-			//close the search
-			$('#search').removeClass('open');
-
-			var $noteBrick = buildBrick();
-
-			createNote($noteBrick, brickDataLoaded);
-		});
-
-	}
-
 
 	//----------------keyboard shortcuts----------------------------
 
