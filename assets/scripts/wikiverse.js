@@ -2248,7 +2248,7 @@ var WIKIVERSE = (function($) {
 		});	
 
 		//if there are bricks in the board
-		if(!jQuery.isEmptyObject(board.bricks)){
+		if(!$.isEmptyObject(board.bricks)){
 
 			$('#global-loading').removeClass("invisible");
 
