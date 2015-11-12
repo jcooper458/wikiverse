@@ -2279,7 +2279,7 @@ var WIKIVERSE = (function($) {
 					break;
 
 					case "gmaps":						
-						wikiversse.buildGmaps($thisBrick, brick.Topic, brickDataLoaded);
+						wikiverse.buildGmaps($thisBrick, brick.Topic, brickDataLoaded);
 					break;
 
 					case "streetview":
