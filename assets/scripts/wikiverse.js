@@ -2252,7 +2252,7 @@ var WIKIVERSE = (function($) {
 			$.each(board.bricks, function(index, brick) {
 
 				//build a brick at position 0,0
-				var $thisBrick = (brick.Type === "gmaps") ? buildGmapsBrick([undefined,undefined]) : buildBrick([undefined,undefined], brick.Id, brick.Parent);
+				var $thisBrick = (brick.Type === "gmaps" || brick.Type === "streetview") ? buildGmapsBrick([undefined,undefined]) : buildBrick([undefined,undefined], brick.Id, brick.Parent);
 
 				//get all Ids of this board (for later picking different ones)
 				wikiverse.thisBoardsIDs.push(brick.Id);
@@ -2335,7 +2335,8 @@ var WIKIVERSE = (function($) {
 
 		$.each(board.bricks, function(key, brick){
 
-			if(brick.Id){
+			//if there is an Id, and its not a gmaps or streetview brick
+			if(brick.Id && (brick.Type !== "gmaps" || brick.Type !== "streetview")){
 
 				var node = {
 					id: "n" + brick.Id,
