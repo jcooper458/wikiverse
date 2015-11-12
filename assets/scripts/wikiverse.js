@@ -880,8 +880,8 @@ var WIKIVERSE = (function($) {
 		$mapbrick.addClass('w2-fix');
 
 		$mapbrick.prepend($mapcanvas);
-		$mapbrick.prepend(getInstagramsButton);
-		$mapbrick.prepend(getFlickrsButton);		
+		$mapbrick.append(getInstagramsButton);
+		$mapbrick.append(getFlickrsButton);		
 
 		$packeryContainer.packery();
 
