@@ -1729,7 +1729,7 @@ var WIKIVERSE = (function($) {
 
 			$(this).tooltip('destroy');
 			$(this).remove();
-
+			
 			//build a node with the searchqueryNode as parent
 			buildNode(result, $thisBrick.data('id'), parent);
 			return false;
@@ -2376,7 +2376,7 @@ var WIKIVERSE = (function($) {
 	}
 
 
-	function removeNode(id){
+	function removeNode(id, $brick){
 
 		//update thisBoardsIDs array: 
 		removeIDfromThisBoardsIds(id);
@@ -2400,12 +2400,15 @@ var WIKIVERSE = (function($) {
 		var edgesArray = wikiverse.mindmap.graph.edges(); 
 		//if there are no edges, start with 0, if there are take the last edge, grab its id, remove the "e" from the id
 		var lastEdgeId = (edgesArray.length > 0) ? parseInt(edgesArray[edgesArray.length-1].id.replace(/\D/g,'')) : 0;
-		
+
 		$.each(thisNode.children, function(nodeId, nodeObj){
 			//for each child, create a new edge, thus increment
 			lastEdgeId++;
 			//set the new parent for the child nodes
 			nodeObj.parent = thisNode.parent;
+
+			//also update all DOM elements with given ID with the new parent (so it can be safely stored to db)
+			$("#" + nodeId).data('parent', parseInt(thisNode.parent.replace(/\D/g,'')))			
 
 	    	//create new edges for the child nodes to the parent
 	    	wikiverse.mindmap.graph.addEdge({
@@ -3198,7 +3201,7 @@ var WIKIVERSE = (function($) {
 
 		var $thisBrick = $(this).parent(".brick");
 
-		if(!$thisBrick.hasClass('gmaps')) removeNode($thisBrick.data('id'));
+		if(!$thisBrick.hasClass('gmaps')) removeNode($thisBrick.data('id'), $thisBrick);
 
 		//$thisBrick.fadeOut('slow').remove();
 		$packeryContainer.packery('remove', $thisBrick);
