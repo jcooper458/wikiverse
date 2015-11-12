@@ -70,10 +70,6 @@ var WIKIVERSE = (function($) {
 	var buildFlickrSearchResults,
 		buildInstagramSearchResults,
 		buildFoto,
-		buildYoutube,
-		buildWikipedia,
-		buildTwitter,
-		buildSection,
 		buildYoutubeSearchResults,
 		makeEachDraggable,
 		playYoutube,
@@ -115,6 +111,7 @@ var WIKIVERSE = (function($) {
 			    enableEdgeHovering: true,
 			    edgeHoverColor: 'edge',
 			    defaultEdgeHoverColor: '#000',
+			    labelThreshold: 15,
 			    edgeHoverSizeRatio: 1,
 			    edgeHoverExtremities: true
 			  }
@@ -706,7 +703,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//build the gmaps brick (coming from database)
-	function buildGmaps($mapbrick, mapObj, callback) {
+	wikiverse.buildGmaps = function($mapbrick, mapObj, callback) {
 
 		var map;
 		var myMaptypeID;
@@ -873,7 +870,7 @@ var WIKIVERSE = (function($) {
 		});
 	}
 	//build the streetmap map brick (from database)
-	function buildStreetMap($mapbrick, streetObj, callback) {
+	wikiverse.buildStreetMap = function($mapbrick, streetObj, callback) {
 
 		var currentStreetMap;
 
@@ -1818,7 +1815,7 @@ var WIKIVERSE = (function($) {
 						$(this).remove();
 
 						var $nextBrick = buildBrick([parseInt($brick.css('left')), parseInt($brick.css('top'))], undefined, $brick.data('id'));
-						buildSection($nextBrick, sectionData, brickDataLoaded);
+						wikiverse.buildSection($nextBrick, sectionData, brickDataLoaded);
 						
 						var brickData = {
 							Type: "wikiSection",
@@ -1997,7 +1994,7 @@ var WIKIVERSE = (function($) {
 	};
 
 	//build a section brick 
-	buildSection = function($brick, section, callback) {
+	wikiverse.buildSection = function($brick, section, callback) {
 
 		$brick.data('type', 'wikiSection');
 		$brick.data('topic', section);
@@ -2236,7 +2233,7 @@ var WIKIVERSE = (function($) {
 	//build a board -  this is called only for saved boards (coming from db)
 	wikiverse.buildBoard = function($packeryContainer, board) {
 		
-		prepareBoardTitle(board);			
+		prepareBoardTitle(board);
 
 		//overwrite the searchHistory with the one coming from db
 		wikiverse.searchHistory = board.search_history;
@@ -2266,7 +2263,7 @@ var WIKIVERSE = (function($) {
 					break;
 
 					case "wikiSection":
-						buildSection($thisBrick, brick.Topic, brickDataLoaded);
+						wikiverse.buildSection($thisBrick, brick.Topic, brickDataLoaded);
 					break;
 
 					case "Flickr":
@@ -2282,11 +2279,11 @@ var WIKIVERSE = (function($) {
 					break;
 
 					case "gmaps":						
-						buildGmaps($thisBrick, brick.Topic, brickDataLoaded);
+						wikiversse.buildGmaps($thisBrick, brick.Topic, brickDataLoaded);
 					break;
 
 					case "streetview":
-						buildStreetMap($thisBrick, brick.Topic, brickDataLoaded);
+						wikiverse.buildStreetMap($thisBrick, brick.Topic, brickDataLoaded);
 					break;
 
 					case "Soundcloud":
@@ -2304,10 +2301,10 @@ var WIKIVERSE = (function($) {
 			});
 		}
 		//this always needs to happen, also without any bricks, coz we need the search query nodes in the graph!
-		buildMindmap(board);
+		wikiverse.buildMindmap(board);
 	}
 
-	function buildMindmap(board){
+	wikiverse.buildMindmap = function(board){
 
 		wikiverse.mindmapObj = {
 			nodes: [],
@@ -2401,7 +2398,7 @@ var WIKIVERSE = (function($) {
 
 		//get the last edge and grab its ID
 		var edgesArray = wikiverse.mindmap.graph.edges(); 
-		//if there are no edges, start with 0
+		//if there are no edges, start with 0, if there are take the last edge, grab its id, remove the "e" from the id
 		var lastEdgeId = (edgesArray.length > 0) ? parseInt(edgesArray[edgesArray.length-1].id.replace(/\D/g,'')) : 0;
 		
 		$.each(thisNode.children, function(nodeId, nodeObj){
@@ -2409,6 +2406,7 @@ var WIKIVERSE = (function($) {
 			lastEdgeId++;
 			//set the new parent for the child nodes
 			nodeObj.parent = thisNode.parent;
+
 	    	//create new edges for the child nodes to the parent
 	    	wikiverse.mindmap.graph.addEdge({
 	    	  id: "e" + lastEdgeId,
@@ -3078,7 +3076,7 @@ var WIKIVERSE = (function($) {
 
 		// When the stage is clicked, we just color each
 		// node and edge with its original color.
-		wikiverse.mindmap.bind('clickStage', function(e) {
+		/*wikiverse.mindmap.bind('clickStage', function(e) {
 		  wikiverse.mindmap.graph.nodes().forEach(function(n) {
 		    n.color = n.originalColor;
 		  });
@@ -3089,7 +3087,7 @@ var WIKIVERSE = (function($) {
 
 		  // Same as in the previous event:
 		  wikiverse.mindmap.refresh();
-		});
+		});*/
 	}
 
 	//----------------keyboard shortcuts----------------------------
