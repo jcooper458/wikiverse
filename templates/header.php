@@ -31,7 +31,7 @@ else{
    
     <div id="searchMeta" class="navbar navbar-default fixed">      
       <i id="closeRightSidebar" class="fa fa-close"></i>
-      <i id="openRightSidebar" class="fa fa-share-alt"></i> 
+      <i id="openRightSidebar" class="fa fa-code-fork"></i> 
     </div>
     <div id="mindmap"></div>
   </nav>
@@ -61,8 +61,6 @@ else{
     </div>
     <div class="results"></div>
   </nav>
-
-
 
   <nav id="wv_nav" class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
