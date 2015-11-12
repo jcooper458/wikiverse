@@ -879,7 +879,8 @@ var WIKIVERSE = (function($) {
 		$mapbrick.data('type', 'streetview');
 		$mapbrick.addClass('w2-fix');
 
-		$mapbrick.prepend($mapcanvas);
+		$mapbrick.append($mapcanvas);
+
 		$mapbrick.append(getInstagramsButton);
 		$mapbrick.append(getFlickrsButton);		
 
@@ -3059,8 +3060,10 @@ var WIKIVERSE = (function($) {
 		  toKeep[nodeId] = e.data.node;
 
 		  wikiverse.mindmap.graph.nodes().forEach(function(n) {
-		    if (toKeep[n.id])
+		    if (toKeep[n.id]){
 		      n.color = n.originalColor;
+		  	  n.icon.color = "#fff";
+		  	}
 		    else
 		      n.color = '#eee';
 		  });
