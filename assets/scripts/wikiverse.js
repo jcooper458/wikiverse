@@ -117,7 +117,7 @@ var WIKIVERSE = (function($) {
 			  }
 			});
 
-			//graphEventHandlers();
+			graphEventHandlers();
 
 
 			//but also open the search if clicked
