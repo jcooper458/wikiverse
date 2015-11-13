@@ -39,6 +39,7 @@ else{
   <nav id="sidebar" class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left well well-sm fixed">
    
     <div id="searchMeta" class="navbar navbar-default fixed">      
+
       <i id="closeSidebar" class="fa fa-close"></i>
       <i id="openSidebar" class="fa fa-plus"></i>
       <h3 id="search-keyword" class=""></h3> 
@@ -62,7 +63,7 @@ else{
     <div class="results"></div>
   </nav>
 
-  <nav id="wv_nav" class="navbar navbar-default navbar-fixed-top">
+  <nav id="wv_nav" class="navbar navbar-default navbar-transparent navbar-fixed-top">
     <div class="container-fluid">
       
       <!-- Brand and toggle get grouped for better mobile display -->
@@ -113,20 +114,6 @@ else{
           
           <?php }  ?>   
           <?php if ( is_user_logged_in() ) { ?>
-
-          <li class="dropdown" id="theme-dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cogs icon-large"></i>theme<b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              <li><a href="#" class="change-style-menu-item" rel="superhero"><i class="icon-fixed-width icon-pencil"></i> Superhero (Default)</a></li>
-              <li><a href="#" class="change-style-menu-item" rel="yeti"><i class="icon-fixed-width icon-pencil"></i> Yeti</a></li>
-              <li><a href="#" class="change-style-menu-item" rel="flatly"><i class="icon-fixed-width icon-pencil"></i> Flatly</a></li>
-              <li><a href="#" class="change-style-menu-item" rel="darkly"><i class="icon-fixed-width icon-pencil"></i> Darkly</a></li>
-              <li><a href="#" class="change-style-menu-item" rel="readable"><i class="icon-fixed-width icon-pencil"></i> Readable</a></li>
-              <li><a href="#" class="change-style-menu-item" rel="lumen"><i class="icon-fixed-width icon-pencil"></i> Lumen</a></li>
-              <li><a href="#" class="change-style-menu-item" rel="simplex"><i class="icon-fixed-width icon-pencil"></i> Simplex</a></li>
-            </ul>
-          </li>
-
 
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo esc_html($current_user->display_name); ?> <span class="caret"></span></a>
