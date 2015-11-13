@@ -119,7 +119,7 @@ var WIKIVERSE = (function($) {
 
 			graphEventHandlers();
 
-			
+
 			function SVGMenu( el, options ) {
 				this.el = el;
 				this.init();
@@ -2232,11 +2232,6 @@ var WIKIVERSE = (function($) {
 
 	function prepareBoardTitle(board){
 
-		if (typeof board.theme === 'undefined') board.theme = "superhero";
-
-		$('link[title="main"]').attr('href', "//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/" + board.theme + "/bootstrap.min.css");
-		$('body').data('theme', board.theme);
-
 		$('#wvTitle > h1').append(board.title);
 		$('#boardDescription').append(board.description);
 
@@ -2581,7 +2576,6 @@ var WIKIVERSE = (function($) {
 		var board = {
 			"title": "",
 			"author": $('#wvAuthor').attr('data-author'),
-			"theme": $('body').data('theme'),
 			"featured_image": featuredImage,
 			"search_history": wikiverse.searchHistory,
 			"bricks": wikiverseParsed
