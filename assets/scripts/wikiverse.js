@@ -120,7 +120,7 @@ var WIKIVERSE = (function($) {
 			graphEventHandlers();
 
 
-			new SVGMenu( document.getElementById( 'sidebar' ) );
+			new SVGMenu( $( '#sidebar' )[0] );
 
 
 			//but also open the search if clicked
