@@ -36,9 +36,23 @@ else{
     <div id="mindmap"></div>
   </nav>
 
-  <nav id="sidebar" class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left well well-sm fixed">
-   
-    <div id="searchMeta" class="navbar navbar-default fixed">      
+  <nav id="sidebar" class="menu">
+  
+   <button class="menu__handle"><span>Menu</span></button>
+   <div class="menu__inner">
+    <ul>
+      <li><a href="#"><i class="fa fa-fw fa-home"></i><span>Home<span></a></li>
+      <li><a href="#"><i class="fa fa-fw fa-heart"></i><span>Favs<span></a></li>
+      <li><a href="#"><i class="fa fa-fw fa-folder"></i><span>Files<span></a></li>
+      <li><a href="#"><i class="fa fa-fw fa-tachometer"></i><span>Stats<span></a></li>
+    </ul>
+   </div>
+   <div class="morph-shape" data-morph-open="M300-10c0,0,295,164,295,410c0,232-295,410-295,410" data-morph-close="M300-10C300-10,5,154,5,400c0,232,295,410,295,410">
+    <svg width="100%" height="100%" viewBox="0 0 600 800" preserveAspectRatio="none">
+      <path fill="none" d="M300-10c0,0,0,164,0,410c0,232,0,410,0,410"/>
+    </svg>
+   </div>
+    <!--<div id="searchMeta" class="navbar navbar-default fixed">      
       <i id="closeSidebar" class="fa fa-close"></i>
       <i id="openSidebar" class="fa fa-plus invisible"></i>
       <h3 id="search-keyword" class=""></h3> 
@@ -59,7 +73,7 @@ else{
         </ul>
       </div>
     </div>
-    <div class="results"></div>
+    <div class="results"></div>-->
   </nav>
 
   <nav id="wv_nav" class="navbar navbar-default navbar-fixed-top">

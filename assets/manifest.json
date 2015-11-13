@@ -13,7 +13,8 @@
     },
     "main.css": {
       "files": [
-        "styles/main.scss"
+        "styles/main.scss",
+        "vendor/ElasticSVGElements/css/sidebar.css"
       ],
       "main": true
     },
