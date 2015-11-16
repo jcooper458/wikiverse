@@ -531,7 +531,7 @@ video {
 
 #sidebar{
   overflow: hidden;
-  margin-top: 70px;
+  margin-top: 45px;
   h1, h2, h3, h4{
     margin-top:5px;
   }
@@ -562,12 +562,12 @@ video {
   width: 104%;
   height: 99%;
   position: absolute;
-  right: -14px;
+  right: -15px;
 }
 
 #rightSidebar{
   z-index:100;
-  margin-top: 70px;
+  margin-top: 45px;
   overflow: hidden;
 
   .fa-close{
