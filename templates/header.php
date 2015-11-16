@@ -38,32 +38,30 @@ else{
 
   <nav id="sidebar" class="menu">
 
-   <button class="menu__handle"><span>Menu</span></button>
+   <button class="menu__handle"><i class="fa fa-align-justify"></i></button>
    <div class="menu__inner">
-     <h3 id="search-keyword" class=""></h3> 
-     <div class="search-ui">
-       <ul class="nav nav-pills">
-         <li class="">
-           <button class="btn btn-xs btn-primary searchButton cursor">search for something else</button>
-           <select class="selectpicker pull-left otherSource show-menu-arrow" data-style="btn btn-default btn-xs" data-width="50%" data-size="20">
-             <option selected="">try another source..</option>
-             <option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option>
-             <option><i class="fa fa-wikipedia wikipedia-icon icon"></i>Wikipedia</option>
-             <option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option>
-             <option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option>
-             <option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option>
-             <option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option>
-           </select>
-         </li>
-       </ul>
-     </div>
+      <div class="search-meta fixed">
+         <h3 id="search-keyword" class=""></h3> 
+         <div class="search-ui">
+           <ul class="nav nav-pills">
+             <li class="">
+               <button class="btn btn-xs btn-primary searchButton cursor">search for something else</button>
+               <select class="selectpicker pull-left otherSource show-menu-arrow" data-style="btn btn-default btn-xs" data-width="50%" data-size="20">
+                 <option selected="">try another source..</option>
+                 <option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option>
+                 <option><i class="fa fa-wikipedia wikipedia-icon icon"></i>Wikipedia</option>
+                 <option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option>
+                 <option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option>
+                 <option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option>
+                 <option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option>
+               </select>
+             </li>
+           </ul>
+         </div>
+       </div>
      <div class="results"></div>
    </div>
-   <div class="morph-shape" data-morph-open="M300-10c0,0,295,164,295,410c0,232-295,410-295,410" data-morph-close="M300-10C300-10,5,154,5,400c0,232,295,410,295,410">
-    <svg width="100%" height="100%" viewBox="0 0 600 800" preserveAspectRatio="none">
-      <path fill="none" d="M300-10c0,0,0,164,0,410c0,232,0,410,0,410"/>
-    </svg>
-   </div>
+
     <!--<div id="searchMeta" class="navbar navbar-default fixed">      
       <i id="closeSidebar" class="fa fa-close"></i>
       <i id="openSidebar" class="fa fa-plus invisible"></i>

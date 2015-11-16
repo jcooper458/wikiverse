@@ -120,10 +120,6 @@ var WIKIVERSE = (function($) {
 
 			graphEventHandlers();
 
-
-			new SVGMenu( $( '#sidebar' )[0] );
-
-
 			//but also open the search if clicked
 			$('.searchButton').on('click', function(event) {
 				event.preventDefault();
@@ -491,10 +487,7 @@ var WIKIVERSE = (function($) {
 	//toggle the sidebar
 	function toggleSidebar() {
 
-		classie.toggle(document.body, 'cbp-spmenu-push-toright');
-		classie.toggle($('#sidebar')[0], 'cbp-spmenu-open');
-		classie.toggle($('#sidebar')[0], 'autoOverflow');
-		classie.toggle($('#searchMeta')[0], 'fixed');
+
 
 	}
 
@@ -2729,50 +2722,6 @@ var WIKIVERSE = (function($) {
 			    wikiverse.mindmapObj.nodes.push(node);
 			});*/
 		}
-	};
-
-	function SVGMenu( el, options ) {
-		this.el = el;
-		this.init();
-	}
-
-	SVGMenu.prototype.init = function() {
-		this.trigger = this.el.querySelector( 'button.menu__handle' );
-		this.shapeEl = this.el.querySelector( 'div.morph-shape' );
-
-		var s = Snap( this.shapeEl.querySelector( 'svg' ) );
-		this.pathEl = s.select( 'path' );
-		this.paths = {
-			reset : this.pathEl.attr( 'd' ),
-			open : this.shapeEl.getAttribute( 'data-morph-open' ),
-			close : this.shapeEl.getAttribute( 'data-morph-close' )
-		};
-
-		this.isOpen = false;
-
-		this.initEvents();
-	};
-
-	SVGMenu.prototype.initEvents = function() {
-		this.trigger.addEventListener( 'click', this.toggle.bind(this) );
-	};
-
-	SVGMenu.prototype.toggle = function() {
-		var self = this;
-
-		if( this.isOpen ) {
-			classie.remove( self.el, 'menu--anim' );
-			setTimeout( function() { classie.remove( self.el, 'menu--open' );	}, 250 );
-		}
-		else {
-			classie.add( self.el, 'menu--anim' );
-			setTimeout( function() { classie.add( self.el, 'menu--open' );	}, 250 );
-		}
-		this.pathEl.stop().animate( { 'path' : this.isOpen ? this.paths.close : this.paths.open }, 350, mina.easeout, function() {
-			self.pathEl.stop().animate( { 'path' : self.paths.reset }, 800, mina.elastic );
-		} );
-		
-		this.isOpen = !this.isOpen;
 	};
 
 	//get the wiki languages
