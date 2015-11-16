@@ -28,8 +28,8 @@ else{
 <header class="banner" role="banner">
 
   <nav id="rightSidebar" class="cbp-spmenu wv_sidebar cbp-spmenu-verticalRight cbp-spmenu-right fixed">
-   
-    <div id="" class="fixed">      
+    
+    <div id="searchMeta" class="fixed">      
       <i id="closeRightSidebar" class="fa fa-close"></i>
       <i id="openRightSidebar" class="fa fa-code-fork"></i> 
     </div>
@@ -38,7 +38,7 @@ else{
 
   <nav id="sidebar" class="cbp-spmenu wv_sidebar cbp-spmenu-vertical cbp-spmenu-left fixed">
    
-    <!--<div id="searchMeta" class="fixed">      
+    <div id="searchMeta" class="fixed">      
 
       <i id="closeSidebar" class="fa fa-close"></i>
       <i id="openSidebar" class="fa fa-plus"></i>
@@ -59,7 +59,7 @@ else{
           </li>
         </ul>
       </div>
-    </div>-->
+    </div>
     <div class="results"></div>
   </nav>
 

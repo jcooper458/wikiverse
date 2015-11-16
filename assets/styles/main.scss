@@ -530,8 +530,8 @@ video {
 }
 
 #sidebar{
-
-  /*margin-top: 70px;
+  overflow: hidden;
+  margin-top: 70px;
   h1, h2, h3, h4{
     margin-top:5px;
   }
@@ -550,21 +550,25 @@ video {
     z-index:100;
     width:360px;
     position:fixed;
-  }*/
+  }
+
   z-index: 100;
 
 }
 
 .results{
-  /*margin-top:120px;*/
-
   overflow: auto;
-  /*padding-right: 15px; */
+  margin-top:120px;
+  width: 104%;
+  height: 99%;
+  position: absolute;
+  right: -14px;
 }
 
 #rightSidebar{
   z-index:100;
   margin-top: 70px;
+  overflow: hidden;
 
   .fa-close{
     font-size: 25px;
@@ -576,6 +580,11 @@ video {
     font-size: 25px;
     position: absolute;
     left: -60px;
+  }
+  #searchMeta{
+    z-index:100;
+    width:360px;
+    position:fixed;
   }
 }
 
@@ -589,13 +598,11 @@ video {
   width: 355px;
   height: 100%;
   top: 0;
-  overflow: hidden;
-  position: absolute;
 }
 
 .cbp-spmenu-verticalRight {
   width: 49%;
-  height: 80%;  
+  height: 90%;  
   top: 0;
 }
 
@@ -618,6 +625,7 @@ video {
 
 .cbp-spmenu-left.cbp-spmenu-open {
   left: 0px;
+  overflow: hidden;
 }
 
 
