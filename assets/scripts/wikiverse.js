@@ -126,7 +126,7 @@ var WIKIVERSE = (function($) {
 				wikiverse.toggleSearch();
 
 				//Close the sidebar, if open:
-				if ($('body').hasClass('cbp-spmenu-push-toright')) {
+				if ($sidebar.hasClass('cbp-spmenu-open')) {
 					toggleSidebar();
 				}
 			});
@@ -196,7 +196,7 @@ var WIKIVERSE = (function($) {
 				$('.search').removeClass('open');
 
 				//if not already open, open the sidebar:
-				if (!$('body').hasClass('cbp-spmenu-push-toright')) {
+				if (!$sidebar.hasClass('cbp-spmenu-open')) {
 					toggleSidebar();
 				}
 				
@@ -393,7 +393,7 @@ var WIKIVERSE = (function($) {
 		prepareSearchNavbar(origQuery, parent);
 
 		//Open the sidebar:
-		if (!$('body').hasClass('cbp-spmenu-push-toright')) {
+		if (!$sidebar.hasClass('cbp-spmenu-open')) {
 			toggleSidebar();
 		}
 
@@ -488,8 +488,6 @@ var WIKIVERSE = (function($) {
 	function toggleSidebar() {
 
 		classie.toggle($('#sidebar')[0], 'cbp-spmenu-open');
-		classie.toggle($('#sidebar')[0], 'autoOverflow');
-		classie.toggle($('#searchMeta')[0], 'fixed');
 
 		//close and plus button logic 
 		//if sidebar open, hide the plus
@@ -503,9 +501,7 @@ var WIKIVERSE = (function($) {
 	//toggle the sidebar
 	function toggleRightSidebar() {
 
-		classie.toggle(document.body, 'cbp-spmenu-push-toleft');
 		classie.toggle($('#rightSidebar')[0], 'cbp-spmenu-open');
-		classie.toggle($('#rightSidebar')[0], 'autoOverflow');
 
 		//close and plus button logic 
 		//if sidebar open, hide the plus
@@ -529,7 +525,7 @@ var WIKIVERSE = (function($) {
 			prepareSearchNavbar(position);
 
 			//Open the sidebar:
-			if (!$('body').hasClass('cbp-spmenu-push-toright')) {
+			if (!$sidebar.hasClass('cbp-spmenu-open')) {
 				toggleSidebar();
 			}
 			if($(this).attr('id') === "getInstagrams"){
@@ -1184,7 +1180,7 @@ var WIKIVERSE = (function($) {
 	function getConnections(source, topic, parent) {
 
 		//Open the sidebar:
-		if (!$('body').hasClass('cbp-spmenu-push-toright')) {
+		if (!$sidebar.hasClass('cbp-spmenu-open')) {
 			toggleSidebar();
 		}
 
@@ -1325,7 +1321,7 @@ var WIKIVERSE = (function($) {
 			
 			if(result){
 
-				var $result = $('<img class="result" width="117" src="' + result.Topic.thumbURL + '">');
+				var $result = $('<img class="result" width="118" src="' + result.Topic.thumbURL + '">');
 				$result.data("topic", result);
 
 				//append row to sidebar-results-table
@@ -3154,7 +3150,7 @@ var WIKIVERSE = (function($) {
 	$('.board-pilot').click(function() {
 
 		//Close the sidebar if open:
-		if ($('body').hasClass('cbp-spmenu-push-toright')) {
+		if ($sidebar.hasClass('cbp-spmenu-open')) {
 			toggleSidebar();
 		}
 

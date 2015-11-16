@@ -27,18 +27,18 @@ else{
 
 <header class="banner" role="banner">
 
-  <nav id="rightSidebar" class="cbp-spmenu cbp-spmenu-verticalRight cbp-spmenu-right well well-sm fixed">
+  <nav id="rightSidebar" class="cbp-spmenu wv_sidebar cbp-spmenu-verticalRight cbp-spmenu-right fixed">
    
-    <div id="searchMeta" class="navbar navbar-default fixed">      
+    <div id="" class="fixed">      
       <i id="closeRightSidebar" class="fa fa-close"></i>
       <i id="openRightSidebar" class="fa fa-code-fork"></i> 
     </div>
     <div id="mindmap"></div>
   </nav>
 
-  <nav id="sidebar" class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left well well-sm fixed">
+  <nav id="sidebar" class="cbp-spmenu wv_sidebar cbp-spmenu-vertical cbp-spmenu-left fixed">
    
-    <div id="searchMeta" class="navbar navbar-default fixed">      
+    <div id="searchMeta" class="fixed">      
 
       <i id="closeSidebar" class="fa fa-close"></i>
       <i id="openSidebar" class="fa fa-plus"></i>
