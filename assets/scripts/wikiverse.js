@@ -293,7 +293,7 @@ var WIKIVERSE = (function($) {
 		}
 
 		//create a loading icon
-		$sidebar.append(loadingIcon);
+		$results.append(loadingIcon);
 
 	}
 
