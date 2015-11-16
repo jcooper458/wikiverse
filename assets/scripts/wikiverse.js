@@ -488,7 +488,6 @@ var WIKIVERSE = (function($) {
 	//toggle the sidebar
 	function toggleSidebar() {
 
-		classie.toggle(document.body, 'cbp-spmenu-push-toright');
 		classie.toggle($('#sidebar')[0], 'cbp-spmenu-open');
 		classie.toggle($('#sidebar')[0], 'autoOverflow');
 		classie.toggle($('#searchMeta')[0], 'fixed');
@@ -1327,7 +1326,7 @@ var WIKIVERSE = (function($) {
 			
 			if(result){
 
-				var $result = $('<img class="result" width="112" src="' + result.Topic.thumbURL + '">');
+				var $result = $('<img class="result" width="117" src="' + result.Topic.thumbURL + '">');
 				$result.data("topic", result);
 
 				//append row to sidebar-results-table

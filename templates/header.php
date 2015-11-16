@@ -40,7 +40,7 @@ else{
    
     <div id="searchMeta" class="navbar navbar-default fixed">      
       <i id="closeSidebar" class="fa fa-close"></i>
-      <i id="openSidebar" class="fa fa-plus invisible"></i>
+      <i id="openSidebar" class="fa fa-plus"></i>
       <h3 id="search-keyword" class=""></h3> 
       <div class="search-ui">
         <ul class="nav nav-pills">
@@ -83,9 +83,9 @@ else{
         <li>&nbsp;&nbsp;&nbsp;&nbsp;</li> 
         <?php if ( is_singular("board") && ( $current_user->ID == $post->post_author ) || ( is_page('start'))) { ?>    
 
-        <li><a class="searchButton" href="#"><i class="fa fa-plus"></i>&nbsp;&nbsp;add content</a></li>              
+        <li><a class="searchButton" href="#">add content</a></li>              
         <!--<li><a id="addNoteButton"  href="#"><i class="fa fa-sticky-note-o"></i>&nbsp;&nbsp;add a note</a></li>  -->           
-        <li><a id="addMap"  href="#"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;add a map</a></li>              
+        <li><a id="addMap"  href="#">add a map</a></li>              
 
         <?php }  ?>
       </ul>
