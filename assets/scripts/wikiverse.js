@@ -487,7 +487,8 @@ var WIKIVERSE = (function($) {
 	//toggle the sidebar
 	function toggleSidebar() {
 
-		classie.toggle($('#sidebar')[0], 'cbp-spmenu-open');
+		classie.toggle($sidebar[0], 'cbp-spmenu-open');
+		//classie.toggle($(".results")[0], 'autoOverflow');
 
 		//close and plus button logic 
 		//if sidebar open, hide the plus

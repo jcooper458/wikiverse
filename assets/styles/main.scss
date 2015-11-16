@@ -123,7 +123,6 @@ blockquote{
   overflow: auto;
 }
 
-
 .searchButton, #addNoteButton, #addMap{
 
   font-size:16px;
@@ -484,6 +483,8 @@ table tr, .result, #clear, .results img, .cursor{cursor: pointer;}
 
 .results{
   margin-top:120px;
+  overflow: auto;
+  /*padding-right: 15px; */
 }
 
 .brick .table-hover {
@@ -551,6 +552,13 @@ video {
     position:fixed;
   }
   z-index: 100;
+
+}
+
+.results{
+  margin-top:120px;
+
+  /*padding-right: 15px; */
 }
 
 #rightSidebar{

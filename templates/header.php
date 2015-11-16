@@ -60,7 +60,7 @@ else{
         </ul>
       </div>
     </div>
-    <div class="results"></div>
+    <div class="results autoOverflow"></div>
   </nav>
 
   <nav id="wv_nav" class="navbar navbar-default navbar-transparent navbar-fixed-top">
