@@ -121,6 +121,11 @@ blockquote{
 
 .autoOverflow{
   overflow: auto;
+
+}
+
+.hiddenOverflow{
+  overflow:hidden;
 }
 
 .searchButton, #addNoteButton, #addMap{
@@ -481,12 +486,6 @@ table tr, .result, #clear, .results img, .cursor{cursor: pointer;}
     filter: alpha(opacity=80); /* For IE8 and earlier */
 }
 
-.results{
-  margin-top:120px;
-  overflow: auto;
-  /*padding-right: 15px; */
-}
-
 .brick .table-hover {
   > tbody {
     > tr:hover {
@@ -531,7 +530,8 @@ video {
 }
 
 #sidebar{
-  margin-top: 70px;
+
+  /*margin-top: 70px;
   h1, h2, h3, h4{
     margin-top:5px;
   }
@@ -550,14 +550,15 @@ video {
     z-index:100;
     width:360px;
     position:fixed;
-  }
+  }*/
   z-index: 100;
 
 }
 
 .results{
-  margin-top:120px;
+  /*margin-top:120px;*/
 
+  overflow: auto;
   /*padding-right: 15px; */
 }
 
@@ -588,12 +589,13 @@ video {
   width: 355px;
   height: 100%;
   top: 0;
+  overflow: hidden;
+  position: absolute;
 }
 
 .cbp-spmenu-verticalRight {
   width: 49%;
-  height: 80%;
-  
+  height: 80%;  
   top: 0;
 }
 

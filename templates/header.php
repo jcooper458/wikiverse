@@ -38,7 +38,7 @@ else{
 
   <nav id="sidebar" class="cbp-spmenu wv_sidebar cbp-spmenu-vertical cbp-spmenu-left fixed">
    
-    <div id="searchMeta" class="fixed">      
+    <!--<div id="searchMeta" class="fixed">      
 
       <i id="closeSidebar" class="fa fa-close"></i>
       <i id="openSidebar" class="fa fa-plus"></i>
@@ -59,8 +59,8 @@ else{
           </li>
         </ul>
       </div>
-    </div>
-    <div class="results autoOverflow"></div>
+    </div>-->
+    <div class="results"></div>
   </nav>
 
   <nav id="wv_nav" class="navbar navbar-default navbar-transparent navbar-fixed-top">
