@@ -114,6 +114,7 @@ var WIKIVERSE = (function($) {
 			    defaultEdgeHoverColor: '#000',
 			    labelThreshold: 15,
 			    edgeHoverSizeRatio: 1,
+			    defaultLabelColor: "#ccc",
 			    edgeHoverExtremities: true
 			  }
 			});
