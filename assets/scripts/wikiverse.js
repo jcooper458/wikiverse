@@ -1370,11 +1370,12 @@ var WIKIVERSE = (function($) {
 
 			//build a homogenic array here (equally looking for all sources: topic and type)
 			var resultsArray = tracks.map(function(item, index){
-
+				console.log(item)
 				return {
 					Topic: {
 						title: item.title,
-						uri: item.uri
+						uri: item.uri,
+						snippet: item.description
 					},
 					Type: "Soundcloud"
 				}
