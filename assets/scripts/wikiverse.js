@@ -5,6 +5,7 @@ var WIKIVERSE = (function($) {
 	var wikiverse = {};
 
 	var close_icon = '<span class="cross control-buttons"><i class="fa fa-close"></i></span>';
+	var fotoResize = '<span class="resize control-buttons"><i class="fa fa-expand"></i></span>';
 	var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 	var wikiverse_nav = '<select class="selectpicker connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="100%" data-size="20"><option selected="">try another source..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option><option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option><option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option></select>';
 	var handle = '<div class="row handle"><p class="text-center"><i class="fa fa-hand-rock-o"></i>&nbsp;&nbsp;grab me here</p></div>';
@@ -234,27 +235,27 @@ var WIKIVERSE = (function($) {
 
 	//toggles the image size on click (works also for youtube)
 	function toggleImageSize( event ) {
-		
-		var $brick = $(event.target).parents('.brick');
+
+		var $enlargeIcon = $(event.target); 
+		var $brick = $enlargeIcon.parents('.brick');
 		var tempDataObj = $brick.data('topic');
 
-	     // toggle the size for images
-	     if($( event.target ).is('img.img-result, .youtube img')){
+      //make it large
+       $brick.toggleClass("w2");
 
-	      //make it large
-	       $brick.toggleClass("w2");
+       //if it is large, update the dataObj so it saves the state
+       if($brick.hasClass("w2")){
+       		tempDataObj.size = 'large';
+       }else{
+       		tempDataObj.size = 'small';
+       }
+       //set the dataObj to data topic
+       $brick.data('topic', tempDataObj);
 
-	       //if it is large, update the dataObj so it saves the state
-	       if($brick.hasClass("w2")){
-	       		tempDataObj.size = 'large';
-	       }else{
-	       		tempDataObj.size = 'small';
-	       }
-	       //set the dataObj to data topic
-	       $brick.data('topic', tempDataObj);
+       $packeryContainer.packery();	   
 
-	       $packeryContainer.packery();
-	   }
+	   //change the icon based on if expanded or compressed: 
+	   $enlargeIcon.hasClass('fa-expand') ? $enlargeIcon.removeClass('fa-expand').addClass('fa-compress') : $enlargeIcon.removeClass('fa-compress').addClass('fa-expand');
 	 }
 
 	//get the username for any given flickr picture 
@@ -1259,6 +1260,7 @@ var WIKIVERSE = (function($) {
 		var $titleOverlay = $(htmlTitleOverlay);
 
 		$brick.append($photo);
+		$brick.prepend($(fotoResize));
 		$brick.append($tagsOverlay);
 		$brick.append($titleOverlay);
 		$brick.find('.foto-owner').append(photoObj.owner);
@@ -3284,7 +3286,9 @@ var WIKIVERSE = (function($) {
 	$packeryContainer.on( 'layoutComplete', orderItems );*/
 
 	//Toggle Size of Images on click
-	$packeryContainer.on('dblclick', 'img', toggleImageSize);
+	$packeryContainer.on("click", ".foto .resize", function(e){
+		toggleImageSize(e);
+	});
 
 	return wikiverse;
 

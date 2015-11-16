@@ -310,6 +310,15 @@ nav {
     z-index: 2;
 }
 
+.resize {
+    visibility: hidden;
+    cursor: pointer;
+    top: -11px;
+    right: -9px;
+    position: absolute;
+    z-index: 2;
+}
+
 .fa{
 
   cursor: pointer;
@@ -460,11 +469,10 @@ nav {
 
 .search:hover .cross,
 .brick:hover .cross,
+.brick:hover .resize,
 .wiki:hover select,
 .wiki:hover .btn,
 .brick:hover .getFotos{visibility: visible;}
-
-
 
 table tr, .result, #clear, .results img, .cursor{cursor: pointer;}
 
