@@ -3199,9 +3199,12 @@ var WIKIVERSE = (function($) {
 
 		if(!$thisBrick.hasClass('gmaps')) removeNode($thisBrick.data('id'), $thisBrick);
 
-		//$thisBrick.fadeOut('slow').remove();
-		$packeryContainer.packery('remove', $thisBrick);
-		$packeryContainer.packery();
+		$thisBrick.fadeOut(250, function(){
+
+			$packeryContainer.packery('remove', $thisBrick);
+			$packeryContainer.packery();
+			
+		});
 	});
 
 	//show save board button on packery change (needs work)
@@ -3245,6 +3248,8 @@ var WIKIVERSE = (function($) {
 	$packeryContainer.on("click", ".foto .resize", function(e){
 		toggleImageSize(e);
 	});
+
+
 
 	return wikiverse;
 
