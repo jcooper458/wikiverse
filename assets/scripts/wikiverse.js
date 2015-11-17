@@ -5,7 +5,7 @@ var WIKIVERSE = (function($) {
 	var wikiverse = {};
 
 	var close_icon = '<span class="cross control-buttons"><i class="fa fa-close"></i></span>';
-	var fotoResize = '<span class="resize control-buttons"><i class="fa fa-expand"></i></span>';
+	var fotoResizeButton = '<span class="resize control-buttons"><i class="fa fa-expand"></i></span>';
 	var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 	var wikiverse_nav = '<select class="selectpicker connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="100%" data-size="20"><option selected="">try another source..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option><option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option><option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option></select>';
 	var handle = '<div class="row handle"><p class="text-center"><i class="fa fa-hand-rock-o"></i>&nbsp;&nbsp;grab me here</p></div>';
@@ -1247,30 +1247,37 @@ var WIKIVERSE = (function($) {
 		$brick.data('topic', photoObj);
 
 		var $photo = $('<img class="img-result" src="' + photoObj.mediumURL + '">');
+		var $figure = $('<figure class="effect-julia"></figure>');
 
-		var htmlTitleOverlay =
+		/*var htmlTitleOverlay =
 			'<div class="title-overlay overlay">' +
 			'<p class="foto-title">' + photoObj.title + '</p>' +
 			'<p class="">by <strong class="foto-owner"></strong> on <strong>' + type + '</strong></p>' +
-			'</div>';
+			'</div>';*/
 
-		var htmlTagsOverlay =
+
+		var	figureOverlayHTML = '<figcaption>'+
+									'<h6>' + photoObj.title + ' <span class="foto-owner">by ' + photoObj.owner + '</span><span>on ' + type + '</span></h6>'+
+									'<div class="foto-tags"></div>'+
+								'</figcaption>'+
+
+		/*var htmlTagsOverlay =
 			'<div class="tags-overlay overlay">' +
 			'<p class="foto-tags"></p>' +
-			'</div>';
+			'</div>';*/
 
-		var $tagsOverlay = $(htmlTagsOverlay);
-		var $titleOverlay = $(htmlTitleOverlay);
+		$brick.prepend($(fotoResizeButton));		
+		$brick.append($figure);
 
-		$brick.append($photo);
-		$brick.prepend($(fotoResize));
-		$brick.append($tagsOverlay);
-		$brick.append($titleOverlay);
-		$brick.find('.foto-owner').append(photoObj.owner);
+		$figure.append($photo);
+		$figure.append($(figureOverlayHTML));
+		//$figure.append($titleOverlay);
+
+		//$figure.find('.foto-owner').append(photoObj.owner);
 
 		if (photoObj.tags) {
 			photoObj.tags.map(function(tag, index) {
-				$brick.find('.foto-tags').append('#<strong><a class="instaTag tag" href="#">' + tag + '</a></strong>');
+				$figure.find('.foto-tags').append('<p>#<a class="instaTag tag" href="#">' + tag + '</a></p>');
 			});
 		} 
 
@@ -1289,8 +1296,8 @@ var WIKIVERSE = (function($) {
 
 			getFlickrUsername(photoObj.owner, function(username) {
 
-				$brick.find('.foto-owner').empty();
-				$brick.find('.foto-owner').append(username);
+				$figure.find('.foto-owner').empty();
+				$figure.find('.foto-owner').append(username);
 
 				//store the tags and re-assign them to the foto data (for later save)
 				var thisPhoto = $brick.data('topic');
@@ -1375,7 +1382,6 @@ var WIKIVERSE = (function($) {
 
 			//build a homogenic array here (equally looking for all sources: topic and type)
 			var resultsArray = tracks.map(function(item, index){
-				console.log(item)
 				return {
 					Topic: {
 						title: item.title,
@@ -1546,9 +1552,13 @@ var WIKIVERSE = (function($) {
 	//build a tweet
 	wikiverse.buildTwitter = function($brick, twitterObj, callback) {
 
-		$brick.addClass('w2-fix');
+		$brick.addClass('w2');
 		$brick.addClass('Twitter');
 
+		$brick.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(e) {		  	
+			$packeryContainer.packery();  
+		});
+		
 		//replace hashtags with links
 		var tweet = twitterObj.title.replace(/(^|\W)(#[a-z\d][\w-]*)/ig, '$1<a hashtag="$2" href="#">$2</a>');
 			tweet = tweet.replace(/(^|\W)(@[a-z\d][\w-]*)/ig, '$1<a hashtag="$2" href="#">$2</a>');
