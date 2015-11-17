@@ -1240,7 +1240,7 @@ var WIKIVERSE = (function($) {
 		var	figureOverlayHTML = '<figcaption>'+
 									'<h4>' + photoObj.title + ' <span class="foto-owner">by ' + photoObj.owner + '</span></h4>'+
 									'<div class="foto-tags"></div>'+
-									'<h5 class="fotoType"><strong>' + type + '</strong></h5>'+
+									'<h5 class="fotoType"><strong>' + type.toLowerCase() + '</strong></h5>'+
 								'</figcaption>'+
 
 		$brick.prepend($(fotoResizeButton));		

@@ -89,9 +89,6 @@ blockquote{
 }
 
 .brick{
-  transition: width .5s cubic-bezier(.87,-.41,.19,1.44),
-            height .5s cubic-bezier(.87,-.41,.19,1.44);
-
   cursor: move;
   outline: 0;
   opacity: .1;
@@ -109,6 +106,11 @@ blockquote{
   iframe{margin-bottom: -5px;}
 
   .btn{width:100%;}
+}
+
+.foto, .Twitter, .Wikipedia{
+  transition: width .5s cubic-bezier(.87,-.41,.19,1.44),
+            height .5s cubic-bezier(.87,-.41,.19,1.44);
 }
 
 .w1 {
@@ -705,6 +707,10 @@ video {
 /*Fotos */
 
 
+.brick figure {
+  overflow: hidden; 
+}
+
 .brick figure figcaption{
   position: absolute;
   top: 0;
@@ -715,7 +721,10 @@ video {
 }
 figure .foto-tags{
   position: absolute;
-  bottom:10px;
+  bottom: 2px;
+  max-height: 70%;
+  x-overflow:visible;
+  z-index: 1;
 }
 
 figure.effect-julia p {
@@ -727,29 +736,26 @@ figure.effect-julia p {
   text-transform: none;
   font-weight: 400;
   font-size: 75%;
-  -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
-  transition: opacity 0.35s, transform 0.35s;
-  -webkit-transform: translate3d(-360px,0,0);
-  transform: translate3d(-360px,0,0);
   cursor: pointer;
   font-size: 13px;
   color: #df691a;
   visibility: hidden;
+  
 }
 
 figure.effect-julia p:first-child {
-  -webkit-transition-delay: 0.15s;
+  -webkit-transition-delay: 0.75s;
   transition-delay: 0.15s;
 }
 
 figure.effect-julia p:nth-of-type(2) {
-  -webkit-transition-delay: 0.1s;
+  -webkit-transition-delay: 0.5s;
   transition-delay: 0.1s;
 }
 
 figure.effect-julia p:nth-of-type(3) {
-  -webkit-transition-delay: 0.05s;
-  transition-delay: 0.05s;
+  -webkit-transition-delay: 0.35s;
+  transition-delay: 0.25s;
 }
 
 figure.effect-julia:hover p:first-child {
@@ -758,15 +764,22 @@ figure.effect-julia:hover p:first-child {
 }
 
 figure.effect-julia:hover p:nth-of-type(2) {
-  -webkit-transition-delay: 0.05s;
-  transition-delay: 0.05s;
+  -webkit-transition-delay: 0.45s;
+  transition-delay: 0.25s;
 }
 
 figure.effect-julia:hover p:nth-of-type(3) {
-  -webkit-transition-delay: 0.1s;
+  -webkit-transition-delay: 0.3s;
   transition-delay: 0.1s;
 }
 
+figure.effect-julia img {
+  -webkit-transition: opacity .5s ease-in-out;
+   -moz-transition: opacity .5s ease-in-out;
+   -ms-transition: opacity .5s ease-in-out;
+   -o-transition: opacity .5s ease-in-out;
+   transition: opacity .5s ease-in-out;
+}
 figure.effect-julia:hover img {
   opacity: 0.4;
   /*-webkit-transform: scale3d(1.1,1.1,1);
@@ -775,14 +788,16 @@ figure.effect-julia:hover img {
 
 figure.effect-julia:hover p {
   visibility: visible;
-  opacity: 1;
-  -webkit-transform: translate3d(0,0,0);
-  transform: translate3d(0,0,0);
+}
+
+figure.effect-julia p:hover {
+  opacity: 0.4;
 }
 
 figure.effect-julia figcaption h4 {
   visibility: hidden;
   margin-left:5px;
+  margin-top: 0px;
 }
 
 figure.effect-julia figcaption .fotoType {
