@@ -2178,7 +2178,7 @@ var WIKIVERSE = (function($) {
 
 	function prepareBoardTitle(board){
 
-		$('#wvTitle > h1').append(board.title);
+		$('#wvTitle h1').append(board.title);
 		$('#boardDescription').append(board.description);
 
 	}

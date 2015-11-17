@@ -49,7 +49,11 @@ h2, .h2 {
   margin: 0 auto;
 }
 
-/*this is to not squash gmaps controls */
+#wvAuthor{
+  position: relative;
+  bottom: 10px;
+
+}
 
 .author{
   .main {
