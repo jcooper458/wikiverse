@@ -89,6 +89,8 @@ blockquote{
 }
 
 .brick{
+  transition: width .5s cubic-bezier(.87,-.41,.19,1.44),
+            height .5s cubic-bezier(.87,-.41,.19,1.44);
 
   cursor: move;
   outline: 0;
@@ -116,10 +118,11 @@ blockquote{
 }
 
 .w2 {
+  width: 460px;
   
-  width: auto;
+  /*width: auto;
   max-width: 460px;
-  height:auto;
+  height:auto;*/
 
 }
 

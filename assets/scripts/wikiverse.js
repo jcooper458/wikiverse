@@ -240,6 +240,10 @@ var WIKIVERSE = (function($) {
       //make it large
        $brick.toggleClass("w2");
 
+       $brick.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(e) {		  	
+			$packeryContainer.packery();  
+		});
+
        //if it is large, update the dataObj so it saves the state
        if($brick.hasClass("w2")){
        		tempDataObj.size = 'large';
@@ -249,7 +253,7 @@ var WIKIVERSE = (function($) {
        //set the dataObj to data topic
        $brick.data('topic', tempDataObj);
 
-       $packeryContainer.packery();	   
+
 
 	   //change the icon based on if expanded or compressed: 
 	   $enlargeIcon.hasClass('fa-expand') ? $enlargeIcon.removeClass('fa-expand').addClass('fa-compress') : $enlargeIcon.removeClass('fa-compress').addClass('fa-expand');
