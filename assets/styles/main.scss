@@ -112,9 +112,7 @@ blockquote{
 }
 
 .w1 {
-  width: auto;
-  max-width: 225px;
-  height:auto;
+  width: 225px;
 }
 
 .w2 {
@@ -417,16 +415,6 @@ blockquote{
     border-color: rgba(0,0,0,0.2);
 }
 
-.title-overlay {
-  top: 0;
-  max-height: 40%;
-}
-
-.tags-overlay {
-  bottom: 0;
-  max-height: 40%;
-}
-
 .controls {
   background-color: #fff;
   border-radius: 2px;
@@ -726,15 +714,23 @@ video {
   overflow: hidden; 
 }
 
-.brick figure figcaption a {
-  font-size: 12px;
+.brick figure{
+  
+  .tag{
+    cursor: pointer;
+    font-size: 15px;
+    color:# df691a;
+  }
+  .tag:hover span{
+    text-decoration: underline;
+  }
+  
 }
-
 
 figure.effect-julia p {
   display: inline-block;
-  margin: 0 0 0.25em;
-  padding: 0.4em 1em;
+  margin: 3px 12px -5px 0px;
+  padding: 0px 10px 0px 4px;
   background: rgba(255,255,255,0.9);
   color: #2f3238;
   text-transform: none;
@@ -744,6 +740,7 @@ figure.effect-julia p {
   transition: opacity 0.35s, transform 0.35s;
   -webkit-transform: translate3d(-360px,0,0);
   transform: translate3d(-360px,0,0);
+
 }
 
 figure.effect-julia p:first-child {
@@ -783,6 +780,7 @@ figure.effect-julia:hover img {
 }*/
 
 figure.effect-julia:hover p {
+
   opacity: 1;
   -webkit-transform: translate3d(0,0,0);
   transform: translate3d(0,0,0);

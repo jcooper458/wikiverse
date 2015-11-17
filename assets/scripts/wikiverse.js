@@ -231,10 +231,8 @@ var WIKIVERSE = (function($) {
 		}
 
 	//toggles the image size on click (works also for youtube)
-	function toggleImageSize( event ) {
+	function toggleImageSize( $brick, $enlargeIcon ) {
 
-		var $enlargeIcon = $(event.target); 
-		var $brick = $enlargeIcon.parents('.brick');
 		var tempDataObj = $brick.data('topic');
 
       //make it large
@@ -252,8 +250,6 @@ var WIKIVERSE = (function($) {
        }
        //set the dataObj to data topic
        $brick.data('topic', tempDataObj);
-
-
 
 	   //change the icon based on if expanded or compressed: 
 	   $enlargeIcon.hasClass('fa-expand') ? $enlargeIcon.removeClass('fa-expand').addClass('fa-compress') : $enlargeIcon.removeClass('fa-compress').addClass('fa-expand');
@@ -1220,14 +1216,6 @@ var WIKIVERSE = (function($) {
 		}
 	}
 
-	//for twitter/flickr/instagram tags, when clicked, search those'in same source
-	function onTagClickedDoSearch($brick, type) {
-		$brick.find('.tag').on('click', function(e) {
-			e.preventDefault();
-			getConnections(type, $(this).html(), $brick.data('id'));
-		});
-	}
-
 	wikiverse.buildFlickr = function($brick, photoObj, callback){
 
 		wikiverse.buildFoto($brick, photoObj, "Flickr", callback);
@@ -1249,35 +1237,20 @@ var WIKIVERSE = (function($) {
 		var $photo = $('<img class="img-result" src="' + photoObj.mediumURL + '">');
 		var $figure = $('<figure class="effect-julia"></figure>');
 
-		/*var htmlTitleOverlay =
-			'<div class="title-overlay overlay">' +
-			'<p class="foto-title">' + photoObj.title + '</p>' +
-			'<p class="">by <strong class="foto-owner"></strong> on <strong>' + type + '</strong></p>' +
-			'</div>';*/
-
-
 		var	figureOverlayHTML = '<figcaption>'+
 									'<h6>' + photoObj.title + ' <span class="foto-owner">by ' + photoObj.owner + '</span><span>on ' + type + '</span></h6>'+
 									'<div class="foto-tags"></div>'+
 								'</figcaption>'+
-
-		/*var htmlTagsOverlay =
-			'<div class="tags-overlay overlay">' +
-			'<p class="foto-tags"></p>' +
-			'</div>';*/
 
 		$brick.prepend($(fotoResizeButton));		
 		$brick.append($figure);
 
 		$figure.append($photo);
 		$figure.append($(figureOverlayHTML));
-		//$figure.append($titleOverlay);
-
-		//$figure.find('.foto-owner').append(photoObj.owner);
 
 		if (photoObj.tags) {
 			photoObj.tags.map(function(tag, index) {
-				$figure.find('.foto-tags').append('<p>#<a class="instaTag tag" href="#">' + tag + '</a></p>');
+				$figure.find('.foto-tags').append('<p class="tag pointer">#<span>' + tag + '</span></p>');
 			});
 		} 
 
@@ -1307,10 +1280,17 @@ var WIKIVERSE = (function($) {
 
 			});
 
+			$brick.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(e) {		  	
+				$packeryContainer.packery();  
+			});
+
 		}
 
-		//search for tags on click
-		onTagClickedDoSearch($brick, type);
+		//on tag click search for tags
+		$brick.find('.foto-tags .tag').on('click', function(e) {
+			e.preventDefault();
+			getConnections(type, $(this).find("span").html(), $brick.data('id'));
+		});
 
 		var imgLoad = imagesLoaded($brick);
 
@@ -1558,7 +1538,7 @@ var WIKIVERSE = (function($) {
 		$brick.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(e) {		  	
 			$packeryContainer.packery();  
 		});
-		
+
 		//replace hashtags with links
 		var tweet = twitterObj.title.replace(/(^|\W)(#[a-z\d][\w-]*)/ig, '$1<a hashtag="$2" href="#">$2</a>');
 			tweet = tweet.replace(/(^|\W)(@[a-z\d][\w-]*)/ig, '$1<a hashtag="$2" href="#">$2</a>');
@@ -3260,7 +3240,7 @@ var WIKIVERSE = (function($) {
 
 	//Toggle Size of Images on click
 	$packeryContainer.on("click", ".foto .resize", function(e){
-		toggleImageSize(e);
+		toggleImageSize($(e.target).parents(".brick"), $(e.target));
 	});
 
 
