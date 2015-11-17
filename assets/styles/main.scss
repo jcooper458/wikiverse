@@ -778,11 +778,11 @@ figure.effect-julia:hover p:nth-of-type(3) {
 }
 
 figure.effect-julia img {
-  -webkit-transition: opacity .5s ease-in-out;
+  /*-webkit-transition: opacity .5s ease-in-out;
    -moz-transition: opacity .5s ease-in-out;
    -ms-transition: opacity .5s ease-in-out;
    -o-transition: opacity .5s ease-in-out;
-   transition: opacity .5s ease-in-out;
+   transition: opacity .5s ease-in-out;*/
 }
 figure.effect-julia:hover img {
   opacity: 0.4;

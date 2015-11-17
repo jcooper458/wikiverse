@@ -24,14 +24,6 @@ use Roots\Sage\Wrapper;
         get_template_part('templates/wv-markup'); 
 
       //else for the frontpage
-      }else{
-
-        get_template_part('templates/headerHomepage');
-        ?>
-
-
-
-     <?php   
       }
     ?>
     <div class="container-fluid" role="document">
