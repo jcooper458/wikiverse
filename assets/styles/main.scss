@@ -713,34 +713,28 @@ video {
   height: 100%;
   overflow: hidden; 
 }
-
-.brick figure{
-  
-  .tag{
-    cursor: pointer;
-    font-size: 15px;
-    color:# df691a;
-  }
-  .tag:hover span{
-    text-decoration: underline;
-  }
-  
+figure .foto-tags{
+  position: absolute;
+  bottom:10px;
 }
 
 figure.effect-julia p {
   display: inline-block;
-  margin: 3px 12px -5px 0px;
+  margin: 3px 2px -5px 0px;
   padding: 0px 10px 0px 4px;
   background: rgba(255,255,255,0.9);
   color: #2f3238;
   text-transform: none;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 75%;
   -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
   transition: opacity 0.35s, transform 0.35s;
   -webkit-transform: translate3d(-360px,0,0);
   transform: translate3d(-360px,0,0);
-
+  cursor: pointer;
+  font-size: 13px;
+  color: #df691a;
+  visibility: hidden;
 }
 
 figure.effect-julia p:first-child {
@@ -772,16 +766,36 @@ figure.effect-julia:hover p:nth-of-type(3) {
   -webkit-transition-delay: 0.1s;
   transition-delay: 0.1s;
 }
-/*
+
 figure.effect-julia:hover img {
   opacity: 0.4;
-  -webkit-transform: scale3d(1.1,1.1,1);
-  transform: scale3d(1.1,1.1,1);
-}*/
+  /*-webkit-transform: scale3d(1.1,1.1,1);
+  transform: scale3d(1.1,1.1,1);*/
+}
 
 figure.effect-julia:hover p {
-
+  visibility: visible;
   opacity: 1;
   -webkit-transform: translate3d(0,0,0);
   transform: translate3d(0,0,0);
+}
+
+figure.effect-julia figcaption h4 {
+  visibility: hidden;
+  margin-left:5px;
+}
+
+figure.effect-julia figcaption .fotoType {
+  visibility: hidden;
+  position: absolute;
+  bottom:-10px;
+  right:2px;
+}
+
+figure.effect-julia:hover figcaption h4 {
+  visibility: visible;
+}
+
+figure.effect-julia:hover figcaption .fotoType {
+  visibility: visible;
 }

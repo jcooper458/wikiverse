@@ -1238,8 +1238,9 @@ var WIKIVERSE = (function($) {
 		var $figure = $('<figure class="effect-julia"></figure>');
 
 		var	figureOverlayHTML = '<figcaption>'+
-									'<h6>' + photoObj.title + ' <span class="foto-owner">by ' + photoObj.owner + '</span><span>on ' + type + '</span></h6>'+
+									'<h4>' + photoObj.title + ' <span class="foto-owner">by ' + photoObj.owner + '</span></h4>'+
 									'<div class="foto-tags"></div>'+
+									'<h5 class="fotoType"><strong>' + type + '</strong></h5>'+
 								'</figcaption>'+
 
 		$brick.prepend($(fotoResizeButton));		
@@ -1250,7 +1251,7 @@ var WIKIVERSE = (function($) {
 
 		if (photoObj.tags) {
 			photoObj.tags.map(function(tag, index) {
-				$figure.find('.foto-tags').append('<p class="tag pointer">#<span>' + tag + '</span></p>');
+				$figure.find('.foto-tags').append('<p class="tag">#<span>' + tag + '</span></p>');
 			});
 		} 
 
