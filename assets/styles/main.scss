@@ -286,6 +286,10 @@ blockquote{
     }
 }
 
+.brick > .btn, .brick > .connections{
+    margin-top: -2px;
+}
+
 .ui-pnotify{
   top:70!important;
 }
@@ -484,16 +488,6 @@ table tr, .result, #clear, .results img, .cursor{cursor: pointer;}
     filter: alpha(opacity=80); /* For IE8 and earlier */
 }
 
-.brick .table-hover {
-  > tbody {
-    > tr:hover {
-      > td,
-      > th {
-        background-color: #E7E7E7;
-      }
-    }
-  }
-}
 .brick table {margin-bottom: 0px;}
 .brick .nav>li>a {
 position: relative;
@@ -561,10 +555,6 @@ video {
   height: 99%;
   position: absolute;
   right: -15px;
-}
-
-.result:hover{
-  background-color: #485563;
 }
 
 #rightSidebar{

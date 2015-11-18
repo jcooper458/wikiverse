@@ -11,7 +11,7 @@ var WIKIVERSE = (function($) {
 	var handle = '<div class="row handle"><p class="text-center"><i class="fa fa-hand-rock-o"></i>&nbsp;&nbsp;grab me here</p></div>';
 	var defaultBrick = '<div class="brick">' + close_icon + '</div>';
 	var defaultMapBrick = '<div class="brick gmaps">' + handle + close_icon + '</div>';
-	var resultsTable = '<table class="table table-hover"></table>';
+	var tableHover = '<table class="table table-hover"></table>';
 	var getInstagramsButton = '<button id="getInstagrams" class="btn btn-default btn-xs getFotos" type="button">get instragram fotos of this location</button>';
 	var getFlickrsButton = '<button id="getFlickrs" class="btn btn-default btn-xs getFotos" type="button">get flickr fotos of this location</button>';
 	var loadingIcon = '<span id="loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate">';
@@ -1387,7 +1387,7 @@ var WIKIVERSE = (function($) {
 
 	wikiverse.buildListResults = function(results, searchResultsListBuilt) {
 
-		$results.append(resultsTable);
+		$results.append(tableHover);
 
 		results.forEach(function(result, index) {
 
@@ -1412,7 +1412,7 @@ var WIKIVERSE = (function($) {
 	//stack the twitter search results in the sidebar
 	wikiverse.buildTwitterSearchResults = function(results) {
 
-		$results.append(resultsTable);
+		$results.append(tableHover);
 
 		results.forEach(function(result, index) {
 
@@ -1781,8 +1781,6 @@ var WIKIVERSE = (function($) {
 			},
 			dataType: 'jsonp',
 			success: function(data) {
-				//if there is sections, append them
-				var $sectionResults = $('<div class="sections"></div>');
 
 				if (typeof data.parse.sections !== 'undefined' && data.parse.sections.length > 0) {
 
@@ -1794,13 +1792,14 @@ var WIKIVERSE = (function($) {
 
 						$(this).remove();
 
-						$brick.append($sectionResults);
+						var $sectionsTable = $(tableHover)
+						$brick.append($sectionsTable);
 
 						data.parse.sections.forEach(function(section) {
 
 							//if not any of those, add the resulting sections
 							if ((section.line !== "References") && (section.line !== "Notes") && (section.line !== "External links") && (section.line !== "Citations") && (section.line !== "Bibliography") && (section.line !== "Notes and references")) {
-								$sectionResults.append('<p class="result" data-title="' + section.anchor + '" data-index="' + section.index + '">' + section.line + '</p>');
+								$sectionsTable.append('<tr class="section" data-wvtitle="' + section.anchor + '" data-wvindex="' + section.index + '"><td>' + section.line + '</td></tr>');
 							}
 
 						});
@@ -1808,7 +1807,7 @@ var WIKIVERSE = (function($) {
 						$packeryContainer.packery();
 
 						//create the section object and trigger the creation of a section brick
-						$sectionResults.find(".result").on('click', function() {
+						$sectionsTable.find(".section").on('click', function() {
 
 							$packeryContainer.packery('stamp', $brick);
 
@@ -1816,7 +1815,7 @@ var WIKIVERSE = (function($) {
 								title: $(this).html(),
 								language: topic.language,
 								name: topic.title,
-								index: $(this).attr("data-index")
+								index: $(this).attr("data-wvindex")
 							};
 
 							$(this).remove();
@@ -2080,7 +2079,7 @@ var WIKIVERSE = (function($) {
 	//stack the youtube search results in the sidebar
 	wikiverse.buildYoutubeSearchResults = function(results) {
 
-		$results.append(resultsTable);
+		$results.append(tableHover);
 
 		results.forEach(function(result, index) {
 
