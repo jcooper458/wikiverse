@@ -1430,8 +1430,8 @@ var WIKIVERSE = (function($) {
 	//search the Twitter API for tweets
 	function getTweets(query, dataLoaded, triggerSearchResultsFunction) {
 
-		var queryString = '%23' + query + '&result_type=mixed&count=20';
-gulp
+		var queryString = query + '&result_type=mixed&count=20';
+
 		$.ajax({
 			url: '/app/plugins/wp-twitter-api/api.php',
 			data: {
