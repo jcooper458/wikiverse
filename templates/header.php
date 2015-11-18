@@ -89,8 +89,8 @@ else{
       		<div type="Flickr" class="sourceParams" id="flickrSort" >
 
       			<select id="flickrSortType" name="flickrSort" class="selectpicker" data-style="btn btn-default" data-width="100%">
-      				<option value="relevance">by relevance</option>
-      				<option value="interestingness-desc">by interestingness</option>
+      				<option value="relevance">sort by relevance</option>
+      				<option value="interestingness-desc">sort by interestingness</option>
       			</select>
 
       		</div>
@@ -121,7 +121,7 @@ else{
         <li>&nbsp;&nbsp;&nbsp;&nbsp;</li>
         <?php if ( is_singular("board") && ( $current_user->ID == $post->post_author ) || ( is_page('start'))) { ?>
 
-        <li><a class="searchButton" href="#">add content</a></li>
+        <li><a class="searchButton" href="#">quick search</a></li>
         <!--<li><a id="addNoteButton"  href="#"><i class="fa fa-sticky-note-o"></i>&nbsp;&nbsp;add a note</a></li>  -->
         <li><a id="addMap"  href="#">add a map</a></li>
 

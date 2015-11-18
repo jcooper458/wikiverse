@@ -187,6 +187,8 @@ var WIKIVERSE = (function($) {
 			//get the query from the search div
 			var query = $("#searchInput input").val();
 
+			//call the search functions with static, default parameters
+			//this is because its a quick search via the "add content" button
 			getWikis(query, "en", searchResultsLoaded);
 			getSoundclouds(query, searchResultsLoaded);
 			getTweets(query, searchResultsLoaded);
@@ -199,7 +201,9 @@ var WIKIVERSE = (function($) {
 
 		});
 
-		//TODO EXPLAIN THIS
+		//when any of the search source parameters are changed,
+		//the value is passed to the global wikiverse source parameter variable
+		//and getConnections is called via the sourceType trigger
 		$('.sourceParams select').on('change', function() {
 			wikiverse[$(this).attr('id')] = $(this).val();
 			$sourceType.trigger('change');
@@ -216,8 +220,7 @@ var WIKIVERSE = (function($) {
 			if (!$sidebar.hasClass('cbp-spmenu-open')) {
 				toggleSidebar();
 			}
-
-			//pass, undefined parent, type of source
+			
 			prepareSearchNavbar(query);
 
 			//set the source in the source dropdown (this need to happen only from here)
