@@ -36,7 +36,7 @@ h1, .h1, h2, .h2, h3, .h3 {
  /* font-weight: bold;*/
   font-size: 90px;
   font-weight: bold;
-  color: #4E5D6C;  
+  color: #4E5D6C;
 }
 
 h2, .h2 {
@@ -128,7 +128,7 @@ blockquote{
 
 .w2 {
   width: 460px;
-  
+
   /*width: auto;
   max-width: 460px;
   height:auto;*/
@@ -355,9 +355,9 @@ blockquote{
 
 #global-loading{
 
-  position: fixed; 
-  top:50%; 
-  right:50%; 
+  position: fixed;
+  top:50%;
+  right:50%;
 
   .glyphicon-refresh-animate {
     font-size: 100px!important;
@@ -515,15 +515,15 @@ padding: 1px 10px;
 
 }
 
-.home{  
+.home{
   .main{
     margin-top: 40px;
   }
 }
 
-video {  
-   width:100%; 
-   height:auto; 
+video {
+   width:100%;
+   height:auto;
    outline:0;
 }
 
@@ -600,7 +600,7 @@ video {
 
 .cbp-spmenu-verticalRight {
   width: 49%;
-  height: 90%;  
+  height: 90%;
   top: 0;
 }
 
@@ -650,7 +650,7 @@ video {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 2;
+    z-index: 100;
     -webkit-transition: all 0.5s ease-in-out;
   -moz-transition: all 0.5s ease-in-out;
   -o-transition: all 0.5s ease-in-out;
@@ -717,7 +717,7 @@ video {
 
 
 .brick figure {
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .brick figure figcaption{
@@ -726,7 +726,7 @@ video {
   left: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden; 
+  overflow: hidden;
 }
 figure .foto-tags{
   position: absolute;
@@ -754,7 +754,7 @@ figure.effect-julia p {
   transition: transform 0.35s;
   -webkit-transform: translate3d(-360px,0,0);
   transform: translate3d(-360px,0,0);
-  
+
 }
 
 figure.effect-julia p:first-child {
