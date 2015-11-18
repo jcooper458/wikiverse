@@ -9,8 +9,8 @@ var WIKIVERSE = (function($) {
 	var youtube_icon = '<i class="fa fa-youtube-square"></i>';
 	var wikiverse_nav = '<select class="selectpicker connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="100%" data-size="20"><option selected="">try another source..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option><option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option><option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option></select>';
 	var handle = '<div class="row handle"><p class="text-center"><i class="fa fa-hand-rock-o"></i>&nbsp;&nbsp;grab me here</p></div>';
-	var defaultBrick = '<div class="brick well well-sm">' + close_icon + '</div>';
-	var defaultMapBrick = '<div class="brick gmaps well well-sm">' + handle + close_icon + '</div>';
+	var defaultBrick = '<div class="brick">' + close_icon + '</div>';
+	var defaultMapBrick = '<div class="brick gmaps">' + handle + close_icon + '</div>';
 	var resultsTable = '<table class="table table-hover"></table>';
 	var getInstagramsButton = '<button id="getInstagrams" class="btn btn-default btn-xs getFotos" type="button">get instragram fotos of this location</button>';
 	var getFlickrsButton = '<button id="getFlickrs" class="btn btn-default btn-xs getFotos" type="button">get flickr fotos of this location</button>';

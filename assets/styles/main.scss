@@ -112,11 +112,6 @@ blockquote{
   .btn{width:100%;}
 }
 
-.well.brick{
-  background: #1F2D3A;
-
-}
-
 .foto, .Twitter, .wiki{
   transition: width .5s cubic-bezier(.87,-.41,.19,1.44),
             height .5s cubic-bezier(.87,-.41,.19,1.44);
@@ -168,7 +163,7 @@ blockquote{
   width: 800px;
 }
 
-.connections{
+.brick selectpicker{
   margin-top: -2px;
 }
 
@@ -278,6 +273,7 @@ blockquote{
 .borderBottom{border-bottom: 1px solid #ccc;}
 
 .brick{
+    background: #1F2D3A;
     img{
       max-width:100%;
       max-height:100%;
