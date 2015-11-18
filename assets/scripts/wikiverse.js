@@ -226,6 +226,16 @@ var WIKIVERSE = (function($) {
 
 		});
 
+
+		$('.search input').keyup(function(e) {
+			e.preventDefault();
+
+			//make enter save the board
+			if (e.keyCode === 13) {
+				$("#wv_search").trigger('click');
+			}
+		});
+
 		/*$("#addNoteButton").on("click", function() {
 			//close the search
 			$('#search').removeClass('open');
@@ -2488,7 +2498,7 @@ var WIKIVERSE = (function($) {
 		$('.search input[type="search"]').val('');
 		$('.search input[type="search"]').focus();
 
-		$('.source').hide();																																																																																																									
+		$('.source').hide();
 
 	};
 
