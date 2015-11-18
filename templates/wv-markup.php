@@ -3,11 +3,11 @@
 
 	<div class="search-container center buffer-top-large">
 
-		<div class="row sourceParams" id="searchInput" >
+		<div class="row" id="searchInput" >
 			<input type="search" value="" placeholder="type any keyword here.." />
 		</div>
 
-		<div class="row sourceParams" id="searchButton" >
+		<div class="row" id="searchButton" >
 			<button id="wv_search" type="submit" class="btn btn-primary btn-lg">Search</button>
 		</div>
 		<div class="row" id="searchResults" >

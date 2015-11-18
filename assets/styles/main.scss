@@ -533,12 +533,11 @@ video {
   }
 
   z-index: 100;
-
 }
 
 .results{
   overflow: auto;
-  margin-top:120px;
+  margin-top:200px;
   width: 104%;
   height: 99%;
   position: absolute;
@@ -547,6 +546,10 @@ video {
 
 .search-ui{
   width: 355px;
+}
+
+.sourceParams{
+  margin-top:5px;
 }
 
 #rightSidebar{

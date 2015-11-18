@@ -42,7 +42,9 @@ var WIKIVERSE = (function($) {
 		Soundcloud: ["\uF1be", "#FF6700"],
 		searchQuery: ["\uF002", "#000"],
 	}
-
+	
+	//set default wikiLanguage
+	var wikiLang = "en";
 	//var is_root = location.pathname === "/";
 
 	var wpnonce = $('#nonce').html();
@@ -55,6 +57,8 @@ var WIKIVERSE = (function($) {
 	var $results = $('.results');
 	var $searchKeyword = $('#search-keyword');
 	var $sidebar = $('#sidebar');
+	var $sourceParams = $('.sourceParams');
+	var $sourceType = $('.sourceType');
 
 	//	$('#packery').imagesLoaded( function() {
 	// initialize Packery
@@ -85,7 +89,8 @@ var WIKIVERSE = (function($) {
 	wikiverse.init = function() {
 
 		//hide the sources button that hold results
-		$('.source').hide();
+	//	$('.source').hide();
+		$sourceParams.hide();
 
 		wikiverse.searchHistory = {};
 		wikiverse.thisBoardsIDs = [];
@@ -190,11 +195,10 @@ var WIKIVERSE = (function($) {
 
 		});
 
-		var lang = "en";
-
-		/*$('#langselect').live('change', function() {
-			lang = $(this).val();
-		});*/
+		$('#wikiLangSelect').live('change', function() {
+			wikiLang = $(this).val();
+			$sourceType.trigger('change');
+		});
 
 		$(".source").on("click", function() {
 
@@ -208,7 +212,12 @@ var WIKIVERSE = (function($) {
 				toggleSidebar();
 			}
 
+			//pass, undefined parent, type of source
 			prepareSearchNavbar(query);
+
+			//set the source in the source dropdown (this need to happen only from here)
+			$sourceType.val($(this).attr("id"));
+			$sourceType.selectpicker('refresh');
 
 			var thisResultsArray = $(this).data("results");
 			var functionToBuildSearchResults = $(this).attr("fn");
@@ -225,25 +234,6 @@ var WIKIVERSE = (function($) {
 			getGmapsSearch($thisBrick);
 
 		});
-
-
-		$('.search input').keyup(function(e) {
-			e.preventDefault();
-
-			//make enter save the board
-			if (e.keyCode === 13) {
-				$("#wv_search").trigger('click');
-			}
-		});
-
-		/*$("#addNoteButton").on("click", function() {
-			//close the search
-			$('#search').removeClass('open');
-
-			var $noteBrick = buildBrick();
-
-			createNote($noteBrick, brickDataLoaded);
-		});*/
 
 	}
 
@@ -1229,7 +1219,7 @@ var WIKIVERSE = (function($) {
 				break;
 
 			case "Wikipedia":
-				getWikis(topic, "en", searchResultsLoaded, "buildListResults");
+				getWikis(topic, wikiLang, searchResultsLoaded, "buildListResults");
 				break;
 		}
 	}
@@ -1579,109 +1569,6 @@ var WIKIVERSE = (function($) {
 		callback($brick);
 
 	};
-
-
-	//gets the wikilanguages for any given article - not used at the moment
-	function getWikiLanguages(topic, lang, $brick) {
-
-		$.ajax({
-			url: 'https://' + lang + '.wikipedia.org/w/api.php',
-			data: {
-				action: 'query',
-				titles: topic,
-				prop: 'langlinks',
-				format: 'json',
-				lllimit: 500
-			},
-			dataType: 'jsonp',
-			success: function(data) {
-
-				var languageObj = data.query.pages[Object.keys(data.query.pages)[0]].langlinks;
-
-				if (!$.isEmptyObject(languageObj)) {
-					var langDropDown = $('<select class="pull-right languages show-menu-arrow" data-width="50%" data-size="20" data-style="btn btn-default btn-xs" data-live-search="true"></select>');
-
-					$.each(languageObj, function() {
-
-						langDropDown.append('<option value="' + this.lang + '" data-topic="' + this['*'] + '">' + getLanguage(this.lang) + '</option>');
-
-					});
-
-					langDropDown.prepend('<option selected>read in..</option>');
-
-					$brick.prepend(langDropDown);
-
-					//make it a beautiful dropdown with selectpicker
-					langDropDown.selectpicker();
-
-					var thisTopic = $brick.data('topic');
-
-					langDropDown.change(function() {
-
-						thisTopic = {
-							title: $(this).children(":selected").data('topic'),
-							language: $(this).children(":selected").attr('value')
-						};
-						var $thisBrick = buildBrick([parseInt($brick.css('left')), parseInt($brick.css('top'))]);
-
-						buildWikipedia($thisBrick, thisTopic, $brick.attr("tabindex"), brickDataLoaded);
-					});
-					$packeryContainer.packery();
-				}
-			}
-		});
-
-	}
-
-	//get the Interwikilinks for any given Wiki article
-	function getInterWikiLinks(section, $brick) {
-
-		$.ajax({
-			url: 'https://' + section.language + '.wikipedia.org/w/api.php',
-			data: {
-				action: 'parse',
-				page: section.title,
-				format: 'json',
-				prop: 'links',
-				section: section.index
-			},
-			dataType: 'jsonp',
-			success: function(data) {
-
-				if (typeof data.parse.links !== 'undefined' && data.parse.links.length > 0) {
-
-					var interWikiArray = data.parse.links;
-
-					var interWikiDropDown = $('<select class="pull-right points-to show-menu-arrow" data-width="50%" data-style="btn btn-default btn-xs" data-size="20"></select>');
-
-					interWikiArray.forEach(function(link, index) {
-
-						interWikiDropDown.append('<option index="' + link.ns + '" topic="' + link['*'] + '">' + link['*'] + '</option>');
-
-					});
-
-					interWikiDropDown.prepend('<option selected>Points to..</option>');
-
-					$brick.prepend(interWikiDropDown);
-					interWikiDropDown.selectpicker();
-
-					interWikiDropDown.change(function() {
-
-						var thisTopic = {
-
-							title: $(this).children(":selected").attr('topic'),
-							language: section.language
-						};
-						var $thisBrick = buildBrick([parseInt($brick.css('left')), parseInt($brick.css('top'))]);
-						buildWikipedia($thisBrick, thisTopic, $brick.attr("tabindex"), brickDataLoaded);
-					});
-
-					$packeryContainer.packery();
-				}
-			}
-		});
-
-	}
 
 	//"get" functions always do query the respective APIs and built an equally looking (wikiverse)results array for all sources
 	function getWikis(topic, lang, dataLoaded, triggerSearchResultsFunction) {
@@ -2491,12 +2378,6 @@ var WIKIVERSE = (function($) {
 
 		$('#searchResults h3').hide();
 
-		//$('.sourceParams').hide();
-		//$('#addNote').show();
-
-		//$('#source').val($("#source option:first").val());
-		//$('#source').selectpicker('refresh');
-
 		$('.search').addClass('open');
 		$('.search input[type="search"]').val('');
 		$('.search input[type="search"]').focus();
@@ -3117,7 +2998,16 @@ var WIKIVERSE = (function($) {
 		e.preventDefault();
 		//make enter save the board
 		if (e.keyCode === 13) {
-			$(".otherSource").trigger('change');
+			$sourceType.trigger('change');
+		}
+	});
+
+	$('.search input').keyup(function(e) {
+		e.preventDefault();
+
+		//make enter save the board
+		if (e.keyCode === 13) {
+			$("#wv_search").trigger('click');
 		}
 	});
 
@@ -3187,9 +3077,33 @@ var WIKIVERSE = (function($) {
 	//----------------EVENTS----------------------------
 	//
 
-	$('.otherSource').change(function(event) {
-		getConnections($(this).val(), $(this).parents('#sidebar').find('#search-keyword').val(), $searchKeyword.data('parent'));
-	});
+		$sourceType.change(function(event) {
+
+			$sourceParams.hide();
+
+			if($searchKeyword.val() !== ""){
+				getConnections($(this).val(), $searchKeyword.val(), $searchKeyword.data('parent'));
+
+				switch ($(this).val()) {
+
+					case "Flickr":
+						$('#flickrType, #flickrSort').show();
+					break;
+
+					case "Instagram":
+						$('#InstagramType').show();
+					break;
+
+					case "Wikipedia":
+						$('#languageType').show();
+					break;
+
+				}
+			}
+			else{
+					$searchKeyword.fadeOut().fadeIn();
+			}
+		});
 
 	//close sidebar
 	$('#sidebar .fa').click(function() {

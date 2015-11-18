@@ -48,26 +48,52 @@ else{
 
         <input id="search-keyword" type="text" class="form-control" placeholder="Search for...">
 
+        	<div class="" id="sourceType" >
 
-        <select class="selectpicker pull-left otherSource show-menu-arrow" data-style="btn btn-default" data-width="100%" data-size="20">
-          <!--<option ="">try another source..</option>-->
-          <option selected><i class="fa fa-wikipedia wikipedia-icon icon"></i>Wikipedia</option>
-          <option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option>
-          <option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option>
-          <option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option>
-          <option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option>
-          <option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option>
-        </select>
+            <select class="selectpicker sourceType show-menu-arrow" data-style="btn btn-default" data-width="100%">
+              <!--<option ="">try another source..</option>-->
+              <option selected><i class="fa fa-wikipedia wikipedia-icon icon"></i>Wikipedia</option>
+              <option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option>
+              <option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option>
+              <option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option>
+              <option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option>
+              <option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option>
+            </select>
 
-        <select class="selectpicker pull-left flickr show-menu-arrow" data-style="btn btn-default" data-width="100%" data-size="20">
-          <!--<option ="">try another source..</option>-->
-          <option selected><i class="fa fa-wikipedia wikipedia-icon icon"></i>Wikipedia</option>
-          <option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option>
-          <option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option>
-          <option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option>
-          <option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option>
-          <option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option>
-        </select>
+          </div>
+
+        	<div class="sourceParams" id="languageType" >
+        			<?php get_template_part('templates/languages'); ?>
+          </div>
+
+      		<div class="sourceParams" id="instagramType" >
+
+      			<select name="input" class="selectpicker" data-style="btn btn-default" data-width="100%">
+      				<option value="hashtag">#hashtag</option>
+      				<option value="username">@username</option>
+      				<option value="coordinates" >coordinates</option>
+      			</select>
+
+      		</div>
+
+      		<div class="sourceParams" id="flickrType" >
+
+      			<select name="flickrType" class="selectpicker" data-style="btn btn-default" data-width="100%">
+      				<option value="textQuery">keyword</option>
+      				<option value="userQuery">username</option>
+      				<option value="geoQuery">coordinates</option>
+      			</select>
+
+      		</div>
+
+      		<div class="sourceParams" id="flickrSort" >
+
+      			<select name="flickrSort" class="selectpicker" data-style="btn btn-default" data-width="100%">
+      				<option value="relevance">by relevance</option>
+      				<option value="interestingness-desc">by interestingness</option>
+      			</select>
+
+      		</div>
 
       </div>
     </div>
