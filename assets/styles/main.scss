@@ -491,7 +491,10 @@ padding: 1px 10px;
 /* General styles for all menus */
 
 .cbp-spmenu {
-
+  height: 95%;
+  border-left: 1px solid #252525;
+  border-top: 1px solid #252525;
+  border-bottom: 1px solid #252525;
 }
 
 .home{
@@ -509,8 +512,7 @@ video {
 #sidebar{
   overflow: hidden;
   margin-top: 45px;
-  border-right: 1px solid #252525;
-  border-top: 1px solid #252525;
+
   h1, h2, h3, h4{
     margin-top:5px;
   }
@@ -545,11 +547,10 @@ video {
 }
 
 #rightSidebar{
+
   z-index:100;
   margin-top: 45px;
-  border-left: 1px solid #252525;
-  border-top: 1px solid #252525;
-  border-bottom: 1px solid #252525;
+
   overflow: hidden;
 
   .fa-close{
@@ -578,13 +579,12 @@ video {
 
 .cbp-spmenu-vertical {
   width: 355px;
-  height: 100%;
+
   top: 0;
 }
 
 .cbp-spmenu-verticalRight {
-  width: 49%;
-  height: 90%;
+  width: 39%;
   top: 0;
 }
 
@@ -593,7 +593,7 @@ video {
 
 /*right sidebar*/
 .cbp-spmenu-right {
-  right: -50%;
+  right: -40%;
 }
 .cbp-spmenu-right.cbp-spmenu-open {
   right: 0px;
