@@ -1423,14 +1423,13 @@ var WIKIVERSE = (function($) {
 			$results.find('.table').append($result);
 
 		});
-
 		searchResultsListBuilt($results);
 	}
 
 	//search the Twitter API for tweets
 	function getTweets(query, dataLoaded, triggerSearchResultsFunction) {
 
-		var queryString = query + '&result_type=mixed&count=20';
+		var queryString = query + '&result_type=mixed&count=50';
 
 		$.ajax({
 			url: '/app/plugins/wp-twitter-api/api.php',
@@ -2650,7 +2649,7 @@ var WIKIVERSE = (function($) {
 						$('#wvTitle h1').html(board.title);
 
 						//update the board author
-						$('#wvAuthor h2').html('by ' + '<a href="/user/' + board.author + '">' + board.author + '</a>');
+						$('#wvAuthor').html('by ' + '<a href="/user/' + board.author + '">' + board.author + '</a>');
 
 						var $buttonToSwap;
 						var PNotifyMessage;
