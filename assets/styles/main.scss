@@ -370,21 +370,6 @@ blockquote{
 
 /*Loading Icon */
 
-.brick.foto:hover .overlay{opacity:.7;}
-
-.brick.foto .overlay{
-  height: auto;
-  width: 100%;
-  margin: auto;
-  position: absolute;
-  background-color:#000;
-  color:#fff;
-  opacity:0;
-  font-size:12px;
-  padding:0px 5px 0px 5px;
-  overflow:hidden;
-}
-
 .btn-google {
     color: #fff;
     background-color: #dd4b39;
@@ -749,13 +734,13 @@ figure.effect-julia p {
   color: #df691a;
   visibility: hidden;
 
-  -webkit-transition: -webkit-transform 0.35s;
+/*  -webkit-transition: -webkit-transform 0.35s;
   transition: transform 0.35s;
   -webkit-transform: translate3d(-360px,0,0);
-  transform: translate3d(-360px,0,0);
+  transform: translate3d(-360px,0,0);*/
 
 }
-
+/*
 figure.effect-julia p:first-child {
   -webkit-transition-delay: 0.75s;
   transition-delay: 0.15s;
@@ -784,20 +769,21 @@ figure.effect-julia:hover p:nth-of-type(2) {
 figure.effect-julia:hover p:nth-of-type(3) {
   -webkit-transition-delay: 0.3s;
   transition-delay: 0.1s;
-}
-
+}*/
+/*
 figure.effect-julia img {
   -webkit-transition: opacity .3s linear;
    -moz-transition: opacity .3s linear;
    -ms-transition: opacity .3s linear;
    -o-transition: opacity .3s linear;
    transition: opacity .3s linear;
-}
+}*/
 figure.effect-julia:hover img {
   opacity: 0.4;
   /*-webkit-transform: scale3d(1.1,1.1,1);
   transform: scale3d(1.1,1.1,1);*/
 }
+
 
 figure.effect-julia:hover p {
   visibility: visible;
