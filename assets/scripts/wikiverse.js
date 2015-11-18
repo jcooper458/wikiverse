@@ -42,9 +42,13 @@ var WIKIVERSE = (function($) {
 		Soundcloud: ["\uF1be", "#FF6700"],
 		searchQuery: ["\uF002", "#000"],
 	}
-	
-	//set default wikiLanguage
-	var wikiLang = "en";
+
+	//set default settings for the searches
+	wikiverse.wikiLang = "en";
+	wikiverse.instagramSearchType = "hashtag";
+	wikiverse.flickrSearchType = "textQuery";
+	wikiverse.flickrSortType = "relevance";
+
 	//var is_root = location.pathname === "/";
 
 	var wpnonce = $('#nonce').html();
@@ -195,8 +199,9 @@ var WIKIVERSE = (function($) {
 
 		});
 
-		$('#wikiLangSelect').live('change', function() {
-			wikiLang = $(this).val();
+		//TODO EXPLAIN THIS
+		$('.sourceParams select').on('change', function() {
+			wikiverse[$(this).attr('id')] = $(this).val();
 			$sourceType.trigger('change');
 		});
 
@@ -1198,12 +1203,12 @@ var WIKIVERSE = (function($) {
 		switch (source) {
 
 			case "Flickr":
-				getFlickrs(topic, "relevance", "textQuery", searchResultsLoaded, "buildFotoSearchResults");
+				getFlickrs(topic, wikiverse.flickrSortType, wikiverse.flickrSearchType, searchResultsLoaded, "buildFotoSearchResults");
 				break;
 
 			case "Instagram":
 				//remove whitespace from instagram query
-				getInstagrams(topic.replace(/ /g, ''), "hashtag", searchResultsLoaded, "buildFotoSearchResults");
+				getInstagrams(topic.replace(/ /g, ''), wikiverse.instagramSearchType, searchResultsLoaded, "buildFotoSearchResults");
 				break;
 
 			case "Youtube":
@@ -1219,7 +1224,7 @@ var WIKIVERSE = (function($) {
 				break;
 
 			case "Wikipedia":
-				getWikis(topic, wikiLang, searchResultsLoaded, "buildListResults");
+				getWikis(topic, wikiverse.wikiLang, searchResultsLoaded, "buildListResults");
 				break;
 		}
 	}
@@ -3081,7 +3086,10 @@ var WIKIVERSE = (function($) {
 
 			$sourceParams.hide();
 
+			//do the conditional for the respective source dropdowns
 			if($searchKeyword.val() !== ""){
+
+				//grab the content
 				getConnections($(this).val(), $searchKeyword.val(), $searchKeyword.data('parent'));
 
 				switch ($(this).val()) {
@@ -3091,7 +3099,7 @@ var WIKIVERSE = (function($) {
 					break;
 
 					case "Instagram":
-						$('#InstagramType').show();
+						$('#instagramType').show();
 					break;
 
 					case "Wikipedia":

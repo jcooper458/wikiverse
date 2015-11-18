@@ -66,9 +66,9 @@ else{
         			<?php get_template_part('templates/languages'); ?>
           </div>
 
-      		<div class="sourceParams" id="instagramType" >
+      		<div type="Instagram" class="sourceParams" id="instagramType" >
 
-      			<select name="input" class="selectpicker" data-style="btn btn-default" data-width="100%">
+      			<select id="instagramSearchType" name="input" class="selectpicker" data-style="btn btn-default" data-width="100%">
       				<option value="hashtag">#hashtag</option>
       				<option value="username">@username</option>
       				<option value="coordinates" >coordinates</option>
@@ -76,9 +76,9 @@ else{
 
       		</div>
 
-      		<div class="sourceParams" id="flickrType" >
+      		<div type="Flickr" class="sourceParams" id="flickrType" >
 
-      			<select name="flickrType" class="selectpicker" data-style="btn btn-default" data-width="100%">
+      			<select id="flickrSearchType" name="flickrType" class="selectpicker" data-style="btn btn-default" data-width="100%">
       				<option value="textQuery">keyword</option>
       				<option value="userQuery">username</option>
       				<option value="geoQuery">coordinates</option>
@@ -86,9 +86,9 @@ else{
 
       		</div>
 
-      		<div class="sourceParams" id="flickrSort" >
+      		<div type="Flickr" class="sourceParams" id="flickrSort" >
 
-      			<select name="flickrSort" class="selectpicker" data-style="btn btn-default" data-width="100%">
+      			<select id="flickrSortType" name="flickrSort" class="selectpicker" data-style="btn btn-default" data-width="100%">
       				<option value="relevance">by relevance</option>
       				<option value="interestingness-desc">by interestingness</option>
       			</select>
