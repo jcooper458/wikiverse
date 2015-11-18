@@ -730,7 +730,7 @@ video {
 }
 figure .foto-tags{
   position: absolute;
-  bottom: 2px;
+  bottom: 5px;
   max-height: 70%;
   x-overflow:visible;
   z-index: 1;
@@ -749,6 +749,11 @@ figure.effect-julia p {
   font-size: 13px;
   color: #df691a;
   visibility: hidden;
+
+  -webkit-transition: -webkit-transform 0.35s;
+  transition: transform 0.35s;
+  -webkit-transform: translate3d(-360px,0,0);
+  transform: translate3d(-360px,0,0);
   
 }
 
@@ -797,6 +802,9 @@ figure.effect-julia:hover img {
 
 figure.effect-julia:hover p {
   visibility: visible;
+  opacity: 1;
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
 }
 
 figure.effect-julia p:hover {
