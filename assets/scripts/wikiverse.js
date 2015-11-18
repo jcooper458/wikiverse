@@ -302,8 +302,8 @@ var WIKIVERSE = (function($) {
 		$sidebar.find("#loading").remove();
 
 		//empty the searchkeyword and re-fill it with new search query
-		$searchKeyword.empty();
-		$searchKeyword.append(query.toLowerCase());
+		$searchKeyword.val('');
+		$searchKeyword.val(query.toLowerCase());
 
 		//store the parent in case it is passed, in case we are getting a connection from the board
 		if (parent) {
@@ -952,15 +952,14 @@ var WIKIVERSE = (function($) {
 
 		type = type || "textQuery";
 
-		var APIextras = "url_q,url_z,tags,owner_name,geo";
+		var APIextras = "url_q,url_c,tags,owner_name,geo";
 		var APIkey = '1a7d3826d58da8a6285ef7062f670d30';
 
 		function buildFlickrResultArray(data, triggerSearchResultsFunction) {
 
 			var resultsArray = data.photos.photo.map(function(photoObj, index) {
 
-				if (photoObj.url_z) {
-
+				if (photoObj.url_c) {
 					return {
 						Topic: {
 
@@ -968,7 +967,7 @@ var WIKIVERSE = (function($) {
 							id: photoObj.id,
 							title: photoObj.title,
 							thumbURL: photoObj.url_q,
-							mediumURL: photoObj.url_z,
+							mediumURL: photoObj.url_c,
 							tags: photoObj.tags.split(" ")
 
 						},
@@ -3178,7 +3177,7 @@ var WIKIVERSE = (function($) {
 	//
 
 	$('.otherSource').change(function(event) {
-		getConnections($(this).val(), $(this).parents('#sidebar').find('h3').html(), $searchKeyword.data('parent'));
+		getConnections($(this).val(), $(this).parents('#sidebar').find('#search-keyword').val(), $searchKeyword.data('parent'));
 	});
 
 	//close sidebar

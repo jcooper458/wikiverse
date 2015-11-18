@@ -42,21 +42,25 @@ else{
 
       <i id="closeSidebar" class="fa fa-close"></i>
       <i id="openSidebar" class="fa fa-plus"></i>
-      <h3 id="search-keyword" class=""></h3>
+
       <div class="search-ui">
-        <ul class="nav nav-pills">
-          <li class="">
-            <select class="selectpicker pull-left otherSource show-menu-arrow" data-style="btn btn-default btn-xs" data-width="50%" data-size="20">
-              <option selected="">try another source..</option>
-              <option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option>
-              <option><i class="fa fa-wikipedia wikipedia-icon icon"></i>Wikipedia</option>
-              <option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option>
-              <option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option>
-              <option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option>
-              <option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option>
-            </select>
-          </li>
-        </ul>
+
+        <div class="input-group">
+          <input id="search-keyword" type="text" class="form-control" placeholder="Search for...">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button">search</button>
+          </span>
+        </div>
+
+        <select class="selectpicker pull-left otherSource show-menu-arrow" data-style="btn btn-default btn-xs" data-width="50%" data-size="20">
+          <option selected="">try another source..</option>
+          <option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option>
+          <option><i class="fa fa-wikipedia wikipedia-icon icon"></i>Wikipedia</option>
+          <option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option>
+          <option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option>
+          <option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option>
+          <option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option>
+        </select>
       </div>
     </div>
     <div class="results"></div>
