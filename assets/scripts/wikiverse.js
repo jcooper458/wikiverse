@@ -1782,53 +1782,61 @@ var WIKIVERSE = (function($) {
 			dataType: 'jsonp',
 			success: function(data) {
 				//if there is sections, append them
-
 				var $sectionResults = $('<div class="sections"></div>');
 
 				if (typeof data.parse.sections !== 'undefined' && data.parse.sections.length > 0) {
 
-					$brick.append($sectionResults);
+					var $sectionsButton = $('<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> sections </button>');
 
-					data.parse.sections.forEach(function(section) {
+					$brick.append($sectionsButton);
 
-						//if not any of those, add the resulting sections
-						if ((section.line !== "References") && (section.line !== "Notes") && (section.line !== "External links") && (section.line !== "Citations") && (section.line !== "Bibliography") && (section.line !== "Notes and references")) {
-							$sectionResults.append(' <button type="button" class="list-group-item result" title="' + section.anchor + '" index="' + section.index + '">' + section.line + '</button>');
-						}
-					});
-
-					$packeryContainer.packery();
-
-					//create the section object and trigger the creation of a section brick
-					$sectionResults.find(".result").on('click', function() {
-
-						$packeryContainer.packery('stamp', $brick);
-
-						var sectionData = {
-
-							title: $(this).html(),
-							language: topic.language,
-							name: topic.title,
-							index: $(this).attr("index")
-						};
+					$sectionsButton.one('click', function() {
 
 						$(this).remove();
 
-						var $nextBrick = buildBrick([parseInt($brick.css('left')), parseInt($brick.css('top'))], undefined, $brick.data('id'));
-						wikiverse.buildSection($nextBrick, sectionData, brickDataLoaded);
+						$brick.append($sectionResults);
 
-						var brickData = {
-							Type: "wikiSection",
-							Topic: sectionData,
-							Id: $nextBrick.data('id')
-						}
+						data.parse.sections.forEach(function(section) {
 
-						buildNode(brickData, $nextBrick.data('id'), $brick.data('id'));
+							//if not any of those, add the resulting sections
+							if ((section.line !== "References") && (section.line !== "Notes") && (section.line !== "External links") && (section.line !== "Citations") && (section.line !== "Bibliography") && (section.line !== "Notes and references")) {
+								$sectionResults.append('<p class="result" data-title="' + section.anchor + '" data-index="' + section.index + '">' + section.line + '</p>');
+							}
 
-						$packeryContainer.packery('unstamp', $brick);
+						});
+
+						$packeryContainer.packery();
+
+						//create the section object and trigger the creation of a section brick
+						$sectionResults.find(".result").on('click', function() {
+
+							$packeryContainer.packery('stamp', $brick);
+
+							var sectionData = {
+								title: $(this).html(),
+								language: topic.language,
+								name: topic.title,
+								index: $(this).attr("data-index")
+							};
+
+							$(this).remove();
+
+							var $nextBrick = buildBrick([parseInt($brick.css('left')), parseInt($brick.css('top'))], undefined, $brick.data('id'));
+
+							wikiverse.buildSection($nextBrick, sectionData, brickDataLoaded);
+
+							var brickData = {
+								Type: "wikiSection",
+								Topic: sectionData,
+								Id: $nextBrick.data('id')
+							}
+
+							buildNode(brickData, $nextBrick.data('id'), $brick.data('id'));
+
+							$packeryContainer.packery('unstamp', $brick);
+						});
+
 					});
-				} else {
-					$sectionResults.append('No Sections found for this Wikipedia article..');
 				}
 			}
 		});
@@ -1846,7 +1854,6 @@ var WIKIVERSE = (function($) {
 	wikiverse.buildWikipedia = function($brick, topic, callback) {
 
 		var $connections = $(wikiverse_nav);
-		var $sectionsButton = $('<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> sections </button>');
 
 		$brick.data('type', 'Wikipedia');
 		$brick.data('topic', topic);
@@ -1862,13 +1869,9 @@ var WIKIVERSE = (function($) {
 			getConnections($(this).find("option:selected").text(), topic.title, $brick.data('id'));
 		});
 
-		$brick.append($sectionsButton);
 
-		$sectionsButton.on('click', function() {
-			$packeryContainer.packery('stamp', $brick);
+		$brick.one("mouseenter", function() {
 			getWikiSections($brick, topic);
-			$sectionsButton.remove();
-			$packeryContainer.packery('unstamp', $brick);
 		});
 
 		//Go get the Main Image - 2 API Calls necessairy.. :(
@@ -2170,10 +2173,8 @@ var WIKIVERSE = (function($) {
 			});
 
 		} else {
-
 			draggie = new Draggabilly(itemElem);
 		}
-
 
 		// bind Draggabilly events to Packery
 		$packeryContainer.packery('bindDraggabillyEvents', draggie);
