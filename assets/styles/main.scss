@@ -492,7 +492,7 @@ padding: 1px 10px;
 
 .cbp-spmenu {
   height: 95%;
-  border-left: 1px solid #252525;
+
   border-top: 1px solid #252525;
   border-bottom: 1px solid #252525;
 }
@@ -512,7 +512,7 @@ video {
 #sidebar{
   overflow: hidden;
   margin-top: 45px;
-
+  border-right: 1px solid #252525;
   h1, h2, h3, h4{
     margin-top:5px;
   }
@@ -550,7 +550,7 @@ video {
 
   z-index:100;
   margin-top: 45px;
-
+  border-left: 1px solid #252525;
   overflow: hidden;
 
   .fa-close{

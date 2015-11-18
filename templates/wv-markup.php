@@ -5,7 +5,7 @@
 
 		<div class="row sourceParams" id="searchInput" >
 			<input type="search" value="" placeholder="type any keyword here.." />
-		</div>        
+		</div>
 
 		<div class="row sourceParams" id="searchButton" >
 			<button id="wv_search" type="submit" class="btn btn-primary btn-lg">Search</button>
@@ -39,16 +39,16 @@
         <i class="fa fa-icon-save"></i>
       </div>
       <div class="modal-body">
-      
+
         <div class="form-group">
           <input id="boardTitle" placeholder="Insert a Title for your board" type="text" class="form-control">
-        </div>      
-      
+        </div>
+
       </div>
       <div class="modal-footer">
-       
+
         <button class="btn btn-default" id="boardSubmitButton" disabled type="button">Save board</button>
-        
+
       </div>
     </div>
   </div>
