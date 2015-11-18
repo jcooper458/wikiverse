@@ -30,7 +30,7 @@ else{
   <nav id="rightSidebar" class="cbp-spmenu wv_sidebar cbp-spmenu-verticalRight cbp-spmenu-right fixed">
 
     <div id="searchMeta" class="fixed">
-      <i id="closeRightSidebar" class="fa fa-close"></i>
+      <i id="closeRightSidebar" class="fa fa-close invisible"></i>
       <i id="openRightSidebar" class="fa fa-code-fork"></i>
     </div>
     <div id="mindmap"></div>
@@ -40,27 +40,35 @@ else{
 
     <div id="searchMeta" class="">
 
-      <i id="closeSidebar" class="fa fa-close"></i>
+      <i id="closeSidebar" class="fa fa-close invisible"></i>
       <i id="openSidebar" class="fa fa-plus"></i>
 
       <div class="search-ui">
 
-        <div class="input-group">
-          <input id="search-keyword" type="text" class="form-control" placeholder="Search for...">
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="button">search</button>
-          </span>
-        </div>
 
-        <select class="selectpicker pull-left otherSource show-menu-arrow" data-style="btn btn-default btn-xs" data-width="50%" data-size="20">
-          <option selected="">try another source..</option>
+        <input id="search-keyword" type="text" class="form-control" placeholder="Search for...">
+
+
+        <select class="selectpicker pull-left otherSource show-menu-arrow" data-style="btn btn-default" data-width="100%" data-size="20">
+          <!--<option ="">try another source..</option>-->
+          <option selected><i class="fa fa-wikipedia wikipedia-icon icon"></i>Wikipedia</option>
           <option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option>
-          <option><i class="fa fa-wikipedia wikipedia-icon icon"></i>Wikipedia</option>
           <option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option>
           <option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option>
           <option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option>
           <option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option>
         </select>
+
+        <select class="selectpicker pull-left flickr show-menu-arrow" data-style="btn btn-default" data-width="100%" data-size="20">
+          <!--<option ="">try another source..</option>-->
+          <option selected><i class="fa fa-wikipedia wikipedia-icon icon"></i>Wikipedia</option>
+          <option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option>
+          <option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option>
+          <option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option>
+          <option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option>
+          <option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option>
+        </select>
+
       </div>
     </div>
     <div class="results"></div>

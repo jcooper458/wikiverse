@@ -510,7 +510,9 @@ var WIKIVERSE = (function($) {
 		//if sidebar open, hide the plus
 		if ($sidebar.hasClass('cbp-spmenu-open')) {
 			$('#openSidebar').addClass('invisible');
+			$('#closeSidebar').removeClass('invisible');
 		} else {
+			$('#closeSidebar').addClass('invisible');
 			$('#openSidebar').removeClass('invisible');
 		}
 	}
@@ -523,10 +525,13 @@ var WIKIVERSE = (function($) {
 		//close and plus button logic
 		//if sidebar open, hide the plus
 		if ($('#rightSidebar').hasClass('cbp-spmenu-open')) {
-			$('#openRightSidebar').addClass('invisible');
 			sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
 			wikiverse.mindmap.refresh();
+
+			$('#closeRightSidebar').removeClass('invisible');
+			$('#openRightSidebar').addClass('invisible');
 		} else {
+			$('#closeRightSidebar').addClass('invisible');
 			$('#openRightSidebar').removeClass('invisible');
 		}
 
@@ -1090,7 +1095,6 @@ var WIKIVERSE = (function($) {
 		};
 
 		var instagramUrl;
-
 
 		function buildInstagramResultArray(data, triggerSearchResultsFunction) {
 
@@ -3109,6 +3113,13 @@ var WIKIVERSE = (function($) {
 		}
 	}, false);
 
+	$searchKeyword.keyup(function(e) {
+		e.preventDefault();
+		//make enter save the board
+		if (e.keyCode === 13) {
+			$(".otherSource").trigger('change');
+		}
+	});
 
 	/*document.addEventListener("keydown", function(e) {
 		if (!($("input").is(":focus")) && e.keyCode === 87) {
