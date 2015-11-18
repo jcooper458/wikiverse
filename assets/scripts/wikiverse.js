@@ -2485,7 +2485,10 @@ var WIKIVERSE = (function($) {
 		//$('#source').selectpicker('refresh');
 
 		$('.search').addClass('open');
-		$('.search > form > input[type="search"]').focus();
+		$('.search input[type="search"]').val('');
+		$('.search input[type="search"]').focus();
+
+		$('.source').hide();																																																																																																									
 
 	};
 
@@ -3211,7 +3214,7 @@ var WIKIVERSE = (function($) {
 	$packeryContainer.packery('on', 'layoutComplete', function(pckryInstance, laidOutItems) {
 
 		//cant use show() or fadeIn() coz it messes up the bootstrap nav
-		$(".board-pilot, .searchButton").removeClass('invisible');
+		$(".board-pilot").removeClass('invisible');
 
 	});
 
