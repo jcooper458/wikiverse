@@ -44,10 +44,12 @@ var WIKIVERSE = (function($) {
 	}
 
 	//set default settings for the searches
-	wikiverse.wikiLang = "en";
+	wikiverse.searchLang = "en";
 	wikiverse.instagramSearchType = "hashtag";
 	wikiverse.flickrSearchType = "textQuery";
 	wikiverse.flickrSortType = "relevance";
+	wikiverse.youtubeSortType = "relevance";
+	wikiverse.twitterSearchType = "popular";
 
 	//var is_root = location.pathname === "/";
 
@@ -86,8 +88,7 @@ var WIKIVERSE = (function($) {
 		buildYoutubeSearchResults,
 		makeEachDraggable,
 		playYoutube,
-		destroyBoard,
-		getLanguage;
+		destroyBoard;
 
 	//initiate the wikiverse search functionality
 	wikiverse.init = function() {
@@ -191,8 +192,8 @@ var WIKIVERSE = (function($) {
 			//this is because its a quick search via the "add content" button
 			getWikis(query, "en", searchResultsLoaded);
 			getSoundclouds(query, searchResultsLoaded);
-			getTweets(query, searchResultsLoaded);
-			getYoutubes(query, searchResultsLoaded);
+			getTweets(query, "popular", "en", searchResultsLoaded);
+			getYoutubes(query, "relevance", searchResultsLoaded);
 			getFlickrs(query, "relevance", "textQuery", searchResultsLoaded);
 			getInstagrams(query, "hashtag", searchResultsLoaded);
 
@@ -204,7 +205,7 @@ var WIKIVERSE = (function($) {
 		//when any of the search source parameters are changed,
 		//the value is passed to the global wikiverse source parameter variable
 		//and getConnections is called via the sourceType trigger
-		$('.sourceParams select').on('change', function() {
+		$sourceParams.find('select').on('change', function() {
 			wikiverse[$(this).attr('id')] = $(this).val();
 			$sourceType.trigger('change');
 		});
@@ -220,7 +221,7 @@ var WIKIVERSE = (function($) {
 			if (!$sidebar.hasClass('cbp-spmenu-open')) {
 				toggleSidebar();
 			}
-			
+
 			prepareSearchNavbar(query);
 
 			//set the source in the source dropdown (this need to happen only from here)
@@ -385,7 +386,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//search youtube videos
-	function getYoutubes(topic, dataLoaded, triggerFunction) {
+	function getYoutubes(topic, orderby, dataLoaded, triggerFunction) {
 
 		$.ajax({
 			url: 'https://www.googleapis.com/youtube/v3/search',
@@ -393,6 +394,7 @@ var WIKIVERSE = (function($) {
 				q: topic,
 				key: 'AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8',
 				part: 'snippet',
+				orderby: orderby,
 				maxResults: 50
 			},
 			dataType: 'jsonp',
@@ -1215,7 +1217,7 @@ var WIKIVERSE = (function($) {
 				break;
 
 			case "Youtube":
-				getYoutubes(topic, searchResultsLoaded, "buildYoutubeSearchResults");
+				getYoutubes(topic, wikiverse.youtubeSortType, searchResultsLoaded, "buildYoutubeSearchResults");
 				break;
 
 			case "Soundcloud":
@@ -1223,11 +1225,11 @@ var WIKIVERSE = (function($) {
 				break;
 
 			case "Twitter":
-				getTweets(topic, searchResultsLoaded, "buildTwitterSearchResults");
+				getTweets(topic, wikiverse.twitterSearchType, wikiverse.searchLang, searchResultsLoaded, "buildTwitterSearchResults");
 				break;
 
 			case "Wikipedia":
-				getWikis(topic, wikiverse.wikiLang, searchResultsLoaded, "buildListResults");
+				getWikis(topic, wikiverse.searchLang, searchResultsLoaded, "buildListResults");
 				break;
 		}
 	}
@@ -1438,9 +1440,9 @@ var WIKIVERSE = (function($) {
 	}
 
 	//search the Twitter API for tweets
-	function getTweets(query, dataLoaded, triggerSearchResultsFunction) {
+	function getTweets(query, searchType, lang, dataLoaded, triggerSearchResultsFunction) {
 
-		var queryString = query + '&result_type=mixed&count=50';
+		var queryString = query + '&result_type=' + searchType + '&lang=' + lang + '&count=50';
 
 		$.ajax({
 			url: '/app/plugins/wp-twitter-api/api.php',
@@ -2634,303 +2636,16 @@ var WIKIVERSE = (function($) {
 		}
 	};
 
-	//get the wiki languages
-	getLanguage = function(langCode) {
+	function removeIDfromThisBoardsIds(id) {
 
-		var langarray = {
+		//delete item from thisBoardsIds
+		var indexToDelete = wikiverse.thisBoardsIDs.indexOf(id);
 
-			'en': 'English',
-			'de': 'Deutsch',
-			'fr': 'Français',
-			'nl': 'Nederlands',
-			'it': 'Italiano',
-			'es': 'Español',
-			'pl': 'Polski',
-			'ru': 'Русский',
-			'ja': '日本語',
-			'pt': 'Português',
-			'zh': '中文',
-			'sv': 'Svenska',
-			'vi': 'Tiếng Việt',
-			'uk': 'Українська',
-			'ca': 'Català',
-			'no': 'Norsk (Bokmål)',
-			'fi': 'Suomi',
-			'cs': 'Čeština',
-			'fa': 'فارسی',
-			'hu': 'Magyar',
-			'ko': '한국어',
-			'ro': 'Română',
-			'id': 'Bahasa Indonesia',
-			'ar': 'العربية',
-			'tr': 'Türkçe',
-			'sk': 'Slovenčina',
-			'kk': 'Қазақша',
-			'eo': 'Esperanto',
-			'da': 'Dansk',
-			'sr': 'Српски / Srpski',
-			'lt': 'Lietuvių',
-			'eu': 'Euskara',
-			'ms': 'Bahasa Melayu',
-			'he': 'עברית',
-			'bg': 'Български',
-			'sl': 'Slovenščina',
-			'vo': 'Volapük',
-			'hr': 'Hrvatski',
-			'war': 'Winaray',
-			'hi': 'हिन्दी',
-			'et': 'Eesti',
-			'gl': 'Galego',
-			'nn': 'Nynorsk',
-			'az': 'Azərbaycanca',
-			'simple': 'Simple English',
-			'la': 'Latina',
-			'el': 'Ελληνικά',
-			'th': 'ไทย',
-			'sh': 'Srpskohrvatski / Српскохрватски',
-			'oc': 'Occitan',
-			'new': 'नेपाल भाषा',
-			'mk': 'Македонски',
-			'ka': 'ქართული',
-			'roa-rup': 'Armãneashce',
-			'tl': 'Tagalog',
-			'pms': 'Piemontèis',
-			'be': 'Беларуская',
-			'ht': 'Krèyol ayisyen',
-			'te': 'తెలుగు',
-			'uz': 'O‘zbek',
-			'ta': 'தமிழ்',
-			'be-x-old': 'Беларуская (тарашкевіца)',
-			'lv': 'Latviešu',
-			'br': 'Brezhoneg',
-			'sq': 'Shqip',
-			'ceb': 'Sinugboanong Binisaya',
-			'jv': 'Basa Jawa',
-			'mg': 'Malagasy',
-			'cy': 'Cymraeg',
-			'mr': 'मराठी',
-			'lb': 'Lëtzebuergesch',
-			'is': 'Íslenska',
-			'bs': 'Bosanski',
-			'hy': 'Հայերեն',
-			'my': 'မြန်မာဘာသာ',
-			'yo': 'Yorùbá',
-			'an': 'Aragonés',
-			'lmo': 'Lumbaart',
-			'ml': 'മലയാളം',
-			'fy': 'Frysk',
-			'pnb': 'شاہ مکھی پنجابی (Shāhmukhī Pañjābī)',
-			'af': 'Afrikaans',
-			'bpy': 'ইমার ঠার/বিষ্ণুপ্রিয়া মণিপুরী',
-			'bn': 'বাংলা',
-			'sw': 'Kiswahili',
-			'io': 'Ido',
-			'scn': 'Sicilianu',
-			'ne': 'नेपाली',
-			'gu': 'ગુજરાતી',
-			'zh-yue': '粵語',
-			'ur': 'اردو',
-			'ba': 'Башҡорт',
-			'nds': 'Plattdüütsch',
-			'ku': 'Kurdî / كوردی',
-			'ast': 'Asturianu',
-			'ky': 'Кыргызча',
-			'qu': 'Runa Simi',
-			'su': 'Basa Sunda',
-			'diq': 'Zazaki',
-			'tt': 'Tatarça / Татарча',
-			'ga': 'Gaeilge',
-			'cv': 'Чăваш',
-			'ia': 'Interlingua',
-			'nap': 'Nnapulitano',
-			'bat-smg': 'Žemaitėška',
-			'map-bms': 'Basa Banyumasan',
-			'als': 'Alemannisch',
-			'wa': 'Walon',
-			'kn': 'ಕನ್ನಡ',
-			'am': 'አማርኛ',
-			'sco': 'Scots',
-			'ckb': 'Soranî / کوردی',
-			'gd': 'Gàidhlig',
-			'bug': 'Basa Ugi',
-			'tg': 'Тоҷикӣ',
-			'mzn': 'مَزِروني',
-			'hif': 'Fiji Hindi',
-			'zh-min-nan': 'Bân-lâm-gú',
-			'yi': 'ייִדיש',
-			'vec': 'Vèneto',
-			'arz': 'مصرى (Maṣrī)',
-			'roa-tara': 'Tarandíne',
-			'nah': 'Nāhuatl',
-			'os': 'Иронау',
-			'sah': 'Саха тыла (Saxa Tyla)',
-			'mn': 'Монгол',
-			'sa': 'संस्कृतम्',
-			'pam': 'Kapampangan',
-			'hsb': 'Hornjoserbsce',
-			'li': 'Limburgs',
-			'mi': 'Māori',
-			'si': 'සිංහල',
-			'se': 'Sámegiella',
-			'co': 'Corsu',
-			'gan': '贛語',
-			'glk': 'گیلکی',
-			'bar': 'Boarisch',
-			'bo': 'བོད་སྐད',
-			'fo': 'Føroyskt',
-			'ilo': 'Ilokano',
-			'bcl': 'Bikol',
-			'mrj': 'Кырык Мары (Kyryk Mary) ',
-			'fiu-vro': 'Võro',
-			'nds-nl': 'Nedersaksisch',
-			'ps': 'پښتو',
-			'tk': 'تركمن / Туркмен',
-			'vls': 'West-Vlams',
-			'gv': 'Gaelg',
-			'rue': 'русиньскый язык',
-			'pa': 'ਪੰਜਾਬੀ',
-			'xmf': 'მარგალური (Margaluri)',
-			'pag': 'Pangasinan',
-			'dv': 'Divehi',
-			'nrm': 'Nouormand/Normaund',
-			'zea': 'Zeêuws',
-			'kv': 'Коми',
-			'koi': 'Перем Коми (Perem Komi)',
-			'km': 'ភាសាខ្មែរ',
-			'rm': 'Rumantsch',
-			'csb': 'Kaszëbsczi',
-			'lad': 'Dzhudezmo',
-			'udm': 'Удмурт кыл',
-			'or': 'ଓଡ଼ିଆ',
-			'mt': 'Malti',
-			'mhr': 'Олык Марий (Olyk Marij)',
-			'fur': 'Furlan',
-			'lij': 'Líguru',
-			'wuu': '吴语',
-			'ug': 'ئۇيغۇر تىلى',
-			'frr': 'Nordfriisk',
-			'pi': 'पाऴि',
-			'sc': 'Sardu',
-			'zh-classical': '古文 / 文言文',
-			'bh': 'भोजपुरी',
-			'ksh': 'Ripoarisch',
-			'nov': 'Novial',
-			'ang': 'Englisc',
-			'so': 'Soomaaliga',
-			'stq': 'Seeltersk',
-			'kw': 'Kernewek/Karnuack',
-			'nv': 'Diné bizaad',
-			'vep': 'Vepsän',
-			'hak': 'Hak-kâ-fa / 客家話',
-			'ay': 'Aymar',
-			'frp': 'Arpitan',
-			'pcd': 'Picard',
-			'ext': 'Estremeñu',
-			'szl': 'Ślůnski',
-			'gag': 'Gagauz',
-			'gn': 'Avañe',
-			'ln': 'Lingala',
-			'ie': 'Interlingue',
-			'eml': 'Emiliàn e rumagnòl',
-			'haw': 'Hawai`i',
-			'xal': 'Хальмг',
-			'pfl': 'Pfälzisch',
-			'pdc': 'Deitsch',
-			'rw': 'Ikinyarwanda',
-			'krc': 'Къарачай-Малкъар (Qarachay-Malqar)',
-			'crh': 'Qırımtatarca',
-			'ace': 'Bahsa Acèh',
-			'to': 'faka Tonga',
-			'as': 'অসমীয়া',
-			'ce': 'Нохчийн',
-			'kl': 'Kalaallisut',
-			'arc': 'Aramaic',
-			'dsb': 'Dolnoserbski',
-			'myv': 'Эрзянь (Erzjanj Kelj)',
-			'pap': 'Papiamentu',
-			'bjn': 'Bahasa Banjar',
-			'sn': 'chiShona',
-			'tpi': 'Tok Pisin',
-			'lbe': 'Лакку',
-			'lez': 'Лезги чІал (Lezgi č’al)',
-			'kab': 'Taqbaylit',
-			'mdf': 'Мокшень (Mokshanj Kälj)',
-			'wo': 'Wolof',
-			'jbo': 'Lojban',
-			'av': 'Авар',
-			'srn': 'Sranantongo',
-			'cbk-zam': 'Chavacano de Zamboanga',
-			'bxr': 'Буряад',
-			'ty': 'Reo Mā`ohi',
-			'lo': 'ລາວ',
-			'kbd': 'Адыгэбзэ (Adighabze)',
-			'ab': 'Аҧсуа',
-			'tet': 'Tetun',
-			'mwl': 'Mirandés',
-			'ltg': 'Latgaļu',
-			'na': 'dorerin Naoero',
-			'kg': 'KiKongo',
-			'ig': 'Igbo',
-			'nso': 'Sesotho sa Leboa',
-			'za': 'Cuengh',
-			'kaa': 'Qaraqalpaqsha',
-			'zu': 'isiZulu',
-			'chy': 'Tsetsêhestâhese',
-			'rmy': 'romani - रोमानी',
-			'cu': 'Словѣньскъ',
-			'tn': 'Setswana',
-			'chr': 'ᏣᎳᎩ',
-			'got': 'Gothic',
-			'cdo': 'Mìng-dĕ̤ng-ngṳ̄',
-			'sm': 'Gagana Samoa',
-			'bi': 'Bislama',
-			'mo': 'Молдовеняскэ',
-			'bm': 'Bamanankan',
-			'iu': 'ᐃᓄᒃᑎᑐᑦ',
-			'pih': 'Norfuk',
-			'ss': 'SiSwati',
-			'sd': 'سنڌي، سندھی ، सिन्ध',
-			'pnt': 'Ποντιακά',
-			'ee': 'Eʋegbe',
-			'ki': 'Gĩkũyũ',
-			'om': 'Oromoo',
-			'ha': 'هَوُسَ',
-			'ti': 'ትግርኛ',
-			'ts': 'Xitsonga',
-			'ks': 'कश्मीरी / كشميري',
-			'fj': 'Na Vosa Vakaviti',
-			'sg': 'Sängö',
-			've': 'Tshivenda',
-			'rn': 'Kirundi',
-			'cr': 'Nehiyaw',
-			'ak': 'Akana',
-			'tum': 'chiTumbuka',
-			'lg': 'Luganda',
-			'dz': 'ཇོང་ཁ',
-			'ny': 'Chi-Chewa',
-			'ik': 'Iñupiak',
-			'ch': 'Chamoru',
-			'ff': 'Fulfulde',
-			'st': 'Sesotho',
-			'tw': 'Twi',
-			'xh': 'isiXhosa',
-			'ng': 'Oshiwambo',
-			'ii': 'ꆇꉙ',
-			'cho': 'Choctaw',
-			'mh': 'Ebon',
-			'aa': 'Afar',
-			'kj': 'Kuanyama',
-			'ho': 'Hiri Motu',
-			'mus': 'Muskogee',
-			'kr': 'Kanuri',
-			'hz': 'Otsiherero'
-		};
+		if (indexToDelete > -1) {
+			wikiverse.thisBoardsIDs.splice(indexToDelete, 1);
+		}
 
-		var language = langarray[langCode];
-
-		return language;
-
-	};
+	}
 
 	function graphEventHandlers() {
 
@@ -3109,6 +2824,14 @@ var WIKIVERSE = (function($) {
 						$('#languageType').show();
 					break;
 
+					case "Twitter":
+						$('#languageType, #twitterType').show();
+					break;
+
+					case "Youtube":
+						$('#youtubeType').show();
+					break;
+
 				}
 			}
 			else{
@@ -3125,17 +2848,6 @@ var WIKIVERSE = (function($) {
 	$('#rightSidebar .fa').click(function() {
 		toggleRightSidebar();
 	});
-
-	function removeIDfromThisBoardsIds(id) {
-
-		//delete item from thisBoardsIds
-		var indexToDelete = wikiverse.thisBoardsIDs.indexOf(id);
-
-		if (indexToDelete > -1) {
-			wikiverse.thisBoardsIDs.splice(indexToDelete, 1);
-		}
-
-	}
 
 	// REMOVE ITEM
 	$packeryContainer.on("click", ".brick .cross", function() {
