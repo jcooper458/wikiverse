@@ -193,7 +193,7 @@ var WIKIVERSE = (function($) {
 			getWikis(query, "en", searchResultsLoaded);
 			getSoundclouds(query, searchResultsLoaded);
 			getTweets(query, "popular", "en", searchResultsLoaded);
-			getYoutubes(query, "relevance", searchResultsLoaded);
+			getYoutubes(query, "relevance", "en", searchResultsLoaded);
 			getFlickrs(query, "relevance", "textQuery", searchResultsLoaded);
 			getInstagrams(query, "hashtag", searchResultsLoaded);
 
@@ -386,7 +386,7 @@ var WIKIVERSE = (function($) {
 	}
 
 	//search youtube videos
-	function getYoutubes(topic, order, dataLoaded, triggerFunction) {
+	function getYoutubes(topic, order, lang, dataLoaded, triggerFunction) {
 
 		$.ajax({
 			url: 'https://www.googleapis.com/youtube/v3/search',
@@ -395,6 +395,7 @@ var WIKIVERSE = (function($) {
 				"key": 'AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8',
 				"part": 'snippet',
 				"order": order,
+				"relevanceLanguage": lang,
 				"maxResults": 50
 			},
 			dataType: 'jsonp',
@@ -1217,7 +1218,7 @@ var WIKIVERSE = (function($) {
 				break;
 
 			case "Youtube":
-				getYoutubes(topic, wikiverse.youtubeSortType, searchResultsLoaded, "buildYoutubeSearchResults");
+				getYoutubes(topic, wikiverse.youtubeSortType, wikiverse.searchLang, searchResultsLoaded, "buildYoutubeSearchResults");
 				break;
 
 			case "Soundcloud":
@@ -2829,7 +2830,7 @@ var WIKIVERSE = (function($) {
 					break;
 
 					case "Youtube":
-						$('#youtubeType').show();
+						$('#youtubeType, #languageType').show();
 					break;
 
 				}
