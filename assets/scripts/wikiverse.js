@@ -12,8 +12,8 @@ var WIKIVERSE = (function($) {
 	var defaultBrick = '<div class="brick">' + close_icon + '</div>';
 	var defaultMapBrick = '<div class="brick gmaps">' + handle + close_icon + '</div>';
 	var tableHover = '<table class="table table-hover"></table>';
-	var getInstagramsButton = '<button id="getInstagrams" class="btn btn-default btn-xs getFotos" type="button">get instragram fotos of this location</button>';
-	var getFlickrsButton = '<button id="getFlickrs" class="btn btn-default btn-xs getFotos" type="button">get flickr fotos of this location</button>';
+	var getInstagramsButton = '<button id="Instagram" class="btn btn-default btn-xs getFotos" type="button">get instragram fotos of this location</button>';
+	var getFlickrsButton = '<button id="Flickr" class="btn btn-default btn-xs getFotos" type="button">get flickr fotos of this location</button>';
 	var loadingIcon = '<span id="loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate">';
 	var note = '<textarea id="note" class="form-control" placeholder="add your own infos.." rows="3"></textarea>';
 
@@ -222,11 +222,7 @@ var WIKIVERSE = (function($) {
 				toggleSidebar();
 			}
 
-			prepareSearchNavbar(query);
-
-			//set the source in the source dropdown (this need to happen only from here)
-			$sourceType.val($(this).attr("id"));
-			$sourceType.selectpicker('refresh');
+			prepareSearchNavbar(query, $(this).attr("id"));
 
 			var thisResultsArray = $(this).data("results");
 			var functionToBuildSearchResults = $(this).attr("fn");
@@ -294,8 +290,8 @@ var WIKIVERSE = (function($) {
 	}
 
 	//clean up the sidebar navbar for the new search
-	function prepareSearchNavbar(query, parent) {
-
+	function prepareSearchNavbar(query, source, parent) {
+		$sourceType.hide();
 		//empty the search results
 		$results.empty();
 		$sidebar.find("#loading").remove();
@@ -308,6 +304,9 @@ var WIKIVERSE = (function($) {
 		if (parent) {
 			$searchKeyword.data('parent', parent);
 		}
+
+		$sourceType.val(source);
+		$sourceType.selectpicker('refresh');
 
 		//create a loading icon
 		$results.append(loadingIcon);
@@ -408,7 +407,7 @@ var WIKIVERSE = (function($) {
 	//search for related youtube videos
 	function getRelatedYoutubes(videoID, origQuery, dataLoaded, triggerFunction, parent) {
 
-		prepareSearchNavbar(origQuery, parent);
+		prepareSearchNavbar(origQuery, "Youtube", parent);
 
 		//Open the sidebar:
 		if (!$sidebar.hasClass('cbp-spmenu-open')) {
@@ -545,13 +544,13 @@ var WIKIVERSE = (function($) {
 
 			var position = $(this).parents(".brick").data("position");
 
-			prepareSearchNavbar(position);
+			prepareSearchNavbar(position, $(this).attr('id'));
 
 			//Open the sidebar:
 			if (!$sidebar.hasClass('cbp-spmenu-open')) {
 				toggleSidebar();
 			}
-			if ($(this).attr('id') === "getInstagrams") {
+			if ($(this).attr('id') === "Instagram") {
 				getInstagrams(position, "coordinates", searchResultsLoaded, "buildFotoSearchResults");
 			} else {
 				getFlickrs(position, "relevance", "geoQuery", searchResultsLoaded, "buildFotoSearchResults");
@@ -1204,7 +1203,7 @@ var WIKIVERSE = (function($) {
 			toggleSidebar();
 		}
 
-		prepareSearchNavbar(topic, parent);
+		prepareSearchNavbar(topic, source, parent);
 
 		switch (source) {
 
@@ -1723,7 +1722,7 @@ var WIKIVERSE = (function($) {
 							$packeryContainer.packery('stamp', $brick);
 
 							var sectionData = {
-								title: $(this).html(),
+								title: $(this).find('td').html(),
 								language: topic.language,
 								name: topic.title,
 								index: $(this).attr("data-wvindex")
