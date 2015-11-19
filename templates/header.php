@@ -60,6 +60,14 @@ else{
             </select>
           </div>
 
+      		<div type="Youtube" class="sourceParams" id="youtubeType">
+      			<select id="youtubeSortType" name="youtubeSort" class="selectpicker" data-style="btn btn-default" data-width="100%">
+      				<option value="relevance">sort by relevance</option>
+      				<option value="date">sort by date</option>
+      				<option value="viewCount">sort by view count</option>
+      				<option value="rating">sort by rating</option>
+      			</select>
+
         	<div class="sourceParams" id="languageType">
         			<?php get_template_part('templates/languages'); ?>
           </div>
@@ -92,14 +100,6 @@ else{
       				<option value="popular">get popular results</option>
       				<option value="recent">get recent results</option>
       				<option value="mixed">get mixed results</option>
-      			</select>
-
-      		<div type="Youtube" class="sourceParams" id="youtubeType">
-      			<select id="youtubeSortType" name="youtubeSort" class="selectpicker" data-style="btn btn-default" data-width="100%">
-      				<option value="relevance">sort by relevance</option>
-      				<option value="published">sort by date</option>
-      				<option value="viewCount">sort by view count</option>
-      				<option value="rating">sort by rating</option>
       			</select>
       		</div>
 

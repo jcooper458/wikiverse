@@ -386,16 +386,16 @@ var WIKIVERSE = (function($) {
 	}
 
 	//search youtube videos
-	function getYoutubes(topic, orderby, dataLoaded, triggerFunction) {
+	function getYoutubes(topic, order, dataLoaded, triggerFunction) {
 
 		$.ajax({
 			url: 'https://www.googleapis.com/youtube/v3/search',
 			data: {
-				q: topic,
-				key: 'AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8',
-				part: 'snippet',
-				orderby: orderby,
-				maxResults: 50
+				"q": topic,
+				"key": 'AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8',
+				"part": 'snippet',
+				"order": order,
+				"maxResults": 50
 			},
 			dataType: 'jsonp',
 			success: function(data) {
