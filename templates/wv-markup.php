@@ -4,12 +4,10 @@
 	<div class="search-container center buffer-top-large">
 
 		<div class="row" id="searchInput" >
-			<input type="search" value="" placeholder="type any keyword here.." />
+			<input type="search" value="" placeholder="type any keyword and hit enter.." />
 		</div>
 
-		<div class="row" id="searchButton" >
-			<button id="wv_search" type="submit" class="btn btn-primary btn-lg">Search</button>
-		</div>
+
 		<div class="row" id="searchResults" >
 			<h3>wikiverse found content from following sources: </h3>
 			<div class="resultsCount">

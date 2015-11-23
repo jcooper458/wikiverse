@@ -100,7 +100,7 @@ var WIKIVERSE = (function($) {
 		wikiverse.searchHistory = {};
 		wikiverse.thisBoardsIDs = [];
 
-		sigma.classes.graph.addMethod('neighbors', function(nodeId) {
+			sigma.classes.graph.addMethod('neighbors', function(nodeId) {
 			var k,
 				neighbors = {},
 				index = this.allNeighborsIndex[nodeId] || {};
@@ -181,25 +181,6 @@ var WIKIVERSE = (function($) {
 					first = false;
 				}
 			});
-		});
-
-		$("#wv_search").on("click", function() {
-
-			//get the query from the search div
-			var query = $("#searchInput input").val();
-
-			//call the search functions with static, default parameters
-			//this is because its a quick search via the "add content" button
-			getWikis(query, "en", searchResultsLoaded);
-			getSoundclouds(query, searchResultsLoaded);
-			getTweets(query, "popular", "en", searchResultsLoaded);
-			getYoutubes(query, "relevance", "en", searchResultsLoaded);
-			getFlickrs(query, "relevance", "textQuery", searchResultsLoaded);
-			getInstagrams(query, "hashtag", searchResultsLoaded);
-
-			//reset the searchkeyword parent so that there is no parent, and thus a new searhquery node is created
-			$searchKeyword.removeData('parent');
-
 		});
 
 		//when any of the search source parameters are changed,
@@ -2275,7 +2256,6 @@ var WIKIVERSE = (function($) {
 
 			}
 		});
-
 		wikiverse.mindmap.graph.read(wikiverse.mindmapObj);
 	}
 
@@ -2725,12 +2705,27 @@ var WIKIVERSE = (function($) {
 		}
 	});
 
+	//wv_search
 	$('.search input').keyup(function(e) {
 		e.preventDefault();
 
 		//make enter save the board
 		if (e.keyCode === 13) {
-			$("#wv_search").trigger('click');
+
+			//get the query from the search div
+			var query = $("#searchInput input").val();
+
+			//call the search functions with static, default parameters
+			//this is because its a quick search via the "add content" button
+			getWikis(query, "en", searchResultsLoaded);
+			getSoundclouds(query, searchResultsLoaded);
+			getTweets(query, "popular", "en", searchResultsLoaded);
+			getYoutubes(query, "relevance", "en", searchResultsLoaded);
+			getFlickrs(query, "relevance", "textQuery", searchResultsLoaded);
+			getInstagrams(query, "hashtag", searchResultsLoaded);
+
+			//reset the searchkeyword parent so that there is no parent, and thus a new searhquery node is created
+			$searchKeyword.removeData('parent');
 		}
 	});
 
