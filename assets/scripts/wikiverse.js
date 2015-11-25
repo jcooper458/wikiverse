@@ -95,7 +95,7 @@ var WIKIVERSE = (function($) {
 
 		//hide the sources button that hold results
 	//	$('.source').hide();
-		$sourceParams.hide();
+		$sourceParams.hide();		
 
 		wikiverse.searchHistory = {};
 		wikiverse.thisBoardsIDs = [];
@@ -2675,6 +2675,7 @@ var WIKIVERSE = (function($) {
 		/*wikiverse.mindmap.bind('clickStage', function(e) {
 			wikiverse.mindmap.graph.nodes().forEach(function(n) {
 				n.color = n.originalColor;
+				n.icon.color = "#000";
 			});
 
 			wikiverse.mindmap.graph.edges().forEach(function(e) {

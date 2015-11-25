@@ -4,7 +4,7 @@
 	<div class="search-container center buffer-top-large">
 
 		<div class="row" id="searchInput" >
-			<input type="search" value="" placeholder="type any keyword and hit enter.." />
+			<input type="search" value="" placeholder="" />
 		</div>
 
 
