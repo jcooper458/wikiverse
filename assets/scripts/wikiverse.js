@@ -91,6 +91,7 @@ var WIKIVERSE = (function($) {
 		destroyBoard;
 
 	//initiate the wikiverse search functionality
+	//this is called on document ready (from _main.js)
 	wikiverse.init = function() {
 
 		//hide the sources button that hold results
@@ -100,7 +101,7 @@ var WIKIVERSE = (function($) {
 		wikiverse.searchHistory = {};
 		wikiverse.thisBoardsIDs = [];
 
-			sigma.classes.graph.addMethod('neighbors', function(nodeId) {
+		sigma.classes.graph.addMethod('neighbors', function(nodeId) {
 			var k,
 				neighbors = {},
 				index = this.allNeighborsIndex[nodeId] || {};
@@ -297,7 +298,7 @@ var WIKIVERSE = (function($) {
 
 	//callback for when API search results are loaded
 	function searchResultsLoaded(results, source, triggerSearchResultsFunction) {
-		console.log(results)
+
 		//
 		if (results.length > 0) {
 
@@ -322,7 +323,7 @@ var WIKIVERSE = (function($) {
 				wikiverse[triggerSearchResultsFunction](results, searchResultsListBuilt);
 			}
 		} else {
-			$results.append("Nothing found for " + $searchKeyword.html() + " on " + source);
+			$results.append("Nothing found for " + $searchKeyword.val() + " on " + source);
 			$results.append(". \n\nTry another source or look for something else: ");
 
 			//remove the loading icon when done
@@ -1609,7 +1610,7 @@ var WIKIVERSE = (function($) {
 			//
 			//not that updateSearchhistory is emptying the searchkeyword.data(parent) in case something is added to the searchhistory,
 			//thus forcing the second (if not) state!
-			var parent = $searchKeyword.data('parent') || wikiverse.searchHistory[$searchKeyword.html().toLowerCase()];
+			var parent = $searchKeyword.data('parent') || wikiverse.searchHistory[$searchKeyword.val().toLowerCase()];
 
 			var $thisBrick = buildBrick([parseInt($topBrick.css('left')), parseInt($topBrick.css('top')) - 200], undefined, parent);
 			var result = $(this).data("topic");
@@ -1619,6 +1620,8 @@ var WIKIVERSE = (function($) {
 
 			$(this).tooltip('destroy');
 			$(this).remove();
+
+			console.log(wikiverse.searchHistory);
 
 			//build a node with the searchqueryNode as parent
 			buildNode(result, $thisBrick.data('id'), parent);
@@ -1631,22 +1634,24 @@ var WIKIVERSE = (function($) {
 
 	function updateSearchHistory() {
 
+		var searchQuery = $searchKeyword.val();
+
 		//if search keyword is not already in history, add it
-		if (!wikiverse.searchHistory.hasOwnProperty($searchKeyword.html().toLowerCase())) {
-			wikiverse.searchHistory[$searchKeyword.html().toLowerCase()] = getRandomWvID();
+		if (!wikiverse.searchHistory.hasOwnProperty(searchQuery.toLowerCase())) {
+			wikiverse.searchHistory[searchQuery.toLowerCase()] = getRandomWvID();
 
 			//empty the $searchkeyword parent id so that a new searchquery parent is created
 
 			var searchQueryNodeData = {
 				Topic: {
-					title: $searchKeyword.html()
+					title: searchQuery
 				},
 				Type: "searchQuery",
-				Id: wikiverse.searchHistory[$searchKeyword.html().toLowerCase()]
+				Id: wikiverse.searchHistory[searchQuery.toLowerCase()]
 			}
 
 			//build a node for the searchquery
-			buildNode(searchQueryNodeData, wikiverse.searchHistory[$searchKeyword.html().toLowerCase()]);
+			buildNode(searchQueryNodeData, wikiverse.searchHistory[searchQuery.toLowerCase()]);
 		}
 	}
 
@@ -2797,6 +2802,7 @@ var WIKIVERSE = (function($) {
 
 		$sourceType.change(function(event) {
 
+			//these are the different dropdowns for an advanced search
 			$sourceParams.hide();
 
 			//do the conditional for the respective source dropdowns
@@ -2830,7 +2836,8 @@ var WIKIVERSE = (function($) {
 				}
 			}
 			else{
-					$searchKeyword.fadeOut().fadeIn();
+				//highlight the fact that the searchquery is empty
+				$searchKeyword.fadeOut().fadeIn();
 			}
 		});
 
