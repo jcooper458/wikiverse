@@ -2705,7 +2705,7 @@ var WIKIVERSE = (function($) {
 	$searchKeyword.keyup(function(e) {
 		//reset the searchkeyword parent so that there is no parent, and thus a new searhquery node is created
 		$searchKeyword.removeData('parent');
-		
+
 		e.preventDefault();
 		//make enter save the board
 		if (e.keyCode === 13) {
