@@ -718,6 +718,7 @@ video {
   height: 100%;
   overflow: hidden;
 }
+
 figure .foto-tags{
   position: absolute;
   bottom: 5px;
@@ -739,6 +740,7 @@ figure.effect-julia p {
   font-size: 13px;
   color: #df691a;
   visibility: hidden;
+}
 
 figure.effect-julia:hover img {
   opacity: 0.4;
@@ -773,6 +775,4 @@ figure.effect-julia:hover figcaption h4 {
 
 figure.effect-julia:hover figcaption .fotoType {
   visibility: visible;
-}
-
 }
