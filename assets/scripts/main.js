@@ -68,15 +68,6 @@
         // JavaScript to be fired on the home page, after the init JS      
       }
     },
-    // Login page
-    'login': {
-      init: function() {
-
-      },
-      finalize: function() {
-        $('#user_login').focus();
-      }
-    },
     // About us page, note the change from about-us to about_us.
     'about_us': {
       init: function() {

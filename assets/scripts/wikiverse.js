@@ -297,7 +297,7 @@ var WIKIVERSE = (function($) {
 
 	//callback for when API search results are loaded
 	function searchResultsLoaded(results, source, triggerSearchResultsFunction) {
-
+		console.log(results)
 		//
 		if (results.length > 0) {
 
@@ -972,7 +972,6 @@ var WIKIVERSE = (function($) {
 			var latitude = topic.split(',')[0];
 			var longitude = topic.split(',')[1];
 
-
 			$.ajax({
 				url: 'https://api.flickr.com/services/rest',
 				data: {
@@ -995,7 +994,7 @@ var WIKIVERSE = (function($) {
 							place_id: data.places.place[0].woeid,
 							format: 'json',
 							nojsoncallback: 1,
-							per_page: 40,
+							per_page: 100,
 							extras: APIextras,
 							sort: sort
 						},
@@ -1050,7 +1049,7 @@ var WIKIVERSE = (function($) {
 							user_id: data.user.id,
 							format: 'json',
 							nojsoncallback: 1,
-							per_page: 40,
+							per_page: 100,
 							extras: APIextras,
 							sort: sort
 						},

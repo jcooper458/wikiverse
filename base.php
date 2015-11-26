@@ -21,8 +21,10 @@ use Roots\Sage\Wrapper;
       if(!is_front_page()) {
         
         get_template_part('templates/header');
-        get_template_part('templates/wv-markup'); 
 
+        if(!is_author()) {
+          get_template_part('templates/wv-markup'); 
+        }
       //else for the frontpage
       }
     ?>
