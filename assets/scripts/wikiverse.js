@@ -2703,6 +2703,9 @@ var WIKIVERSE = (function($) {
 	}, false);
 
 	$searchKeyword.keyup(function(e) {
+		//reset the searchkeyword parent so that there is no parent, and thus a new searhquery node is created
+		$searchKeyword.removeData('parent');
+		
 		e.preventDefault();
 		//make enter save the board
 		if (e.keyCode === 13) {
@@ -2805,12 +2808,13 @@ var WIKIVERSE = (function($) {
 			//these are the different dropdowns for an advanced search
 			$sourceParams.hide();
 
-			//do the conditional for the respective source dropdowns
+			//if something is inside the search input
 			if($searchKeyword.val() !== ""){
 
 				//grab the content
 				getConnections($(this).val(), $searchKeyword.val(), $searchKeyword.data('parent'));
 
+				//do the conditional for the respective source dropdowns
 				switch ($(this).val()) {
 
 					case "Flickr":
@@ -2836,7 +2840,7 @@ var WIKIVERSE = (function($) {
 				}
 			}
 			else{
-				//highlight the fact that the searchquery is empty
+				//else highlight the fact that the searchquery is empty
 				$searchKeyword.fadeOut().fadeIn();
 			}
 		});
