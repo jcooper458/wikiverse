@@ -90,6 +90,46 @@ var WIKIVERSE = (function($) {
 		playYoutube,
 		destroyBoard;
 
+	// --------SIGMA CLASSES AND  DEFAULTS
+
+	sigma.classes.graph.addMethod('neighbors', function(nodeId) {
+		var k,
+			neighbors = {},
+			index = this.allNeighborsIndex[nodeId] || {};
+
+		for (k in index)
+			neighbors[k] = this.nodesIndex[k];
+
+		return neighbors;
+	});
+
+	sigma.classes.graph.addMethod('getNodesById', function() {
+		return this.nodesIndex;
+	});
+
+	wikiverse.mindmap = new sigma({
+		renderer: {
+			container: document.getElementById('mindmap'),
+			type: 'canvas'
+		},
+		settings: {
+			doubleClickEnabled: false,
+			minEdgeSize: 1,
+			maxEdgeSize: 3,
+			minNodeSize: 5,
+			maxNodeSize: 15,
+			enableEdgeHovering: true,
+			edgeHoverColor: 'edge',
+			defaultEdgeHoverColor: '#000',
+			labelThreshold: 15,
+			edgeHoverSizeRatio: 1,
+			defaultLabelColor: "#ccc",
+			edgeHoverExtremities: true
+		}
+	});
+
+	graphEventHandlers();
+
 	//initiate the wikiverse search functionality
 	//this is called on document ready (from _main.js)
 	wikiverse.init = function() {
@@ -100,44 +140,6 @@ var WIKIVERSE = (function($) {
 
 		wikiverse.searchHistory = {};
 		wikiverse.thisBoardsIDs = [];
-
-		sigma.classes.graph.addMethod('neighbors', function(nodeId) {
-			var k,
-				neighbors = {},
-				index = this.allNeighborsIndex[nodeId] || {};
-
-			for (k in index)
-				neighbors[k] = this.nodesIndex[k];
-
-			return neighbors;
-		});
-
-		sigma.classes.graph.addMethod('getNodesById', function() {
-			return this.nodesIndex;
-		});
-
-		wikiverse.mindmap = new sigma({
-			renderer: {
-				container: document.getElementById('mindmap'),
-				type: 'canvas'
-			},
-			settings: {
-				doubleClickEnabled: false,
-				minEdgeSize: 1,
-				maxEdgeSize: 3,
-				minNodeSize: 5,
-				maxNodeSize: 15,
-				enableEdgeHovering: true,
-				edgeHoverColor: 'edge',
-				defaultEdgeHoverColor: '#000',
-				labelThreshold: 15,
-				edgeHoverSizeRatio: 1,
-				defaultLabelColor: "#ccc",
-				edgeHoverExtremities: true
-			}
-		});
-
-		graphEventHandlers();
 
 		//but also open the search if clicked
 		$('.searchButton').on('click', function(event) {
@@ -2206,7 +2208,7 @@ var WIKIVERSE = (function($) {
 				label: query,
 				x: Math.random(),
 				y: Math.random(),
-				size: 15,
+				size: 20,
 				parent: "n0",
 				color: '#f8f8f8',
 				icon: {
@@ -2672,6 +2674,21 @@ var WIKIVERSE = (function($) {
 			// call the refresh method to make the colors
 			// update effective.
 			wikiverse.mindmap.refresh();
+
+			//scroll to clicked element
+			$("#rightSidebar").hide(function(){
+				$('html, body').animate({
+				     scrollTop: $("#" + nodeId).offset().top
+				 }, 1000, function(){				 	
+			 		$("#" + nodeId).fadeOut(function(){ 
+			 			$(this).fadeIn("slow", function(){
+			 				$("#rightSidebar").show();
+			 			}); 
+			 		});
+			 	});
+			 });
+
+
 		});
 
 		// When the stage is clicked, we just color each
