@@ -2636,6 +2636,7 @@ var WIKIVERSE = (function($) {
             //remove all nodes
            	mindmap.graph.clear();
            	updateFilters();
+           	$("#filter #filter_All").hide();
            	mindmap.refresh();
 
         }
