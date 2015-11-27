@@ -407,6 +407,17 @@ blockquote{
     border-right: 1px solid rgba(0,0,0,0.2);
 }
 
+.btn-google:hover, .btn-google:focus, .btn-google:active, .btn-google.active, .open>.dropdown-toggle.btn-google {
+    color: #fff;
+    background-color: #c23321;
+    border-color: rgba(0,0,0,0.2);
+}
+
+.btn-twitter:hover, .btn-twitter:focus, .btn-twitter:active, .btn-twitter.active, .open>.dropdown-toggle.btn-twitter {
+    color: #fff;
+    background-color: #2795e9;
+    border-color: rgba(0,0,0,0.2);
+}
 
 .controls {
   background-color: #fff;
@@ -441,6 +452,17 @@ blockquote{
 .note{
   word-wrap: break-word;
 }
+
+.wiki select,
+.wiki .btn,
+.brick .getFotos{visibility: hidden;}
+
+.search:hover .cross,
+.brick:hover .cross,
+.brick:hover .resize,
+.wiki:hover select,
+.wiki:hover .btn,
+.brick:hover .getFotos{visibility: visible;}
 
 table tr, .result, #clear, .results img, .cursor{cursor: pointer;}
 
