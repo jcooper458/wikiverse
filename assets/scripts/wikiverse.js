@@ -128,6 +128,9 @@ var WIKIVERSE = (function($) {
 		}
 	});
 
+	//instantiate a filter from the filter plugin
+	var filter = sigma.plugins.filter(mindmap);
+
 	graphEventHandlers();
 
 	//initiate the wikiverse search functionality
@@ -1627,8 +1630,6 @@ var WIKIVERSE = (function($) {
 			$(this).tooltip('destroy');
 			$(this).remove();
 
-			console.log(wikiverse.searchHistory[Object.keys(wikiverse.searchHistory)[0]]);
-
 			//build a node with the searchqueryNode as parent
 			buildNode(result, $thisBrick.data('id'), parent);
 			return false;
@@ -2216,6 +2217,7 @@ var WIKIVERSE = (function($) {
 				y: Math.random(),
 				size: 20,
 				parent: "n0",
+				source: "searchQuery",
 				color: '#f8f8f8',
 				icon: {
 					font: 'FontAwesome', // or 'FontAwesome' etc..
@@ -2242,6 +2244,7 @@ var WIKIVERSE = (function($) {
 					size: 10,
 					parent: "n" + brick.Parent,
 					color: '#f8f8f8',
+					source: brick.Type,
 					border_size: 2,
 					border_color: "#000",
 					icon: {
@@ -2350,6 +2353,7 @@ var WIKIVERSE = (function($) {
 			size: 15,
 			parent: "n" + parent,
 			color: '#f8f8f8',
+			source: brickData.Type,
 			border_size: 2,
 			border_color: "#000",
 			icon: {
@@ -2669,6 +2673,7 @@ var WIKIVERSE = (function($) {
 		// We do the same for the edges, and we only keep
 		// edges that have both extremities colored.
 		mindmap.bind('clickNode', function(e) {
+
 			var nodeId = e.data.node.id,
 				toKeep = mindmap.graph.neighbors(nodeId);
 			toKeep[nodeId] = e.data.node;
@@ -2693,19 +2698,21 @@ var WIKIVERSE = (function($) {
 			// update effective.
 			mindmap.refresh();
 
-			//scroll to clicked element
-			$("#rightSidebar").hide(function(){
-				$('html, body').animate({
-				     scrollTop: $("#" + nodeId).offset().top
-				 }, 1000, function(){				 	
-			 		$("#" + nodeId).fadeOut(function(){ 
-			 			$(this).fadeIn("slow", function(){
-			 				$("#rightSidebar").show();
-			 			}); 
-			 		});
-			 	});
-			 });
-
+			//if not search query node, scroll to brick
+			if(mindmap.graph.nodes(nodeId).source !== "searchQuery"){
+				//scroll to clicked element
+				$("#rightSidebar").hide(function(){
+					$('html, body').animate({
+					     scrollTop: $("#" + nodeId).offset().top
+					 }, 1000, function(){				 	
+				 		$("#" + nodeId).fadeOut(function(){ 
+				 			$(this).fadeIn("slow", function(){
+				 				$("#rightSidebar").show();
+				 			}); 
+				 		});
+				 	});
+				 });
+			}//if not search query node
 
 		});
 
@@ -2726,17 +2733,18 @@ var WIKIVERSE = (function($) {
 		});*/
 	}
 
-	//filter by MoT
+	//filter by source
 	function sourceFilter(source){
+	  
 	  //reset all filters first
-	  filter.undo('edge-source-equals-x').apply();
+	  filter.undo('node-source-equals-x').apply();
 
 	  //if All, dont filter anything
 	  if(source !== "All"){
 	    //create the mot filter
-	    filter.edgesBy(function(edge) {
-	      return edge.source == source;
-	    }, 'edge-source-equals-x').apply();
+	    filter.nodesBy(function(node) {
+	      return (node.source == source || node.source == "searchQuery");
+	    }, 'node-source-equals-x').apply();
 	  }
 	}
 
@@ -2899,7 +2907,11 @@ var WIKIVERSE = (function($) {
 		toggleSidebar();
 	});
 
-	//close sidebar
+	$('#filter button').on('click', function(){
+	  sourceFilter($(this).attr('data-source'));
+	});
+
+	//filter
 	$('#rightSidebar .fa').click(function() {
 		toggleRightSidebar();
 	});
