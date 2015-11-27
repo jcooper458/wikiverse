@@ -1878,6 +1878,7 @@ var WIKIVERSE = (function($) {
                     infobox.find('#coordinates').remove();
                     //infobox.find('*').css('max-width', '290px');
                     infobox.find('img').unwrap();
+                    infobox.find('.IPA a').contents().unwrap();
 
                     var article = $('<div class="article"></div>');
 
