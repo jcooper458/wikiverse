@@ -219,6 +219,7 @@ var WIKIVERSE = (function($) {
             var functionToBuildSearchResults = $(this).attr("fn");
 
             wikiverse[functionToBuildSearchResults](thisResultsArray, searchResultsListBuilt);
+            $sourceType.trigger('change');
 
         });
 
@@ -516,6 +517,8 @@ var WIKIVERSE = (function($) {
         //close and plus button logic
         //if sidebar open, hide the plus
         if ($('#rightSidebar').hasClass('cbp-spmenu-open')) {
+        	
+        	updateFilters();
 
             sigma.layouts.fruchtermanReingold.start(mindmap, fruchtermanReingoldSettings);
             mindmap.refresh();

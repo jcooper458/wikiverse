@@ -5,17 +5,17 @@
       <i id="closeRightSidebar" class="fa fa-close invisible"></i>
       <i id="openRightSidebar" class="fa fa-code-fork"></i>
     </div>
-    <div id="" class="">
-        <div id="filter" class="btn-group" role="group" aria-label="...">
-          <button id="filter_Wikipedia"   data-source="Wikipedia"   type="button" class="btn btn-default"><i class="fa fa-wikipedia-w"></i>     Wikipedia</button>
-          <button id="filter_Flickr"      data-source="Flickr"      type="button" class="btn btn-default"><i class="fa fa-flickr"></i>        Flickr</button>
-          <button id="filter_Instagram"   data-source="Instagram"   type="button" class="btn btn-default"><i class="fa fa-instagram"></i>     Instagram</button>
-          <button id="filter_Youtube"     data-source="Youtube"     type="button" class="btn btn-default"><i class="fa fa-youtube-square"></i>     Youtube</button>
-          <button id="filter_Twitter"     data-source="Twitter"     type="button" class="btn btn-default"><i class="fa fa-twitter"></i>       Twitter</button>
-          <button id="filter_Soundcloud"  data-source="Soundcloud"  type="button" class="btn btn-default"><i class="fa fa-soundcloud"></i>    Soundcloud</button>
-          <button id="filter_All"         data-source="All"         type="button" class="btn btn-default">All</button>
-        </div>
+
+    <div id="filter" class="btn-group" role="group" aria-label="...">
+      <button id="filter_Wikipedia"   data-source="Wikipedia"   type="button" class="btn btn-default"><i class="fa fa-wikipedia-w"></i>     Wikipedia</button>
+      <button id="filter_Flickr"      data-source="Flickr"      type="button" class="btn btn-default"><i class="fa fa-flickr"></i>        Flickr</button>
+      <button id="filter_Instagram"   data-source="Instagram"   type="button" class="btn btn-default"><i class="fa fa-instagram"></i>     Instagram</button>
+      <button id="filter_Youtube"     data-source="Youtube"     type="button" class="btn btn-default"><i class="fa fa-youtube-square"></i>     Youtube</button>
+      <button id="filter_Twitter"     data-source="Twitter"     type="button" class="btn btn-default"><i class="fa fa-twitter"></i>       Twitter</button>
+      <button id="filter_Soundcloud"  data-source="Soundcloud"  type="button" class="btn btn-default"><i class="fa fa-soundcloud"></i>    Soundcloud</button>
+      <button id="filter_All"         data-source="All"         type="button" class="btn btn-default">All</button>
     </div>
+
     <div id="mindmap"></div>
 
 
