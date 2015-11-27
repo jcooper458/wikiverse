@@ -1303,6 +1303,7 @@ var WIKIVERSE = (function($) {
         $brick.find('.foto-tags .tag').on('click', function(e) {
             e.preventDefault();
             getConnections(type, $(this).find("span").html(), $brick.data('id'));
+            $sourceType.trigger("change");
         });
 
         var imgLoad = imagesLoaded($brick);
