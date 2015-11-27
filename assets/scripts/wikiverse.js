@@ -190,7 +190,11 @@ var WIKIVERSE = (function($) {
 		//the value is passed to the global wikiverse source parameter variable
 		//and getConnections is called via the sourceType trigger
 		$sourceParams.find('select').on('change', function() {
+			
+			//wikiverse source parameter variable ()
 			wikiverse[$(this).attr('id')] = $(this).val();
+
+			//call getconnections by triggering a change on sourcetype
 			$sourceType.trigger('change');
 		});
 
@@ -304,8 +308,8 @@ var WIKIVERSE = (function($) {
 		//
 		if (results.length > 0) {
 
+			//this is the source button within the quicksearch
 			$('#' + source).show();
-			$('#searchResults h3').show();
 
 			//create the incrementing number animation
 			var number = 0;
@@ -1623,7 +1627,7 @@ var WIKIVERSE = (function($) {
 			$(this).tooltip('destroy');
 			$(this).remove();
 
-			console.log(wikiverse.searchHistory);
+			console.log(wikiverse.searchHistory[Object.keys(wikiverse.searchHistory)[0]]);
 
 			//build a node with the searchqueryNode as parent
 			buildNode(result, $thisBrick.data('id'), parent);
@@ -1763,6 +1767,7 @@ var WIKIVERSE = (function($) {
 
 		$connections.change(function(event) {
 			getConnections($(this).find("option:selected").text(), topic.title, $brick.data('id'));
+			$sourceType.trigger('change');
 		});
 
 
@@ -2030,6 +2035,7 @@ var WIKIVERSE = (function($) {
 
 		$brick.find('.related').on('click', function() {
 			getRelatedYoutubes(youtubeObj.youtubeID, youtubeObj.query, searchResultsLoaded, "buildYoutubeSearchResults", $brick.data('id'));
+			$sourceType.trigger('change');
 		});
 
 		callback($brick);
@@ -2289,6 +2295,12 @@ var WIKIVERSE = (function($) {
 			node.children = neighbors;
 
 		});
+
+		//if for some reason, there is no parent, grab the root of the tree
+		if(!thisNode.parent || thisNode.parent == "undefined"){
+			thisNode.parent = "n" + wikiverse.searchHistory[Object.keys(wikiverse.searchHistory)[0]];
+		}
+
 		//drop the given node
 		mindmap.graph.dropNode("n" + id);
 
@@ -2300,6 +2312,7 @@ var WIKIVERSE = (function($) {
 		$.each(thisNode.children, function(nodeId, nodeObj) {
 			//for each child, create a new edge, thus increment
 			lastEdgeId++;
+
 			//set the new parent for the child nodes
 			nodeObj.parent = thisNode.parent;
 
@@ -2347,7 +2360,7 @@ var WIKIVERSE = (function($) {
 			}
 		});
 
-		//if a parent is passed, create an edge, otherwise its the first node, without parent
+		//if a parent is passed, create an edge, otherwise its the first node, without parent, thus without edge
 		if (parent) {
 
 			//get the last edge and grab its ID
@@ -2365,7 +2378,6 @@ var WIKIVERSE = (function($) {
 				color: "#f8f8f8",
 				type: "curvedArrow"
 			});
-
 		}
 
 		//if sidebar is open do the fruchertmanreingold, if not, dont do anything and save memory!
@@ -2828,7 +2840,7 @@ var WIKIVERSE = (function($) {
 		if ($sidebar.hasClass('cbp-spmenu-open')) {
 			toggleSidebar();
 		}
-
+		//save, clear or edit board
 		wikiverse[$(this).attr('id')](wpnonce);
 	});
 
