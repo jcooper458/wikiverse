@@ -2627,33 +2627,17 @@ var WIKIVERSE = (function($) {
 
     //clear a board from all bricks
     wikiverse.clearBoard = function(wpnonce) {
+
         if (confirm('Are you sure you want to clear this board?')) {
+
             var elements = $packeryContainer.packery('getItemElements');
             $packeryContainer.packery('remove', elements);
 
             //remove all nodes
-            /*mindmap.graph.clear();
+           	mindmap.graph.clear();
+           	updateFilters();
+           	mindmap.refresh();
 
-			//re-add search nodes
-			$.each(board.search_history, function(query, id){
-
-				var node = {
-					id: "n" + id,
-					label: query,
-					x: Math.random(),
-					y: Math.random(),
-					size: 20,
-					parent: "n0",
-					color: '#ccc',
-					icon: {
-						font: 'FontAwesome', // or 'FontAwesome' etc..
-						content: '\uF129', // or custom fontawesome code eg. "\uF129"
-						scale: 0.7, // 70% of node size
-						color: '#ffffff' // foreground color (white)
-					}
-					}
-					mindmapObj.nodes.push(node);
-			});*/
         }
     };
 
