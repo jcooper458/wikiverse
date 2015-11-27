@@ -42,10 +42,9 @@ use Roots\Sage\Wrapper;
       <?php
       //else for the frontpage
       }
-    ?>
-      <?php include Wrapper\template_path(); ?>
-
-    <?php
+      else{
+        include Wrapper\template_path(); 
+      }
       do_action('get_footer');
       get_template_part('templates/footer');
       wp_footer();
