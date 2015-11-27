@@ -7,13 +7,13 @@
     </div>
     <div id="" class="">
         <div id="filter" class="btn-group" role="group" aria-label="...">
-          <button data-source="Wikipedia" type="button" class="btn btn-default">Wikipedia</button>
-          <button data-source="Flickr" type="button" class="btn btn-default">Flickr</button>
-          <button data-source="Instagram" type="button" class="btn btn-default">Instagram</button>
-          <button data-source="Youtube" type="button" class="btn btn-default">Youtube</button>
-          <button data-source="Twitter" type="button" class="btn btn-default">Twitter</button>
-          <button data-source="Soundcloud" type="button" class="btn btn-default">Soundcloud</button>
-          <button data-source="All" type="button" class="btn btn-default">All</button>
+          <button id="filter_Wikipedia"   data-source="Wikipedia"   type="button" class="btn btn-default"><i class="fa fa-wikipedia-w"></i>     Wikipedia</button>
+          <button id="filter_Flickr"      data-source="Flickr"      type="button" class="btn btn-default"><i class="fa fa-flickr"></i>        Flickr</button>
+          <button id="filter_Instagram"   data-source="Instagram"   type="button" class="btn btn-default"><i class="fa fa-instagram"></i>     Instagram</button>
+          <button id="filter_Youtube"     data-source="Youtube"     type="button" class="btn btn-default"><i class="fa fa-youtube-square"></i>     Youtube</button>
+          <button id="filter_Twitter"     data-source="Twitter"     type="button" class="btn btn-default"><i class="fa fa-twitter"></i>       Twitter</button>
+          <button id="filter_Soundcloud"  data-source="Soundcloud"  type="button" class="btn btn-default"><i class="fa fa-soundcloud"></i>    Soundcloud</button>
+          <button id="filter_All"         data-source="All"         type="button" class="btn btn-default">All</button>
         </div>
     </div>
     <div id="mindmap"></div>
@@ -36,12 +36,12 @@
           <div class="" id="sourceType" >
             <select class="selectpicker sourceType show-menu-arrow" data-style="btn btn-default" data-width="100%">
               <!--<option ="">try another source..</option>-->
-              <option selected><i class="fa fa-wikipedia wikipedia-icon icon"></i>Wikipedia</option>
-              <option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option>
-              <option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option>
-              <option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option>
-              <option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option>
-              <option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option>
+              <option selected> Wikipedia</option>
+              <option>          Youtube</option>
+              <option>          Twitter</option>
+              <option>          Flickr</option>
+              <option>          Instagram</option>
+              <option>          Soundcloud</option>
             </select>
           </div>
 
