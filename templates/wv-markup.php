@@ -5,7 +5,20 @@
       <i id="closeRightSidebar" class="fa fa-close invisible"></i>
       <i id="openRightSidebar" class="fa fa-code-fork"></i>
     </div>
+    <div id="" class="">
+        <div id="filter" class="btn-group" role="group" aria-label="...">
+          <button data-source="Wikipedia" type="button" class="btn btn-default">Wikipedia</button>
+          <button data-source="Flickr" type="button" class="btn btn-default">Flickr</button>
+          <button data-source="Instagram" type="button" class="btn btn-default">Instagram</button>
+          <button data-source="Youtube" type="button" class="btn btn-default">Youtube</button>
+          <button data-source="Twitter" type="button" class="btn btn-default">Twitter</button>
+          <button data-source="Soundcloud" type="button" class="btn btn-default">Soundcloud</button>
+          <button data-source="All" type="button" class="btn btn-default">All</button>
+        </div>
+    </div>
     <div id="mindmap"></div>
+
+
   </nav>
 
   <nav id="sidebar" class="cbp-spmenu wv_sidebar cbp-spmenu-vertical cbp-spmenu-left fixed">
