@@ -34,11 +34,21 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5 {
 
 
 .gigante{
-  font-family: 'Raleway', sans-serif!important;
- /* font-weight: bold;*/
-  font-size: 90px;
-  font-weight: bold;
+  p{
+    font-family: 'Raleway', sans-serif!important;
+    font-size: 90px;
+    font-weight: bold;
+  }
+  span#front-beta {
+    position: relative;
+    font-size: 25px;
+    color: #4E5D6C;
+    top: -115px;
+    left: 405px;
+  }
 }
+
+
 
 h2, .h2 {
   font-size: 20px!important;
