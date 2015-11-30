@@ -27,15 +27,15 @@
 
 <div class="container-fluid dark-blue">
   <div class="container buffer-bottom" role="document">
-    <div class="col-lg-8 buffer-top-large">
+    <div class="col-lg-8 col-md-8 col-sm-8 buffer-top-large">
       <h1><a href="/login">Sign up</a>  or just <a href="/start">try it out</a></h1>
       <h3>Create some crazy connections and enjoy serendipity.</h3>
       <h3 class="buffer-bottom">Or gather thought-out topics into one handpicked selection.</h3>
       <h4>Drag and drop the topics to align them as you prefer.</h4>
       <h4>Follow your train of thought with the mindmap.</h4>
     </div>
-    <div class="col-lg-4">
-      <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/wv_mindmap.png">
+    <div class="col-lg-4 col-md-4 col-sm-4">
+      <img class="img-responsive" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/wv_mindmap.png">
     </div>
   </div>
 </div>
@@ -48,51 +48,66 @@ $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
 ?>
 <div class="container-fluid">
   <div class="container buffer-bottom" role="document">
-    <h1>Featured boards</h1>
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <h1>Staff-picked boards</h1>
 
-    <div id="packerySite" class="packerySite buffer-top">
+      <div id="packerySite" class="packerySite buffer-top">
 
-    <?php 
-    if ( $query->have_posts() ) : while ( $query->have_posts() ) : $query->the_post(); 
+      <?php 
+      if ( $query->have_posts() ) : while ( $query->have_posts() ) : $query->the_post(); 
 
 
-      $the_title = get_the_title();
-      $the_permalink = get_the_permalink();
-      $the_content = get_the_content();
-      $the_content_Array = json_decode($the_content);
-
-    ?>
-      <div class="brick well well-sm visible">
-
-        <?php if(isset($the_content_Array->featured_image)){ echo '<a href="'. $the_permalink . '"><img src="' . $the_content_Array->featured_image . '"></a>'; }?>
-        <?php echo '<a href="'. $the_permalink . '"><h3>' . $the_title . '</h3></a>'; ?>  
-
-        <?php 
-      echo '</div>';
-
-      wp_link_pages(array('before' => '<nav class="pagination">', 'after' => '</nav>'));
+        $the_title = get_the_title();
+        $the_permalink = get_the_permalink();
+        $the_content = get_the_content();
+        $the_content_Array = json_decode($the_content);
 
       ?>
-    <?php endwhile; endif; ?>
+        <div class="brick well well-sm visible">
 
+          <?php if(isset($the_content_Array->featured_image)){ echo '<a href="'. $the_permalink . '"><img src="' . $the_content_Array->featured_image . '"></a>'; }?>
+          <?php echo '<a href="'. $the_permalink . '"><h3>' . $the_title . '</h3></a>'; ?>  
+
+          <?php 
+        echo '</div>';
+
+        wp_link_pages(array('before' => '<nav class="pagination">', 'after' => '</nav>'));
+
+        ?>
+      <?php endwhile; endif; ?>
+      </div>
     </div>
   </div>
 </div>
+
 <div class="container-fluid dark-blue">
   <div class="container buffer-bottom" role="document">
-    <h1>wikiverse is 100% free and open source</h1>
-    <h3>Use https://wikiver.se to save your boards,</h3>
-    <h3 class="buffer-bottom">or install wikiverse on your own server and start self-hosting infoboards.</h3>
-    <h4>Follow the instructions on <a href="https://github.com/kubante/wikiverse">Github</a></h4>
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <h1>100% free and open source</h1>
+      <h3>Use <a href="https://wikiver.se">https://wikiver.se/login</a> to save your boards.</h3>
+      <h3 class="buffer-bottom">Or install wikiverse on your own server and start self-hosting infoboards.</h3>
+      <h4>Follow the instructions on <a href="https://github.com/kubante/wikiverse">Github</a></h4>
+    </div>
   </div>
 </div>
 
 
 <div class="container-fluid">
   <div class="container buffer-bottom" role="document">
-    <h1>wikiverse is 100% free and open source</h1>
-    <h3>Fork the project on Github and contribute</h3>
-    <h3>Because knowledge should be free!</h3>
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <h1>Built with open-source software</h1>
+      <h4><a href="https://jquery.com/">jQuery</a>, <a href="http://packery.metafizzy.co/">packery</a>, <a href="http://sigmajs.org/">sigma.js</a>, <a href="http://getbootstrap.com/">bootstrap</a>, <a href="https://wordpress.com/">Wordpress</a>, <a href="https://roots.io/sage/">Sage</a> </h4>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid dark-blue">
+  <div class="container buffer-bottom" role="document">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <h1>wikiverse needs you.</h1>
+      <h3>Graphic designers, UI/UX designers, developers are welcome!</h3>
+      <h3>Contact wikiverse and get started contributing.</h3>
+    </div
   </div>
 </div>
 <!--
