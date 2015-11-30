@@ -17,8 +17,8 @@
         <li><a href="#demo">demo</a></li>
         <li><a href="#register">sign-up</a></li>
         <li><a href="#featured">featured</a></li>
-        <li><a href="#thanks">awknoledgements</a></li>
-        <li><a href="#login">login</a></li>
+        <li><a href="#contribute">contribute</a></li>
+        <li><a href="/login">login</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->

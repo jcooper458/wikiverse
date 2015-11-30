@@ -9,7 +9,7 @@
   </div>
 </div>
 
-<div id="video" class="">
+<div id="demo" class="">
   <video muted autoplay poster="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/wv.png" class="">
     <source src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/wv.mp4" type="video/mp4"/>
     <source src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/wv.ogv" type="video/ogg"/>
@@ -27,7 +27,7 @@
   <h3>Start with one keyword. Get the craziest connections.</h5>
 </div>	-->
 
-<div class="container-fluid dark-blue">
+<div id="register" class="container-fluid dark-blue">
   <div class="container buffer-bottom" role="document">
     <div class="col-lg-8 col-md-8 col-sm-8 buffer-top-large">
       <h1><a href="/login">Sign up</a>  or just <a href="/start">try it out</a></h1>
@@ -48,7 +48,7 @@ $fotoURL = "";
 $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
 
 ?>
-<div class="container-fluid">
+<div id="featured" class="container-fluid">
   <div class="container buffer-bottom" role="document">
     <div class="col-lg-12 col-md-12 col-sm-12">
       <h1>Staff-picked boards</h1>
@@ -82,7 +82,7 @@ $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
   </div>
 </div>
 
-<div class="container-fluid dark-blue">
+<div id="thanks" class="container-fluid dark-blue">
   <div class="container buffer-bottom" role="document">
     <div class="col-lg-12 col-md-12 col-sm-12">
       <h1>100% free and open source</h1>
@@ -94,7 +94,7 @@ $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
 </div>
 
 
-<div class="container-fluid">
+<div id="contribute" class="container-fluid">
   <div class="container buffer-bottom" role="document">
     <div class="col-lg-12 col-md-12 col-sm-12">
       <h1>Built with open-source software</h1>

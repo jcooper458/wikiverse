@@ -97,10 +97,6 @@ footer{
   margin-top:55px;
 }
 
-#packery{
-    margin-left:20px;
-}
-
 .stack-topright{
   top: 70px;
   position:absolute;
@@ -611,6 +607,14 @@ video {
   margin-top:5px;
 }
 
+#searchInput{
+  position: absolute;
+  top: 45%;
+}
+#searchResults {
+  position: absolute;
+  top: 75%;
+}
 #rightSidebar{
 
   z-index:100;
@@ -747,7 +751,7 @@ video {
   padding:20px;
 }
 
-#video{
+#demo{
     opacity: 0.8;
 }
 
