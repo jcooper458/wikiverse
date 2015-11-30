@@ -40,17 +40,15 @@ use Roots\Sage\Wrapper;
         </div><!-- /.content -->
       </div><!-- /.wrap -->
       <?php
-
       //else for the frontpage
       }
       else{
         get_template_part('templates/headerHomepage');
         include Wrapper\template_path(); 
-        do_action('get_footer');
-        get_template_part('templates/footer');
-        wp_footer();
       }
-
+      do_action('get_footer');
+      get_template_part('templates/footer');
+      wp_footer();
     ?>
 
 
