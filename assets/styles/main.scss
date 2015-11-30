@@ -38,12 +38,14 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5 {
     font-family: 'Raleway', sans-serif!important;
     font-size: 90px;
     font-weight: bold;
+    margin-top: 40px;
+    margin-bottom: -20px;
   }
   span#front-beta {
     position: relative;
     font-size: 25px;
     color: #4E5D6C;
-    top: -115px;
+    top: -85px;
     left: 405px;
   }
 }
