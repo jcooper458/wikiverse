@@ -498,6 +498,9 @@ var WIKIVERSE = (function($) {
 
         classie.toggle($sidebar[0], 'cbp-spmenu-open');
 
+        //focus the search input
+        $searchKeyword.focus();
+
         //close and plus button logic
         //if sidebar open, hide the plus
         if ($sidebar.hasClass('cbp-spmenu-open')) {
