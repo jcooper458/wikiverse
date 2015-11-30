@@ -1,12 +1,17 @@
 
-  
+  <div id="toggleSidebar" class="fixed">
+
+    <i id="openSidebar" class="fa fa-plus left"></i>
+    <i id="closeSidebar" class="fa fa-close left invisible"></i>
+
+    <i id="openRightSidebar" class="fa fa-code-fork right"></i>
+    <i id="closeRightSidebar" class="fa fa-close right invisible"></i>
+
+  </div>
+
+ 
 
   <nav id="rightSidebar" class="cbp-spmenu wv_sidebar cbp-spmenu-verticalRight cbp-spmenu-right fixed">
-
-  <div id="searchMeta" class="fixed">
-    <i id="closeRightSidebar" class="fa fa-close invisible"></i>
-    <i id="openRightSidebar" class="fa fa-code-fork"></i>
-  </div>
 
     <div id="filter" class="btn-group" role="group" aria-label="...">
       <button id="filter_Wikipedia"   data-source="Wikipedia"   type="button" class="btn btn-default"><i class="fa fa-wikipedia-w"></i>     Wikipedia</button>
@@ -20,16 +25,10 @@
 
     <div id="mindmap"></div>
 
-
   </nav>
 
+
   <nav id="sidebar" class="cbp-spmenu wv_sidebar cbp-spmenu-vertical cbp-spmenu-left fixed">
-
-    <div id="searchMeta" class="">
-
-      <i id="closeSidebar" class="fa fa-close invisible"></i>
-      <i id="openSidebar" class="fa fa-plus"></i>
-    </div>
 
       <div class="search-ui">
 

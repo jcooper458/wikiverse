@@ -501,11 +501,12 @@ var WIKIVERSE = (function($) {
         //close and plus button logic
         //if sidebar open, hide the plus
         if ($sidebar.hasClass('cbp-spmenu-open')) {
-            $('#openSidebar').addClass('invisible');
+            $('#openSidebar').hide();
             $('#closeSidebar').removeClass('invisible');
+            $('#closeSidebar').show();
         } else {
-            $('#closeSidebar').addClass('invisible');
-            $('#openSidebar').removeClass('invisible');
+            $('#closeSidebar').hide();
+            $('#openSidebar').show();
         }
     }
 
@@ -518,16 +519,18 @@ var WIKIVERSE = (function($) {
         //if sidebar open, hide the plus
         if ($('#rightSidebar').hasClass('cbp-spmenu-open')) {
         	
+        	//only show filters to sources that are present on the board
         	updateFilters();
 
             sigma.layouts.fruchtermanReingold.start(mindmap, fruchtermanReingoldSettings);
             mindmap.refresh();
 
             $('#closeRightSidebar').removeClass('invisible');
-            $('#openRightSidebar').addClass('invisible');
+            $('#closeRightSidebar').show();
+            $('#openRightSidebar').hide();
         } else {
-            $('#closeRightSidebar').addClass('invisible');
-            $('#openRightSidebar').removeClass('invisible');
+            $('#closeRightSidebar').hide();
+            $('#openRightSidebar').show();
         }
 
     }
@@ -2899,18 +2902,17 @@ var WIKIVERSE = (function($) {
         }
     });
 
-    //close sidebar
-    $('#sidebar .fa').click(function() {
+    $('#toggleSidebar .left').click(function() {
         toggleSidebar();
     });
 
-    $('#filter button').on('click', function() {
-        sourceFilter($(this).attr('data-source'));
+    $('#toggleSidebar .right').click(function() {
+        toggleRightSidebar();
     });
 
     //filter
-    $('#rightSidebar .fa').click(function() {
-        toggleRightSidebar();
+    $('#filter button').on('click', function() {
+        sourceFilter($(this).attr('data-source'));
     });
 
     // REMOVE ITEM
