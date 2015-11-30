@@ -14,11 +14,11 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="/login">sign-up</a></li>
-        <li><a href="/login">sign-up</a></li>
-        <li><a href="/login">sign-up</a></li>
-        <li><a href="/login">sign-up</a></li>
-        <li><a href="/login">login</a></li>
+        <li><a href="#demo">demo</a></li>
+        <li><a href="#register">sign-up</a></li>
+        <li><a href="#featured">featured</a></li>
+        <li><a href="#thanks">aknoledgements</a></li>
+        <li><a href="#login">login</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->

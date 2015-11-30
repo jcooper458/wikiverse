@@ -31,9 +31,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5 {
   font-weight: 500!important;
 }
 
-a {
-  color: #89A4BE !important;
-}
+
 
 .gigante{
   font-family: 'Raleway', sans-serif!important;
@@ -52,6 +50,9 @@ h2, .h2 {
   }
   h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, .gigante {
    color: #4E5D6C !important;
+  }
+  a {
+    color: #89A4BE !important;
   }
 }
 
@@ -111,6 +112,9 @@ blockquote{
 }
 
 .brick{
+  a {
+    color: #89A4BE !important;
+  }
   cursor: move;
   outline: 0;
   opacity: .1;
@@ -537,13 +541,14 @@ video {
   .fa{
     font-size: 25px;
     position: fixed;
-    background-color: #2B3E50;
-    padding: 3px 5px 4px 5px;
   }
   #closeSidebar{
 
     left: 360px;
     top: 50px;
+    background-color: #1F2D3A;
+    border: 1px solid #252525;
+    padding: 3px 5px 4px 5px;
   }
   #openSidebar{
 
@@ -555,6 +560,9 @@ video {
 
     right: 360px;
     top: 50px;
+    background-color: #1F2D3A;
+    border: 1px solid black;
+    padding: 3px 5px 4px 5px;
   }
 
   #openRightSidebar{

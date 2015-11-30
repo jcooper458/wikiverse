@@ -27,9 +27,16 @@
 
 <div class="container-fluid dark-blue">
   <div class="container buffer-bottom" role="document">
-    <h1><a href="/login">Sign up</a>  or <a href="/start">try it out</a> and start building your own boards!</h1>
-    <h3>Create some crazy connections and enjoy serendipity.</h3>
-    <h3>Or gather thought-out topics into one handpicked selection.</h3>
+    <div class="col-lg-8 buffer-top-large">
+      <h1><a href="/login">Sign up</a>  or just <a href="/start">try it out</a></h1>
+      <h3>Create some crazy connections and enjoy serendipity.</h3>
+      <h3 class="buffer-bottom">Or gather thought-out topics into one handpicked selection.</h3>
+      <h4>Drag and drop the topics to align them as you prefer.</h4>
+      <h4>Follow your train of thought with the mindmap.</h4>
+    </div>
+    <div class="col-lg-4">
+      <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/wv_mindmap.png">
+    </div>
   </div>
 </div>
 
@@ -75,8 +82,8 @@ $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
   <div class="container buffer-bottom" role="document">
     <h1>wikiverse is 100% free and open source</h1>
     <h3>Use https://wikiver.se to save your boards,</h3>
-    <h3>or install wikiverse on a private server and save them there.</h3>
-    <h4>Follow the instructions on <a href="">Github</a></h4>
+    <h3 class="buffer-bottom">or install wikiverse on your own server and start self-hosting infoboards.</h3>
+    <h4>Follow the instructions on <a href="https://github.com/kubante/wikiverse">Github</a></h4>
   </div>
 </div>
 
