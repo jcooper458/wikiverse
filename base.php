@@ -43,6 +43,7 @@ use Roots\Sage\Wrapper;
       //else for the frontpage
       }
       else{
+        get_template_part('templates/headerHomepage');
         include Wrapper\template_path(); 
       }
       do_action('get_footer');
