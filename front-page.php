@@ -7,15 +7,17 @@
   </div>
 </div>
 
-<!--<div id="video" class="">
+<div id="video" class="">
   <video loop muted autoplay poster="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/wv.png" class="">
     <source src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/wv.mp4" type="video/mp4"/>
     <source src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/wv.ogv" type="video/ogg"/>
     <source src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/wv.webm" type="video/webm"/>
      No Video supported. 
   </video>
-</div>-->
-
+</div>
+<!--
+<video loop muted autoplay class="video-stream" x-webkit-airplay="allow" data-youtube-id="N9oxmRT2YWw" src="http://v20.lscache8.c.youtube.com/videoplayback?sparams=id%2Cexpire%2Cip%2Cipbits%2Citag%2Cratebypass%2Coc%3AU0hPRVRMVV9FSkNOOV9MRllD&amp;itag=43&amp;ipbits=0&amp;signature=D2BCBE2F115E68C5FF97673F1D797F3C3E3BFB99.59252109C7D2B995A8D51A461FF9A6264879948E&amp;sver=3&amp;ratebypass=yes&amp;expire=1300417200&amp;key=yt1&amp;ip=0.0.0.0&amp;id=37da319914f6616c"></video>
+-->
 <!--<div id="homeBoard1" class="packery"></div>-->
 	
 <!--<div class="container buffer-bottom" role="document">
