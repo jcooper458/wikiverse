@@ -1,6 +1,6 @@
 
-<div class="container-fluid dark-blue">
-  <div class="container buffer-bottom" role="document">
+<div class="container-fluid dark-blue buffer-bottom">
+  <div class="container" role="document">
     <div class="col-lg-12 col-md-12 col-sm-12">
       <div class="gigante"><p>wikiverse</p> <span id="front-beta">beta</span></div>
       <h1>is a powerful content aggregator.</h1>
@@ -27,8 +27,8 @@
   <h3>Start with one keyword. Get the craziest connections.</h5>
 </div>	-->
 
-<div id="register" class="container-fluid dark-blue">
-  <div class="container buffer-bottom" role="document">
+<div id="register" class="container-fluid dark-blue buffer-bottom buffer-top">
+  <div class="container" role="document">
     <div class="col-lg-8 col-md-8 col-sm-8 buffer-top-large">
       <h1><a href="/login">Sign up</a>  or just <a href="/start">try it out</a></h1>
       <h3>Create some crazy connections and enjoy serendipity.</h3>
@@ -48,8 +48,8 @@ $fotoURL = "";
 $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
 
 ?>
-<div id="featured" class="container-fluid">
-  <div class="container buffer-bottom" role="document">
+<div id="featured" class="container-fluid buffer-bottom buffer-top">
+  <div class="container" role="document">
     <div class="col-lg-12 col-md-12 col-sm-12">
       <h1>Staff-picked boards</h1>
 
@@ -82,8 +82,8 @@ $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
   </div>
 </div>
 
-<div id="thanks" class="container-fluid dark-blue">
-  <div class="container buffer-bottom" role="document">
+<div id="thanks" class="container-fluid dark-blue buffer-bottom buffer-top">
+  <div class="container" role="document">
     <div class="col-lg-12 col-md-12 col-sm-12">
       <h1>100% free and open source</h1>
       <h3>Use <a href="https://wikiver.se/login">https://wikiver.se</a> to save your boards.</h3>
@@ -94,8 +94,8 @@ $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
 </div>
 
 
-<div id="contribute" class="container-fluid">
-  <div class="container buffer-bottom" role="document">
+<div id="contribute" class="container-fluid buffer-bottom buffer-top">
+  <div class="container" role="document">
     <div class="col-lg-12 col-md-12 col-sm-12">
       <h1>Built with open-source software</h1>
       <h4><a href="https://jquery.com/">jQuery</a>, <a href="http://packery.metafizzy.co/">packery</a>, <a href="http://sigmajs.org/">sigma.js</a>, <a href="http://getbootstrap.com/">bootstrap</a>, <a href="https://wordpress.com/">Wordpress</a>, <a href="https://roots.io/sage/">Sage</a> </h4>
