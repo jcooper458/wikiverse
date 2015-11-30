@@ -61,7 +61,10 @@ h2, .h2 {
   h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, .gigante {
    color: #4E5D6C !important;
   }
-  a, .brick a {
+  a{
+    color: #89A4BE !important;
+  }
+  a h3{
     color: #89A4BE !important;
   }
 }
