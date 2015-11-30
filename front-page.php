@@ -74,8 +74,9 @@ $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
 <div class="container-fluid dark-blue">
   <div class="container buffer-bottom" role="document">
     <h1>wikiverse is 100% free and open source</h1>
-    <h3>Because knowledge should be free!</h3>
-    <h3>Fork the project on Github and contribute</h3>
+    <h3>Use https://wikiver.se to save your boards,</h3>
+    <h3>or install wikiverse on a private server and save them there.</h3>
+    <h4>Follow the instructions on <a href="">Github</a></h4>
   </div>
 </div>
 
@@ -83,8 +84,8 @@ $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
 <div class="container-fluid">
   <div class="container buffer-bottom" role="document">
     <h1>wikiverse is 100% free and open source</h1>
-    <h3>Because knowledge should be free!</h3>
     <h3>Fork the project on Github and contribute</h3>
+    <h3>Because knowledge should be free!</h3>
   </div>
 </div>
 <!--
