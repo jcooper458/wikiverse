@@ -71,7 +71,7 @@ var WIKIVERSE = (function($) {
     var packery = $packeryContainer.packery({
         itemSelector: '.brick',
         //stamp: '.search',
-        gutter: 11,
+        gutter: 10,
         transitionDuration: 0,
         columnWidth: 225,
         //	columnWidth: '.brick',
@@ -133,7 +133,7 @@ var WIKIVERSE = (function($) {
 
     graphEventHandlers();
 
-    // overwrite Packery methods
+   /* // overwrite Packery methods
     var __resetLayout = Packery.prototype._resetLayout;
     Packery.prototype._resetLayout = function() {
       __resetLayout.call( this );
@@ -165,7 +165,7 @@ var WIKIVERSE = (function($) {
     // always resize
     Packery.prototype.needsResizeLayout = function() {
       return true;
-    };
+    };*/
 
     //initiate the wikiverse search functionality
     //this is called on document ready (from _main.js)
@@ -1951,7 +1951,7 @@ var WIKIVERSE = (function($) {
         $brick.data('topic', section);
 
         $brick.addClass('wiki');
-        $brick.addClass('w2');
+        //$brick.addClass('w2');
 
         $brick.prepend('<h4>' + section.name + '</h4>');
 
@@ -3010,7 +3010,13 @@ var WIKIVERSE = (function($) {
         toggleImageSize($(e.target).parents(".brick"), $(e.target));
     });
 
+    $(window).scroll(function(){
+      var sticky = $('#wvTitle h1'),
+          scroll = $(window).scrollTop();
 
+      if (scroll >= 100) sticky.addClass('fixedTitle');
+      else sticky.removeClass('fixed');
+    });
 
     return wikiverse;
 
