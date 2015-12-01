@@ -5,11 +5,13 @@
 @import "../../bower_components/bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
 // endbower
 
+@import "common/_bootswatch";
+
 @import "common/_global";
 @import "components/_buttons";
 @import "components/_comments";
 @import "components/_forms";
-@import "components/_grid";
+//@import "components/_grid";
 @import "components/_wp-classes";
 @import "layouts/_header";
 @import "layouts/_sidebar";
@@ -25,11 +27,12 @@
   height:1000px;
 }
 
+
 h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5 {
   margin: 30px 5px 15px 5px;
-  font-family: 'Raleway';
-  font-weight: 500!important;
+  /*font-family: 'Raleway';*/
 }
+
 
 .gigante{
   p{
@@ -64,10 +67,6 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5 {
   content: ' ';
   display: block;
   clear: both;
-}
-
-h2, .h2 {
-  font-size: 20px!important;
 }
 
 .home{

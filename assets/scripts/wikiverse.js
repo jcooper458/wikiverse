@@ -90,7 +90,48 @@ var WIKIVERSE = (function($) {
         playYoutube,
         destroyBoard;
 
+    // --------SIGMA CLASSES AND  DEFAULTS
 
+    sigma.classes.graph.addMethod('neighbors', function(nodeId) {
+        var k,
+            neighbors = {},
+            index = this.allNeighborsIndex[nodeId] || {};
+
+        for (k in index)
+            neighbors[k] = this.nodesIndex[k];
+
+        return neighbors;
+    });
+
+    sigma.classes.graph.addMethod('getNodesById', function() {
+        return this.nodesIndex;
+    });
+
+    var mindmap = new sigma({
+        renderer: {
+            container: document.getElementById('mindmap'),
+            type: 'canvas'
+        },
+        settings: {
+            doubleClickEnabled: false,
+            minEdgeSize: 1,
+            maxEdgeSize: 3,
+            minNodeSize: 5,
+            maxNodeSize: 15,
+            enableEdgeHovering: true,
+            edgeHoverColor: 'edge',
+            defaultEdgeHoverColor: '#000',
+            labelThreshold: 15,
+            edgeHoverSizeRatio: 1,
+            defaultLabelColor: "#ccc",
+            edgeHoverExtremities: true
+        }
+    });
+
+    //instantiate a filter from the filter plugin
+    var filter = sigma.plugins.filter(mindmap);
+
+    graphEventHandlers();
 
 
     // overwrite Packery methods for centered layout
@@ -131,49 +172,7 @@ var WIKIVERSE = (function($) {
     //initiate the wikiverse search functionality
     //this is called on document ready (from _main.js)
     wikiverse.init = function() {
-    	
-    	// --------SIGMA CLASSES AND  DEFAULTS
 
-    	sigma.classes.graph.addMethod('neighbors', function(nodeId) {
-    	    var k,
-    	        neighbors = {},
-    	        index = this.allNeighborsIndex[nodeId] || {};
-
-    	    for (k in index)
-    	        neighbors[k] = this.nodesIndex[k];
-
-    	    return neighbors;
-    	});
-
-    	sigma.classes.graph.addMethod('getNodesById', function() {
-    	    return this.nodesIndex;
-    	});
-
-    	var mindmap = new sigma({
-    	    renderer: {
-    	        container: document.getElementById('mindmap'),
-    	        type: 'canvas'
-    	    },
-    	    settings: {
-    	        doubleClickEnabled: false,
-    	        minEdgeSize: 1,
-    	        maxEdgeSize: 3,
-    	        minNodeSize: 5,
-    	        maxNodeSize: 15,
-    	        enableEdgeHovering: true,
-    	        edgeHoverColor: 'edge',
-    	        defaultEdgeHoverColor: '#000',
-    	        labelThreshold: 15,
-    	        edgeHoverSizeRatio: 1,
-    	        defaultLabelColor: "#ccc",
-    	        edgeHoverExtremities: true
-    	    }
-    	});
-
-    	//instantiate a filter from the filter plugin
-    	var filter = sigma.plugins.filter(mindmap);
-
-    	graphEventHandlers();
         //hide the sources button that hold results
         //	$('.source').hide();
         $sourceParams.hide();
