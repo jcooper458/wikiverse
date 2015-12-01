@@ -16,7 +16,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#demo">demo</a></li>
         <li><a href="#register">sign-up</a></li>
-        <li><a href="#featured">featured</a></li>
+        <li><a href="#featured">staff picks</a></li>
         <li><a href="#contribute">contribute</a></li>
         <li><a href="/login">login</a></li>
       </ul>
