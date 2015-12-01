@@ -3010,6 +3010,7 @@ var WIKIVERSE = (function($) {
         toggleImageSize($(e.target).parents(".brick"), $(e.target));
     });
 
+    //Fix title on scroll
     $(window).scroll(function(){
       var sticky = $('#wvTitle h1'),
           scroll = $(window).scrollTop();
