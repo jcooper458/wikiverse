@@ -34,9 +34,11 @@
   <div class="container" role="document">
     <div class="col-lg-8 col-md-8 col-sm-8 buffer-top-large">
       <h1><a href="/login">Sign up</a>  or just <a href="/start">try it out</a></h1>
-      <h3>Create some crazy connections and enjoy serendipity.</h3>
+      <br>
+      <h3>Create interesting connections and enjoy serendipity.</h3>
       <h3 class="buffer-bottom">Or gather thought-out topics into one handpicked selection.</h3>
-      <h4>Drag and drop the topics to align them as you prefer.</h4>
+      <br>
+      <h4>Drag and drop the content to align it as you prefer.</h4>
       <h4>Follow your train of thought with the mindmap.</h4>
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4">
@@ -54,7 +56,7 @@ $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
 <div id="featured" class="container-fluid buffer-bottom buffer-top">
   <div class="container" role="document">
     <div class="col-lg-12 col-md-12 col-sm-12">
-      <h1>staff picks</h1>
+      <h1>Staff picks</h1>
 
       <div id="packerySite" class="packerySite packery buffer-top">
 
@@ -90,11 +92,12 @@ $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
     <div class="col-lg-12 col-md-12 col-sm-12 buffer-bottom buffer-top">
       <h1>100% free and open source</h1>
       <h3>Use <a href="https://wikiver.se/login">https://wikiver.se</a> to save your boards.</h3>
-      <h3 class="buffer-bottom">Or install wikiverse on your own server and host the boards yourself.</h3>
+      <h3>Or install wikiverse on your own server and host the boards yourself.</h3>
+      <h4>Follow the instructions on <a href="https://github.com/kubante/wikiverse">Github</a></h4>
+      <br>
       <h2>wikiverse is built with open-source software</h2>
       <h4 class="buffer-bottom"><a href="https://jquery.com/">jQuery</a>, <a href="http://packery.metafizzy.co/">packery</a>, <a href="http://sigmajs.org/">sigma.js</a>, <a href="http://getbootstrap.com/">bootstrap</a>, <a href="http://tympanus.net/codrops/">codrops</a>, <a href="https://wordpress.com/">wordpress</a>, <a href="https://roots.io/sage/">sage</a> </h4>
     
-      <h4>Follow the instructions on <a href="https://github.com/kubante/wikiverse">Github</a></h4>
     
     </div>
   </div>
