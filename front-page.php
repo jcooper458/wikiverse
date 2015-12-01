@@ -96,9 +96,15 @@ $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
       <h4>Follow the instructions on <a href="https://github.com/kubante/wikiverse">Github</a></h4>
       <br>
       <h2>wikiverse is built with open-source software</h2>
-      <h4 class="buffer-bottom"><a href="https://jquery.com/">jQuery</a>, <a href="http://packery.metafizzy.co/">packery</a>, <a href="http://sigmajs.org/">sigma.js</a>, <a href="http://getbootstrap.com/">bootstrap</a>, <a href="http://tympanus.net/codrops/">codrops</a>, <a href="https://wordpress.com/">wordpress</a>, <a href="https://roots.io/sage/">sage</a> </h4>
-    
-    
+      <h4 class="buffer-bottom">
+        <a target="_blank" href="https://jquery.com/">jQuery</a>, 
+        <a target="_blank" href="http://packery.metafizzy.co/">packery</a>, 
+        <a target="_blank" href="http://sigmajs.org/">sigma.js</a>, 
+        <a target="_blank" href="http://getbootstrap.com/">bootstrap</a>, 
+        <a target="_blank" href="http://tympanus.net/codrops/">codrops</a>, 
+        <a target="_blank" href="https://wordpress.com/">wordpress</a>, 
+        <a target="_blank" href="https://roots.io/sage/">sage</a> 
+      </h4>    
     </div>
   </div>
 </div>
