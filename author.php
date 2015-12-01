@@ -12,7 +12,7 @@ if ( have_posts() ) {?>
 
 <div id="" class="text-center"><h1><?php echo $curauth->data->user_login; ?>'s boards</h1></div>
 
-<div id="packerySite" class="packerySite">
+<div id="packerySite" class="packerySite packery">
 
 <?php	
 while ( have_posts() ) : the_post(); 
