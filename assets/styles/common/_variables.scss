@@ -20,12 +20,14 @@ $gray:                   lighten($gray-base, 33.5%) !default; // #555
 $gray-light:             #4E5D6C !default;   // #999
 $gray-lighter:           #EBEBEB !default; // #eee
 
-$brand-primary:         #DF691A !default;
+$brand-primary:         #89A4BE !default;
 $brand-success:         #5cb85c !default;
 $brand-info:            #5bc0de !default;
 $brand-warning:         #f0ad4e !default;
 $brand-danger:          #d9534f !default;
 
+
+$dark-blue-light:		#4E5D6C !default;
 
 //== Scaffolding
 //
@@ -74,7 +76,7 @@ $line-height-computed:    floor(($font-size-base * $line-height-base)) !default;
 $headings-font-family:    inherit !default;
 $headings-font-weight:    300 !default;
 $headings-line-height:    1.1 !default;
-$headings-color:          inherit !default;
+$headings-color:          $dark-blue-light !default;
 
 
 //== Iconography

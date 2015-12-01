@@ -71,7 +71,7 @@ var WIKIVERSE = (function($) {
     var packery = $packeryContainer.packery({
         itemSelector: '.brick',
         //stamp: '.search',
-        gutter: 10,
+        gutter: 11,
         transitionDuration: 0,
         columnWidth: 225,
         //	columnWidth: '.brick',
@@ -133,8 +133,7 @@ var WIKIVERSE = (function($) {
 
     graphEventHandlers();
 
-
-    // overwrite Packery methods for centered layout
+    // overwrite Packery methods
     var __resetLayout = Packery.prototype._resetLayout;
     Packery.prototype._resetLayout = function() {
       __resetLayout.call( this );
@@ -167,7 +166,6 @@ var WIKIVERSE = (function($) {
     Packery.prototype.needsResizeLayout = function() {
       return true;
     };
-
 
     //initiate the wikiverse search functionality
     //this is called on document ready (from _main.js)
