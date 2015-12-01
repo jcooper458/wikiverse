@@ -1701,7 +1701,7 @@ var WIKIVERSE = (function($) {
 
                     $brick.append($sectionsButton);
                     $packeryContainer.packery();
-                    
+
                     $sectionsButton.one('click', function() {
 
                         $(this).remove();
@@ -2435,16 +2435,21 @@ var WIKIVERSE = (function($) {
     //collect the bricks for saveboard/createboard/forkboard
     wikiverse.collectBricks = function() {
 
-        var $firstBrick = $packeryContainer.find('.brick:first');
+    	//get all bricks
+        var bricks = $packeryContainer.packery('getItemElements');
+        //find all images
+        var image =  $(bricks).find('img:first');
+
+        //identify first brick with image 
+        var $firstBrickWithImage = $(image[0]).parents(".brick");
         var featuredImage;
 
-        if ($firstBrick.data('type') === "streetview") {
+        //if its a streetview, take the rendered streetview image stores in the gmaps function
+        if ($firstBrickWithImage.data('type') === "streetview") {
             featuredImage = $firstBrick.data('featuredImage');
         } else {
-            featuredImage = $firstBrick.find('img').attr('src');
+            featuredImage = image[0].currentSrc
         }
-
-        var bricks = $packeryContainer.packery('getItemElements');
 
         var wikiverseParsed = bricks.reduce(function(Brick, brick, index) {
 
