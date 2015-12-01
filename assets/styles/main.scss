@@ -115,10 +115,6 @@ footer{
   position:absolute;
 }
 
-blockquote{
-  border-left:0px!important;
-}
-
 .single{
 
   h1{
@@ -134,7 +130,7 @@ blockquote{
 }
 
 .brick{
-  a {
+  p > a {
     color: #89A4BE !important;
   }
   cursor: move;

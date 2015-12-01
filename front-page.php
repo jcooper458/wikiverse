@@ -90,7 +90,7 @@ $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
     <div class="col-lg-12 col-md-12 col-sm-12 buffer-bottom buffer-top">
       <h1>100% free and open source</h1>
       <h3>Use <a href="https://wikiver.se/login">https://wikiver.se</a> to save your boards.</h3>
-      <h3 class="buffer-bottom">Or install wikiverse on your own server and start self-hosting infoboards.</h3>
+      <h3 class="buffer-bottom">Or install wikiverse on your own server and host the boards yourself.</h3>
       <h2>wikiverse is built with open-source software</h2>
       <h4 class="buffer-bottom"><a href="https://jquery.com/">jQuery</a>, <a href="http://packery.metafizzy.co/">packery</a>, <a href="http://sigmajs.org/">sigma.js</a>, <a href="http://getbootstrap.com/">bootstrap</a>, <a href="http://tympanus.net/codrops/">codrops</a>, <a href="https://wordpress.com/">wordpress</a>, <a href="https://roots.io/sage/">sage</a> </h4>
     
@@ -101,17 +101,18 @@ $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
 </div>
 
 
-<!--<div id="contribute" class="container-fluid buffer-bottom buffer-top">
+<div id="contribute" class="container-fluid buffer-bottom buffer-top">
   <div class="container" role="document">
     <div class="col-lg-12 col-md-12 col-sm-12">
-      <h1>Built with open-source software</h1>
-      <h4><a href="https://jquery.com/">jQuery</a>, <a href="http://packery.metafizzy.co/">packery</a>, <a href="http://sigmajs.org/">sigma.js</a>, <a href="http://getbootstrap.com/">bootstrap</a>, <a href="http://tympanus.net/codrops/">codrops</a>, <a href="https://wordpress.com/">wordpress</a>, <a href="https://roots.io/sage/">sage</a> </h4>
-      <h3 class="buffer-bottom">wikiverse needs you.</h3>
-      <h4>Graphic designers, UI/UX designers, developers are welcome!</h4>
-      <h4>Fork wikiverse <a href="https://github.com/kubante/wikiverse">on Github</a> and get started contributing.</h4>
+      <blockquote>
+          <p>There
+would of course be no atlas possible without the archive that precedes it;<br>
+the atlas offers in this sense the "becoming-sight" and "becoming-knowledge" of the archive.</p>
+          <footer>Georges Didi-Huberman in <cite title="Source Title">Atlas, or the Anxious Gay Science</cite></footer>
+      </blockquote>
     </div>
   </div>
-</div>-->
+</div>
 
 <!--
 <div class="container buffer-bottom" role="document">
