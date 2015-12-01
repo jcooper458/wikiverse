@@ -3012,7 +3012,7 @@ var WIKIVERSE = (function($) {
     });
 
     //Fix title on scroll
-    $(window).scroll(function(){
+   $(window).scroll(function(){
       var sticky = $('#wvTitle h1'),
           scroll = $(window).scrollTop();
 
