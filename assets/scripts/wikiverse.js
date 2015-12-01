@@ -1807,7 +1807,7 @@ var WIKIVERSE = (function($) {
 
         $brick.addClass('wiki');
 
-        $brick.prepend('<h2>' + topic.title + '</h2>');
+        $brick.prepend('<h4 class="wikiTitle">' + topic.title + '</h4>');
 
         $brick.prepend($connections);
         $connections.selectpicker();
@@ -1859,7 +1859,7 @@ var WIKIVERSE = (function($) {
                                     var imageUrl = data.query.pages[Object.keys(data.query.pages)[0]].imageinfo[0].thumburl;
                                     var image = $('<img src="' + imageUrl + '">');
 
-                                    image.insertAfter($brick.find("h2"));
+                                    image.insertAfter($brick.find(".wikiTitle"));
 
                                     var imgLoad = imagesLoaded($brick);
 
@@ -1926,7 +1926,7 @@ var WIKIVERSE = (function($) {
                     if ($brick.find("img").length) {
                         article.insertAfter($brick.find("img"));
                     } else {
-                        article.insertAfter($brick.find("h2"));
+                        article.insertAfter($brick.find(".wikiTitle"));
                     }
 
                     article.append(infobox);
@@ -1951,8 +1951,9 @@ var WIKIVERSE = (function($) {
         $brick.data('topic', section);
 
         $brick.addClass('wiki');
+        $brick.addClass('w2');
 
-        $brick.prepend('<p><h4>' + section.name + '</h4></p>');
+        $brick.prepend('<h4>' + section.name + '</h4>');
 
         //search another source menu:
         var $connections = $(wikiverse_nav);
@@ -1996,9 +1997,9 @@ var WIKIVERSE = (function($) {
                 wholeSection.find('#coordinates').remove();
 
                 //if image is bigger than 290, shrink it
-                if (wholeSection.find('img').width() > 250 || wholeSection.find('img').attr("width") > 250) {
+                if (wholeSection.find('img').width() > 460 || wholeSection.find('img').attr("width") > 460) {
 
-                    wholeSection.find('img').attr('width', 250);
+                    wholeSection.find('img').attr('width', 460);
                     wholeSection.find('img').removeAttr('height');
                 }
                 wholeSection.find('a[class*=exter]').remove();
@@ -2007,15 +2008,6 @@ var WIKIVERSE = (function($) {
                 wholeSection.wrap('<div class="section"></div>');
 
                 $('.section').readmore(rmOptions);
-
-                //check if there is Geolocations
-
-                /*
-				if ($brick.find('.geo-dms').length) {
-						var geoPosition = $brick.find('.geo-nondefault .geo').html();
-						console.log(geoPosition);
-					} // end if geo
-				*/
 
                 //enable to create new bricks out of links
                 buildNextTopic($brick, section.language);
