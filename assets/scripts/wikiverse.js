@@ -1700,7 +1700,8 @@ var WIKIVERSE = (function($) {
                     var $sectionsButton = $('<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> sections </button>');
 
                     $brick.append($sectionsButton);
-
+                    $packeryContainer.packery();
+                    
                     $sectionsButton.one('click', function() {
 
                         $(this).remove();
@@ -2598,7 +2599,7 @@ var WIKIVERSE = (function($) {
 
                         $buttonToSwap.removeAttr('id');
                         $buttonToSwap.attr('id', 'saveBoard');
-                        $buttonToSwap.html('Save Changes');
+                        $buttonToSwap.html('save changes');
 
                         new PNotify({
                             text: PNotifyMessage,
