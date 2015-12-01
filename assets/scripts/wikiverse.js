@@ -1962,6 +1962,7 @@ var WIKIVERSE = (function($) {
 
         $connections.change(function(event) {
             getConnections($(this).find("option:selected").text(), section.title, $brick.data('id'));
+        	$sourceType.trigger("change");
         });
 
         $.ajax({
