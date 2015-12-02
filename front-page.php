@@ -118,7 +118,7 @@ $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
           <p>There
 would of course be no atlas possible without the archive that precedes it;<br>
 the atlas offers in this sense the "becoming-sight" and "becoming-knowledge" of the archive.</p>
-          <footer>Georges Didi-Huberman in <cite title="Source Title">Atlas, or the Anxious Gay Science</cite></footer>
+          <footer>Georges Didi-Huberman in <cite title="Source Title">The eye of history</cite></footer>
       </blockquote>
     </div>
   </div>

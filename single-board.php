@@ -3,7 +3,7 @@
 <!--<div class="row" id=""><div class="" id="mindmap"></div></div>-->
 <div id="global-loading" class="invisible"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></div>
 
-<div id="wvTitle" class="text-center"><h1></h1></div>
+<div id="wvTitle"><h1 class="text-center"></h1></div>
 
 <div id="wvAuthor" data-currentUser="<?php echo $current_user->user_login;?>" data-author="<?php the_author_meta( 'user_nicename', $author_id ); ?>" class="text-center">
 	by <a href="/user/<?php the_author_meta( 'user_nicename', $author_id ); ?>"><?php the_author_meta( 'user_nicename', $author_id ); ?>

@@ -54,7 +54,7 @@ else{
 
         <?php }  ?>
       </ul>
-
+      
       <ul class="nav navbar-nav navbar-right">
 
         <?php if ( is_user_logged_in() ) {
