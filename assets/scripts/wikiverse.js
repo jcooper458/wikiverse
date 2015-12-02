@@ -41,8 +41,27 @@ var WIKIVERSE = (function($) {
         Flickr: ["\uF16e", "#FF0085"],
         Soundcloud: ["\uF1be", "#FF6700"],
         searchQuery: ["\uF002", "#000"],
-    }
+    };
 
+    wikiverse.sigmaSettings = {
+        doubleClickEnabled: false,
+        minEdgeSize: 1,
+        maxEdgeSize: 3,
+        minNodeSize: 5,
+        maxNodeSize: 15,
+        enableEdgeHovering: true,
+        edgeHoverColor: 'edge',
+        defaultEdgeHoverColor: '#000',
+        labelThreshold: 15,
+        edgeHoverSizeRatio: 1,
+        defaultLabelColor: "#ccc",
+        edgeHoverExtremities: true
+    };
+
+    wikiverse.sigmaRenderer = {
+        container: document.getElementById('mindmap'),
+        type: 'canvas'
+    };
     //set default settings for the searches
     wikiverse.searchLang = "en";
     wikiverse.instagramSearchType = "hashtag";
@@ -90,7 +109,9 @@ var WIKIVERSE = (function($) {
         playYoutube,
         destroyBoard;
 
-    // --------SIGMA CLASSES AND  DEFAULTS
+
+
+    // --------SIGMA class enhancements, init, filters and eventhandlers
 
     sigma.classes.graph.addMethod('neighbors', function(nodeId) {
         var k,
@@ -107,31 +128,84 @@ var WIKIVERSE = (function($) {
         return this.nodesIndex;
     });
 
-    var mindmap = new sigma({
-        renderer: {
-            container: document.getElementById('mindmap'),
-            type: 'canvas'
-        },
-        settings: {
-            doubleClickEnabled: false,
-            minEdgeSize: 1,
-            maxEdgeSize: 3,
-            minNodeSize: 5,
-            maxNodeSize: 15,
-            enableEdgeHovering: true,
-            edgeHoverColor: 'edge',
-            defaultEdgeHoverColor: '#000',
-            labelThreshold: 15,
-            edgeHoverSizeRatio: 1,
-            defaultLabelColor: "#ccc",
-            edgeHoverExtremities: true
-        }
-    });
+    function mindMapEventHandler(){
 
-    //instantiate a filter from the filter plugin
-    var filter = sigma.plugins.filter(mindmap);
+	    // We first need to save the original colors of our
+	    // nodes and edges, like this:
+	    wikiverse.mindmap.graph.nodes().forEach(function(n) {
+	        n.originalColor = n.color;
+	    });
+	    wikiverse.mindmap.graph.edges().forEach(function(e) {
+	        e.originalColor = e.color;
+	    });
 
-    graphEventHandlers();
+	    // When a node is clicked, we check for each node
+	    // if it is a neighbor of the clicked one. If not,
+	    // we set its color as grey, and else, it takes its
+	    // original color.
+	    // We do the same for the edges, and we only keep
+	    // edges that have both extremities colored.
+	    wikiverse.mindmap.bind('clickNode', function(e) {
+
+	        var nodeId = e.data.node.id,
+	            toKeep = wikiverse.mindmap.graph.neighbors(nodeId);
+	        toKeep[nodeId] = e.data.node;
+
+	        wikiverse.mindmap.graph.nodes().forEach(function(n) {
+	            if (toKeep[n.id]) {
+	                n.color = n.originalColor;
+	                n.icon.color = "#fff";
+	            } else
+	                n.color = '#eee';
+	        });
+
+	        wikiverse.mindmap.graph.edges().forEach(function(e) {
+	            if (toKeep[e.source] && toKeep[e.target])
+	                e.color = e.originalColor;
+	            else
+	                e.color = '#eee';
+	        });
+
+	        // Since the data has been modified, we need to
+	        // call the refresh method to make the colors
+	        // update effective.
+	        wikiverse.mindmap.refresh();
+
+	        //if not search query node, scroll to brick
+	        if (wikiverse.mindmap.graph.nodes(nodeId).source !== "searchQuery") {
+	            //scroll to clicked element
+	            $("#rightSidebar").hide(function() {
+	                $('html, body').animate({
+	                    scrollTop: $("#" + nodeId).offset().top
+	                }, 1000, function() {
+	                    $("#" + nodeId).fadeOut(function() {
+	                        $(this).fadeIn("slow", function() {
+	                            $("#rightSidebar").show();
+	                        });
+	                    });
+	                });
+	            });
+	        } //if not search query node
+
+	    });
+
+	    // When the stage is clicked, we just color each
+	    // node and edge with its original color.
+	    /*wikiverse.mindmap.bind('clickStage', function(e) {
+			wikiverse.mindmap.graph.nodes().forEach(function(n) {
+				n.color = n.originalColor;
+				n.icon.color = "#000";
+			});
+
+			wikiverse.mindmap.graph.edges().forEach(function(e) {
+				e.color = e.originalColor;
+			});
+
+			// Same as in the previous event:
+			wikiverse.mindmap.refresh();
+		});*/
+    }
+    
 
    /* // overwrite Packery methods
     var __resetLayout = Packery.prototype._resetLayout;
@@ -170,6 +244,16 @@ var WIKIVERSE = (function($) {
     //initiate the wikiverse search functionality
     //this is called on document ready (from _main.js)
     wikiverse.init = function() {
+
+    	//overwrite the wikiverse mindmapobject
+    	//used in both buildMindmap and init
+    	wikiverse.mindmap = new sigma({
+    	    renderer: wikiverse.sigmaRenderer,
+    	    settings: wikiverse.sigmaSettings
+    	});
+    	//overwrite the wikiverse mindmap filter
+    	wikiverse.filter = sigma.plugins.filter(wikiverse.mindmap);
+    	mindMapEventHandler();
 
         //hide the sources button that hold results
         //	$('.source').hide();
@@ -559,8 +643,8 @@ var WIKIVERSE = (function($) {
         	//only show filters to sources that are present on the board
         	updateFilters();
 
-            sigma.layouts.fruchtermanReingold.start(mindmap, fruchtermanReingoldSettings);
-            mindmap.refresh();
+            sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
+            wikiverse.mindmap.refresh();
 
             $('#closeRightSidebar').removeClass('invisible');
             $('#closeRightSidebar').show();
@@ -2277,7 +2361,7 @@ var WIKIVERSE = (function($) {
     }
 
     //build a board -	this is called only for saved boards (coming from db)
-    wikiverse.buildBoard = function($packeryContainer, board) {
+    wikiverse.buildBoard = function($packeryContainer, board) {  	
 
         prepareBoardTitle(board);
 
@@ -2351,6 +2435,16 @@ var WIKIVERSE = (function($) {
     }
 
     wikiverse.buildMindmap = function(board) {
+    	
+    	//overwrite the wikiverse mindmapobject
+    	//used in both buildMindmap and init
+    	wikiverse.mindmap = new sigma({
+    	    renderer: wikiverse.sigmaRenderer,
+    	    settings: wikiverse.sigmaSettings
+    	});
+    	//overwrite the wikiverse mindmap filter
+    	wikiverse.filter = sigma.plugins.filter(wikiverse.mindmap);
+    	mindMapEventHandler();
 
         var mindmapObj = {
             nodes: [],
@@ -2420,7 +2514,7 @@ var WIKIVERSE = (function($) {
 
             }
         });
-        mindmap.graph.read(mindmapObj);
+        wikiverse.mindmap.graph.read(mindmapObj);
         updateFilters();
     }
 
@@ -2431,13 +2525,13 @@ var WIKIVERSE = (function($) {
         removeIDfromThisBoardsIds(id);
 
         //get the given node by Id
-        var nodesObj = mindmap.graph.getNodesById();
+        var nodesObj = wikiverse.mindmap.graph.getNodesById();
         var thisNode = nodesObj["n" + id];
 
         //recreate the children for this node
-        mindmap.graph.nodes().map(function(node, index) {
+        wikiverse.graph.nodes().map(function(node, index) {
 
-            var neighbors = mindmap.graph.neighbors(node.id);
+            var neighbors = wikiverse.mindmap.graph.neighbors(node.id);
             delete neighbors[node.parent]
             node.children = neighbors;
 
@@ -2449,10 +2543,10 @@ var WIKIVERSE = (function($) {
         }
 
         //drop the given node
-        mindmap.graph.dropNode("n" + id);
+        wikiverse.mindmap.graph.dropNode("n" + id);
 
         //get the last edge and grab its ID
-        var edgesArray = mindmap.graph.edges();
+        var edgesArray = wikiverse.mindmap.graph.edges();
         //if there are no edges, start with 0, if there are take the last edge, grab its id, remove the "e" from the id
         var lastEdgeId = (edgesArray.length > 0) ? parseInt(edgesArray[edgesArray.length - 1].id.replace(/\D/g, '')) : 0;
 
@@ -2467,7 +2561,7 @@ var WIKIVERSE = (function($) {
             $("#" + nodeId).data('parent', parseInt(thisNode.parent.replace(/\D/g, '')))
 
             //create new edges for the child nodes to the parent
-            mindmap.graph.addEdge({
+            wikiverse.mindmap.graph.addEdge({
                 id: "e" + lastEdgeId,
                 // Reference extremities:
                 source: thisNode.parent,
@@ -2482,15 +2576,15 @@ var WIKIVERSE = (function($) {
         //if sidebar is open do the fruchertmanreingold, if not, dont do anything and save memory!
         if ($('#rightSidebar').hasClass('cbp-spmenu-open')) {
         	updateFilters();
-            sigma.layouts.fruchtermanReingold.start(mindmap, fruchtermanReingoldSettings);
-            mindmap.refresh();
+            sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
+            wikiverse.mindmap.refresh();
         }
     }
 
     function buildNode(brickData, id, parent) {
 
         // Then, let's add some data to display:
-        mindmap.graph.addNode({
+        wikiverse.mindmap.graph.addNode({
             id: "n" + id,
             label: brickData.Topic.title,
             x: Math.random(),
@@ -2513,12 +2607,12 @@ var WIKIVERSE = (function($) {
         if (parent) {
 
             //get the last edge and grab its ID
-            var edgesArray = mindmap.graph.edges();
+            var edgesArray = wikiverse.mindmap.graph.edges();
             //if there are no edges, start with 0
             var lastEdgeId = (edgesArray.length > 0) ? parseInt(edgesArray[edgesArray.length - 1].id.replace(/\D/g, '')) : 0;
             lastEdgeId++;
 
-            mindmap.graph.addEdge({
+            wikiverse.mindmap.graph.addEdge({
                 id: 'e' + lastEdgeId,
                 // Reference extremities:
                 source: 'n' + parent,
@@ -2532,15 +2626,15 @@ var WIKIVERSE = (function($) {
         //if sidebar is open do the fruchertmanreingold, if not, dont do anything and save memory!
         if ($('#rightSidebar').hasClass('cbp-spmenu-open')) {
         	updateFilters();
-            sigma.layouts.fruchtermanReingold.start(mindmap, fruchtermanReingoldSettings);
-            mindmap.refresh();
+            sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
+            wikiverse.mindmap.refresh();
         }
     }
 
     function updateFilters() {
         $('#filter button').hide();
 
-        mindmap.graph.nodes().forEach(function(node, index) {
+        wikiverse.mindmap.graph.nodes().forEach(function(node, index) {
             $("#filter #filter_" + node.source).show();
         });
 
@@ -2801,94 +2895,17 @@ var WIKIVERSE = (function($) {
 
     }
 
-    function graphEventHandlers() {
-
-        // We first need to save the original colors of our
-        // nodes and edges, like this:
-        mindmap.graph.nodes().forEach(function(n) {
-            n.originalColor = n.color;
-        });
-        mindmap.graph.edges().forEach(function(e) {
-            e.originalColor = e.color;
-        });
-
-        // When a node is clicked, we check for each node
-        // if it is a neighbor of the clicked one. If not,
-        // we set its color as grey, and else, it takes its
-        // original color.
-        // We do the same for the edges, and we only keep
-        // edges that have both extremities colored.
-        mindmap.bind('clickNode', function(e) {
-
-            var nodeId = e.data.node.id,
-                toKeep = mindmap.graph.neighbors(nodeId);
-            toKeep[nodeId] = e.data.node;
-
-            mindmap.graph.nodes().forEach(function(n) {
-                if (toKeep[n.id]) {
-                    n.color = n.originalColor;
-                    n.icon.color = "#fff";
-                } else
-                    n.color = '#eee';
-            });
-
-            mindmap.graph.edges().forEach(function(e) {
-                if (toKeep[e.source] && toKeep[e.target])
-                    e.color = e.originalColor;
-                else
-                    e.color = '#eee';
-            });
-
-            // Since the data has been modified, we need to
-            // call the refresh method to make the colors
-            // update effective.
-            mindmap.refresh();
-
-            //if not search query node, scroll to brick
-            if (mindmap.graph.nodes(nodeId).source !== "searchQuery") {
-                //scroll to clicked element
-                $("#rightSidebar").hide(function() {
-                    $('html, body').animate({
-                        scrollTop: $("#" + nodeId).offset().top
-                    }, 1000, function() {
-                        $("#" + nodeId).fadeOut(function() {
-                            $(this).fadeIn("slow", function() {
-                                $("#rightSidebar").show();
-                            });
-                        });
-                    });
-                });
-            } //if not search query node
-
-        });
-
-        // When the stage is clicked, we just color each
-        // node and edge with its original color.
-        /*mindmap.bind('clickStage', function(e) {
-			mindmap.graph.nodes().forEach(function(n) {
-				n.color = n.originalColor;
-				n.icon.color = "#000";
-			});
-
-			mindmap.graph.edges().forEach(function(e) {
-				e.color = e.originalColor;
-			});
-
-			// Same as in the previous event:
-			mindmap.refresh();
-		});*/
-    }
 
     //filter by source
     function sourceFilter(source) {
 
         //reset all filters first
-        filter.undo('node-source-equals-x').apply();
+        wikiverse.filter.undo('node-source-equals-x').apply();
 
         //if All, dont filter anything
         if (source !== "All") {
             //create the mot filter
-            filter.nodesBy(function(node) {
+            wikiverse.filter.nodesBy(function(node) {
                 return (node.source == source || node.source == "searchQuery");
             }, 'node-source-equals-x').apply();
         }
@@ -3130,7 +3147,7 @@ var WIKIVERSE = (function($) {
     });
 
    	/* END EVENTS */
-   	
+
     return wikiverse;
 
 })(jQuery);

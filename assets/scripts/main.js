@@ -62,6 +62,7 @@
     // single board page
     'single_board': {
       init: function() {
+
         WIKIVERSE.init();
 
         $.getJSON('/wp-json/posts/' + $("#postID").html(), function(board) {
@@ -75,6 +76,7 @@
     // Start page
     'start': {
       init: function() {
+
         WIKIVERSE.init();
         WIKIVERSE.toggleSearch();
       },
