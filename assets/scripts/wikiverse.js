@@ -128,86 +128,7 @@ var WIKIVERSE = (function($) {
         return this.nodesIndex;
     });
 
-    function mindMapEventHandler(){
-
-	    // We first need to save the original colors of our
-	    // nodes and edges, like this:
-	    wikiverse.mindmap.graph.nodes().forEach(function(n) {
-	        n.originalColor = n.color;
-	    });
-	    wikiverse.mindmap.graph.edges().forEach(function(e) {
-	        e.originalColor = e.color;
-	    });
-
-	    // When a node is clicked, we check for each node
-	    // if it is a neighbor of the clicked one. If not,
-	    // we set its color as grey, and else, it takes its
-	    // original color.
-	    // We do the same for the edges, and we only keep
-	    // edges that have both extremities colored.
-	    wikiverse.mindmap.bind('clickNode', function(e) {
-
-	        var nodeId = e.data.node.id,
-	            toKeep = wikiverse.mindmap.graph.neighbors(nodeId);
-	        toKeep[nodeId] = e.data.node;
-
-	        wikiverse.mindmap.graph.nodes().forEach(function(n) {
-	            if (toKeep[n.id]) {
-	                n.color = n.originalColor;
-	                n.icon.color = "#fff";
-	            } else
-	                n.color = '#eee';
-	        });
-
-	        wikiverse.mindmap.graph.edges().forEach(function(e) {
-	            if (toKeep[e.source] && toKeep[e.target])
-	                e.color = e.originalColor;
-	            else
-	                e.color = '#eee';
-	        });
-
-	        // Since the data has been modified, we need to
-	        // call the refresh method to make the colors
-	        // update effective.
-	        wikiverse.mindmap.refresh();
-
-	        //if not search query node, scroll to brick
-	        if (wikiverse.mindmap.graph.nodes(nodeId).source !== "searchQuery") {
-	            //scroll to clicked element
-	            $("#rightSidebar").hide(function() {
-	                $('html, body').animate({
-	                    scrollTop: $("#" + nodeId).offset().top
-	                }, 1000, function() {
-	                    $("#" + nodeId).fadeOut(function() {
-	                        $(this).fadeIn("slow", function() {
-	                            $("#rightSidebar").show();
-	                        });
-	                    });
-	                });
-	            });
-	        } //if not search query node
-
-	    });
-
-	    // When the stage is clicked, we just color each
-	    // node and edge with its original color.
-	    /*wikiverse.mindmap.bind('clickStage', function(e) {
-			wikiverse.mindmap.graph.nodes().forEach(function(n) {
-				n.color = n.originalColor;
-				n.icon.color = "#000";
-			});
-
-			wikiverse.mindmap.graph.edges().forEach(function(e) {
-				e.color = e.originalColor;
-			});
-
-			// Same as in the previous event:
-			wikiverse.mindmap.refresh();
-		});*/
-    }
-    
-
-   /* // overwrite Packery methods
+    /* // overwrite Packery methods
     var __resetLayout = Packery.prototype._resetLayout;
     Packery.prototype._resetLayout = function() {
       __resetLayout.call( this );
@@ -245,15 +166,15 @@ var WIKIVERSE = (function($) {
     //this is called on document ready (from _main.js)
     wikiverse.init = function() {
 
-    	//overwrite the wikiverse mindmapobject
-    	//used in both buildMindmap and init
-    	wikiverse.mindmap = new sigma({
-    	    renderer: wikiverse.sigmaRenderer,
-    	    settings: wikiverse.sigmaSettings
-    	});
-    	//overwrite the wikiverse mindmap filter
-    	wikiverse.filter = sigma.plugins.filter(wikiverse.mindmap);
-    	mindMapEventHandler();
+        //overwrite the wikiverse mindmapobject
+        //used in both buildMindmap and init
+        wikiverse.mindmap = new sigma({
+            renderer: wikiverse.sigmaRenderer,
+            settings: wikiverse.sigmaSettings
+        });
+        //overwrite the wikiverse mindmap filter
+        wikiverse.filter = sigma.plugins.filter(wikiverse.mindmap);
+        mindMapEventHandler();
 
         //hide the sources button that hold results
         //	$('.source').hide();
@@ -375,6 +296,84 @@ var WIKIVERSE = (function($) {
 
         //change the icon based on if expanded or compressed:
         $enlargeIcon.hasClass('fa-expand') ? $enlargeIcon.removeClass('fa-expand').addClass('fa-compress') : $enlargeIcon.removeClass('fa-compress').addClass('fa-expand');
+    }
+
+    function mindMapEventHandler() {
+
+        // We first need to save the original colors of our
+        // nodes and edges, like this:
+        wikiverse.mindmap.graph.nodes().forEach(function(n) {
+            n.originalColor = n.color;
+        });
+        wikiverse.mindmap.graph.edges().forEach(function(e) {
+            e.originalColor = e.color;
+        });
+
+        // When a node is clicked, we check for each node
+        // if it is a neighbor of the clicked one. If not,
+        // we set its color as grey, and else, it takes its
+        // original color.
+        // We do the same for the edges, and we only keep
+        // edges that have both extremities colored.
+        wikiverse.mindmap.bind('clickNode', function(e) {
+
+            var nodeId = e.data.node.id,
+                toKeep = wikiverse.mindmap.graph.neighbors(nodeId);
+            toKeep[nodeId] = e.data.node;
+
+            wikiverse.mindmap.graph.nodes().forEach(function(n) {
+                if (toKeep[n.id]) {
+                    n.color = n.originalColor;
+                    n.icon.color = "#fff";
+                } else
+                    n.color = '#eee';
+            });
+
+            wikiverse.mindmap.graph.edges().forEach(function(e) {
+                if (toKeep[e.source] && toKeep[e.target])
+                    e.color = e.originalColor;
+                else
+                    e.color = '#eee';
+            });
+
+            // Since the data has been modified, we need to
+            // call the refresh method to make the colors
+            // update effective.
+            wikiverse.mindmap.refresh();
+
+            //if not search query node, scroll to brick
+            if (wikiverse.mindmap.graph.nodes(nodeId).source !== "searchQuery") {
+                //scroll to clicked element
+                $("#rightSidebar").hide(function() {
+                    $('html, body').animate({
+                        scrollTop: $("#" + nodeId).offset().top
+                    }, 1000, function() {
+                        $("#" + nodeId).fadeOut(function() {
+                            $(this).fadeIn("slow", function() {
+                                $("#rightSidebar").show();
+                            });
+                        });
+                    });
+                });
+            } //if not search query node
+
+        });
+
+        // When the stage is clicked, we just color each
+        // node and edge with its original color.
+        /*wikiverse.mindmap.bind('clickStage', function(e) {
+    			wikiverse.mindmap.graph.nodes().forEach(function(n) {
+    				n.color = n.originalColor;
+    				n.icon.color = "#000";
+    			});
+
+    			wikiverse.mindmap.graph.edges().forEach(function(e) {
+    				e.color = e.originalColor;
+    			});
+
+    			// Same as in the previous event:
+    			wikiverse.mindmap.refresh();
+    		});*/
     }
 
     //get the username for any given flickr picture
@@ -639,9 +638,9 @@ var WIKIVERSE = (function($) {
         //close and plus button logic
         //if sidebar open, hide the plus
         if ($('#rightSidebar').hasClass('cbp-spmenu-open')) {
-        	
-        	//only show filters to sources that are present on the board
-        	updateFilters();
+
+            //only show filters to sources that are present on the board
+            updateFilters();
 
             sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
             wikiverse.mindmap.refresh();
@@ -2046,7 +2045,7 @@ var WIKIVERSE = (function($) {
 
         $connections.change(function(event) {
             getConnections($(this).find("option:selected").text(), section.title, $brick.data('id'));
-        	$sourceType.trigger("change");
+            $sourceType.trigger("change");
         });
 
         $.ajax({
@@ -2123,112 +2122,110 @@ var WIKIVERSE = (function($) {
     };
 
     //create the stars effect on homepage
-    wikiverse.stars = function(canvas){
+    wikiverse.stars = function(canvas) {
 
-    		window.requestAnimFrame = (function(callback) {
-    		return window.requestAnimationFrame || window.webkitRequestAnimationFrame
-    			|| window.mozRequestAnimationFrame || window.oRequestAnimationFrame
-    			|| window.msRequestAnimationFrame || function(callback) {
-    				window.setTimeout(callback, 1000 / 30);
-    			};
-    		})();
-    		
-    		$(canvas).attr("width", $( window ).width() - 20);
+        window.requestAnimFrame = (function(callback) {
+            return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) {
+                window.setTimeout(callback, 1000 / 30);
+            };
+        })();
 
-    		var context = canvas.getContext('2d'),
-    			sizes = ['micro', 'mini', 'medium', 'big', 'max'],
-    			elements = [],
-    			max_bright = 1,
-    			min_bright = .2;
-    	    
-    	        /* LOGICS */
-    	    	generate(3000, .5);
-    	    	spark(30);
+        $(canvas).attr("width", $(window).width() - 20);
 
-    	    /* FUNCTIONS */
-    		function generate(starsCount, opacity) {
-    			for(var i = 0; i < starsCount; i++) {
-    				var x = randomInt(2, canvas.offsetWidth-2),
-    					y = randomInt(2, canvas.offsetHeight-2),
-    					size = sizes[randomInt(0, sizes.length-1)];
+        var context = canvas.getContext('2d'),
+            sizes = ['micro', 'mini', 'medium', 'big', 'max'],
+            elements = [],
+            max_bright = 1,
+            min_bright = .2;
 
-    				elements.push(star(x, y, size, opacity));
-    			}
-    		}
+        /* LOGICS */
+        generate(3000, .5);
+        spark(30);
 
-    		function spark(numberOfStarsToAnimate) {
-    			for(var i = 0; i < numberOfStarsToAnimate; i++) {
-    				var id = randomInt(0, elements.length - 1),
-    					obj = elements[id],
-    					newAlpha = obj.alpha;
-    				do {
-    					newAlpha = randomFloatAround(obj.alpha);
-    				} while(newAlpha < min_bright || newAlpha > max_bright)
+        /* FUNCTIONS */
+        function generate(starsCount, opacity) {
+            for (var i = 0; i < starsCount; i++) {
+                var x = randomInt(2, canvas.offsetWidth - 2),
+                    y = randomInt(2, canvas.offsetHeight - 2),
+                    size = sizes[randomInt(0, sizes.length - 1)];
 
-    				elements[id] = star(obj.x, obj.y, obj.size, newAlpha);
-    			}
+                elements.push(star(x, y, size, opacity));
+            }
+        }
 
-    			requestAnimFrame(function() {
-    				spark(numberOfStarsToAnimate);
-    			});
-    		}
+        function spark(numberOfStarsToAnimate) {
+            for (var i = 0; i < numberOfStarsToAnimate; i++) {
+                var id = randomInt(0, elements.length - 1),
+                    obj = elements[id],
+                    newAlpha = obj.alpha;
+                do {
+                    newAlpha = randomFloatAround(obj.alpha);
+                } while (newAlpha < min_bright || newAlpha > max_bright)
 
-    		function star(x, y, size, alpha) {
-    			var radius = 0;
-    			switch(size) {
-    				case 'micro':
-    					radius = 0.2;
-    					break;
-    				case 'mini':
-    					radius = 0.4;
-    					break;
-    				case 'medium':
-    					radius = 0.6;
-    					break;
-    				case 'big':
-    					radius = 0.8;
-    					break;
-    				case 'max':
-    					radius = 1.0;
-    					break;
-    			}
+                elements[id] = star(obj.x, obj.y, obj.size, newAlpha);
+            }
 
-    			var gradient = context.createRadialGradient(x, y, 0, x + radius, y + radius, radius * 2);
-    			gradient.addColorStop(0, 'rgba(255, 255, 255, ' + alpha + ')');
-    			gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            requestAnimFrame(function() {
+                spark(numberOfStarsToAnimate);
+            });
+        }
 
-    			/* clear background pixels */
-    			context.beginPath();
-    			context.clearRect(x - radius - 1, y - radius - 1, radius * 2 + 2, radius * 2 + 2);
-    			context.closePath();
+        function star(x, y, size, alpha) {
+            var radius = 0;
+            switch (size) {
+                case 'micro':
+                    radius = 0.2;
+                    break;
+                case 'mini':
+                    radius = 0.4;
+                    break;
+                case 'medium':
+                    radius = 0.6;
+                    break;
+                case 'big':
+                    radius = 0.8;
+                    break;
+                case 'max':
+                    radius = 1.0;
+                    break;
+            }
 
-    			/* draw star */
-    			context.beginPath();
-    			context.arc(x,y,radius,0,2*Math.PI);
-    			context.fillStyle = gradient;
-    			context.fill();
+            var gradient = context.createRadialGradient(x, y, 0, x + radius, y + radius, radius * 2);
+            gradient.addColorStop(0, 'rgba(255, 255, 255, ' + alpha + ')');
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
-    			return {
-    				'x': x,
-    				'y': y,
-    				'size': size,
-    				'alpha': alpha
-    			};
-    		}
+            /* clear background pixels */
+            context.beginPath();
+            context.clearRect(x - radius - 1, y - radius - 1, radius * 2 + 2, radius * 2 + 2);
+            context.closePath();
 
-    		function randomInt(a, b) {
-    			return Math.floor(Math.random()*(b-a+1)+a);
-    		}
+            /* draw star */
+            context.beginPath();
+            context.arc(x, y, radius, 0, 2 * Math.PI);
+            context.fillStyle = gradient;
+            context.fill();
 
-    		function randomFloatAround(num) {
-    			var plusminus = randomInt(0, 1000) % 2,
-    				val = num;
-    			if(plusminus)
-    				val += 0.1;
-    			else
-    				val -= 0.1;
-    			return parseFloat(val.toFixed(1));
-    		}
+            return {
+                'x': x,
+                'y': y,
+                'size': size,
+                'alpha': alpha
+            };
+        }
+
+        function randomInt(a, b) {
+            return Math.floor(Math.random() * (b - a + 1) + a);
+        }
+
+        function randomFloatAround(num) {
+            var plusminus = randomInt(0, 1000) % 2,
+                val = num;
+            if (plusminus)
+                val += 0.1;
+            else
+                val -= 0.1;
+            return parseFloat(val.toFixed(1));
+        }
     }
 
     //build a youtube brick
@@ -2361,7 +2358,7 @@ var WIKIVERSE = (function($) {
     }
 
     //build a board -	this is called only for saved boards (coming from db)
-    wikiverse.buildBoard = function($packeryContainer, board) {  	
+    wikiverse.buildBoard = function($packeryContainer, board) {
 
         prepareBoardTitle(board);
 
@@ -2435,16 +2432,16 @@ var WIKIVERSE = (function($) {
     }
 
     wikiverse.buildMindmap = function(board) {
-    	
-    	//overwrite the wikiverse mindmapobject
-    	//used in both buildMindmap and init
-    	wikiverse.mindmap = new sigma({
-    	    renderer: wikiverse.sigmaRenderer,
-    	    settings: wikiverse.sigmaSettings
-    	});
-    	//overwrite the wikiverse mindmap filter
-    	wikiverse.filter = sigma.plugins.filter(wikiverse.mindmap);
-    	mindMapEventHandler();
+
+        //overwrite the wikiverse mindmapobject
+        //used in both buildMindmap and init
+        wikiverse.mindmap = new sigma({
+            renderer: wikiverse.sigmaRenderer,
+            settings: wikiverse.sigmaSettings
+        });
+        //overwrite the wikiverse mindmap filter
+        wikiverse.filter = sigma.plugins.filter(wikiverse.mindmap);
+        mindMapEventHandler();
 
         var mindmapObj = {
             nodes: [],
@@ -2575,7 +2572,7 @@ var WIKIVERSE = (function($) {
 
         //if sidebar is open do the fruchertmanreingold, if not, dont do anything and save memory!
         if ($('#rightSidebar').hasClass('cbp-spmenu-open')) {
-        	updateFilters();
+            updateFilters();
             sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
             wikiverse.mindmap.refresh();
         }
@@ -2621,11 +2618,11 @@ var WIKIVERSE = (function($) {
                 color: "#f8f8f8",
                 type: "curvedArrow"
             });
-        }        
+        }
 
         //if sidebar is open do the fruchertmanreingold, if not, dont do anything and save memory!
         if ($('#rightSidebar').hasClass('cbp-spmenu-open')) {
-        	updateFilters();
+            updateFilters();
             sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
             wikiverse.mindmap.refresh();
         }
@@ -2665,10 +2662,10 @@ var WIKIVERSE = (function($) {
     //collect the bricks for saveboard/createboard/forkboard
     wikiverse.collectBricks = function() {
 
-    	//get all bricks
+        //get all bricks
         var bricks = $packeryContainer.packery('getItemElements');
         //find all images
-        var image =  $(bricks).find('img:first');
+        var image = $(bricks).find('img:first');
 
         //identify first brick with image 
         var $firstBrickWithImage = $(image[0]).parents(".brick");
@@ -2876,10 +2873,10 @@ var WIKIVERSE = (function($) {
             $packeryContainer.packery('remove', elements);
 
             //remove all nodes
-           	mindmap.graph.clear();
-           	updateFilters();
-           	$("#filter #filter_All").hide();
-           	mindmap.refresh();
+            mindmap.graph.clear();
+            updateFilters();
+            $("#filter #filter_All").hide();
+            mindmap.refresh();
 
         }
     };
@@ -3138,15 +3135,15 @@ var WIKIVERSE = (function($) {
     });
 
     //Fix title on scroll
-   $(window).scroll(function(){
-      var sticky = $('#wvTitle h1'),
-          scroll = $(window).scrollTop();
+    $(window).scroll(function() {
+        var sticky = $('#wvTitle h1'),
+            scroll = $(window).scrollTop();
 
-      if (scroll >= 100) sticky.addClass('fixedTitle');
-      else sticky.removeClass('fixedTitle');
+        if (scroll >= 100) sticky.addClass('fixedTitle');
+        else sticky.removeClass('fixedTitle');
     });
 
-   	/* END EVENTS */
+    /* END EVENTS */
 
     return wikiverse;
 
