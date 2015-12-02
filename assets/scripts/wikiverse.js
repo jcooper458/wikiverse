@@ -2526,7 +2526,7 @@ var WIKIVERSE = (function($) {
         var thisNode = nodesObj["n" + id];
 
         //recreate the children for this node
-        wikiverse.graph.nodes().map(function(node, index) {
+        wikiverse.mindmap.graph.nodes().map(function(node, index) {
 
             var neighbors = wikiverse.mindmap.graph.neighbors(node.id);
             delete neighbors[node.parent]
@@ -2908,112 +2908,7 @@ var WIKIVERSE = (function($) {
         }
     }
 
-    //----------------keyboard shortcuts----------------------------
 
-
-    //CTRL-S for save board
-    document.addEventListener("keydown", function(e) {
-        if (e.keyCode === 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
-            e.preventDefault();
-            $('#saveBoard').trigger('click');
-        }
-    }, false);
-
-    $searchKeyword.keyup(function(e) {
-        //reset the searchkeyword parent so that there is no parent, and thus a new searhquery node is created
-        $searchKeyword.removeData('parent');
-
-        e.preventDefault();
-        //make enter save the board
-        if (e.keyCode === 13) {
-            $sourceType.trigger('change');
-        }
-    });
-
-    //wv_search
-    $('.search input').keyup(function(e) {
-        e.preventDefault();
-
-        //make enter save the board
-        if (e.keyCode === 13) {
-
-            //get the query from the search div
-            var query = $("#searchInput input").val();
-
-            //call the search functions with static, default parameters
-            //this is because its a quick search via the "add content" button
-            getWikis(query, "en", searchResultsLoaded);
-            getSoundclouds(query, searchResultsLoaded);
-            getTweets(query, "popular", "en", searchResultsLoaded);
-            getYoutubes(query, "relevance", "en", searchResultsLoaded);
-            getFlickrs(query, "relevance", "textQuery", searchResultsLoaded);
-            getInstagrams(query, "hashtag", searchResultsLoaded);
-
-            //reset the searchkeyword parent so that there is no parent, and thus a new searhquery node is created
-            $searchKeyword.removeData('parent');
-        }
-    });
-
-    /*document.addEventListener("keydown", function(e) {
-		if (!($("input").is(":focus")) && e.keyCode === 87) {
-			e.preventDefault();
-			$('li#wikipedia').trigger('click');
-		}
-	}, false);
-
-	document.addEventListener("keydown", function(e) {
-		if (!($("input").is(":focus")) && e.keyCode === 89) {
-			e.preventDefault();
-			$('li#youtube').trigger('click');
-		}
-	}, false);
-
-	document.addEventListener("keydown", function(e) {
-		if (!($("input").is(":focus")) && e.keyCode === 71) {
-			e.preventDefault();
-			$('li#gmaps').trigger('click');
-		}
-	}, false);
-
-	document.addEventListener("keydown", function(e) {
-		if (!($("input").is(":focus")) && e.keyCode === 70) {
-			e.preventDefault();
-			$('li#flickr').trigger('click');
-		}
-	}, false);
-
-	document.addEventListener("keydown", function(e) {
-		if (!($("input").is(":focus")) && e.keyCode === 73) {
-			e.preventDefault();
-			$('li#instagram').trigger('click');
-		}
-	}, false);
-
-	document.addEventListener("keydown", function(e) {
-		if (!($("input").is(":focus")) && e.keyCode === 65) {
-			e.preventDefault();
-			$('li#instagram').trigger('click');
-			$('li#gmaps').trigger('click');
-			$('li#flickr').trigger('click');
-			$('li#soundcloud').trigger('click');
-			$('li#wikipedia').trigger('click');
-			$('li#youtube').trigger('click');
-		}
-	}, false);*/
-
-    //call the board-pilots on click (saveboard, clearboard, etc)
-    $('.board-pilot').click(function() {
-
-        //Close the sidebar if open:
-        if ($sidebar.hasClass('cbp-spmenu-open')) {
-            toggleSidebar();
-        }
-        //save, clear or edit board
-        wikiverse[$(this).attr('id')](wpnonce);
-    });
-
-
-    //----------------keyboard shortcuts----------------------------
 
 
 
@@ -3142,7 +3037,65 @@ var WIKIVERSE = (function($) {
         if (scroll >= 100) sticky.addClass('fixedTitle');
         else sticky.removeClass('fixedTitle');
     });
+    //----------------keyboard shortcuts----------------------------
 
+
+    //CTRL-S for save board
+    document.addEventListener("keydown", function(e) {
+        if (e.keyCode === 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+            e.preventDefault();
+            $('#saveBoard').trigger('click');
+        }
+    }, false);
+
+    $searchKeyword.keyup(function(e) {
+        //reset the searchkeyword parent so that there is no parent, and thus a new searhquery node is created
+        $searchKeyword.removeData('parent');
+
+        e.preventDefault();
+        //make enter save the board
+        if (e.keyCode === 13) {
+            $sourceType.trigger('change');
+        }
+    });
+
+    //wv_search
+    $('.search input').keyup(function(e) {
+        e.preventDefault();
+
+        //make enter save the board
+        if (e.keyCode === 13) {
+
+            //get the query from the search div
+            var query = $("#searchInput input").val();
+
+            //call the search functions with static, default parameters
+            //this is because its a quick search via the "add content" button
+            getWikis(query, "en", searchResultsLoaded);
+            getSoundclouds(query, searchResultsLoaded);
+            getTweets(query, "popular", "en", searchResultsLoaded);
+            getYoutubes(query, "relevance", "en", searchResultsLoaded);
+            getFlickrs(query, "relevance", "textQuery", searchResultsLoaded);
+            getInstagrams(query, "hashtag", searchResultsLoaded);
+
+            //reset the searchkeyword parent so that there is no parent, and thus a new searhquery node is created
+            $searchKeyword.removeData('parent');
+        }
+    });
+
+    //call the board-pilots on click (saveboard, clearboard, etc)
+    $('.board-pilot').click(function() {
+
+        //Close the sidebar if open:
+        if ($sidebar.hasClass('cbp-spmenu-open')) {
+            toggleSidebar();
+        }
+        //save, clear or edit board
+        wikiverse[$(this).attr('id')](wpnonce);
+    });
+
+
+    //---------------END -keyboard shortcuts----------------------------
     /* END EVENTS */
 
     return wikiverse;
