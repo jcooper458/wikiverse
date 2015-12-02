@@ -1,5 +1,6 @@
 
 <div class="container-fluid dark-blue buffer-bottom">
+  <canvas id="stars" height="350" width></canvas>
   <div class="container" role="document">
     <div class="col-lg-12 col-md-12 col-sm-12 buffer-bottom">
       <div class="gigante"><p>wikiverse</p> <span id="front-beta">beta</span></div>
