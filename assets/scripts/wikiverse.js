@@ -2141,7 +2141,7 @@ var WIKIVERSE = (function($) {
 
         /* LOGICS */
         generate(300, .6);
-       // spark(30);
+        //spark(100);
 
         /* FUNCTIONS */
         function generate(starsCount, opacity) {
