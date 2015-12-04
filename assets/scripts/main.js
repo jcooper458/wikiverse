@@ -39,6 +39,7 @@
     // Home page
     'home': {
       init: function() {
+        
         WIKIVERSE.stars(document.getElementById("stars"));
     
         $('a[href*=#]:not([href=#])').click(function() {

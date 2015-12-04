@@ -2130,7 +2130,8 @@ var WIKIVERSE = (function($) {
             };
         })();
 
-        $(canvas).attr("width", $(window).width() - 20);
+        $(canvas).attr("width", $(window).width() - 10);
+        $(canvas).attr("height", $("#top-home-container").height() - 10);
 
         var context = canvas.getContext('2d'),
             sizes = ['micro', 'mini', 'medium', 'big', 'max'],
@@ -2139,8 +2140,8 @@ var WIKIVERSE = (function($) {
             min_bright = .2;
 
         /* LOGICS */
-        generate(3000, .5);
-        spark(30);
+        generate(300, .6);
+       // spark(30);
 
         /* FUNCTIONS */
         function generate(starsCount, opacity) {
@@ -2174,19 +2175,19 @@ var WIKIVERSE = (function($) {
             var radius = 0;
             switch (size) {
                 case 'micro':
-                    radius = 0.2;
+                    radius = 0.5;
                     break;
                 case 'mini':
-                    radius = 0.4;
+                    radius = 1;
                     break;
                 case 'medium':
-                    radius = 0.6;
+                    radius = 1.5;
                     break;
                 case 'big':
-                    radius = 0.8;
+                    radius = 2;
                     break;
                 case 'max':
-                    radius = 1.0;
+                    radius = 3;
                     break;
             }
 
