@@ -8,7 +8,7 @@ License information will follow asap.
 wikiverse wont work without these two plugins: 
 
 - Edit Author Slug (can be installed via Wordpress - set the slug to "user")
-- My forked version of the WP-API plugin
+- <del>My forked version of the WP-API plugin</del>
 - wp-twitter-api (own plugin - needs configuration via the Wordpress backend)
 
 I added my composer.json to automate the installation of these two plugins. Follow the bedrock / composer instruction to install the plugins. 
