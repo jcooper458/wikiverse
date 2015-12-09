@@ -66,8 +66,8 @@
 
         WIKIVERSE.init();
 
-        $.getJSON('/wp-json/posts/' + $("#postID").html(), function(board) {
-          WIKIVERSE.buildBoard($('#packery'), JSON.parse(board.content_raw));
+        $.getJSON('/wp-json/wp/v2/board/' + $("#postID").html(), function(board, resp) {
+          WIKIVERSE.buildBoard(JSON.parse(board.content));
         });
       },
       finalize: function() {

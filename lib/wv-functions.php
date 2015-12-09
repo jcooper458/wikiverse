@@ -71,6 +71,7 @@ function register_cpt_board() {
     $args = array( 
         'labels' => $labels,
         'hierarchical' => true,
+        'show_in_rest' => true,
         
        // 'menu_icon' => get_stylesheet_directory_uri() . '/includes/images/bike_icon.png',  // Icon Path
         
@@ -432,6 +433,13 @@ function themeblvd_redirect_admin(){
         wp_redirect( "/");
         exit;       
     }
+}
+
+//removing the rendered content from the rest api response and overwriting it with the raw content
+add_filter( 'rest_prepare_board', 'dt_use_raw_board_content', 10, 3 );
+function dt_use_raw_board_content( $data, $post, $request ) {
+    $data->data['content'] = $post->post_content;
+    return $data;
 }
 
 

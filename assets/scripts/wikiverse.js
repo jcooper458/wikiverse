@@ -1465,10 +1465,11 @@ var WIKIVERSE = (function($) {
     };
 
     //strip html from given text
-    function strip(html) {
-        var tmp = document.createElement("DIV");
-        tmp.innerHTML = html;
-        return tmp.textContent || tmp.innerText || "";
+    wikiverse.strip = function(dirtyString) {
+      var container = document.createElement('div');
+      var text = document.createTextNode(dirtyString);
+      container.appendChild(text);
+      return container.innerHTML; // innerHTML will be a xss safe string
     }
 
     //build the soundcloud brick
@@ -1522,7 +1523,7 @@ var WIKIVERSE = (function($) {
 
         results.forEach(function(result, index) {
 
-            var $result = $('<tr class="result" data-toggle="tooltip" title="' + strip(result.Topic.snippet) + '"><td>' + result.Topic.title + '</td></tr>');
+            var $result = $('<tr class="result" data-toggle="tooltip" title="' + wikiverse.strip(result.Topic.snippet) + '"><td>' + result.Topic.title + '</td></tr>');
             $result.data("topic", result);
 
             //append row to sidebar-results-table
@@ -1719,7 +1720,7 @@ var WIKIVERSE = (function($) {
                     return {
                         Topic: {
                             title: item.title,
-                            snippet: strip(item.snippet),
+                            snippet: wikiverse.strip(item.snippet),
                             language: lang
                         },
                         Type: "Wikipedia"
@@ -2109,7 +2110,7 @@ var WIKIVERSE = (function($) {
 
         results.forEach(function(result, index) {
 
-            var $result = $('<tr class="result" data-toggle="tooltip" youtubeID="' + result.Topic.youtubeID + '" title="' + strip(result.Topic.snippet) + '"><td class="youtubeThumb col-md-6"><img height="100" src="' + result.Topic.thumbnailURL + '"></td class="col-md-6"><td>' + result.Topic.title + '</td></tr>');
+            var $result = $('<tr class="result" data-toggle="tooltip" youtubeID="' + result.Topic.youtubeID + '" title="' + wikiverse.strip(result.Topic.snippet) + '"><td class="youtubeThumb col-md-6"><img height="100" src="' + result.Topic.thumbnailURL + '"></td class="col-md-6"><td>' + result.Topic.title + '</td></tr>');
             $result.data("topic", result);
 
             //append row to sidebar-results-table
@@ -2130,7 +2131,7 @@ var WIKIVERSE = (function($) {
             };
         })();
 
-        $(canvas).attr("width", $(window).width() - 10);
+        $(canvas).attr("width", $(window).width() - 20);
         $(canvas).attr("height", $("#top-home-container").height() - 10);
 
         var context = canvas.getContext('2d'),
@@ -2359,7 +2360,7 @@ var WIKIVERSE = (function($) {
     }
 
     //build a board -	this is called only for saved boards (coming from db)
-    wikiverse.buildBoard = function($packeryContainer, board) {
+    wikiverse.buildBoard = function(board) {
 
         prepareBoardTitle(board);
 
