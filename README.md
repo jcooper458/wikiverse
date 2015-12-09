@@ -5,10 +5,10 @@ The core Javascript file responsible for the content aggregation is called wikiv
 License information will follow asap. 
 
 # Important:
-wikiverse wont work without these two plugins: 
+wikiverse needs Wordpress 4.4. and won't work without these two plugins: 
 
 - Edit Author Slug (can be installed via Wordpress - set the slug to "user")
-- <del>My forked version of the WP-API plugin</del>
+- <del>My forked version of the WP-API plugin</del> (not needed anymore since WP 4.4 is serving JSON natively)
 - wp-twitter-api (own plugin - needs configuration via the Wordpress backend)
 
 I added my composer.json to automate the installation of these two plugins. Follow the bedrock / composer instruction to install the plugins. 
