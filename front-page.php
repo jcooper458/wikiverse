@@ -100,6 +100,7 @@ $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
         <a target="_blank" href="https://jquery.com/">jQuery</a>, 
         <a target="_blank" href="http://packery.metafizzy.co/">packery</a>, 
         <a target="_blank" href="http://sigmajs.org/">sigma.js</a>, 
+        <a target="_blank" href="http://d3js.org/">d3.js</a>, 
         <a target="_blank" href="http://getbootstrap.com/">bootstrap</a>, 
         <a target="_blank" href="http://tympanus.net/codrops/">codrops</a>, 
         <a target="_blank" href="https://wordpress.com/">wordpress</a>, 
