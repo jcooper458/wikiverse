@@ -552,14 +552,15 @@ video {
   .fa{
     font-size: 25px;
     position: fixed;
+    background-color: #1F2D3A;
+    border: 1px solid #252525;
+    padding: 6px 6px 6px 6px;
   }
   #closeSidebar{
 
     left: 360px;
     top: 50px;
-    background-color: #1F2D3A;
-    border: 1px solid #252525;
-    padding: 3px 5px 4px 5px;
+
   }
   #openSidebar{
 
@@ -567,19 +568,17 @@ video {
     top: 50px;
   }
 
-  #closeRightSidebar{
+  #closeBottomSidebar{
 
-    right: 360px;
-    top: 50px;
-    background-color: #1F2D3A;
-    border: 1px solid black;
-    padding: 3px 5px 4px 5px;
+    right: 50px;
+    bottom: 46%;
+
   }
 
-  #openRightSidebar{
+  #openBottomSidebar{
 
-    right: 10px;
-    top: 50px;
+    left: 10px;
+    bottom: 20px;
   }
 }
 
@@ -647,7 +646,7 @@ video {
 
 .cbp-spmenu-horizontal {
   width: 100%;
-  height: 50%;
+  height: 45%;
   left: 0;
   z-index: 1000;
   overflow: hidden;
@@ -661,7 +660,7 @@ video {
 
 
 .cbp-spmenu-bottom {
-  bottom: -50%;
+  bottom: -45%;
 }
 
 .cbp-spmenu-bottom.cbp-spmenu-open {

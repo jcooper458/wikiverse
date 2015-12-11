@@ -665,11 +665,11 @@ var WIKIVERSE = (function($) {
             sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
             wikiverse.mindmap.refresh();
 
-            $('#closeRightSidebar').removeClass('invisible');
-            $('#closeRightSidebar').show();
+            $('#closeBottomSidebar').removeClass('invisible');
+            $('#closeBottomSidebar').show();
             $('#openRightSidebar').hide();
         } else {
-            $('#closeRightSidebar').hide();
+            $('#closeBottomSidebar').hide();
             $('#openRightSidebar').show();
         }
 

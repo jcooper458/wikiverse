@@ -4,8 +4,8 @@
     <i id="openSidebar" class="fa fa-plus left"></i>
     <i id="closeSidebar" class="fa fa-close left invisible"></i>
 
-    <i id="openRightSidebar" class="fa fa-code-fork right"></i>
-    <i id="closeRightSidebar" class="fa fa-close right invisible"></i>
+    <i id="openBottomSidebar" class="fa fa-code-fork right"></i>
+    <i id="closeBottomSidebar" class="fa fa-close right invisible"></i>
 
   </div>
 
