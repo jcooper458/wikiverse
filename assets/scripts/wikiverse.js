@@ -661,6 +661,12 @@ var WIKIVERSE = (function($) {
 
             //only show filters to sources that are present on the board
             updateFilters();
+            
+            //move the cam up a bit to fit the mindmap into the sidebar
+            sigma.misc.animation.camera(wikiverse.cam, { 
+              x:wikiverse.cam.x, 
+              y:wikiverse.cam.y + 150
+            });
 
             sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
             wikiverse.mindmap.refresh();
@@ -2463,6 +2469,8 @@ var WIKIVERSE = (function($) {
         });
         //overwrite the wikiverse mindmap filter
         wikiverse.filter = sigma.plugins.filter(wikiverse.mindmap);
+        wikiverse.cam = wikiverse.mindmap.camera;
+
         mindMapEventHandler();
 
         var mindmapObj = {
@@ -2535,6 +2543,7 @@ var WIKIVERSE = (function($) {
             }
         });
         wikiverse.mindmap.graph.read(mindmapObj);
+
         updateFilters();
     }
 
