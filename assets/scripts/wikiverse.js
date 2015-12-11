@@ -33,14 +33,14 @@ var WIKIVERSE = (function($) {
     };
 
     var nodeSettings = {
-        Wikipedia: ["\uF266", "#000"],
-        wikiSection: ["\uF266", "#000"],
+        Wikipedia: ["\uF266", "#89A4BE"],
+        wikiSection: ["\uF266", "#89A4BE"],
         Twitter: ["\uF099", "#2CB8E3"],
         Youtube: ["\uF167", "#CC181E"],
         Instagram: ["\uF16d", "#2E5F80"],
         Flickr: ["\uF16e", "#FF0085"],
         Soundcloud: ["\uF1be", "#FF6700"],
-        searchQuery: ["\uF002", "#000"],
+        searchQuery: ["\uF002", "#89A4BE"],
     };
 
     wikiverse.sigmaSettings = {
@@ -273,6 +273,26 @@ var WIKIVERSE = (function($) {
 
     }
 
+    wikiverse.demoMindmap = function(json){
+
+        json.nodes.forEach(function(node,index){
+            node.icon.content = '\uF266';
+            console.log(node.icon);
+        });
+
+        wikiverse.mindmap = new sigma({
+            renderer: wikiverse.sigmaRenderer,
+            settings: wikiverse.sigmaSettings
+        });
+
+        mindMapEventHandler();
+         
+        wikiverse.mindmap.graph.read(json);
+        sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
+
+        wikiverse.mindmap.refresh();
+    }
+
     //toggles the image size on click (works also for youtube)
     function toggleImageSize($brick, $enlargeIcon) {
 
@@ -302,12 +322,12 @@ var WIKIVERSE = (function($) {
 
         // We first need to save the original colors of our
         // nodes and edges, like this:
-        wikiverse.mindmap.graph.nodes().forEach(function(n) {
+       /* wikiverse.mindmap.graph.nodes().forEach(function(n) {
             n.originalColor = n.color;
         });
         wikiverse.mindmap.graph.edges().forEach(function(e) {
             e.originalColor = e.color;
-        });
+        });*/
 
         // When a node is clicked, we check for each node
         // if it is a neighbor of the clicked one. If not,
@@ -319,7 +339,7 @@ var WIKIVERSE = (function($) {
 
             var nodeId = e.data.node.id,
                 toKeep = wikiverse.mindmap.graph.neighbors(nodeId);
-            toKeep[nodeId] = e.data.node;
+           /* toKeep[nodeId] = e.data.node;
 
             wikiverse.mindmap.graph.nodes().forEach(function(n) {
                 if (toKeep[n.id]) {
@@ -334,7 +354,7 @@ var WIKIVERSE = (function($) {
                     e.color = e.originalColor;
                 else
                     e.color = '#eee';
-            });
+            });*/
 
             // Since the data has been modified, we need to
             // call the refresh method to make the colors
@@ -344,17 +364,17 @@ var WIKIVERSE = (function($) {
             //if not search query node, scroll to brick
             if (wikiverse.mindmap.graph.nodes(nodeId).source !== "searchQuery") {
                 //scroll to clicked element
-                $("#rightSidebar").hide(function() {
-                    $('html, body').animate({
-                        scrollTop: $("#" + nodeId).offset().top
-                    }, 1000, function() {
-                        $("#" + nodeId).fadeOut(function() {
-                            $(this).fadeIn("slow", function() {
-                                $("#rightSidebar").show();
-                            });
+
+                $('html, body').animate({
+                    scrollTop: $("#" + nodeId).offset().top
+                }, 1000, function() {
+                    $("#" + nodeId).fadeOut(function() {
+                        $(this).fadeIn("slow", function() {
+                            
                         });
                     });
                 });
+       
             } //if not search query node
 
         });
@@ -631,13 +651,13 @@ var WIKIVERSE = (function($) {
     }
 
     //toggle the sidebar
-    function toggleRightSidebar() {
+    function toggleBottomSidebar() {
 
-        classie.toggle($('#rightSidebar')[0], 'cbp-spmenu-open');
+        classie.toggle($('#bottomSidebar')[0], 'cbp-spmenu-open');
 
         //close and plus button logic
         //if sidebar open, hide the plus
-        if ($('#rightSidebar').hasClass('cbp-spmenu-open')) {
+        if ($('#bottomSidebar').hasClass('cbp-spmenu-open')) {
 
             //only show filters to sources that are present on the board
             updateFilters();
@@ -2460,12 +2480,13 @@ var WIKIVERSE = (function($) {
                 size: 20,
                 parent: "n0",
                 source: "searchQuery",
-                color: '#f8f8f8',
+                color: '#2B3E50',
+                border_color: "#89A4BE",
                 icon: {
                     font: 'FontAwesome', // or 'FontAwesome' etc..
                     content: '\uF002', // or custom fontawesome code eg. "\uF129"
                     scale: 0.7, // 70% of node size
-                    color: '#000' // foreground color (white)
+                    color: '#89A4BE' // foreground color (white)
                 }
             }
             mindmapObj.nodes.push(node);
@@ -2485,10 +2506,10 @@ var WIKIVERSE = (function($) {
                     y: Math.random(),
                     size: 10,
                     parent: "n" + brick.Parent,
-                    color: '#f8f8f8',
+                    color: '#2B3E50',
                     source: brick.Type,
                     border_size: 2,
-                    border_color: "#000",
+                    border_color: "#89A4BE",
                     icon: {
                         font: 'FontAwesome', // or 'FontAwesome' etc..
                         content: nodeSettings[brick.Type][0], // or custom fontawesome code eg. "\uF129"
@@ -2504,7 +2525,7 @@ var WIKIVERSE = (function($) {
                     source: "n" + brick.Parent,
                     target: "n" + brick.Id,
                     size: 2,
-                    color: "#f8f8f8",
+                    color: "#8b9aa8",
                     type: "curvedArrow"
                 }
 
@@ -2590,10 +2611,10 @@ var WIKIVERSE = (function($) {
             y: Math.random(),
             size: 15,
             parent: "n" + parent,
-            color: '#f8f8f8',
+            color: '#2B3E50',
             source: brickData.Type,
             border_size: 2,
-            border_color: "#000",
+            border_color: "#89A4BE",
             icon: {
                 font: 'FontAwesome', // or 'FontAwesome' etc..
                 content: nodeSettings[brickData.Type][0], // or custom fontawesome code eg. "\uF129"
@@ -2617,13 +2638,13 @@ var WIKIVERSE = (function($) {
                 source: 'n' + parent,
                 target: 'n' + id,
                 size: 2,
-                color: "#f8f8f8",
+                color: "#8b9aa8",
                 type: "curvedArrow"
             });
         }
 
         //if sidebar is open do the fruchertmanreingold, if not, dont do anything and save memory!
-        if ($('#rightSidebar').hasClass('cbp-spmenu-open')) {
+        if ($('#bottomSidebar').hasClass('cbp-spmenu-open')) {
             updateFilters();
             sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
             wikiverse.mindmap.refresh();
@@ -2963,7 +2984,7 @@ var WIKIVERSE = (function($) {
     });
 
     $('#toggleSidebar .right').click(function() {
-        toggleRightSidebar();
+        toggleBottomSidebar();
     });
 
     //filter

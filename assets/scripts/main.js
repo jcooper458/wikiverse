@@ -55,6 +55,11 @@
           }
         });
 
+        $.getJSON('/app/themes/wv/impressionism.json', function(json) {
+          console.log(json.nodes[0]);   
+          WIKIVERSE.demoMindmap(json);
+        });
+
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS
@@ -66,7 +71,7 @@
 
         WIKIVERSE.init();
 
-        $.getJSON('/wp-json/wp/v2/board/' + $("#postID").html(), function(board, resp) {
+        $.getJSON('/wp-json/wp/v2/board/' + $("#postID").html(), function(board) {
           WIKIVERSE.buildBoard(JSON.parse(board.content));
         });
       },
@@ -80,6 +85,7 @@
 
         WIKIVERSE.init();
         WIKIVERSE.toggleSearch();
+
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS      

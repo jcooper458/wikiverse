@@ -26,6 +26,11 @@
   width: 100%;
   height:1000px;
 }
+.home #mindmap{
+
+  width: 100%;
+  height:500px;
+}
 /*
 #packery::-webkit-scrollbar { 
     display: none; 
@@ -612,11 +617,12 @@ video {
   position: absolute;
   top: 75%;
 }
-#rightSidebar{
+
+
+#bottomSidebar{
 
   z-index:100;
-  margin-top: 45px;
-  border-left: 1px solid #252525;
+  border-top: 1px solid #252525;
   overflow: hidden;
 
 
@@ -639,22 +645,28 @@ video {
   top: 0;
 }
 
-.cbp-spmenu-verticalRight {
-  width: 355px;
-  top: 0;
+.cbp-spmenu-horizontal {
+  width: 100%;
+  height: 50%;
+  left: 0;
+  z-index: 1000;
+  overflow: hidden;
 }
+
 
 
 /* Vertical menu that slides from the left or right */
 
 /*right sidebar*/
-.cbp-spmenu-right {
-  right: -355px;
-}
-.cbp-spmenu-right.cbp-spmenu-open {
-  right: 0px;
+
+
+.cbp-spmenu-bottom {
+  bottom: -50%;
 }
 
+.cbp-spmenu-bottom.cbp-spmenu-open {
+  bottom: 0px;
+}
 
 /*left sidebar*/
 .cbp-spmenu-left {

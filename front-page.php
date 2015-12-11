@@ -32,7 +32,7 @@
 
 <div id="register" class="container-fluid dark-blue buffer-bottom buffer-top">
   <div class="container" role="document">
-    <div class="col-lg-8 col-md-8 col-sm-8 buffer-top-large">
+    <div class="col-lg-7 col-md-7 col-sm-7 buffer-top-large">
       <h1><a href="/login">Sign up</a>  or just <a href="/start">try it out</a></h1>
       <br>
       <h3>Create interesting connections and enjoy serendipity.</h3>
@@ -41,8 +41,12 @@
       <h4>Drag and drop the content to align it as you prefer.</h4>
       <h4>Follow your train of thought with the mindmap.</h4>
     </div>
-    <div class="col-lg-4 col-md-4 col-sm-4">
-      <img class="img-responsive buffer-top buffer-bottom" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/wv_mindmap.png">
+    <div class="col-lg-5 col-md-5 col-sm-5">
+
+      <div id="mindmap"></div>
+        
+        <!--<img class="img-responsive buffer-top buffer-bottom" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/wv_mindmap.png">-->
+    
     </div>
   </div>
 </div>
