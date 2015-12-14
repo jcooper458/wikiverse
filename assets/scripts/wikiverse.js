@@ -55,7 +55,8 @@ var WIKIVERSE = (function($) {
         labelThreshold: 15,
         edgeHoverSizeRatio: 1,
         defaultLabelColor: "#ccc",
-        edgeHoverExtremities: true
+        edgeHoverExtremities: true,
+        mouseWheelEnabled: false
     };
 
     wikiverse.sigmaRenderer = {
@@ -655,18 +656,17 @@ var WIKIVERSE = (function($) {
 
         classie.toggle($('#bottomSidebar')[0], 'cbp-spmenu-open');
 
+        var $bottomSidebar = $('#bottomSidebar');
+
         //close and plus button logic
         //if sidebar open, hide the plus
-        if ($('#bottomSidebar').hasClass('cbp-spmenu-open')) {
+        if ($bottomSidebar.hasClass('cbp-spmenu-open')) {
 
-            //only show filters to sources that are present on the board
+            //only show filters for sources that are present on the board
             updateFilters();
-            
-            //move the cam up a bit to fit the mindmap into the sidebar
-            sigma.misc.animation.camera(wikiverse.cam, { 
-              x:wikiverse.cam.x, 
-              y:wikiverse.cam.y + 150
-            });
+
+            //adjust the size of the mindmap mindmap container
+            $("#mindmap").attr("height", $bottomSidebar.height() - 10);
 
             sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
             wikiverse.mindmap.refresh();
