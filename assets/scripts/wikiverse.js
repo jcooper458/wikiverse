@@ -59,7 +59,7 @@ var WIKIVERSE = (function($) {
         labelSize: "proportional",
         labelColor: "node",
         labelHoverShadow: "node",
-        labelHoverColor: "node",
+        labelHoverColor: "node"
     };
 
     wikiverse.sigmaRenderer = {
