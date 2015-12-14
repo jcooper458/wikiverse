@@ -54,9 +54,12 @@ var WIKIVERSE = (function($) {
         defaultEdgeHoverColor: '#000',
         labelThreshold: 15,
         edgeHoverSizeRatio: 1,
-        defaultLabelColor: "#ccc",
         edgeHoverExtremities: true,
-        mouseWheelEnabled: false
+        mouseWheelEnabled: false,
+        labelSize: "proportional",
+        labelColor: "node",
+        labelHoverShadow: "node",
+        labelHoverColor: "node",
     };
 
     wikiverse.sigmaRenderer = {
