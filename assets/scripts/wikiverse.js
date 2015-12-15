@@ -281,7 +281,6 @@ var WIKIVERSE = (function($) {
 
         json.nodes.forEach(function(node, index) {
             node.icon.content = '\uF266';
-            console.log(node.icon);
         });
 
         wikiverse.mindmap = new sigma({
@@ -2166,10 +2165,6 @@ var WIKIVERSE = (function($) {
         const max_bright = 1;
         const min_bright = .2;
 
-        /* init */
-        generate(300, .6);
-        //spark(100);
-
         /* FUNCTIONS */
         const generate = (starsCount, opacity) => {
             for (var i = 0; i < starsCount; i++) {
@@ -2179,23 +2174,6 @@ var WIKIVERSE = (function($) {
 
                 elements.push(star(x, y, size, opacity));
             }
-        }
-
-        const spark = (numberOfStarsToAnimate) => {
-            for (var i = 0; i < numberOfStarsToAnimate; i++) {
-                var id = randomInt(0, elements.length - 1),
-                    obj = elements[id],
-                    newAlpha = obj.alpha;
-                do {
-                    newAlpha = randomFloatAround(obj.alpha);
-                } while (newAlpha < min_bright || newAlpha > max_bright)
-
-                elements[id] = star(obj.x, obj.y, obj.size, newAlpha);
-            }
-
-            requestAnimFrame(function() {
-                spark(numberOfStarsToAnimate);
-            });
         }
 
         const star = (x, y, size, alpha) => {
@@ -2255,6 +2233,10 @@ var WIKIVERSE = (function($) {
                 val -= 0.1;
             return parseFloat(val.toFixed(1));
         }
+
+        /* init */
+        generate(200, .6);
+
     }
 
     //build a youtube brick
