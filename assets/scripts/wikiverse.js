@@ -1473,7 +1473,7 @@ var WIKIVERSE = (function($) {
     };
 
     //create the flickr brick
-    wikiverse.buildFotoSearchResults = function(results, searchResultsListBuilt) {
+    wikiverse.buildFotoSearchResults = (results, searchResultsListBuilt) => {
 
         results.forEach(function(result, index) {
 
@@ -1543,7 +1543,7 @@ var WIKIVERSE = (function($) {
         });
     }
 
-    wikiverse.buildListResults = function(results, searchResultsListBuilt) {
+    wikiverse.buildListResults = (results, searchResultsListBuilt) => {
 
         $results.append(tableHover);
 
@@ -1695,7 +1695,7 @@ var WIKIVERSE = (function($) {
     }
 
     //build a tweet
-    wikiverse.buildTwitter = function($brick, twitterObj, callback) {
+    wikiverse.buildTwitter = ($brick, twitterObj, callback) => {
 
         $brick.addClass('w2');
         $brick.addClass('Twitter');
@@ -1908,7 +1908,7 @@ var WIKIVERSE = (function($) {
         }
     };
     //build a wiki Brick
-    wikiverse.buildWikipedia = function($brick, topic, callback) {
+    wikiverse.buildWikipedia = ($brick, topic, callback) => {
 
         var $connections = $(wikiverse_nav);
 
@@ -2055,7 +2055,7 @@ var WIKIVERSE = (function($) {
     };
 
     //build a section brick
-    wikiverse.buildSection = function($brick, section, callback) {
+    wikiverse.buildSection = ($brick, section, callback) => {
 
         $brick.data('type', 'wikiSection');
         $brick.data('topic', section);
@@ -2171,7 +2171,7 @@ var WIKIVERSE = (function($) {
         //spark(100);
 
         /* FUNCTIONS */
-        function generate(starsCount, opacity) {
+        const generate = (starsCount, opacity)=> {
             for (var i = 0; i < starsCount; i++) {
                 var x = randomInt(2, canvas.offsetWidth - 2),
                     y = randomInt(2, canvas.offsetHeight - 2),
@@ -2241,7 +2241,7 @@ var WIKIVERSE = (function($) {
             };
         }
 
-        function randomInt(a, b) {
+        const randomInt = (a, b) => {
             return Math.floor(Math.random() * (b - a + 1) + a);
         }
 
@@ -2257,7 +2257,7 @@ var WIKIVERSE = (function($) {
     }
 
     //build a youtube brick
-    wikiverse.buildYoutube = function($brick, youtubeObj, callback) {
+    wikiverse.buildYoutube = ($brick, youtubeObj, callback) => {
 
         var relatedButton = '<button class="btn btn-default btn-xs related" type="button">get related videos</button>';
         var youtubeThumb = '<img class="" id="ytplayer" type="text/html" src="' + youtubeObj.thumbnailURL + '">';
@@ -2776,7 +2776,7 @@ var WIKIVERSE = (function($) {
     };
 
     //create a new board
-    wikiverse.createBoard = function(wpnonce, forkedTitle, newAuthor) {
+    wikiverse.createBoard = (wpnonce, forkedTitle, newAuthor) => {
 
         var board = wikiverse.collectBricks();
 
@@ -3045,7 +3045,7 @@ var WIKIVERSE = (function($) {
     });
     /*
 		// show item order after layout
-		const orderItems = () => {
+		function orderItems() {
 			var itemElems = pckry.getItemElements();
 			for ( var i=0, len = itemElems.length; i < len; i++ ) {
 				var elem = itemElems[i];
