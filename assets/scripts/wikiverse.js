@@ -132,7 +132,7 @@ var WIKIVERSE = (function($) {
         return this.nodesIndex;
     });
 
-    /* // overwrite Packery methods
+     // overwrite Packery methods
     var __resetLayout = Packery.prototype._resetLayout;
     Packery.prototype._resetLayout = function() {
       __resetLayout.call( this );
@@ -164,7 +164,7 @@ var WIKIVERSE = (function($) {
     // always resize
     Packery.prototype.needsResizeLayout = function() {
       return true;
-    };*/
+    };
 
     //initiate the wikiverse search functionality
     //this is called on document ready (from _main.js)
@@ -369,12 +369,10 @@ var WIKIVERSE = (function($) {
                 //scroll to clicked element
 
                 $('html, body').animate({
-                    scrollTop: $("#" + nodeId).offset().top
-                }, 1000, function() {
+                    scrollTop: $("#" + nodeId).offset().top - 40
+                }, 800, function() {
                     $("#" + nodeId).fadeOut(function() {
-                        $(this).fadeIn("slow", function() {
-
-                        });
+                        $(this).fadeIn("slow");
                     });
                 });
 
@@ -656,9 +654,12 @@ var WIKIVERSE = (function($) {
     //toggle the sidebar
     const toggleBottomSidebar = () => {
 
-        classie.toggle($('#bottomSidebar')[0], 'cbp-spmenu-open');
+        const $bottomSidebar = $('#bottomSidebar');
 
-        var $bottomSidebar = $('#bottomSidebar');
+        //adjust the size of the mindmap container
+        $("#mindmap").css("height", $bottomSidebar.height() - 10 + "px");
+
+        classie.toggle($bottomSidebar[0], 'cbp-spmenu-open');
 
         //close and plus button logic
         //if sidebar open, hide the plus
@@ -666,9 +667,6 @@ var WIKIVERSE = (function($) {
 
             //only show filters for sources that are present on the board
             updateFilters();
-
-            //adjust the size of the mindmap mindmap container
-            $("#mindmap").attr("height", $bottomSidebar.height() - 10);
 
             sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
             wikiverse.mindmap.refresh();
