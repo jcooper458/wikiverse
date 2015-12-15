@@ -101,6 +101,7 @@ $query = new WP_Query( array( 'post_type' => 'board', 'cat' => '3' ) );
       <br>
       <h2>wikiverse is built with open-source software</h2>
       <h4 class="buffer-bottom">
+        <a target="_blank" href="http://www.ecmascript.org/">ES6</a>, 
         <a target="_blank" href="https://jquery.com/">jQuery</a>, 
         <a target="_blank" href="http://packery.metafizzy.co/">packery</a>, 
         <a target="_blank" href="http://sigmajs.org/">sigma.js</a>, 
