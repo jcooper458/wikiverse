@@ -5,26 +5,26 @@ var WIKIVERSE = (function($) {
     var wikiverse = {};
 
     var close_icon = '<span class="cross control-buttons"><i class="fa fa-close"></i></span>';
-    var fotoResizeButton = '<span class="resize control-buttons"><i class="fa fa-expand"></i></span>';
-    var youtube_icon = '<i class="fa fa-youtube-square"></i>';
-    var wikiverse_nav = '<select class="selectpicker connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="100%" data-size="20"><option selected="">try another source..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option><option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option><option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option></select>';
-    var handle = '<div class="row handle"><p class="text-center"><i class="fa fa-hand-rock-o"></i>&nbsp;&nbsp;grab me here</p></div>';
-    var defaultBrick = '<div class="brick">' + close_icon + '</div>';
-    var defaultMapBrick = '<div class="brick gmaps">' + handle + close_icon + '</div>';
-    var tableHover = '<table class="table table-hover"></table>';
-    var getInstagramsButton = '<button id="Instagram" class="btn btn-default btn-xs getFotos" type="button">get instragram fotos of this location</button>';
-    var getFlickrsButton = '<button id="Flickr" class="btn btn-default btn-xs getFotos" type="button">get flickr fotos of this location</button>';
-    var loadingIcon = '<span id="loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate">';
-    var note = '<textarea id="note" class="form-control" placeholder="add your own infos.." rows="3"></textarea>';
+    const fotoResizeButton = '<span class="resize control-buttons"><i class="fa fa-expand"></i></span>';
+    const youtube_icon = '<i class="fa fa-youtube-square"></i>';
+    const wikiverse_nav = '<select class="selectpicker connections show-menu-arrow" data-style="btn btn-default btn-xs" data-width="100%" data-size="20"><option selected="">try another source..</option><option><i class="fa fa-youtube-square youtube-icon icon"></i>Youtube</option><option><i class="fa fa-twitter twitter-icon icon"></i>Twitter</option><option><i class="fa fa-flickr flickr-icon icon"></i>Flickr</option><option><i class="fa fa-instagram instagram-icon icon"></i></div>Instagram</option><option><i class="fa fa-soundcloud soundcloud-icon icon"></i>Soundcloud</option></select>';
+    const handle = '<div class="row handle"><p class="text-center"><i class="fa fa-hand-rock-o"></i>&nbsp;&nbsp;grab me here</p></div>';
+    const defaultBrick = `<div class="brick">${close_icon}</div>`;
+    const defaultMapBrick = `<div class="brick gmaps">${handle + close_icon}</div>`;
+    const tableHover = '<table class="table table-hover"></table>';
+    const getInstagramsButton = '<button id="Instagram" class="btn btn-default btn-xs getFotos" type="button">get instragram fotos of this location</button>';
+    const getFlickrsButton = '<button id="Flickr" class="btn btn-default btn-xs getFotos" type="button">get flickr fotos of this location</button>';
+    const loadingIcon = '<span id="loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate">';
+    const note = '<textarea id="note" class="form-control" placeholder="add your own infos.." rows="3"></textarea>';
 
     //used for pNotify
-    var myStack = {
+    const myStack = {
         "dir1": "down",
         "dir2": "left",
         "push": "top"
     };
 
-    var fruchtermanReingoldSettings = {
+    const fruchtermanReingoldSettings = {
         autoArea: true,
         area: 1,
         gravity: 10,
@@ -32,7 +32,7 @@ var WIKIVERSE = (function($) {
         iterations: 1000
     };
 
-    var nodeSettings = {
+    const nodeSettings = {
         Wikipedia: ["\uF266", "#89A4BE"],
         wikiSection: ["\uF266", "#89A4BE"],
         Twitter: ["\uF099", "#2CB8E3"],
@@ -74,24 +74,24 @@ var WIKIVERSE = (function($) {
     wikiverse.youtubeSortType = "relevance";
     wikiverse.twitterSearchType = "popular";
 
-    //var is_root = location.pathname === "/";
+    //const is_root = location.pathname === "/";
 
-    var wpnonce = $('#nonce').html();
+    const wpnonce = $('#nonce').html();
 
     //topbrick is the toppest brick in regards to the scroll position
     //this is used to insert bricks at the same height of the scroll position
     var $topBrick = $(defaultBrick);
-    var $packeryContainer = $('.packery');
+    const $packeryContainer = $('.packery');
 
-    var $results = $('.results');
-    var $searchKeyword = $('#search-keyword');
-    var $sidebar = $('#sidebar');
-    var $sourceParams = $('.sourceParams');
-    var $sourceType = $('.sourceType');
+    const $results = $('.results');
+    const $searchKeyword = $('#search-keyword');
+    const $sidebar = $('#sidebar');
+    const $sourceParams = $('.sourceParams');
+    const $sourceType = $('.sourceType');
 
     //	$('#packery').imagesLoaded( function() {
     // initialize Packery
-    var packery = $packeryContainer.packery({
+    const packery = $packeryContainer.packery({
         itemSelector: '.brick',
         //stamp: '.search',
         gutter: 10,
@@ -1537,8 +1537,6 @@ var WIKIVERSE = (function($) {
                     },
                     Type: "Soundcloud"
                 }
-
-                resultsArray.push(result);
             });
 
             dataLoaded(resultsArray, "Soundcloud", triggerSearchResultsFunction);
@@ -2169,7 +2167,7 @@ var WIKIVERSE = (function($) {
             max_bright = 1,
             min_bright = .2;
 
-        /* LOGICS */
+        /* init */
         generate(300, .6);
         //spark(100);
 
