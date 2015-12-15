@@ -2243,7 +2243,7 @@ var WIKIVERSE = (function($) {
     wikiverse.buildYoutube = ($brick, youtubeObj, callback) => {
 
         var relatedButton = '<button class="btn btn-default btn-xs related" type="button">get related videos</button>';
-        var youtubeThumb = '<img class="" id="ytplayer" type="text/html" src="' + youtubeObj.thumbnailURL + '">';
+        var youtubeThumb = `<img class="" id="ytplayer" type="text/html" src="${youtubeObj.thumbnailURL}">`;
 
         //stop all other players
         $('.youtube').find("iframe").remove();
@@ -2294,7 +2294,7 @@ var WIKIVERSE = (function($) {
 
         $brick.addClass('w2-fix');
 
-        var iframe = '<iframe class="" id="ytplayer" type="text/html" width="460" height="260" src="//www.youtube.com/embed/' + youtubeObj.youtubeID + '?autoplay=1" webkitallowfullscreen autoplay mozallowfullscreen allowfullscreen frameborder="0"/>';
+        var iframe = `<iframe class="" id="ytplayer" type="text/html" width="460" height="260" src="//www.youtube.com/embed/${youtubeObj.youtubeID}'?autoplay=1" webkitallowfullscreen autoplay mozallowfullscreen allowfullscreen frameborder="0"/>`;
 
         $brick.find('img').hide();
         $brick.find('.youtubePlayButton').hide();
