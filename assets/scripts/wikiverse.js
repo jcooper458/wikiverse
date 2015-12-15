@@ -2683,12 +2683,14 @@ var WIKIVERSE = (function($) {
         //identify first brick with image 
         var $firstBrickWithImage = $(image[0]).parents(".brick");
         var featuredImage;
-
-        //if its a streetview, take the rendered streetview image stores in the gmaps function
-        if ($firstBrickWithImage.data('type') === "streetview") {
-            featuredImage = $firstBrick.data('featuredImage');
-        } else {
-            featuredImage = image[0].currentSrc
+        
+        if(bricks.length > 0){            
+            //if its a streetview, take the rendered streetview image stores in the gmaps function
+            if ($firstBrickWithImage.data('type') === "streetview") {
+                featuredImage = $firstBrick.data('featuredImage');
+            } else {
+                featuredImage = image[0].currentSrc
+            }
         }
 
         var wikiverseParsed = bricks.reduce(function(Brick, brick, index) {
@@ -2886,10 +2888,10 @@ var WIKIVERSE = (function($) {
             $packeryContainer.packery('remove', elements);
 
             //remove all nodes
-            mindmap.graph.clear();
+            wikiverse.mindmap.graph.clear();
             updateFilters();
             $("#filter #filter_All").hide();
-            mindmap.refresh();
+            wikiverse.mindmap.refresh();
 
         }
     };
