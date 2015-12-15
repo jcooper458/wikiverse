@@ -89,7 +89,7 @@ var WIKIVERSE = (function($) {
     const $sourceParams = $('.sourceParams');
     const $sourceType = $('.sourceType');
 
-    //	$('#packery').imagesLoaded( function() {
+    //  $('#packery').imagesLoaded( function() {
     // initialize Packery
     const packery = $packeryContainer.packery({
         itemSelector: '.brick',
@@ -97,11 +97,11 @@ var WIKIVERSE = (function($) {
         gutter: 10,
         transitionDuration: 0,
         columnWidth: 225,
-        //	columnWidth: '.brick',
-        //	rowHeight: 60,
-        //	isInitLayout: false
+        //  columnWidth: '.brick',
+        //  rowHeight: 60,
+        //  isInitLayout: false
     });
-    //	});
+    //  });
 
     // --------FUNCTION DEFINITIONS
     // These are defined here for JSHint function order checking
@@ -181,7 +181,7 @@ var WIKIVERSE = (function($) {
         mindMapEventHandler();
 
         //hide the sources button that hold results
-        //	$('.source').hide();
+        //  $('.source').hide();
         $sourceParams.hide();
 
         wikiverse.searchHistory = {};
@@ -279,7 +279,7 @@ var WIKIVERSE = (function($) {
 
     wikiverse.demoMindmap = (json) => {
 
-        json.nodes.forEach(function(node,index){
+        json.nodes.forEach(function(node, index) {
             node.icon.content = '\uF266';
             console.log(node.icon);
         });
@@ -290,7 +290,7 @@ var WIKIVERSE = (function($) {
         });
 
         mindMapEventHandler();
-         
+
         wikiverse.mindmap.graph.read(json);
         sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
 
@@ -326,12 +326,12 @@ var WIKIVERSE = (function($) {
 
         // We first need to save the original colors of our
         // nodes and edges, like this:
-       /* wikiverse.mindmap.graph.nodes().forEach(function(n) {
-            n.originalColor = n.color;
-        });
-        wikiverse.mindmap.graph.edges().forEach(function(e) {
-            e.originalColor = e.color;
-        });*/
+        /* wikiverse.mindmap.graph.nodes().forEach(function(n) {
+             n.originalColor = n.color;
+         });
+         wikiverse.mindmap.graph.edges().forEach(function(e) {
+             e.originalColor = e.color;
+         });*/
 
         // When a node is clicked, we check for each node
         // if it is a neighbor of the clicked one. If not,
@@ -343,22 +343,22 @@ var WIKIVERSE = (function($) {
 
             var nodeId = e.data.node.id,
                 toKeep = wikiverse.mindmap.graph.neighbors(nodeId);
-           /* toKeep[nodeId] = e.data.node;
+            /* toKeep[nodeId] = e.data.node;
 
-            wikiverse.mindmap.graph.nodes().forEach(function(n) {
-                if (toKeep[n.id]) {
-                    n.color = n.originalColor;
-                    n.icon.color = "#fff";
-                } else
-                    n.color = '#eee';
-            });
+             wikiverse.mindmap.graph.nodes().forEach(function(n) {
+                 if (toKeep[n.id]) {
+                     n.color = n.originalColor;
+                     n.icon.color = "#fff";
+                 } else
+                     n.color = '#eee';
+             });
 
-            wikiverse.mindmap.graph.edges().forEach(function(e) {
-                if (toKeep[e.source] && toKeep[e.target])
-                    e.color = e.originalColor;
-                else
-                    e.color = '#eee';
-            });*/
+             wikiverse.mindmap.graph.edges().forEach(function(e) {
+                 if (toKeep[e.source] && toKeep[e.target])
+                     e.color = e.originalColor;
+                 else
+                     e.color = '#eee';
+             });*/
 
             // Since the data has been modified, we need to
             // call the refresh method to make the colors
@@ -374,11 +374,11 @@ var WIKIVERSE = (function($) {
                 }, 1000, function() {
                     $("#" + nodeId).fadeOut(function() {
                         $(this).fadeIn("slow", function() {
-                            
+
                         });
                     });
                 });
-       
+
             } //if not search query node
 
         });
@@ -386,18 +386,18 @@ var WIKIVERSE = (function($) {
         // When the stage is clicked, we just color each
         // node and edge with its original color.
         /*wikiverse.mindmap.bind('clickStage', function(e) {
-    			wikiverse.mindmap.graph.nodes().forEach(function(n) {
-    				n.color = n.originalColor;
-    				n.icon.color = "#000";
-    			});
+                wikiverse.mindmap.graph.nodes().forEach(function(n) {
+                    n.color = n.originalColor;
+                    n.icon.color = "#000";
+                });
 
-    			wikiverse.mindmap.graph.edges().forEach(function(e) {
-    				e.color = e.originalColor;
-    			});
+                wikiverse.mindmap.graph.edges().forEach(function(e) {
+                    e.color = e.originalColor;
+                });
 
-    			// Same as in the previous event:
-    			wikiverse.mindmap.refresh();
-    		});*/
+                // Same as in the previous event:
+                wikiverse.mindmap.refresh();
+            });*/
     }
 
     //get the username for any given flickr picture
@@ -600,41 +600,41 @@ var WIKIVERSE = (function($) {
     //for Wikipedia, trigger the next brick on click of links
     const buildNextTopic = ($brick, lang) => {
 
-        $brick.find(".article a, .section a").unbind('click').click(function(e) {
+            $brick.find(".article a, .section a").unbind('click').click(function(e) {
 
-            e.preventDefault();
+                e.preventDefault();
 
-            //stamp this brick so it doesnt move around
-            $packeryContainer.packery('stamp', $brick);
+                //stamp this brick so it doesnt move around
+                $packeryContainer.packery('stamp', $brick);
 
-            //get the new wikipedia topic from the a element
-            var topic = $(this).attr("title");
+                //get the new wikipedia topic from the a element
+                var topic = $(this).attr("title");
 
-            //unwrap the a element
-            $(this).contents().unwrap();
+                //unwrap the a element
+                $(this).contents().unwrap();
 
-            var wikiData = {
-                title: topic,
-                language: lang
-            };
+                var wikiData = {
+                    title: topic,
+                    language: lang
+                };
 
-            var $nextBrick = buildBrick([parseInt($brick.css('left') + 500), parseInt($brick.css('top') + 500)], undefined, $brick.data('id'));
+                var $nextBrick = buildBrick([parseInt($brick.css('left') + 500), parseInt($brick.css('top') + 500)], undefined, $brick.data('id'));
 
-            wikiverse.buildWikipedia($nextBrick, wikiData, brickDataLoaded);
+                wikiverse.buildWikipedia($nextBrick, wikiData, brickDataLoaded);
 
-            var brickData = {
-                Topic: wikiData,
-                Type: "Wikipedia",
-                Id: $nextBrick.data('id')
-            }
+                var brickData = {
+                    Topic: wikiData,
+                    Type: "Wikipedia",
+                    Id: $nextBrick.data('id')
+                }
 
-            //unstamp it after everything is done
-            $packeryContainer.packery('unstamp', $brick);
+                //unstamp it after everything is done
+                $packeryContainer.packery('unstamp', $brick);
 
-            buildNode(brickData, $nextBrick.data('id'), $brick.data('id'));
-        });
-    }
-    //toggle the sidebar
+                buildNode(brickData, $nextBrick.data('id'), $brick.data('id'));
+            });
+        }
+        //toggle the sidebar
     const toggleSidebar = () => {
 
         classie.toggle($sidebar[0], 'cbp-spmenu-open');
@@ -868,171 +868,171 @@ var WIKIVERSE = (function($) {
     //build the gmaps brick (coming from database)
     wikiverse.buildGmaps = ($mapbrick, mapObj, callback) => {
 
-        var map;
-        var myMaptypeID;
-        var currentMap;
-        var currentStreetMap;
+            var map;
+            var myMaptypeID;
+            var currentMap;
+            var currentStreetMap;
 
-        //$mapbrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">')
+            //$mapbrick.append('<input id="pac-input" class="controls" type="text" placeholder="Enter a location">')
 
-        var $mapcanvas = $('<div id="map_canvas"></div>');
+            var $mapcanvas = $('<div id="map_canvas"></div>');
 
-        $mapbrick.data('type', 'gmaps');
-        $mapbrick.data('position', mapObj.center);
-        $mapbrick.data('bounds', mapObj.bounds.southWest + "," + mapObj.bounds.northEast);
+            $mapbrick.data('type', 'gmaps');
+            $mapbrick.data('position', mapObj.center);
+            $mapbrick.data('bounds', mapObj.bounds.southWest + "," + mapObj.bounds.northEast);
 
-        $mapbrick
+            $mapbrick
             .addClass('w2-fix')
             .addClass('gmaps');
 
-        $mapbrick.append($mapcanvas);
+            $mapbrick.append($mapcanvas);
 
-        $mapbrick.append(getInstagramsButton);
-        $mapbrick.append(getFlickrsButton);
+            $mapbrick.append(getInstagramsButton);
+            $mapbrick.append(getFlickrsButton);
 
-        $packeryContainer.packery();
-
-
-        //call the event for the Fotosearch on click
-        getGmapsFotos($mapbrick);
+            $packeryContainer.packery();
 
 
-        if (mapObj.maptype.toLowerCase() === "roadmap") {
-            myMaptypeID = google.maps.MapTypeId.ROADMAP;
-        } else if (mapObj.maptype.toLowerCase() === "satellite") {
-            myMaptypeID = google.maps.MapTypeId.SATELLITE;
-        } else if (mapObj.maptype.toLowerCase() === "hybrid") {
-            myMaptypeID = google.maps.MapTypeId.HYBRID;
-        } else if (mapObj.maptype.toLowerCase() === "terrain") {
-            myMaptypeID = google.maps.MapTypeId.TERRAIN;
-        }
-
-        //It is necessairy to re-build a valid LatLng object. The one recreated from the JSON string is invalid.
-        var myCenter = new google.maps.LatLng(mapObj.center.split(",")[0], mapObj.center.split(",")[1]);
+            //call the event for the Fotosearch on click
+            getGmapsFotos($mapbrick);
 
 
-        //same for the bounds, on top we need to rebuild LatLngs to re-build a bounds object
-        var LatLngNe = new google.maps.LatLng(mapObj.bounds.northEast.split(",")[0], mapObj.bounds.northEast.split(",")[1]);
-        var LatLngSw = new google.maps.LatLng(mapObj.bounds.southWest.split(",")[0], mapObj.bounds.southWest.split(",")[1]);
+            if (mapObj.maptype.toLowerCase() === "roadmap") {
+                myMaptypeID = google.maps.MapTypeId.ROADMAP;
+            } else if (mapObj.maptype.toLowerCase() === "satellite") {
+                myMaptypeID = google.maps.MapTypeId.SATELLITE;
+            } else if (mapObj.maptype.toLowerCase() === "hybrid") {
+                myMaptypeID = google.maps.MapTypeId.HYBRID;
+            } else if (mapObj.maptype.toLowerCase() === "terrain") {
+                myMaptypeID = google.maps.MapTypeId.TERRAIN;
+            }
 
-        //last but not least: the bound object with the newly created Latlngs
-        var myBounds = new google.maps.LatLngBounds(LatLngSw, LatLngNe);
+            //It is necessairy to re-build a valid LatLng object. The one recreated from the JSON string is invalid.
+            var myCenter = new google.maps.LatLng(mapObj.center.split(",")[0], mapObj.center.split(",")[1]);
 
-        var mapOptions = {
-            zoom: 8,
-            center: myCenter,
-            //scrollwheel: false,
-            mapTypeId: myMaptypeID
-        };
 
-        map = new google.maps.Map($mapcanvas[0], mapOptions);
+            //same for the bounds, on top we need to rebuild LatLngs to re-build a bounds object
+            var LatLngNe = new google.maps.LatLng(mapObj.bounds.northEast.split(",")[0], mapObj.bounds.northEast.split(",")[1]);
+            var LatLngSw = new google.maps.LatLng(mapObj.bounds.southWest.split(",")[0], mapObj.bounds.southWest.split(",")[1]);
 
-        map.fitBounds(myBounds);
+            //last but not least: the bound object with the newly created Latlngs
+            var myBounds = new google.maps.LatLngBounds(LatLngSw, LatLngNe);
 
-        callback($mapbrick);
-
-        google.maps.event.addListener(map, 'idle', function() {
-
-            currentMap = {
-                center: map.getCenter().toUrlValue(),
-                bounds: {
-                    southWest: map.getBounds().getSouthWest().toUrlValue(),
-                    northEast: map.getBounds().getNorthEast().toUrlValue()
-                },
-                maptype: map.getMapTypeId()
+            var mapOptions = {
+                zoom: 8,
+                center: myCenter,
+                //scrollwheel: false,
+                mapTypeId: myMaptypeID
             };
 
-            $mapbrick.data("topic", currentMap);
+            map = new google.maps.Map($mapcanvas[0], mapOptions);
 
-            //store position and bounds into the data container (for later use of getFlickrs/Instagrams)
-            $mapbrick.data('position', map.getCenter().toUrlValue());
-            $mapbrick.data('bounds', map.getBounds().toUrlValue());
-        });
+            map.fitBounds(myBounds);
 
-        google.maps.event.addListener(map, 'maptypeid_changed', function() {
+            callback($mapbrick);
 
-            currentMap.maptype = map.getMapTypeId();
+            google.maps.event.addListener(map, 'idle', function() {
 
-            $mapbrick.data("topic", currentMap);
-
-            //store position and bounds into the data container (for later use of getFlickrs/Instagrams)
-            $mapbrick.data('position', map.getCenter().toUrlValue());
-            $mapbrick.data('bounds', map.getBounds().toUrlValue());
-
-        });
-
-        google.maps.event.addListener(map, 'click', function(event) {
-
-            markers.forEach(function(marker) {
-                marker.setMap(null);
-            });
-
-            var droppedMarker = new google.maps.Marker({
-                position: event.latLng,
-                map: map
-            });
-
-            markers.push(droppedMarker);
-
-            //find the location of the marker
-            var positionUrlString = droppedMarker.getPosition().toUrlValue();
-
-            //calculate the bounds - used for flickr foto search
-            var southWest = map.getBounds().getSouthWest().toUrlValue();
-            var northEast = map.getBounds().getNorthEast().toUrlValue();
-
-            //store position and bounds into the data container (for later use of getFlickrs/Instagrams)
-            $mapbrick.data('position', map.getCenter().toUrlValue());
-            $mapbrick.data('bounds', map.getBounds().toUrlValue());
-        });
-
-        var thePanorama = map.getStreetView(); //get the streetview object
-
-        google.maps.event.addDomListener(window, 'idle', function() {
-            $packeryContainer.packery();
-        });
-
-        //detect if entering Streetview -> Change the type to streetview
-        google.maps.event.addListener(thePanorama, 'visible_changed', function() {
-
-            if (thePanorama.getVisible()) {
-
-                currentStreetMap = {
-                    center: thePanorama.position.toUrlValue(),
-                    zoom: thePanorama.pov.zoom,
-                    //adress: thePanorama.links[0].description,
-                    pitch: thePanorama.pov.pitch,
-                    heading: thePanorama.pov.heading
+                currentMap = {
+                    center: map.getCenter().toUrlValue(),
+                    bounds: {
+                        southWest: map.getBounds().getSouthWest().toUrlValue(),
+                        northEast: map.getBounds().getNorthEast().toUrlValue()
+                    },
+                    maptype: map.getMapTypeId()
                 };
-                $mapbrick.data("type", "streetview");
-                $mapbrick.data("topic", currentStreetMap);
+
+                $mapbrick.data("topic", currentMap);
+
                 //store position and bounds into the data container (for later use of getFlickrs/Instagrams)
                 $mapbrick.data('position', map.getCenter().toUrlValue());
                 $mapbrick.data('bounds', map.getBounds().toUrlValue());
-            }
+            });
 
-        });
+            google.maps.event.addListener(map, 'maptypeid_changed', function() {
 
-        //detect if entering Streetview -> Change the type to streetview
-        google.maps.event.addListener(thePanorama, 'pov_changed', function() {
+                currentMap.maptype = map.getMapTypeId();
 
-            if (thePanorama.getVisible()) {
+                $mapbrick.data("topic", currentMap);
 
-                currentStreetMap = {
-                    center: thePanorama.position.toUrlValue(),
-                    zoom: thePanorama.pov.zoom,
-                    //adress: thePanorama.links[0].description,
-                    pitch: thePanorama.pov.pitch,
-                    heading: thePanorama.pov.heading
-                };
-                $mapbrick.data("topic", currentStreetMap);
                 //store position and bounds into the data container (for later use of getFlickrs/Instagrams)
                 $mapbrick.data('position', map.getCenter().toUrlValue());
                 $mapbrick.data('bounds', map.getBounds().toUrlValue());
-            }
-        });
-    }
-    //build the streetmap map brick (from database)
+
+            });
+
+            google.maps.event.addListener(map, 'click', function(event) {
+
+                markers.forEach(function(marker) {
+                    marker.setMap(null);
+                });
+
+                var droppedMarker = new google.maps.Marker({
+                    position: event.latLng,
+                    map: map
+                });
+
+                markers.push(droppedMarker);
+
+                //find the location of the marker
+                var positionUrlString = droppedMarker.getPosition().toUrlValue();
+
+                //calculate the bounds - used for flickr foto search
+                var southWest = map.getBounds().getSouthWest().toUrlValue();
+                var northEast = map.getBounds().getNorthEast().toUrlValue();
+
+                //store position and bounds into the data container (for later use of getFlickrs/Instagrams)
+                $mapbrick.data('position', map.getCenter().toUrlValue());
+                $mapbrick.data('bounds', map.getBounds().toUrlValue());
+            });
+
+            var thePanorama = map.getStreetView(); //get the streetview object
+
+            google.maps.event.addDomListener(window, 'idle', function() {
+                $packeryContainer.packery();
+            });
+
+            //detect if entering Streetview -> Change the type to streetview
+            google.maps.event.addListener(thePanorama, 'visible_changed', function() {
+
+                if (thePanorama.getVisible()) {
+
+                    currentStreetMap = {
+                        center: thePanorama.position.toUrlValue(),
+                        zoom: thePanorama.pov.zoom,
+                        //adress: thePanorama.links[0].description,
+                        pitch: thePanorama.pov.pitch,
+                        heading: thePanorama.pov.heading
+                    };
+                    $mapbrick.data("type", "streetview");
+                    $mapbrick.data("topic", currentStreetMap);
+                    //store position and bounds into the data container (for later use of getFlickrs/Instagrams)
+                    $mapbrick.data('position', map.getCenter().toUrlValue());
+                    $mapbrick.data('bounds', map.getBounds().toUrlValue());
+                }
+
+            });
+
+            //detect if entering Streetview -> Change the type to streetview
+            google.maps.event.addListener(thePanorama, 'pov_changed', function() {
+
+                if (thePanorama.getVisible()) {
+
+                    currentStreetMap = {
+                        center: thePanorama.position.toUrlValue(),
+                        zoom: thePanorama.pov.zoom,
+                        //adress: thePanorama.links[0].description,
+                        pitch: thePanorama.pov.pitch,
+                        heading: thePanorama.pov.heading
+                    };
+                    $mapbrick.data("topic", currentStreetMap);
+                    //store position and bounds into the data container (for later use of getFlickrs/Instagrams)
+                    $mapbrick.data('position', map.getCenter().toUrlValue());
+                    $mapbrick.data('bounds', map.getBounds().toUrlValue());
+                }
+            });
+        }
+        //build the streetmap map brick (from database)
     wikiverse.buildStreetMap = ($mapbrick, streetObj, callback) => {
 
         var currentStreetMap;
@@ -1388,10 +1388,10 @@ var WIKIVERSE = (function($) {
 
     wikiverse.buildInstagram = ($brick, photoObj, callback) => {
 
-        wikiverse.buildFoto($brick, photoObj, "Instagram", callback);
+            wikiverse.buildFoto($brick, photoObj, "Instagram", callback);
 
-    }
-    //build a foto brick, either flickr or instagram
+        }
+        //build a foto brick, either flickr or instagram
     wikiverse.buildFoto = ($brick, photoObj, type, callback) => {
 
         $brick.addClass('foto');
@@ -1407,7 +1407,7 @@ var WIKIVERSE = (function($) {
             '<h5 class="fotoType"><strong>' + type.toLowerCase() + '</strong></h5>' +
             '</figcaption>' +
 
-        $brick.prepend($(fotoResizeButton));
+            $brick.prepend($(fotoResizeButton));
         $brick.append($figure);
 
         $figure.append($photo);
@@ -1497,7 +1497,7 @@ var WIKIVERSE = (function($) {
     wikiverse.strip = dirtyString => {
         var tmp = document.createElement("DIV");
         tmp.innerHTML = dirtyString;
-        return tmp.textContent || tmp.innerText || "";        
+        return tmp.textContent || tmp.innerText || "";
     }
 
     //build the soundcloud brick
@@ -1515,7 +1515,7 @@ var WIKIVERSE = (function($) {
     }
 
     //search for soundclouds
-    var getSoundclouds= (query, dataLoaded, triggerSearchResultsFunction) => {
+    var getSoundclouds = (query, dataLoaded, triggerSearchResultsFunction) => {
 
         SC.initialize({
             client_id: '15bc70bcd9762ddca2e82ee99de9e2e7'
@@ -1617,15 +1617,15 @@ var WIKIVERSE = (function($) {
     //build a note
     /*function buildNote($brick, topic, callback){
 
-		$brick.addClass('note');
-		$brick.addClass('transparent');
-		$brick.removeClass('well');
-		$brick.removeClass('well-sm');
+        $brick.addClass('note');
+        $brick.addClass('transparent');
+        $brick.removeClass('well');
+        $brick.removeClass('well-sm');
 
-		$brick.append('<blockquote>' + topic.note + '</blockquote>');
+        $brick.append('<blockquote>' + topic.note + '</blockquote>');
 
-		callback($brick);
-	}*/
+        callback($brick);
+    }*/
     //create a note
     function createNote($brick, callback) {
 
@@ -1828,13 +1828,13 @@ var WIKIVERSE = (function($) {
                 format: 'json',
                 prop: 'sections',
                 mobileformat: true
-                /*disableeditsection: true,
-					disablepp: true,
-					//preview: true,
-					sectionprevue: true,
-					section:0,
-					disabletoc: true,
-					mobileformat:true*/
+                    /*disableeditsection: true,
+                    disablepp: true,
+                    //preview: true,
+                    sectionprevue: true,
+                    section:0,
+                    disabletoc: true,
+                    mobileformat:true*/
             },
             dataType: 'jsonp',
             success: function(data) {
@@ -2006,12 +2006,12 @@ var WIKIVERSE = (function($) {
                 preview: true,
                 mobileformat: true,
                 redirects: true
-                /*disableeditsection: true,
-					disablepp: true,
+                    /*disableeditsection: true,
+                    disablepp: true,
 
-					sectionprevue: true,
-					disabletoc: true,
-					mobileformat:true*/
+                    sectionprevue: true,
+                    disabletoc: true,
+                    mobileformat:true*/
             },
             dataType: 'jsonp',
             success: function(data) {
@@ -2160,18 +2160,18 @@ var WIKIVERSE = (function($) {
         $(canvas).attr("width", $(window).width() - 20);
         $(canvas).attr("height", $("#top-home-container").height() - 10);
 
-        var context = canvas.getContext('2d'),
-            sizes = ['micro', 'mini', 'medium', 'big', 'max'],
-            elements = [],
-            max_bright = 1,
-            min_bright = .2;
+        const context = canvas.getContext('2d');
+        const sizes = ['micro', 'mini', 'medium', 'big', 'max'];
+        const elements = [];
+        const max_bright = 1;
+        const min_bright = .2;
 
         /* init */
         generate(300, .6);
         //spark(100);
 
         /* FUNCTIONS */
-        const generate = (starsCount, opacity)=> {
+        const generate = (starsCount, opacity) => {
             for (var i = 0; i < starsCount; i++) {
                 var x = randomInt(2, canvas.offsetWidth - 2),
                     y = randomInt(2, canvas.offsetHeight - 2),
@@ -2219,6 +2219,7 @@ var WIKIVERSE = (function($) {
             }
 
             var gradient = context.createRadialGradient(x, y, 0, x + radius, y + radius, radius * 2);
+
             gradient.addColorStop(0, 'rgba(255, 255, 255, ' + alpha + ')');
             gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
@@ -2385,7 +2386,7 @@ var WIKIVERSE = (function($) {
         return $brick;
     }
 
-    //build a board -	this is called only for saved boards (coming from db)
+    //build a board -   this is called only for saved boards (coming from db)
     wikiverse.buildBoard = (board) => {
 
         prepareBoardTitle(board);
@@ -2450,8 +2451,8 @@ var WIKIVERSE = (function($) {
                         break;
 
                         /*case "note":
-							buildNote($thisBrick, brick.Topic, brickDataLoaded);
-						break;*/
+                            buildNote($thisBrick, brick.Topic, brickDataLoaded);
+                        break;*/
                 }
             });
         }
@@ -3013,10 +3014,10 @@ var WIKIVERSE = (function($) {
 
         /*$thisBrick.fadeOut(250, function(){
 
-			$packeryContainer.packery('remove', $thisBrick);
-			$packeryContainer.packery();
+            $packeryContainer.packery('remove', $thisBrick);
+            $packeryContainer.packery();
 
-		});*/
+        });*/
     });
 
     //show save board button on packery change (needs work)
@@ -3044,17 +3045,17 @@ var WIKIVERSE = (function($) {
         });
     });
     /*
-		// show item order after layout
-		function orderItems() {
-			var itemElems = pckry.getItemElements();
-			for ( var i=0, len = itemElems.length; i < len; i++ ) {
-				var elem = itemElems[i];
-				elem.textContent = i + 1;
-			}
-			console.log(itemElems);
-		}
+        // show item order after layout
+        function orderItems() {
+            var itemElems = pckry.getItemElements();
+            for ( var i=0, len = itemElems.length; i < len; i++ ) {
+                var elem = itemElems[i];
+                elem.textContent = i + 1;
+            }
+            console.log(itemElems);
+        }
 
-		$packeryContainer.on( 'layoutComplete', orderItems );*/
+        $packeryContainer.on( 'layoutComplete', orderItems );*/
 
     //Toggle Size of Images on click
     $packeryContainer.on("click", ".foto .resize", function(e) {
