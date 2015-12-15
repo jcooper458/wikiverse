@@ -168,7 +168,7 @@ var WIKIVERSE = (function($) {
 
     //initiate the wikiverse search functionality
     //this is called on document ready (from _main.js)
-    wikiverse.init = function() {
+    wikiverse.init = () => {
 
         //overwrite the wikiverse mindmapobject
         //used in both buildMindmap and init
@@ -277,7 +277,7 @@ var WIKIVERSE = (function($) {
 
     }
 
-    wikiverse.demoMindmap = function(json){
+    wikiverse.demoMindmap = (json) => {
 
         json.nodes.forEach(function(node,index){
             node.icon.content = '\uF266';
@@ -298,7 +298,7 @@ var WIKIVERSE = (function($) {
     }
 
     //toggles the image size on click (works also for youtube)
-    function toggleImageSize($brick, $enlargeIcon) {
+    const toggleImageSize = ($brick, $enlargeIcon) => {
 
         var tempDataObj = $brick.data('topic');
 
@@ -322,7 +322,7 @@ var WIKIVERSE = (function($) {
         $enlargeIcon.hasClass('fa-expand') ? $enlargeIcon.removeClass('fa-expand').addClass('fa-compress') : $enlargeIcon.removeClass('fa-compress').addClass('fa-expand');
     }
 
-    function mindMapEventHandler() {
+    const mindMapEventHandler = () => {
 
         // We first need to save the original colors of our
         // nodes and edges, like this:
@@ -401,7 +401,7 @@ var WIKIVERSE = (function($) {
     }
 
     //get the username for any given flickr picture
-    function getFlickrUsername(user_id, callback) {
+    const getFlickrUsername = (user_id, callback) => {
 
         $.ajax({
             url: 'https://api.flickr.com/services/rest',
@@ -423,7 +423,7 @@ var WIKIVERSE = (function($) {
     }
 
     //clean up the sidebar navbar for the new search
-    function prepareSearchNavbar(query, source, parent) {
+    const prepareSearchNavbar = (query, source, parent) => {
         $sourceType.hide();
         //empty the search results
         $results.empty();
@@ -448,7 +448,7 @@ var WIKIVERSE = (function($) {
 
 
     //callback for when API search results are loaded
-    function searchResultsLoaded(results, source, triggerSearchResultsFunction) {
+    const searchResultsLoaded = (results, source, triggerSearchResultsFunction) => {
 
         //
         if (results.length > 0) {
@@ -482,7 +482,7 @@ var WIKIVERSE = (function($) {
         }
     }
 
-    function isPortrait(imgElement) {
+    const isPortrait = (imgElement) => {
 
         if (imgElement.width() < imgElement.height()) {
             return true;
@@ -492,13 +492,13 @@ var WIKIVERSE = (function($) {
     }
 
     //callback foor content loaded into brick
-    function brickDataLoaded($brick) {
+    const brickDataLoaded = ($brick) => {
 
         $brick.fadeTo('slow', 1);
         $packeryContainer.packery();
     }
 
-    function buildYoutubeResultArray(data, topic, dataLoaded, triggerFunction) {
+    const buildYoutubeResultArray = (data, topic, dataLoaded, triggerFunction) => {
 
         var resultsArray = data.items.map(function(item, index) {
 
@@ -518,7 +518,7 @@ var WIKIVERSE = (function($) {
     }
 
     //search youtube videos
-    function getYoutubes(topic, order, lang, dataLoaded, triggerFunction) {
+    const getYoutubes = (topic, order, lang, dataLoaded, triggerFunction) => {
 
         $.ajax({
             url: 'https://www.googleapis.com/youtube/v3/search',
@@ -538,7 +538,7 @@ var WIKIVERSE = (function($) {
     }
 
     //search for related youtube videos
-    function getRelatedYoutubes(videoID, origQuery, dataLoaded, triggerFunction, parent) {
+    const getRelatedYoutubes = (videoID, origQuery, dataLoaded, triggerFunction, parent) => {
 
         prepareSearchNavbar(origQuery, "Youtube", parent);
 
@@ -564,7 +564,7 @@ var WIKIVERSE = (function($) {
     }
 
     //function used within validate coordinates
-    function inrange(min, number, max) {
+    const inrange = (min, number, max) => {
         if (!isNaN(number) && (number >= min) && (number <= max)) {
             return true;
         } else {
@@ -573,7 +573,7 @@ var WIKIVERSE = (function($) {
     }
 
     //validate if it is a coordinate
-    function valid_coords(number_lat, number_lng) {
+    const valid_coords = (number_lat, number_lng) => {
         if (inrange(-90, number_lat, 90) && inrange(-180, number_lng, 180)) {
             $("#btnSaveResort").removeAttr("disabled");
             return true;
@@ -584,7 +584,7 @@ var WIKIVERSE = (function($) {
     }
 
     //build an empty brick
-    function buildGmapsBrick(x, y) {
+    const buildGmapsBrick = (x, y) => {
 
         var $brick = $(defaultMapBrick);
 
@@ -598,7 +598,7 @@ var WIKIVERSE = (function($) {
     }
 
     //for Wikipedia, trigger the next brick on click of links
-    function buildNextTopic($brick, lang) {
+    const buildNextTopic = ($brick, lang) => {
 
         $brick.find(".article a, .section a").unbind('click').click(function(e) {
 
@@ -635,7 +635,7 @@ var WIKIVERSE = (function($) {
         });
     }
     //toggle the sidebar
-    function toggleSidebar() {
+    const toggleSidebar = () => {
 
         classie.toggle($sidebar[0], 'cbp-spmenu-open');
 
@@ -655,7 +655,7 @@ var WIKIVERSE = (function($) {
     }
 
     //toggle the sidebar
-    function toggleBottomSidebar() {
+    const toggleBottomSidebar = () => {
 
         classie.toggle($('#bottomSidebar')[0], 'cbp-spmenu-open');
 
@@ -708,7 +708,7 @@ var WIKIVERSE = (function($) {
     var markers = [];
 
     //create the gmaps brick (first time creation)
-    function getGmapsSearch($gmapsSearchBrick) {
+    const getGmapsSearch = ($gmapsSearchBrick) => {
 
         $gmapsSearchBrick.addClass('w2-fix visible');
 
@@ -866,7 +866,7 @@ var WIKIVERSE = (function($) {
     }
 
     //build the gmaps brick (coming from database)
-    wikiverse.buildGmaps = function($mapbrick, mapObj, callback) {
+    wikiverse.buildGmaps = ($mapbrick, mapObj, callback) => {
 
         var map;
         var myMaptypeID;
@@ -1033,7 +1033,7 @@ var WIKIVERSE = (function($) {
         });
     }
     //build the streetmap map brick (from database)
-    wikiverse.buildStreetMap = function($mapbrick, streetObj, callback) {
+    wikiverse.buildStreetMap = ($mapbrick, streetObj, callback) => {
 
         var currentStreetMap;
 
@@ -1100,14 +1100,14 @@ var WIKIVERSE = (function($) {
     }
 
     //search for flickrs
-    function getFlickrs(topic, sort, type, dataLoaded, triggerSearchResultsFunction) {
+    const getFlickrs = (topic, sort, type, dataLoaded, triggerSearchResultsFunction) => {
 
         type = type || "textQuery";
 
         var APIextras = "url_q,url_c,tags,owner_name,geo";
         var APIkey = '1a7d3826d58da8a6285ef7062f670d30';
 
-        function buildFlickrResultArray(data, triggerSearchResultsFunction) {
+        const buildFlickrResultArray = (data, triggerSearchResultsFunction) => {
 
             var resultsArray = data.photos.photo.map(function(photoObj, index) {
 
@@ -1230,7 +1230,7 @@ var WIKIVERSE = (function($) {
     }
 
     //search for instagrams
-    function getInstagrams(query, type, dataLoaded, triggerSearchResultsFunction) {
+    const getInstagrams = (query, type, dataLoaded, triggerSearchResultsFunction) => {
 
         type = type || "hashtag";
 
@@ -1242,7 +1242,7 @@ var WIKIVERSE = (function($) {
 
         var instagramUrl;
 
-        function buildInstagramResultArray(data, triggerSearchResultsFunction) {
+        const buildInstagramResultArray = (data, triggerSearchResultsFunction) => {
 
             var resultsArray = data.data.map(function(photoObj, index) {
 
@@ -1342,7 +1342,7 @@ var WIKIVERSE = (function($) {
     }
 
     //for search query, trigger the search to other sources
-    function getConnections(source, topic, parent) {
+    const getConnections = (source, topic, parent) => {
 
         //Open the sidebar:
         if (!$sidebar.hasClass('cbp-spmenu-open')) {
@@ -1380,19 +1380,19 @@ var WIKIVERSE = (function($) {
         }
     }
 
-    wikiverse.buildFlickr = function($brick, photoObj, callback) {
+    wikiverse.buildFlickr = ($brick, photoObj, callback) => {
 
         wikiverse.buildFoto($brick, photoObj, "Flickr", callback);
 
     }
 
-    wikiverse.buildInstagram = function($brick, photoObj, callback) {
+    wikiverse.buildInstagram = ($brick, photoObj, callback) => {
 
         wikiverse.buildFoto($brick, photoObj, "Instagram", callback);
 
     }
     //build a foto brick, either flickr or instagram
-    wikiverse.buildFoto = function($brick, photoObj, type, callback) {
+    wikiverse.buildFoto = ($brick, photoObj, type, callback) => {
 
         $brick.addClass('foto');
         $brick.data('type', type);
@@ -1407,7 +1407,7 @@ var WIKIVERSE = (function($) {
             '<h5 class="fotoType"><strong>' + type.toLowerCase() + '</strong></h5>' +
             '</figcaption>' +
 
-            $brick.prepend($(fotoResizeButton));
+        $brick.prepend($(fotoResizeButton));
         $brick.append($figure);
 
         $figure.append($photo);
@@ -1494,14 +1494,14 @@ var WIKIVERSE = (function($) {
     };
 
     //strip html from given text
-    wikiverse.strip = function(dirtyString) {
+    wikiverse.strip = dirtyString => {
         var tmp = document.createElement("DIV");
         tmp.innerHTML = dirtyString;
         return tmp.textContent || tmp.innerText || "";        
     }
 
     //build the soundcloud brick
-    wikiverse.buildSoundcloud = function($brick, soundcloudObj, callback) {
+    wikiverse.buildSoundcloud = ($brick, soundcloudObj, callback) => {
 
         $brick.addClass('w2-fix');
         $brick.data('type', 'Soundcloud');
@@ -1515,7 +1515,7 @@ var WIKIVERSE = (function($) {
     }
 
     //search for soundclouds
-    function getSoundclouds(query, dataLoaded, triggerSearchResultsFunction) {
+    var getSoundclouds= (query, dataLoaded, triggerSearchResultsFunction) => {
 
         SC.initialize({
             client_id: '15bc70bcd9762ddca2e82ee99de9e2e7'
@@ -1568,7 +1568,7 @@ var WIKIVERSE = (function($) {
     }
 
     //stack the twitter search results in the sidebar
-    wikiverse.buildTwitterSearchResults = function(results) {
+    wikiverse.buildTwitterSearchResults = (results) => {
 
         $results.append(tableHover);
 
@@ -1685,7 +1685,7 @@ var WIKIVERSE = (function($) {
     }
 
     //find URLs in tweets/wikis,etc and replace them with clickable link
-    function urlify(text) {
+    const urlify = (text) => {
         var urlRegex = /(https?:\/\/[^\s]+)/g;
         return text.replace(urlRegex, function(url) {
                 return '<a class="externalLink" target="_blank" href="' + url + '">' + url + '</a>';
@@ -1794,7 +1794,7 @@ var WIKIVERSE = (function($) {
         $sidebar.find("#loading").remove();
     }
 
-    function updateSearchHistory() {
+    const updateSearchHistory = () => {
 
         var searchQuery = $searchKeyword.val();
 
@@ -2130,7 +2130,7 @@ var WIKIVERSE = (function($) {
     };
 
     //stack the youtube search results in the sidebar
-    wikiverse.buildYoutubeSearchResults = function(results) {
+    wikiverse.buildYoutubeSearchResults = (results) => {
 
         $results.append(tableHover);
 
@@ -2149,7 +2149,7 @@ var WIKIVERSE = (function($) {
     };
 
     //create the stars effect on homepage
-    wikiverse.stars = function(canvas) {
+    wikiverse.stars = (canvas) => {
 
         window.requestAnimFrame = (function(callback) {
             return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) {
@@ -2181,7 +2181,7 @@ var WIKIVERSE = (function($) {
             }
         }
 
-        function spark(numberOfStarsToAnimate) {
+        const spark = (numberOfStarsToAnimate) => {
             for (var i = 0; i < numberOfStarsToAnimate; i++) {
                 var id = randomInt(0, elements.length - 1),
                     obj = elements[id],
@@ -2245,7 +2245,7 @@ var WIKIVERSE = (function($) {
             return Math.floor(Math.random() * (b - a + 1) + a);
         }
 
-        function randomFloatAround(num) {
+        const randomFloatAround = (num) => {
             var plusminus = randomInt(0, 1000) % 2,
                 val = num;
             if (plusminus)
@@ -2342,7 +2342,7 @@ var WIKIVERSE = (function($) {
     };
 
 
-    function prepareBoardTitle(board) {
+    const prepareBoardTitle = (board) => {
 
         $('#wvTitle h1').append(board.title);
         $('#boardDescription').append(board.description);
@@ -2350,7 +2350,7 @@ var WIKIVERSE = (function($) {
     }
 
     //get new random number not inside the already present IDs
-    function getRandomWvID() {
+    const getRandomWvID = () => {
         var rand = Math.floor(Math.random() * 200);
         if ($.inArray(rand, wikiverse.thisBoardsIDs) === -1) {
             wikiverse.thisBoardsIDs.push(rand);
@@ -2386,7 +2386,7 @@ var WIKIVERSE = (function($) {
     }
 
     //build a board -	this is called only for saved boards (coming from db)
-    wikiverse.buildBoard = function(board) {
+    wikiverse.buildBoard = (board) => {
 
         prepareBoardTitle(board);
 
@@ -2459,7 +2459,7 @@ var WIKIVERSE = (function($) {
         wikiverse.buildMindmap(board);
     }
 
-    wikiverse.buildMindmap = function(board) {
+    wikiverse.buildMindmap = (board) => {
 
         //overwrite the wikiverse mindmapobject
         //used in both buildMindmap and init
@@ -2660,7 +2660,7 @@ var WIKIVERSE = (function($) {
         }
     }
 
-    function updateFilters() {
+    const updateFilters = () => {
         $('#filter button').hide();
 
         wikiverse.mindmap.graph.nodes().forEach(function(node, index) {
@@ -2671,7 +2671,7 @@ var WIKIVERSE = (function($) {
     }
 
     //toggle the search overlay
-    wikiverse.toggleSearch = function() {
+    wikiverse.toggleSearch = () => {
 
         $('#searchResults h3').hide();
 
@@ -2684,7 +2684,7 @@ var WIKIVERSE = (function($) {
     };
 
     //fork the board, copy it to your boards
-    wikiverse.forkBoard = function(wpnonce) {
+    wikiverse.forkBoard = (wpnonce) => {
         var forkedTitle = $('#wvTitle h1').html();
         var newAuthor = $('#wvAuthor').attr('data-currentUser');
 
@@ -2692,7 +2692,7 @@ var WIKIVERSE = (function($) {
     };
 
     //collect the bricks for saveboard/createboard/forkboard
-    wikiverse.collectBricks = function() {
+    wikiverse.collectBricks = () => {
 
         //get all bricks
         var bricks = $packeryContainer.packery('getItemElements');
@@ -2734,7 +2734,7 @@ var WIKIVERSE = (function($) {
     };
 
     //save a board when modified
-    wikiverse.saveBoard = function(wpnonce) {
+    wikiverse.saveBoard = (wpnonce) => {
 
         var board = wikiverse.collectBricks();
 
@@ -2897,7 +2897,7 @@ var WIKIVERSE = (function($) {
     };
 
     //clear a board from all bricks
-    wikiverse.clearBoard = function(wpnonce) {
+    wikiverse.clearBoard = (wpnonce) => {
 
         if (confirm('Are you sure you want to clear this board?')) {
 
@@ -2913,7 +2913,7 @@ var WIKIVERSE = (function($) {
         }
     };
 
-    function removeIDfromThisBoardsIds(id) {
+    const removeIDfromThisBoardsIds = (id) => {
 
         //delete item from thisBoardsIds
         var indexToDelete = wikiverse.thisBoardsIDs.indexOf(id);
@@ -2926,7 +2926,7 @@ var WIKIVERSE = (function($) {
 
 
     //filter by source
-    function sourceFilter(source) {
+    const sourceFilter = (source) => {
 
         //reset all filters first
         wikiverse.filter.undo('node-source-equals-x').apply();
@@ -3045,7 +3045,7 @@ var WIKIVERSE = (function($) {
     });
     /*
 		// show item order after layout
-		function orderItems() {
+		const orderItems = () => {
 			var itemElems = pckry.getItemElements();
 			for ( var i=0, len = itemElems.length; i < len; i++ ) {
 				var elem = itemElems[i];
