@@ -685,7 +685,7 @@ var WIKIVERSE = (function($) {
     }
 
     //get the pictures for given location of a map (instagram and flickr)
-    function getGmapsFotos($mapsBrick) {
+    const getGmapsFotos = ($mapsBrick) => {
 
         $mapsBrick.find('.getFotos').on('click', function() {
 
@@ -1585,7 +1585,7 @@ var WIKIVERSE = (function($) {
     }
 
     //search the Twitter API for tweets
-    function getTweets(query, searchType, lang, dataLoaded, triggerSearchResultsFunction) {
+    const getTweets = (query, searchType, lang, dataLoaded, triggerSearchResultsFunction) => {
 
         var queryString = query + '&result_type=' + searchType + '&lang=' + lang + '&count=50';
 
@@ -1627,7 +1627,7 @@ var WIKIVERSE = (function($) {
         callback($brick);
     }*/
     //create a note
-    function createNote($brick, callback) {
+    const createNote = ($brick, callback) => {
 
         $brick.addClass('note');
         $brick.addClass('transparent');
@@ -1726,7 +1726,7 @@ var WIKIVERSE = (function($) {
     };
 
     //"get" functions always do query the respective APIs and built an equally looking (wikiverse)results array for all sources
-    function getWikis(topic, lang, dataLoaded, triggerSearchResultsFunction) {
+    const getWikis = (topic, lang, dataLoaded, triggerSearchResultsFunction) => {
 
         $.ajax({
             url: 'https://' + lang + '.wikipedia.org/w/api.php',
@@ -1758,7 +1758,7 @@ var WIKIVERSE = (function($) {
         });
     }
 
-    function searchResultsListBuilt($results) {
+    const searchResultsListBuilt = ($results) => {
 
         //bind event to every row -> so you can start the wikiverse
         $results.find('.result').unbind('click').on('click', function(event) {
@@ -1818,7 +1818,7 @@ var WIKIVERSE = (function($) {
     }
 
     //search for sections of a wiki article
-    function getWikiSections($brick, topic) {
+    const getWikiSections = ($brick, topic) => {
 
         $.ajax({
             url: 'https://' + topic.language + '.wikipedia.org/w/api.php',
@@ -2198,7 +2198,7 @@ var WIKIVERSE = (function($) {
             });
         }
 
-        function star(x, y, size, alpha) {
+        const star = (x, y, size, alpha) => {
             var radius = 0;
             switch (size) {
                 case 'micro':
@@ -2362,7 +2362,7 @@ var WIKIVERSE = (function($) {
     }
 
     //build an empty brick
-    function buildBrick(position, id, parent) {
+    const buildBrick = (position, id, parent) => {
 
         //if not provided, set position array (x,y coordinates) to 2 undefined values to omit the packery fit!
         position = position || [undefined, undefined];
@@ -2549,7 +2549,7 @@ var WIKIVERSE = (function($) {
     }
 
 
-    function removeNode(id, $brick) {
+    const removeNode = (id, $brick) => {
 
         //update thisBoardsIDs array:
         removeIDfromThisBoardsIds(id);
@@ -2611,7 +2611,7 @@ var WIKIVERSE = (function($) {
         }
     }
 
-    function buildNode(brickData, id, parent) {
+    const buildNode = (brickData, id, parent) => {
 
         // Then, let's add some data to display:
         wikiverse.mindmap.graph.addNode({
@@ -3046,7 +3046,7 @@ var WIKIVERSE = (function($) {
     });
     /*
         // show item order after layout
-        function orderItems() {
+        const orderItems = () => {
             var itemElems = pckry.getItemElements();
             for ( var i=0, len = itemElems.length; i < len; i++ ) {
                 var elem = itemElems[i];
