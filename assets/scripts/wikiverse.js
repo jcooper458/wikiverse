@@ -1495,10 +1495,9 @@ var WIKIVERSE = (function($) {
 
     //strip html from given text
     wikiverse.strip = function(dirtyString) {
-      var container = document.createElement('div');
-      var text = document.createTextNode(dirtyString);
-      container.appendChild(text);
-      return container.innerHTML; // innerHTML will be a xss safe string
+        var tmp = document.createElement("DIV");
+        tmp.innerHTML = dirtyString;
+        return tmp.textContent || tmp.innerText || "";        
     }
 
     //build the soundcloud brick
