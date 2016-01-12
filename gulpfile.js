@@ -189,12 +189,12 @@ gulp.task('styles', ['wiredep'], function() {
 });
 
 gulp.task('babelify', function(){
-  return gulp.src('assets/es6/wikiverse.es6')
+  return gulp.src('assets/es6/wikiverse.js')
     .pipe(babel({
       presets: ['es2015'],
       compact: false
     }))
-    .pipe(gulp.dest("assets/scripts/wikiverse.js"));
+    .pipe(gulp.dest("assets/scripts"));
 });
 
 // ### Scripts
