@@ -7,7 +7,8 @@
       "vendor": [
         "assets/scripts/packery.pkgd.min.js",
         "assets/vendor/linkurious.js/build/sigma.min.js",
-        "assets/vendor/linkurious.js/build/plugins.min.js"
+        "assets/vendor/linkurious.js/build/plugins.min.js",
+        "assets/scripts/wikiverse.js"
       ],
       "main": true
     },
