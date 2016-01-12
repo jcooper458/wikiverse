@@ -79,8 +79,6 @@ function assets() {
   wp_enqueue_script('soundcloud', '//connect.soundcloud.com/sdk-2.0.0.js', [], null, false);
   wp_enqueue_script('soundcloud_player', '//w.soundcloud.com/player/api.js', [], null, false);
 
-  wp_enqueue_script('wikiverse', get_template_directory_uri() . '/assets/scripts/wikiverse.js', [], null, true);
-  
   wp_enqueue_style('font_awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css', false, null, false);
 }
 add_action('wp_enqueue_scripts', __NAMESPACE__ . '\\assets', 100);
