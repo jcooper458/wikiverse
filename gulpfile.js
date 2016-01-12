@@ -19,6 +19,7 @@ var runSequence  = require('run-sequence');
 var sass         = require('gulp-sass');
 var sourcemaps   = require('gulp-sourcemaps');
 var uglify       = require('gulp-uglify');
+var babel = require('gulp-babel');
 
 // See https://github.com/austinpray/asset-builder
 var manifest = require('asset-builder')('./assets/manifest.json');
@@ -187,10 +188,19 @@ gulp.task('styles', ['wiredep'], function() {
     .pipe(writeToManifest('styles'));
 });
 
+gulp.task('babelify', function(){
+  return gulp.src('assets/es6/wikiverse.es6')
+    .pipe(babel({
+      presets: ['es2015'],
+      compact: false
+    }))
+    .pipe(gulp.dest("assets/scripts/wikiverse.js"));
+});
+
 // ### Scripts
 // `gulp scripts` - Runs JSHint then compiles, combines, and optimizes Bower JS
 // and project JS.
-gulp.task('scripts', ['jshint'], function() {
+gulp.task('scripts', /*['jshint'],*/function() {
   var merged = merge();
   manifest.forEachDependency('js', function(dep) {
     merged.add(
@@ -256,7 +266,7 @@ gulp.task('watch', function() {
     }
   });
   gulp.watch([path.source + 'styles/**/*'], ['styles']);
-  gulp.watch([path.source + 'scripts/**/*'], ['jshint', 'scripts']);
+  gulp.watch([path.source + 'scripts/**/*'], [/*'jshint',*/ 'scripts']);
   gulp.watch([path.source + 'fonts/**/*'], ['fonts']);
   gulp.watch([path.source + 'images/**/*'], ['images']);
   gulp.watch(['bower.json', 'assets/manifest.json'], ['build']);
@@ -267,6 +277,7 @@ gulp.task('watch', function() {
 // Generally you should be running `gulp` instead of `gulp build`.
 gulp.task('build', function(callback) {
   runSequence('styles',
+              'babelify',
               'scripts',
               ['fonts', 'images'],
               callback);

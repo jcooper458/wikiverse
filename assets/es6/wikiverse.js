@@ -219,7 +219,7 @@ var WIKIVERSE = (function($) {
             var first = false;
             $(".brick").each(function() {
                 var offset = $(this).offset();
-                if (scrollTop <= offset.top && ($(this).height() + offset.top) < (scrollTop + windowHeight) && first == false) {
+                if (scrollTop <= offset.top && ($(this).height() + offset.top) < (scrollTop + windowHeight) && first === false) {
                     $(this).addClass("top");
 
                     $topBrick = $(this);
@@ -2548,7 +2548,7 @@ var WIKIVERSE = (function($) {
         });
 
         //if for some reason, there is no parent, grab the root of the tree
-        if (!thisNode.parent || thisNode.parent == "undefined") {
+        if (!thisNode.parent || thisNode.parent === "undefined") {
             thisNode.parent = "n" + wikiverse.searchHistory[Object.keys(wikiverse.searchHistory)[0]];
         }
 
@@ -2918,7 +2918,7 @@ var WIKIVERSE = (function($) {
         if (source !== "All") {
             //create the mot filter
             wikiverse.filter.nodesBy(function(node) {
-                return (node.source == source || node.source == "searchQuery");
+                return (node.source ===  source || node.source ===  "searchQuery");
             }, 'node-source-equals-x').apply();
         }
     }
