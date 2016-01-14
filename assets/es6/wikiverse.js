@@ -279,10 +279,6 @@ var WIKIVERSE = (function($) {
 
     wikiverse.demoMindmap = (json) => {
 
-        json.nodes.forEach(function(node, index) {
-            node.icon.content = '\uF266';
-        });
-
         wikiverse.mindmap = new sigma({
             renderer: wikiverse.sigmaRenderer,
             settings: wikiverse.sigmaSettings
