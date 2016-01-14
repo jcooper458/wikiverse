@@ -5,13 +5,13 @@ The core Javascript file responsible for the content aggregation is called wikiv
 License information will follow asap. 
 
 # Important:
-wikiverse wont work without these two plugins: 
+wikiverse might not work without these three plugins: 
 
 - Edit Author Slug (can be installed via Wordpress - set the slug to "user")
-- My forked version of the WP-API plugin
-- wp-twitter-api (own plugin - needs configuration via the Wordpress backend)
+- the development beta 2 version of WP-API plugin (will soon be obsolete due to integration in WP core)
+- wp-twitter-api (my own plugin - needs oauth configuration via the Wordpress backend)
 
-I added my composer.json to automate the installation of these two plugins. Follow the bedrock / composer instruction to install the plugins. 
+I added my composer.json to automate the installation of these plugins. Follow the bedrock / composer instruction to install the plugins. 
 
 For the rest, just install the theme, and start building boards. Enjoy!
 
