@@ -70,6 +70,7 @@ function assets() {
 
   wp_enqueue_script('modernizr', asset_path('scripts/modernizr.js'), [], null, true);
   wp_enqueue_script('sage_js', asset_path('scripts/main.js'), ['jquery'], null, true);
+  wp_enqueue_script('wikiverse', get_stylesheet_directory_uri() . '/assets/wikiverse.js', [], null, true);
 
   wp_enqueue_script('gmaps', 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&signed_in=true', [], null, false);  
   wp_enqueue_script('soundcloud', '//connect.soundcloud.com/sdk-2.0.0.js', [], null, false);

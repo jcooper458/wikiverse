@@ -1,8 +1,20 @@
-var WIKIVERSE = (function($) {
+'use strict';
+    
+import {
+    getTweets, 
+    getYoutubes, 
+    getRelatedYoutubes, 
+    getInstagrams,
+    getFlickrs,
+    getFlickrUsername,
+    getSoundclouds,
+    getWikis,
+    searchResultsListBuilt
+    } from './getFunctions.js';
 
-    'use strict';
+window.WIKIVERSE = (function($) {
 
-    var wikiverse = {};
+    const wikiverse = {};
 
     const close_icon = '<span class="cross control-buttons"><i class="fa fa-close"></i></span>';
     const fotoResizeButton = '<span class="resize control-buttons"><i class="fa fa-expand"></i></span>';
@@ -81,7 +93,6 @@ var WIKIVERSE = (function($) {
     //topbrick is the toppest brick in regards to the scroll position
     //this is used to insert bricks at the same height of the scroll position
     var $topBrick = $(defaultBrick);
-    const $packeryContainer = $('.packery');
 
     const $results = $('.results');
     const $searchKeyword = $('#search-keyword');
@@ -89,19 +100,18 @@ var WIKIVERSE = (function($) {
     const $sourceParams = $('.sourceParams');
     const $sourceType = $('.sourceType');
 
-    //  $('#packery').imagesLoaded( function() {
-    // initialize Packery
-    const packery = $packeryContainer.packery({
+    //this is needed for all non-packery actions
+    const $packeryContainer = $('.packery');
+
+    //for all packery actions, use packeryContainer
+    const packeryContainer = document.querySelector('#packery');
+
+    const pckry = new Packery( packeryContainer, {
         itemSelector: '.brick',
-        //stamp: '.search',
         gutter: 10,
         transitionDuration: 0,
-        columnWidth: 225,
-        //  columnWidth: '.brick',
-        //  rowHeight: 60,
-        //  isInitLayout: false
+        columnWidth: 225
     });
-    //  });
 
     // --------FUNCTION DEFINITIONS
     // These are defined here for JSHint function order checking
@@ -112,8 +122,6 @@ var WIKIVERSE = (function($) {
         makeEachDraggable,
         playYoutube,
         destroyBoard;
-
-
 
     // --------SIGMA class enhancements, init, filters and eventhandlers
 
@@ -132,43 +140,45 @@ var WIKIVERSE = (function($) {
         return this.nodesIndex;
     });
 
-     // overwrite Packery methods
-    var __resetLayout = Packery.prototype._resetLayout;
-    Packery.prototype._resetLayout = function() {
-      __resetLayout.call( this );
-      // reset packer
-      var parentSize = getSize( this.element.parentNode );
-      var colW = this.columnWidth + this.gutter;
-      this.fitWidth = Math.floor( ( parentSize.innerWidth + this.gutter ) / colW ) * colW;
-      this.packer.width = this.fitWidth;
-      this.packer.height = Number.POSITIVE_INFINITY;
-      this.packer.reset();
-    };
+    //  // overwrite Packery methods
+    // var __resetLayout = pckry.prototype._resetLayout;
+    // pckry.prototype._resetLayout = function() {
+    //   __resetLayout.call( this );
+    //   // reset packer
+    //   var parentSize = getSize( this.element.parentNode );
+    //   var colW = this.columnWidth + this.gutter;
+    //   this.fitWidth = Math.floor( ( parentSize.innerWidth + this.gutter ) / colW ) * colW;
+    //   this.packer.width = this.fitWidth;
+    //   this.packer.height = Number.POSITIVE_INFINITY;
+    //   this.packer.reset();
+    // };
 
-    Packery.prototype._getContainerSize = function() {
-      // remove empty space from fit width
-      var emptyWidth = 0;
-      for ( var i=0, len = this.packer.spaces.length; i < len; i++ ) {
-        var space = this.packer.spaces[i];
-        if ( space.y === 0 && space.height === Number.POSITIVE_INFINITY ) {
-          emptyWidth += space.width;
-        }
-      }
+    // pckry.prototype._getContainerSize = function() {
+    //   // remove empty space from fit width
+    //   var emptyWidth = 0;
+    //   for ( var i=0, len = this.packer.spaces.length; i < len; i++ ) {
+    //     var space = this.packer.spaces[i];
+    //     if ( space.y === 0 && space.height === Number.POSITIVE_INFINITY ) {
+    //       emptyWidth += space.width;
+    //     }
+    //   }
 
-      return {
-        width: this.fitWidth - this.gutter - emptyWidth,
-        height: this.maxY - this.gutter
-      };
-    };
+    //   return {
+    //     width: this.fitWidth - this.gutter - emptyWidth,
+    //     height: this.maxY - this.gutter
+    //   };
+    // };
 
-    // always resize
-    Packery.prototype.needsResizeLayout = function() {
-      return true;
-    };
+    // // always resize
+    // pckry.prototype.needsResizeLayout = function() {
+    //   return true;
+    // };
 
     //initiate the wikiverse search functionality
     //this is called on document ready (from _main.js)
     wikiverse.init = () => {
+
+        //console.log(WP_API_Settings);
 
         //overwrite the wikiverse mindmapobject
         //used in both buildMindmap and init
@@ -301,7 +311,7 @@ var WIKIVERSE = (function($) {
         $brick.toggleClass("w2");
 
         $brick.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(e) {
-            $packeryContainer.packery();
+            pckry.layout();
         });
 
         //if it is large, update the dataObj so it saves the state
@@ -393,28 +403,6 @@ var WIKIVERSE = (function($) {
             });*/
     }
 
-    //get the username for any given flickr picture
-    const getFlickrUsername = (user_id, callback) => {
-
-        $.ajax({
-            url: 'https://api.flickr.com/services/rest',
-            data: {
-
-                method: 'flickr.people.getInfo',
-                api_key: '1a7d3826d58da8a6285ef7062f670d30',
-                user_id: user_id,
-                format: 'json',
-                nojsoncallback: 1,
-                per_page: 40
-            },
-            success: function(data) {
-                if (data.stat === "ok") {
-                    callback(data.person.username._content);
-                }
-            }
-        });
-    }
-
     //clean up the sidebar navbar for the new search
     const prepareSearchNavbar = (query, source, parent) => {
         $sourceType.hide();
@@ -488,73 +476,11 @@ var WIKIVERSE = (function($) {
     const brickDataLoaded = ($brick) => {
 
         $brick.fadeTo('slow', 1);
-        $packeryContainer.packery();
+        pckry.layout();
     }
 
-    const buildYoutubeResultArray = (data, topic, dataLoaded, triggerFunction) => {
 
-        var resultsArray = data.items.map(function(item, index) {
 
-            return {
-                Topic: {
-                    title: item.snippet.title,
-                    snippet: item.snippet.description,
-                    youtubeID: item.id.videoId,
-                    query: topic,
-                    thumbnailURL: item.snippet.thumbnails.high.url
-                },
-                Type: "Youtube"
-            };
-        });
-
-        dataLoaded(resultsArray, "Youtube", triggerFunction);
-    }
-
-    //search youtube videos
-    const getYoutubes = (topic, order, lang, dataLoaded, triggerFunction) => {
-
-        $.ajax({
-            url: 'https://www.googleapis.com/youtube/v3/search',
-            data: {
-                "q": topic,
-                "key": 'AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8',
-                "part": 'snippet',
-                "order": order,
-                "relevanceLanguage": lang,
-                "maxResults": 50
-            },
-            dataType: 'jsonp',
-            success: function(data) {
-                buildYoutubeResultArray(data, topic, dataLoaded, triggerFunction);
-            }
-        });
-    }
-
-    //search for related youtube videos
-    const getRelatedYoutubes = (videoID, origQuery, dataLoaded, triggerFunction, parent) => {
-
-        prepareSearchNavbar(origQuery, "Youtube", parent);
-
-        //Open the sidebar:
-        if (!$sidebar.hasClass('cbp-spmenu-open')) {
-            toggleSidebar();
-        }
-
-        $.ajax({
-            url: 'https://www.googleapis.com/youtube/v3/search',
-            data: {
-                relatedToVideoId: videoID,
-                key: 'AIzaSyCtYijGwLNP1Vf8RuitR5AgTagybiIFod8',
-                part: 'snippet',
-                type: 'video',
-                maxResults: 25
-            },
-            dataType: 'jsonp',
-            success: function(data) {
-                buildYoutubeResultArray(data, origQuery, dataLoaded, triggerFunction);
-            }
-        });
-    }
 
     //function used within validate coordinates
     const inrange = (min, number, max) => {
@@ -581,11 +507,14 @@ var WIKIVERSE = (function($) {
 
         var $brick = $(defaultMapBrick);
 
-        $packeryContainer.append($brick).packery('appended', $brick);
+        packeryContainer.appendChild( $brick[0] );
+        pckry.appended( $brick[0] );
+        
         $brick.each(makeEachDraggable);
 
-        $packeryContainer.packery('fit', $brick[0], x, y);
-        $packeryContainer.packery();
+        //fit the brick at given position: first is x, second y
+        pckry.fit($brick[0], x, y )
+        pckry.layout();
 
         return $brick;
     }
@@ -598,7 +527,7 @@ var WIKIVERSE = (function($) {
                 e.preventDefault();
 
                 //stamp this brick so it doesnt move around
-                $packeryContainer.packery('stamp', $brick);
+                pckry.stamp( $brick[0] )
 
                 //get the new wikipedia topic from the a element
                 var topic = $(this).attr("title");
@@ -622,7 +551,7 @@ var WIKIVERSE = (function($) {
                 }
 
                 //unstamp it after everything is done
-                $packeryContainer.packery('unstamp', $brick);
+                pckry.unstamp( $brick[0] )
 
                 buildNode(brickData, $nextBrick.data('id'), $brick.data('id'));
             });
@@ -777,7 +706,7 @@ var WIKIVERSE = (function($) {
 
         // do something only the first time the map is loaded
         google.maps.event.addListenerOnce(map, 'idle', function() {
-            $packeryContainer.packery();
+            pckry.layout();
         });
 
         google.maps.event.addListener(map, 'idle', function() {
@@ -883,7 +812,7 @@ var WIKIVERSE = (function($) {
             $mapbrick.append(getInstagramsButton);
             $mapbrick.append(getFlickrsButton);
 
-            $packeryContainer.packery();
+            pckry.layout();
 
 
             //call the event for the Fotosearch on click
@@ -982,7 +911,7 @@ var WIKIVERSE = (function($) {
             var thePanorama = map.getStreetView(); //get the streetview object
 
             google.maps.event.addDomListener(window, 'idle', function() {
-                $packeryContainer.packery();
+                pckry.layout();
             });
 
             //detect if entering Streetview -> Change the type to streetview
@@ -1040,7 +969,7 @@ var WIKIVERSE = (function($) {
         $mapbrick.append(getInstagramsButton);
         $mapbrick.append(getFlickrsButton);
 
-        $packeryContainer.packery();
+        pckry.layout();
 
         //call the event for the Fotosearch on click
         getGmapsFotos($mapbrick);
@@ -1090,248 +1019,6 @@ var WIKIVERSE = (function($) {
 
         //if nothing changes, re-save the data-topic (otherwise its lost upon resave without moving)
         $mapbrick.data("topic", streetObj);
-    }
-
-    //search for flickrs
-    const getFlickrs = (topic, sort, type, dataLoaded, triggerSearchResultsFunction) => {
-
-        type = type || "textQuery";
-
-        var APIextras = "url_q,url_c,tags,owner_name,geo";
-        var APIkey = '1a7d3826d58da8a6285ef7062f670d30';
-
-        const buildFlickrResultArray = (data, triggerSearchResultsFunction) => {
-
-            var resultsArray = data.photos.photo.map(function(photoObj, index) {
-
-                if (photoObj.url_c) {
-                    return {
-                        Topic: {
-
-                            owner: photoObj.owner,
-                            id: photoObj.id,
-                            title: photoObj.title,
-                            thumbURL: photoObj.url_q,
-                            mediumURL: photoObj.url_c,
-                            tags: photoObj.tags.split(" ")
-
-                        },
-                        Type: "Flickr"
-                    };
-                }
-            });
-
-            dataLoaded(resultsArray, "Flickr", triggerSearchResultsFunction);
-        }
-
-
-        //if query is coordinates (bounds)
-        if (type === "geoQuery") {
-
-            var latitude = topic.split(',')[0];
-            var longitude = topic.split(',')[1];
-
-            $.ajax({
-                url: 'https://api.flickr.com/services/rest',
-                data: {
-
-                    method: 'flickr.places.findByLatLon',
-                    api_key: APIkey,
-                    lat: latitude,
-                    lon: longitude,
-                    format: 'json',
-                    nojsoncallback: 1
-                },
-                success: function(data) {
-
-                    $.ajax({
-                        url: 'https://api.flickr.com/services/rest',
-                        data: {
-
-                            method: 'flickr.photos.search',
-                            api_key: APIkey,
-                            place_id: data.places.place[0].woeid,
-                            format: 'json',
-                            nojsoncallback: 1,
-                            per_page: 100,
-                            extras: APIextras,
-                            sort: sort
-                        },
-                        success: function(data) {
-                            buildFlickrResultArray(data, triggerSearchResultsFunction);
-                        }
-                    });
-
-                }
-            });
-
-        } else if (type === "textQuery") { // is textQuery
-
-            $.ajax({
-                url: 'https://api.flickr.com/services/rest',
-                data: {
-
-                    method: 'flickr.photos.search',
-                    api_key: APIkey,
-                    text: topic,
-                    format: 'json',
-                    nojsoncallback: 1,
-                    per_page: 100,
-                    extras: APIextras,
-                    sort: sort
-                },
-                success: function(data) {
-                    buildFlickrResultArray(data, triggerSearchResultsFunction);
-                }
-            });
-
-        } else if (type === "userQuery") {
-
-            $.ajax({
-                url: 'https://api.flickr.com/services/rest',
-                data: {
-
-                    method: 'flickr.people.findByUsername',
-                    api_key: APIkey,
-                    username: topic,
-                    format: 'json',
-                    nojsoncallback: 1
-                },
-                success: function(data) {
-
-                    $.ajax({
-                        url: 'https://api.flickr.com/services/rest',
-                        data: {
-
-                            method: 'flickr.photos.search',
-                            api_key: APIkey,
-                            user_id: data.user.id,
-                            format: 'json',
-                            nojsoncallback: 1,
-                            per_page: 100,
-                            extras: APIextras,
-                            sort: sort
-                        },
-                        success: function(data) {
-                            buildFlickrResultArray(data, triggerSearchResultsFunction);
-                        }
-                    });
-
-                }
-            });
-        }
-    }
-
-    //search for instagrams
-    const getInstagrams = (query, type, dataLoaded, triggerSearchResultsFunction) => {
-
-        type = type || "hashtag";
-
-        var client_id = "db522e56e7574ce9bb70fa5cc760d2e7";
-
-        var access_parameters = {
-            client_id: client_id
-        };
-
-        var instagramUrl;
-
-        const buildInstagramResultArray = (data, triggerSearchResultsFunction) => {
-
-            var resultsArray = data.data.map(function(photoObj, index) {
-
-                return {
-                    Topic: {
-
-                        owner: photoObj.user.username,
-                        id: photoObj.id,
-                        title: query,
-                        thumbURL: photoObj.images.low_resolution.url,
-                        mediumURL: photoObj.images.standard_resolution.url,
-                        tags: photoObj.tags
-
-                    },
-                    Type: "Instagram"
-                };
-            });
-
-            dataLoaded(resultsArray, "Instagram", triggerSearchResultsFunction);
-        }
-
-
-        // if coordinate
-        if (type === "coordinates") {
-
-            var latitude = query.split(',')[0];
-            var longitude = query.split(',')[1];
-
-            if (valid_coords(latitude, longitude)) {
-
-                $.ajax({
-                    url: 'https://api.instagram.com/v1/media/search',
-                    data: {
-                        lat: latitude,
-                        lng: longitude,
-                        client_id: 'db522e56e7574ce9bb70fa5cc760d2e7',
-                        format: 'json'
-                    },
-                    dataType: 'jsonp',
-                    success: function(data) {
-
-                        buildInstagramResultArray(data, triggerSearchResultsFunction);
-
-                    }
-                });
-            } else {
-                $instagramSearchBrick.find('.results').append('<div class="no-results">"' + query + '" is not a coordinate .. :( </div>');
-            }
-        } else if (type === "hashtag") {
-
-            instagramUrl = 'https://api.instagram.com/v1/tags/' + query + '/media/recent?callback=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
-            //var instagramUrl = 'https://api.instagram.com/v1/tags/' + query + '/media/recent?client_id=db522e56e7574ce9bb70fa5cc760d2e7';
-
-            $.getJSON(instagramUrl, access_parameters, function(data) {
-
-                buildInstagramResultArray(data, triggerSearchResultsFunction);
-
-            });
-
-        } else if (type === "username") {
-
-            $.ajax({
-                url: 'https://api.instagram.com/v1/users/search',
-                data: {
-                    q: query,
-                    client_id: 'db522e56e7574ce9bb70fa5cc760d2e7',
-                    format: 'json'
-                },
-                dataType: 'jsonp',
-                success: function(data) {
-
-                    if (typeof data.data !== 'undefined' && data.data.length > 0) {
-
-                        data.data.map(function(user, index) {
-
-                            if (user.username === query) {
-                                var userID = user.id;
-                                var getUserUrl = 'https://api.instagram.com/v1/users/' + userID + '/media/recent/?callback=?&count=40&client_id=db522e56e7574ce9bb70fa5cc760d2e7';
-
-                                $.getJSON(getUserUrl, access_parameters, function(data) {
-
-                                    buildInstagramResultArray(data, triggerSearchResultsFunction);
-
-                                });
-                                return;
-                            }
-
-                        });
-
-
-                    } else {
-                        $results.append('<div class="no-results">No user found with this query: "' + query + '"</div>');
-                    }
-                }
-            });
-        }
     }
 
     //for search query, trigger the search to other sources
@@ -1439,7 +1126,7 @@ var WIKIVERSE = (function($) {
             });
 
             $brick.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(e) {
-                $packeryContainer.packery();
+                pckry.layout();
             });
 
         }
@@ -1458,7 +1145,7 @@ var WIKIVERSE = (function($) {
                 return;
             }
             callback($brick);
-            $packeryContainer.packery();
+            pckry.layout();
 
             $('#global-loading').remove();
         });
@@ -1507,35 +1194,6 @@ var WIKIVERSE = (function($) {
         callback($brick);
     }
 
-    //search for soundclouds
-    var getSoundclouds = (query, dataLoaded, triggerSearchResultsFunction) => {
-
-        SC.initialize({
-            client_id: '15bc70bcd9762ddca2e82ee99de9e2e7'
-        });
-
-        SC.get('/tracks', {
-            q: query,
-            limit: 50
-        }, function(tracks) {
-
-            //build a homogenic array here (equally looking for all sources: topic and type)
-            var resultsArray = tracks.map(function(item, index) {
-                return {
-                    Topic: {
-                        title: item.title,
-                        uri: item.uri,
-                        snippet: item.description
-                    },
-                    Type: "Soundcloud"
-                }
-            });
-
-            dataLoaded(resultsArray, "Soundcloud", triggerSearchResultsFunction);
-
-        });
-    }
-
     wikiverse.buildListResults = (results, searchResultsListBuilt) => {
 
         $results.append(tableHover);
@@ -1575,36 +1233,6 @@ var WIKIVERSE = (function($) {
 
         });
         searchResultsListBuilt($results);
-    }
-
-    //search the Twitter API for tweets
-    const getTweets = (query, searchType, lang, dataLoaded, triggerSearchResultsFunction) => {
-
-        var queryString = query + '&result_type=' + searchType + '&lang=' + lang + '&count=50';
-
-        $.ajax({
-            url: '/app/plugins/wp-twitter-api/api.php',
-            data: {
-                "search": queryString
-            },
-            success: function(data) {
-
-                var data = JSON.parse(data);
-
-                var resultsArray = data.statuses.map(function(tweet, index) {
-
-                    return {
-                        Topic: {
-                            title: tweet.text,
-                            user: tweet.user.screen_name,
-                            userThumb: tweet.user.profile_image_url_https
-                        },
-                        Type: "Twitter"
-                    }
-                });
-                dataLoaded(resultsArray, "Twitter", triggerSearchResultsFunction);
-            }
-        });
     }
 
     //build a note
@@ -1667,7 +1295,7 @@ var WIKIVERSE = (function($) {
 
             $brick.prepend('<blockquote>' + text + '</blockquote>');
 
-            $packeryContainer.packery();
+            pckry.layout();
         });
 
         //store the note temporarly
@@ -1694,7 +1322,7 @@ var WIKIVERSE = (function($) {
         $brick.addClass('Twitter');
 
         $brick.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(e) {
-            $packeryContainer.packery();
+            pckry.layout();
         });
 
         //replace hashtags with links
@@ -1717,75 +1345,6 @@ var WIKIVERSE = (function($) {
         callback($brick);
 
     };
-
-    //"get" functions always do query the respective APIs and built an equally looking (wikiverse)results array for all sources
-    const getWikis = (topic, lang, dataLoaded, triggerSearchResultsFunction) => {
-
-        $.ajax({
-            url: 'https://' + lang + '.wikipedia.org/w/api.php',
-            data: {
-                action: 'query',
-                list: 'search',
-                srsearch: topic,
-                format: 'json',
-                srlimit: 50
-            },
-            dataType: 'jsonp',
-            success: function(data) {
-
-                //build a homogenic array here (equally looking for all sources: topic and type)
-                var resultsArray = data.query.search.map(function(item, index) {
-
-                    return {
-                        Topic: {
-                            title: item.title,
-                            snippet: wikiverse.strip(item.snippet),
-                            language: lang
-                        },
-                        Type: "Wikipedia"
-                    }
-                });
-
-                dataLoaded(resultsArray, "Wikipedia", triggerSearchResultsFunction);
-            }
-        });
-    }
-
-    const searchResultsListBuilt = ($results) => {
-
-        //bind event to every row -> so you can start the wikiverse
-        $results.find('.result').unbind('click').on('click', function(event) {
-
-            //if there is no parent saved in the searchkeyword, you are searching for soemthign new, thus
-            //updatethesearchistory and use that searchquery for a fresh parent node in the mindmap
-            if (!$searchKeyword.data('parent')) {
-                updateSearchHistory();
-            }
-
-            //if there is a searchkeyword parent, we are using the search to continue a topic, take that as parent
-            //if not, it means we are pushing a topic to the board for the first time, take the searchquery id as parent
-            //
-            //not that updateSearchhistory is emptying the searchkeyword.data(parent) in case something is added to the searchhistory,
-            //thus forcing the second (if not) state!
-            var parent = $searchKeyword.data('parent') || wikiverse.searchHistory[$searchKeyword.val().toLowerCase()];
-
-            var $thisBrick = buildBrick([parseInt($topBrick.css('left')), parseInt($topBrick.css('top')) - 200], undefined, parent);
-            var result = $(this).data("topic");
-
-            //concatenate the respective function to push bricks to the board (buildWikis, buildYoutubes, etc)
-            wikiverse["build" + result.Type]($thisBrick, result.Topic, brickDataLoaded);
-
-            $(this).tooltip('destroy');
-            $(this).remove();
-
-            //build a node with the searchqueryNode as parent
-            buildNode(result, $thisBrick.data('id'), parent);
-            return false;
-        });
-
-        //remove the loading icon when done
-        $sidebar.find("#loading").remove();
-    }
 
     const updateSearchHistory = () => {
 
@@ -1837,7 +1396,7 @@ var WIKIVERSE = (function($) {
                     var $sectionsButton = $('<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> sections </button>');
 
                     $brick.append($sectionsButton);
-                    $packeryContainer.packery();
+                    pckry.layout();
 
                     $sectionsButton.one('click', function() {
 
@@ -1855,12 +1414,12 @@ var WIKIVERSE = (function($) {
 
                         });
 
-                        $packeryContainer.packery();
+                        pckry.layout();
 
                         //create the section object and trigger the creation of a section brick
                         $sectionsTable.find(".section").on('click', function() {
 
-                            $packeryContainer.packery('stamp', $brick);
+                            pckry.stamp( $brick[0] )
 
                             var sectionData = {
                                 title: $(this).find('td').html(),
@@ -1883,7 +1442,7 @@ var WIKIVERSE = (function($) {
 
                             buildNode(brickData, $nextBrick.data('id'), $brick.data('id'));
 
-                            $packeryContainer.packery('unstamp', $brick);
+                            pckry.unstamp( $brick[0] )
                         });
 
                     });
@@ -1897,7 +1456,7 @@ var WIKIVERSE = (function($) {
         moreLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> more </button>',
         lessLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> less </button>',
         afterToggle: function() {
-            $packeryContainer.packery();
+            pckry.layout();
         }
     };
     //build a wiki Brick
@@ -1971,7 +1530,7 @@ var WIKIVERSE = (function($) {
                                             return;
                                         }
                                         callback($brick);
-                                        $packeryContainer.packery();
+                                        pckry.layout();
 
                                         $('#global-loading').remove();
                                     });
@@ -2036,7 +1595,7 @@ var WIKIVERSE = (function($) {
 
                     article.readmore(rmOptions);
 
-                    $packeryContainer.packery();
+                    pckry.layout();
 
                     //enable to create new bricks out of links
                     buildNextTopic($brick, topic.language);
@@ -2117,7 +1676,7 @@ var WIKIVERSE = (function($) {
                 buildNextTopic($brick, section.language);
 
                 callback($brick);
-                $packeryContainer.packery();
+                pckry.layout();
             }
         });
     };
@@ -2262,7 +1821,7 @@ var WIKIVERSE = (function($) {
         $brick.append('<i class="fa youtubePlayButton fa-youtube-play"></i>');
 
         imagesLoaded('#packery .youtube', function() {
-            $packeryContainer.packery();
+            pckry.layout();
         });
 
         $brick.find('.youtubePlayButton').on('click', function() {
@@ -2295,7 +1854,7 @@ var WIKIVERSE = (function($) {
 
         $brick.append(iframe);
 
-        $packeryContainer.packery();
+        pckry.layout();
     };
 
     //make each brick draggable
@@ -2315,7 +1874,7 @@ var WIKIVERSE = (function($) {
         }
 
         // bind Draggabilly events to Packery
-        $packeryContainer.packery('bindDraggabillyEvents', draggie);
+        pckry.bindDraggabillyEvents( draggie );
     };
 
 
@@ -2352,12 +1911,14 @@ var WIKIVERSE = (function($) {
         $brick.attr('id', "n" + id);
         $brick.data('parent', parent);
 
-        $packeryContainer.append($brick).packery('appended', $brick);
+        packeryContainer.appendChild( $brick[0] );
+        pckry.appended( $brick[0] );
+        
         $brick.each(makeEachDraggable);
 
         //fit the brick at given position: first is x, second y
-        $packeryContainer.packery('fit', $brick[0], position[0], position[1]);
-        $packeryContainer.packery();
+        pckry.fit($brick[0], position[0], position[1] )
+        pckry.layout();
 
         return $brick;
     }
@@ -2373,64 +1934,68 @@ var WIKIVERSE = (function($) {
       "bricks": {}
     }*/
 
-    const wvReducer = (state = {}, action) => {
+    // const wvReducer = (state = {}, action) => {
 
-        switch(action.type){
+    //     switch(action.type){
 
-            case 'ADD_BRICK':
-                return {
-                    title: state.title,
-                    author: state.author,
-                    featured_image: state.featured_image,
-                    bricks: [{id: action.id, text: action.text}]
-                }
+    //         case 'ADD_BRICK':
+    //             return {
+    //                 title: state.title,
+    //                 author: state.author,
+    //                 featured_image: state.featured_image,
+    //                 bricks: [{id: action.id, text: action.text}]
+    //             }
 
-            default:
-                return state;
-        }
-    };
+    //         default:
+    //             return state;
+    //     }
+    // };
     
-    const testReducer = () => {
 
-        const stateBefore = {
-            title: "bob dylan",
-            author: "kubante",
-            featured_image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Bob_Dylan_in_November_1963-5.jpg/220px-Bob_Dylan_in_November_1963-5.jpg",
-            bricks: []
-        };
 
-        const action = {
-            type: 'ADD_BRICK',
-            id: 0,
-            text: 'A brick dummy text'
-        };
+    // const testReducer = () => {
+
+    //     const stateBefore = {
+    //         title: "bob dylan",
+    //         author: "kubante",
+    //         featured_image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Bob_Dylan_in_November_1963-5.jpg/220px-Bob_Dylan_in_November_1963-5.jpg",
+    //         bricks: []
+    //     };
+
+    //     const action = {
+    //         type: 'ADD_BRICK',
+    //         id: 0,
+    //         text: 'A brick dummy text'
+    //     };
     
-        const stateAfter = {
-            title: "bob dylan",
-            author: "kubante",
-            featured_image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Bob_Dylan_in_November_1963-5.jpg/220px-Bob_Dylan_in_November_1963-5.jpg",
-            bricks: [
-                {
-                    id: 0,
-                    text: 'A brick dummy text'
-                }
-            ]
-        };
+    //     const stateAfter = {
+    //         title: "bob dylan",
+    //         author: "kubante",
+    //         featured_image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Bob_Dylan_in_November_1963-5.jpg/220px-Bob_Dylan_in_November_1963-5.jpg",
+    //         bricks: [
+    //             {
+    //                 id: 0,
+    //                 text: 'A brick dummy text'
+    //             }
+    //         ]
+    //     };
 
-        deepFreeze(stateBefore);
-        deepFreeze(action);
-        
-        expect(wvReducer(stateBefore, action)).toEqual(stateAfter);
-    }
-    testReducer();
-    console.log("all tests passed");
+    //     deepFreeze(stateBefore);
+    //     deepFreeze(action);
 
-/*    const { createStore } = Redux;
-    const store = createStore(changeBoardState);
+    //     expect(wvReducer(stateBefore, action)).toEqual(stateAfter);
+    // }
+    // testReducer();
+    // console.log("all tests passed");
 
-    store.dispatch({type: "addBrick"});
+    // const { createStore } = Redux;
+    // const store = createStore(wvReducer);
 
-    console.log(store.getState());*/
+    // store.dispatch({type: "addBrick"});
+
+    // console.log(store.getState());
+
+
 
     //build a board -   this is called only for saved boards (coming from db)
     wikiverse.buildBoard = (board) => {
@@ -2742,7 +2307,7 @@ var WIKIVERSE = (function($) {
     wikiverse.collectBricks = () => {
 
         //get all bricks
-        var bricks = $packeryContainer.packery('getItemElements');
+        var bricks = pckry.getItemElements()
         //find all images
         var image = $(bricks).find('img:first');
 
@@ -2950,12 +2515,14 @@ var WIKIVERSE = (function($) {
 
         if (confirm('Are you sure you want to clear this board?')) {
 
-            var elements = $packeryContainer.packery('getItemElements');
-            $packeryContainer.packery('remove', elements);
+            var elements = pckry.getItemElements();
+            pckry.remove( elements );
 
             //remove all nodes
             wikiverse.mindmap.graph.clear();
+
             updateFilters();
+
             $("#filter #filter_All").hide();
             wikiverse.mindmap.refresh();
 
@@ -3057,22 +2624,8 @@ var WIKIVERSE = (function($) {
 
         if (!$thisBrick.hasClass('gmaps')) removeNode($thisBrick.data('id'), $thisBrick);
 
-        $packeryContainer.packery('remove', $thisBrick);
-        $packeryContainer.packery();
-
-        /*$thisBrick.fadeOut(250, function(){
-
-            $packeryContainer.packery('remove', $thisBrick);
-            $packeryContainer.packery();
-
-        });*/
-    });
-
-    //show save board button on packery change (needs work)
-    $packeryContainer.packery('on', 'layoutComplete', function(pckryInstance, laidOutItems) {
-
-        //cant use show() or fadeIn() coz it messes up the bootstrap nav
-        $(".board-pilot").removeClass('invisible');
+        pckry.remove( $thisBrick[0] )
+        pckry.layout();
 
     });
 
@@ -3092,18 +2645,6 @@ var WIKIVERSE = (function($) {
             }
         });
     });
-    /*
-        // show item order after layout
-        const orderItems = () => {
-            var itemElems = pckry.getItemElements();
-            for ( var i=0, len = itemElems.length; i < len; i++ ) {
-                var elem = itemElems[i];
-                elem.textContent = i + 1;
-            }
-            console.log(itemElems);
-        }
-
-        $packeryContainer.on( 'layoutComplete', orderItems );*/
 
     //Toggle Size of Images on click
     $packeryContainer.on("click", ".foto .resize", function(e) {

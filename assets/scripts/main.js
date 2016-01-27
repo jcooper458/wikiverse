@@ -68,10 +68,10 @@
     'single_board': {
       init: function() {
 
-        WIKIVERSE.init();
+        window.WIKIVERSE.init();
 
         $.getJSON('/wp-json/wp/v2/board/' + $("#postID").html(), function(board) {
-          WIKIVERSE.buildBoard(JSON.parse(board.content));
+          window.WIKIVERSE.buildBoard(JSON.parse(board.content));
         });
       },
       finalize: function() {
