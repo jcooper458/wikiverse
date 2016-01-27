@@ -1,5 +1,10 @@
 'use strict';
 
+//vendor imports
+import { createStore } from 'redux'
+import wvReducer from './reducers.js'
+
+//wv imports
 import {strip, isPortrait} from './helpers.js'
     
 import {
@@ -14,6 +19,7 @@ import {
     } from './APIcalls.js';
 
 import {stars} from './stars.js'
+
 
 window.WIKIVERSE = (function($) {
 
@@ -145,9 +151,9 @@ window.WIKIVERSE = (function($) {
 
     //initiate the wikiverse search functionality
     //this is called on document ready (from _main.js)
-    wikiverse.init = () => {
+    wikiverse.init = (state = {}) => {
 
-        //console.log(WP_API_Settings);
+        const store = createStore(wvReducer, state);
 
         //overwrite the wikiverse mindmapobject
         //used in both buildMindmap and init
@@ -165,6 +171,8 @@ window.WIKIVERSE = (function($) {
 
         wikiverse.searchHistory = {};
         wikiverse.thisBoardsIDs = [];
+
+        if(state.length > 0)wikiverse.buildBoard(state);
 
     }
 
