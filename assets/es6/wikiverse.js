@@ -2,7 +2,7 @@
 
 //vendor imports
 import { createStore } from 'redux'
-import wvReducer from './reducers.js'
+import { wvReducer } from './reducers.js'
 
 //wv imports
 import {strip, isPortrait} from './helpers.js'
@@ -170,10 +170,9 @@ window.WIKIVERSE = (function($) {
         $sourceParams.hide();
 
         wikiverse.searchHistory = {};
-        wikiverse.thisBoardsIDs = [];
 
-        if(state.length > 0)wikiverse.buildBoard(state);
-
+        wikiverse.buildBoard(state);
+        console.log(store.getState());
     }
 
     const searchResultsListBuilt = ($results) => {
@@ -1263,7 +1262,7 @@ window.WIKIVERSE = (function($) {
 
         //if search keyword is not already in history, add it
         if (!wikiverse.searchHistory.hasOwnProperty(searchQuery.toLowerCase())) {
-            wikiverse.searchHistory[searchQuery.toLowerCase()] = getRandomWvID();
+            wikiverse.searchHistory[searchQuery.toLowerCase()] =  Date.now();
 
             //empty the $searchkeyword parent id so that a new searchquery parent is created
 
@@ -1705,17 +1704,6 @@ window.WIKIVERSE = (function($) {
 
     }
 
-    //get new random number not inside the already present IDs
-    const getRandomWvID = () => {
-        var rand = Math.floor(Math.random() * 200);
-        if ($.inArray(rand, wikiverse.thisBoardsIDs) === -1) {
-            wikiverse.thisBoardsIDs.push(rand);
-            return rand;
-        } else {
-            return getRandomWvID();
-        }
-    }
-
     //build an empty brick
     const buildBrick = (position, id, parent) => {
 
@@ -1725,7 +1713,7 @@ window.WIKIVERSE = (function($) {
         var $brick = $(defaultBrick);
 
         //if no id is passed from backend, get random not in this boards IDs
-        id = id || getRandomWvID();
+        id = id || Date.now();
 
         $brick.data('id', id);
         $brick.attr('id', "n" + id);
@@ -1752,12 +1740,6 @@ window.WIKIVERSE = (function($) {
         //overwrite the searchHistory with the one coming from db
         wikiverse.searchHistory = board.search_history;
 
-        $.each(board.search_history, function(query, id) {
-
-            wikiverse.thisBoardsIDs.push(id);
-
-        });
-
         //if there are bricks in the board
         if (!$.isEmptyObject(board.bricks)) {
 
@@ -1767,9 +1749,6 @@ window.WIKIVERSE = (function($) {
 
                 //build a brick at position 0,0
                 var $thisBrick = (brick.Type === "gmaps" || brick.Type === "streetview") ? buildGmapsBrick([undefined, undefined]) : buildBrick([undefined, undefined], brick.Id, brick.Parent);
-
-                //get all Ids of this board (for later picking different ones)
-                wikiverse.thisBoardsIDs.push(brick.Id);
 
                 switch (brick.Type) {
                     case "Wikipedia":
@@ -1908,9 +1887,6 @@ window.WIKIVERSE = (function($) {
 
 
     const removeNode = (id, $brick) => {
-
-        //update thisBoardsIDs array:
-        removeIDfromThisBoardsIds(id);
 
         //get the given node by Id
         var nodesObj = wikiverse.mindmap.graph.getNodesById();
@@ -2275,18 +2251,6 @@ window.WIKIVERSE = (function($) {
 
         }
     };
-
-    const removeIDfromThisBoardsIds = (id) => {
-
-        //delete item from thisBoardsIds
-        var indexToDelete = wikiverse.thisBoardsIDs.indexOf(id);
-
-        if (indexToDelete > -1) {
-            wikiverse.thisBoardsIDs.splice(indexToDelete, 1);
-        }
-
-    }
-
 
     //filter by source
     const sourceFilter = (source) => {

@@ -66,9 +66,7 @@
     },
     // single board page
     'single_board': {
-      init: function() {
-
-        
+      init: function() {       
 
         $.getJSON('/wp-json/wp/v2/board/' + $("#postID").html(), function(board) { 
           window.WIKIVERSE.init(JSON.parse(board.content));
