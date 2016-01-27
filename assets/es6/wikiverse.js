@@ -1,4 +1,6 @@
 'use strict';
+
+import {strip, isPortrait} from './helpers.js'
     
 import {
     getTweets, 
@@ -8,9 +10,10 @@ import {
     getFlickrs,
     getFlickrUsername,
     getSoundclouds,
-    getWikis,
-    searchResultsListBuilt
-    } from './getFunctions.js';
+    getWikis
+    } from './APIcalls.js';
+
+import {stars} from './stars.js'
 
 window.WIKIVERSE = (function($) {
 
@@ -140,40 +143,6 @@ window.WIKIVERSE = (function($) {
         return this.nodesIndex;
     });
 
-    //  // overwrite Packery methods
-    // var __resetLayout = pckry.prototype._resetLayout;
-    // pckry.prototype._resetLayout = function() {
-    //   __resetLayout.call( this );
-    //   // reset packer
-    //   var parentSize = getSize( this.element.parentNode );
-    //   var colW = this.columnWidth + this.gutter;
-    //   this.fitWidth = Math.floor( ( parentSize.innerWidth + this.gutter ) / colW ) * colW;
-    //   this.packer.width = this.fitWidth;
-    //   this.packer.height = Number.POSITIVE_INFINITY;
-    //   this.packer.reset();
-    // };
-
-    // pckry.prototype._getContainerSize = function() {
-    //   // remove empty space from fit width
-    //   var emptyWidth = 0;
-    //   for ( var i=0, len = this.packer.spaces.length; i < len; i++ ) {
-    //     var space = this.packer.spaces[i];
-    //     if ( space.y === 0 && space.height === Number.POSITIVE_INFINITY ) {
-    //       emptyWidth += space.width;
-    //     }
-    //   }
-
-    //   return {
-    //     width: this.fitWidth - this.gutter - emptyWidth,
-    //     height: this.maxY - this.gutter
-    //   };
-    // };
-
-    // // always resize
-    // pckry.prototype.needsResizeLayout = function() {
-    //   return true;
-    // };
-
     //initiate the wikiverse search functionality
     //this is called on document ready (from _main.js)
     wikiverse.init = () => {
@@ -197,94 +166,42 @@ window.WIKIVERSE = (function($) {
         wikiverse.searchHistory = {};
         wikiverse.thisBoardsIDs = [];
 
-        //but also open the search if clicked
-        $('.searchButton').on('click', function(event) {
-            event.preventDefault();
-            wikiverse.toggleSearch();
+    }
 
-            //Close the sidebar, if open:
-            if ($sidebar.hasClass('cbp-spmenu-open')) {
-                toggleSidebar();
-            }
-        });
+    const searchResultsListBuilt = ($results) => {
 
-        //close the search
-        $('.search, .search button.close').on('click', function(event) {
-            if (event.target.className === 'close') {
-                $(this).removeClass('open');
-            }
-        });
+        //bind event to every row -> so you can start the wikiverse
+        $results.find('.result').unbind('click').on('click', function(event) {
 
-        //adding escape functionality for closing search
-        $(document).keyup(function(e) {
-            if ($('.search').hasClass('open') && e.keyCode === 27) { // escape key maps to keycode `27`
-                $('.search').removeClass('open');
-            }
-        });
-
-        //detect top element
-        $(document).scroll(function() {
-            var scrollTop = $(window).scrollTop();
-            var windowHeight = $(window).height();
-            var first = false;
-            $(".brick").each(function() {
-                var offset = $(this).offset();
-                if (scrollTop <= offset.top && ($(this).height() + offset.top) < (scrollTop + windowHeight) && first === false) {
-                    $(this).addClass("top");
-
-                    $topBrick = $(this);
-
-                    first = true;
-                } else {
-                    $(this).removeClass("top");
-                    first = false;
-                }
-            });
-        });
-
-        //when any of the search source parameters are changed,
-        //the value is passed to the global wikiverse source parameter variable
-        //and getConnections is called via the sourceType trigger
-        $sourceParams.find('select').on('change', function() {
-
-            //wikiverse source parameter variable ()
-            wikiverse[$(this).attr('id')] = $(this).val();
-
-            //call getconnections by triggering a change on sourcetype
-            $sourceType.trigger('change');
-        });
-
-        $(".source").on("click", function() {
-
-            var query = $("#searchInput input").val();
-
-            //close the search
-            $('.search').removeClass('open');
-
-            //if not already open, open the sidebar:
-            if (!$sidebar.hasClass('cbp-spmenu-open')) {
-                toggleSidebar();
+            //if there is no parent saved in the searchkeyword, you are searching for soemthign new, thus
+            //updatethesearchistory and use that searchquery for a fresh parent node in the mindmap
+            if (!$searchKeyword.data('parent')) {
+                updateSearchHistory();
             }
 
-            prepareSearchNavbar(query, $(this).attr("id"));
+            //if there is a searchkeyword parent, we are using the search to continue a topic, take that as parent
+            //if not, it means we are pushing a topic to the board for the first time, take the searchquery id as parent
+            //
+            //not that updateSearchhistory is emptying the searchkeyword.data(parent) in case something is added to the searchhistory,
+            //thus forcing the second (if not) state!
+            var parent = $searchKeyword.data('parent') || wikiverse.searchHistory[$searchKeyword.val().toLowerCase()];
 
-            var thisResultsArray = $(this).data("results");
-            var functionToBuildSearchResults = $(this).attr("fn");
+            var $thisBrick = buildBrick([parseInt($topBrick.css('left')), parseInt($topBrick.css('top')) - 200], undefined, parent);
+            var result = $(this).data("topic");
 
-            wikiverse[functionToBuildSearchResults](thisResultsArray, searchResultsListBuilt);
-            $sourceType.trigger('change');
+            //concatenate the respective function to push bricks to the board (buildWikis, buildYoutubes, etc)
+            wikiverse["build" + result.Type]($thisBrick, result.Topic, brickDataLoaded);
 
+            $(this).tooltip('destroy');
+            $(this).remove();
+
+            //build a node with the searchqueryNode as parent
+            buildNode(result, $thisBrick.data('id'), parent);
+            return false;
         });
 
-        $("#addMap").on("click", function() {
-
-            var $mapDefaultBrick = $(defaultMapBrick);
-            var $thisBrick = buildGmapsBrick(parseInt($mapDefaultBrick.css('left')), parseInt($mapDefaultBrick.css('top')));
-
-            getGmapsSearch($thisBrick);
-
-        });
-
+        //remove the loading icon when done
+        $sidebar.find("#loading").remove();
     }
 
     wikiverse.demoMindmap = (json) => {
@@ -463,14 +380,6 @@ window.WIKIVERSE = (function($) {
         }
     }
 
-    const isPortrait = (imgElement) => {
-
-        if (imgElement.width() < imgElement.height()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     //callback foor content loaded into brick
     const brickDataLoaded = ($brick) => {
@@ -1173,12 +1082,6 @@ window.WIKIVERSE = (function($) {
 
     };
 
-    //strip html from given text
-    wikiverse.strip = dirtyString => {
-        var tmp = document.createElement("DIV");
-        tmp.innerHTML = dirtyString;
-        return tmp.textContent || tmp.innerText || "";
-    }
 
     //build the soundcloud brick
     wikiverse.buildSoundcloud = ($brick, soundcloudObj, callback) => {
@@ -1200,7 +1103,7 @@ window.WIKIVERSE = (function($) {
 
         results.forEach(function(result, index) {
 
-            var $result = $('<tr class="result" data-toggle="tooltip" title="' + wikiverse.strip(result.Topic.snippet) + '"><td>' + result.Topic.title + '</td></tr>');
+            var $result = $('<tr class="result" data-toggle="tooltip" title="' + strip(result.Topic.snippet) + '"><td>' + result.Topic.title + '</td></tr>');
             $result.data("topic", result);
 
             //append row to sidebar-results-table
@@ -1688,7 +1591,7 @@ window.WIKIVERSE = (function($) {
 
         results.forEach(function(result, index) {
 
-            var $result = $('<tr class="result" data-toggle="tooltip" youtubeID="' + result.Topic.youtubeID + '" title="' + wikiverse.strip(result.Topic.snippet) + '"><td class="youtubeThumb col-md-6"><img height="100" src="' + result.Topic.thumbnailURL + '"></td class="col-md-6"><td>' + result.Topic.title + '</td></tr>');
+            var $result = $('<tr class="result" data-toggle="tooltip" youtubeID="' + result.Topic.youtubeID + '" title="' + strip(result.Topic.snippet) + '"><td class="youtubeThumb col-md-6"><img height="100" src="' + result.Topic.thumbnailURL + '"></td class="col-md-6"><td>' + result.Topic.title + '</td></tr>');
             $result.data("topic", result);
 
             //append row to sidebar-results-table
@@ -1700,97 +1603,6 @@ window.WIKIVERSE = (function($) {
 
     };
 
-    //create the stars effect on homepage
-    wikiverse.stars = (canvas) => {
-
-        window.requestAnimFrame = (function(callback) {
-            return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) {
-                window.setTimeout(callback, 1000 / 30);
-            };
-        })();
-
-        $(canvas).attr("width", $(window).width() - 20);
-        $(canvas).attr("height", $("#top-home-container").height() - 10);
-
-        const context = canvas.getContext('2d');
-        const sizes = ['micro', 'mini', 'medium', 'big', 'max'];
-        const elements = [];
-        const max_bright = 1;
-        const min_bright = .2;
-
-        /* FUNCTIONS */
-        const generate = (starsCount, opacity) => {
-            for (var i = 0; i < starsCount; i++) {
-                var x = randomInt(2, canvas.offsetWidth - 2),
-                    y = randomInt(2, canvas.offsetHeight - 2),
-                    size = sizes[randomInt(0, sizes.length - 1)];
-
-                elements.push(star(x, y, size, opacity));
-            }
-        }
-
-        const star = (x, y, size, alpha) => {
-            var radius = 0;
-            switch (size) {
-                case 'micro':
-                    radius = 0.5;
-                    break;
-                case 'mini':
-                    radius = 1;
-                    break;
-                case 'medium':
-                    radius = 1.5;
-                    break;
-                case 'big':
-                    radius = 2;
-                    break;
-                case 'max':
-                    radius = 3;
-                    break;
-            }
-
-            var gradient = context.createRadialGradient(x, y, 0, x + radius, y + radius, radius * 2);
-
-            gradient.addColorStop(0, 'rgba(255, 255, 255, ' + alpha + ')');
-            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-
-            /* clear background pixels */
-            context.beginPath();
-            context.clearRect(x - radius - 1, y - radius - 1, radius * 2 + 2, radius * 2 + 2);
-            context.closePath();
-
-            /* draw star */
-            context.beginPath();
-            context.arc(x, y, radius, 0, 2 * Math.PI);
-            context.fillStyle = gradient;
-            context.fill();
-
-            return {
-                'x': x,
-                'y': y,
-                'size': size,
-                'alpha': alpha
-            };
-        }
-
-        const randomInt = (a, b) => {
-            return Math.floor(Math.random() * (b - a + 1) + a);
-        }
-
-        const randomFloatAround = (num) => {
-            var plusminus = randomInt(0, 1000) % 2,
-                val = num;
-            if (plusminus)
-                val += 0.1;
-            else
-                val -= 0.1;
-            return parseFloat(val.toFixed(1));
-        }
-
-        /* init */
-        generate(200, .6);
-
-    }
 
     //build a youtube brick
     wikiverse.buildYoutube = ($brick, youtubeObj, callback) => {
@@ -2716,9 +2528,98 @@ window.WIKIVERSE = (function($) {
         wikiverse[$(this).attr('id')](wpnonce);
     });
 
+    //but also open the search if clicked
+    $('.searchButton').on('click', function(event) {
+        event.preventDefault();
+        wikiverse.toggleSearch();
 
+        //Close the sidebar, if open:
+        if ($sidebar.hasClass('cbp-spmenu-open')) {
+            toggleSidebar();
+        }
+    });
+
+    //close the search
+    $('.search, .search button.close').on('click', function(event) {
+        if (event.target.className === 'close') {
+            $(this).removeClass('open');
+        }
+    });
+
+    //adding escape functionality for closing search
+    $(document).keyup(function(e) {
+        if ($('.search').hasClass('open') && e.keyCode === 27) { // escape key maps to keycode `27`
+            $('.search').removeClass('open');
+        }
+    });
+
+    //detect top element
+    $(document).scroll(function() {
+        var scrollTop = $(window).scrollTop();
+        var windowHeight = $(window).height();
+        var first = false;
+        $(".brick").each(function() {
+            var offset = $(this).offset();
+            if (scrollTop <= offset.top && ($(this).height() + offset.top) < (scrollTop + windowHeight) && first === false) {
+                $(this).addClass("top");
+
+                $topBrick = $(this);
+
+                first = true;
+            } else {
+                $(this).removeClass("top");
+                first = false;
+            }
+        });
+    });
+
+    //when any of the search source parameters are changed,
+    //the value is passed to the global wikiverse source parameter variable
+    //and getConnections is called via the sourceType trigger
+    $sourceParams.find('select').on('change', function() {
+
+        //wikiverse source parameter variable ()
+        wikiverse[$(this).attr('id')] = $(this).val();
+
+        //call getconnections by triggering a change on sourcetype
+        $sourceType.trigger('change');
+    });
+
+    $(".source").on("click", function() {
+
+        var query = $("#searchInput input").val();
+
+        //close the search
+        $('.search').removeClass('open');
+
+        //if not already open, open the sidebar:
+        if (!$sidebar.hasClass('cbp-spmenu-open')) {
+            toggleSidebar();
+        }
+
+        prepareSearchNavbar(query, $(this).attr("id"));
+
+        var thisResultsArray = $(this).data("results");
+        var functionToBuildSearchResults = $(this).attr("fn");
+
+        wikiverse[functionToBuildSearchResults](thisResultsArray, searchResultsListBuilt);
+        $sourceType.trigger('change');
+
+    });
+
+    $("#addMap").on("click", function() {
+
+        var $mapDefaultBrick = $(defaultMapBrick);
+        var $thisBrick = buildGmapsBrick(parseInt($mapDefaultBrick.css('left')), parseInt($mapDefaultBrick.css('top')));
+
+        getGmapsSearch($thisBrick);
+
+    });
     //---------------END -keyboard shortcuts----------------------------
     /* END EVENTS */
+
+    //return stars to be used elsewhere on page
+    wikiverse.stars = stars;
 
     return wikiverse;
 
