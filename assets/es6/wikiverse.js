@@ -19,9 +19,10 @@ import {
     } from './APIcalls.js';
 
 import {stars} from './stars.js'
-import {wikiverse} from './wvObj.js'
 
 window.WIKIVERSE = (function($) {
+
+    const wikiverse = {};
 
     const close_icon = '<span class="cross control-buttons"><i class="fa fa-close"></i></span>';
     const fotoResizeButton = '<span class="resize control-buttons"><i class="fa fa-expand"></i></span>';
@@ -35,6 +36,37 @@ window.WIKIVERSE = (function($) {
     const getFlickrsButton = '<button id="Flickr" class="btn btn-default btn-xs getFotos" type="button">get flickr fotos of this location</button>';
     const loadingIcon = '<span id="loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate">';
     const note = '<textarea id="note" class="form-control" placeholder="add your own infos.." rows="3"></textarea>';
+
+    wikiverse.sigmaSettings = {
+        doubleClickEnabled: false,
+        minEdgeSize: 1,
+        maxEdgeSize: 3,
+        minNodeSize: 5,
+        maxNodeSize: 15,
+        enableEdgeHovering: true,
+        edgeHoverColor: 'edge',
+        defaultEdgeHoverColor: '#000',
+        labelThreshold: 15,
+        edgeHoverSizeRatio: 1,
+        edgeHoverExtremities: true,
+        mouseWheelEnabled: false,
+        labelSize: "proportional",
+        labelColor: "node",
+        labelHoverShadow: "node",
+        labelHoverColor: "node"
+    };
+    wikiverse.sigmaRenderer =  {
+        container: document.getElementById('mindmap'),
+        type: 'canvas'
+    };
+
+    //set default settings for the searches
+    wikiverse.searchLang = "en";
+    wikiverse.instagramSearchType = "hashtag";
+    wikiverse.flickrSearchType = "textQuery";
+    wikiverse.flickrSortType = "relevance";
+    wikiverse.youtubeSortType ="relevance";
+    wikiverse.twitterSearchType = "popular";
 
     const fruchtermanReingoldSettings = {
         autoArea: true,
@@ -55,6 +87,14 @@ window.WIKIVERSE = (function($) {
         searchQuery: ["\uF002", "#89A4BE"],
     };
 
+    const rmOptions = {
+        speed: 700,
+        moreLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> more </button>',
+        lessLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> less </button>',
+        afterToggle: function() {
+            pckry.layout();
+        }
+    };
     //const is_root = location.pathname === "/";
 
     const wpnonce = $('#nonce').html();
@@ -82,14 +122,6 @@ window.WIKIVERSE = (function($) {
         columnWidth: 225
     });
 
-    // --------FUNCTION DEFINITIONS
-    // These are defined here for JSHint function order checking
-    var buildFlickrSearchResults,
-        buildInstagramSearchResults,
-        buildFoto,
-        buildYoutubeSearchResults,
-        makeEachDraggable,
-        playYoutube;
 
     // --------SIGMA class enhancements, init, filters and eventhandlers
 
@@ -114,12 +146,26 @@ window.WIKIVERSE = (function($) {
 
         const store = createStore(wvReducer, state);
 
+        //overwrite the wikiverse mindmapobject
+        //used in both buildMindmap and init
+        wikiverse.mindmap = new sigma({
+            renderer: wikiverse.sigmaRenderer,
+            settings: wikiverse.sigmaSettings
+        });
+        //overwrite the wikiverse mindmap filter
+        wikiverse.filter = sigma.plugins.filter(wikiverse.mindmap);
+        wikiverse.cam = wikiverse.mindmap.camera;
+
+        mindMapEventHandler();
+
         //hide the sources button that hold results
         //  $('.source').hide();
         $sourceParams.hide();
 
+        wikiverse.searchHistory = {};
+
         wikiverse.buildBoard(state);
-        console.log(store.getState());
+        //console.log(store.getState());
     }
 
     const searchResultsListBuilt = ($results) => {
@@ -348,40 +394,40 @@ window.WIKIVERSE = (function($) {
     //for Wikipedia, trigger the next brick on click of links
     const buildNextTopic = ($brick, lang) => {
 
-            $brick.find(".article a, .section a").unbind('click').click(function(e) {
+        $brick.find(".article a, .section a").unbind('click').click(function(e) {
 
-                e.preventDefault();
+            e.preventDefault();
 
-                //stamp this brick so it doesnt move around
-                pckry.stamp( $brick[0] )
+            //stamp this brick so it doesnt move around
+            pckry.stamp( $brick[0] )
 
-                //get the new wikipedia topic from the a element
-                var topic = $(this).attr("title");
+            //get the new wikipedia topic from the a element
+            var topic = $(this).attr("title");
 
-                //unwrap the a element
-                $(this).contents().unwrap();
+            //unwrap the a element
+            $(this).contents().unwrap();
 
-                var wikiData = {
-                    title: topic,
-                    language: lang
-                };
+            var wikiData = {
+                title: topic,
+                language: lang
+            };
 
-                var $nextBrick = buildBrick([parseInt($brick.css('left') + 500), parseInt($brick.css('top') + 500)], undefined, $brick.data('id'));
+            var $nextBrick = buildBrick([parseInt($brick.css('left') + 500), parseInt($brick.css('top') + 500)], undefined, $brick.data('id'));
 
-                wikiverse.buildWikipedia($nextBrick, wikiData, brickDataLoaded);
+            wikiverse.buildWikipedia($nextBrick, wikiData, brickDataLoaded);
 
-                var brickData = {
-                    Topic: wikiData,
-                    Type: "Wikipedia",
-                    Id: $nextBrick.data('id')
-                }
+            var brickData = {
+                Topic: wikiData,
+                Type: "Wikipedia",
+                Id: $nextBrick.data('id')
+            }
 
-                //unstamp it after everything is done
-                pckry.unstamp( $brick[0] )
+            //unstamp it after everything is done
+            pckry.unstamp( $brick[0] )
 
-                buildNode(brickData, $nextBrick.data('id'), $brick.data('id'));
-            });
-        }
+            buildNode(brickData, $nextBrick.data('id'), $brick.data('id'));
+        });
+    }
         //toggle the sidebar
     const toggleSidebar = () => {
 
@@ -1191,14 +1237,6 @@ window.WIKIVERSE = (function($) {
         });
     }
 
-    var rmOptions = {
-        speed: 700,
-        moreLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> more </button>',
-        lessLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> less </button>',
-        afterToggle: function() {
-            pckry.layout();
-        }
-    };
     //build a wiki Brick
     wikiverse.buildWikipedia = ($brick, topic, callback) => {
 
@@ -1487,7 +1525,7 @@ window.WIKIVERSE = (function($) {
     };
 
     //play a youtube video
-    playYoutube = function($brick, youtubeObj) {
+    const playYoutube = function($brick, youtubeObj) {
 
         //stop all other players
         $('.youtube').find("iframe").remove();
@@ -1508,7 +1546,7 @@ window.WIKIVERSE = (function($) {
     };
 
     //make each brick draggable
-    makeEachDraggable = function(i, itemElem) {
+    const makeEachDraggable = function(i, itemElem) {
 
         // make element draggable with Draggabilly
         var draggie;
@@ -1628,18 +1666,6 @@ window.WIKIVERSE = (function($) {
     }
 
     wikiverse.buildMindmap = (board) => {
-
-        //overwrite the wikiverse mindmapobject
-        //used in both buildMindmap and init
-        wikiverse.mindmap = new sigma({
-            renderer: wikiverse.sigmaRenderer,
-            settings: wikiverse.sigmaSettings
-        });
-        //overwrite the wikiverse mindmap filter
-        wikiverse.filter = sigma.plugins.filter(wikiverse.mindmap);
-        wikiverse.cam = wikiverse.mindmap.camera;
-
-        mindMapEventHandler();
 
         var mindmapObj = {
             nodes: [],

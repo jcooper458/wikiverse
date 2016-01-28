@@ -713,7 +713,7 @@ function combineReducers(reducers) {
 
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./createStore":7,"./utils/isPlainObject":9,"./utils/mapValues":10,"./utils/pick":11,"_process":16}],6:[function(require,module,exports){
+},{"./createStore":7,"./utils/isPlainObject":9,"./utils/mapValues":10,"./utils/pick":11,"_process":15}],6:[function(require,module,exports){
 /**
  * Composes single-argument functions from right to left.
  *
@@ -956,7 +956,7 @@ exports.bindActionCreators = _bindActionCreators2['default'];
 exports.applyMiddleware = _applyMiddleware2['default'];
 exports.compose = _compose2['default'];
 }).call(this,require('_process'))
-},{"./applyMiddleware":3,"./bindActionCreators":4,"./combineReducers":5,"./compose":6,"./createStore":7,"_process":16}],9:[function(require,module,exports){
+},{"./applyMiddleware":3,"./bindActionCreators":4,"./combineReducers":5,"./compose":6,"./createStore":7,"_process":15}],9:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1225,11 +1225,9 @@ var _APIcalls = require('./APIcalls.js');
 
 var _stars = require('./stars.js');
 
-var _wvObj = require('./wvObj.js');
-
-//wv imports
-
 window.WIKIVERSE = (function ($) {
+
+    var wikiverse = {};
 
     var close_icon = '<span class="cross control-buttons"><i class="fa fa-close"></i></span>';
     var fotoResizeButton = '<span class="resize control-buttons"><i class="fa fa-expand"></i></span>';
@@ -1243,6 +1241,37 @@ window.WIKIVERSE = (function ($) {
     var getFlickrsButton = '<button id="Flickr" class="btn btn-default btn-xs getFotos" type="button">get flickr fotos of this location</button>';
     var loadingIcon = '<span id="loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate">';
     var note = '<textarea id="note" class="form-control" placeholder="add your own infos.." rows="3"></textarea>';
+
+    wikiverse.sigmaSettings = {
+        doubleClickEnabled: false,
+        minEdgeSize: 1,
+        maxEdgeSize: 3,
+        minNodeSize: 5,
+        maxNodeSize: 15,
+        enableEdgeHovering: true,
+        edgeHoverColor: 'edge',
+        defaultEdgeHoverColor: '#000',
+        labelThreshold: 15,
+        edgeHoverSizeRatio: 1,
+        edgeHoverExtremities: true,
+        mouseWheelEnabled: false,
+        labelSize: "proportional",
+        labelColor: "node",
+        labelHoverShadow: "node",
+        labelHoverColor: "node"
+    };
+    wikiverse.sigmaRenderer = {
+        container: document.getElementById('mindmap'),
+        type: 'canvas'
+    };
+
+    //set default settings for the searches
+    wikiverse.searchLang = "en";
+    wikiverse.instagramSearchType = "hashtag";
+    wikiverse.flickrSearchType = "textQuery";
+    wikiverse.flickrSortType = "relevance";
+    wikiverse.youtubeSortType = "relevance";
+    wikiverse.twitterSearchType = "popular";
 
     var fruchtermanReingoldSettings = {
         autoArea: true,
@@ -1263,6 +1292,14 @@ window.WIKIVERSE = (function ($) {
         searchQuery: ['', "#89A4BE"]
     };
 
+    var rmOptions = {
+        speed: 700,
+        moreLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> more </button>',
+        lessLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> less </button>',
+        afterToggle: function afterToggle() {
+            pckry.layout();
+        }
+    };
     //const is_root = location.pathname === "/";
 
     var wpnonce = $('#nonce').html();
@@ -1290,10 +1327,6 @@ window.WIKIVERSE = (function ($) {
         columnWidth: 225
     });
 
-    // --------FUNCTION DEFINITIONS
-    // These are defined here for JSHint function order checking
-    var buildFlickrSearchResults, buildInstagramSearchResults, buildFoto, buildYoutubeSearchResults, makeEachDraggable, playYoutube;
-
     // --------SIGMA class enhancements, init, filters and eventhandlers
 
     sigma.classes.graph.addMethod('neighbors', function (nodeId) {
@@ -1312,17 +1345,31 @@ window.WIKIVERSE = (function ($) {
 
     //initiate the wikiverse search functionality
     //this is called on document ready (from _main.js)
-    _wvObj.wikiverse.init = function () {
+    wikiverse.init = function () {
         var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
         var store = (0, _redux.createStore)(_reducers.wvReducer, state);
+
+        //overwrite the wikiverse mindmapobject
+        //used in both buildMindmap and init
+        wikiverse.mindmap = new sigma({
+            renderer: wikiverse.sigmaRenderer,
+            settings: wikiverse.sigmaSettings
+        });
+        //overwrite the wikiverse mindmap filter
+        wikiverse.filter = sigma.plugins.filter(wikiverse.mindmap);
+        wikiverse.cam = wikiverse.mindmap.camera;
+
+        mindMapEventHandler();
 
         //hide the sources button that hold results
         //  $('.source').hide();
         $sourceParams.hide();
 
-        _wvObj.wikiverse.buildBoard(state);
-        console.log(store.getState());
+        wikiverse.searchHistory = {};
+
+        wikiverse.buildBoard(state);
+        //console.log(store.getState());
     };
 
     var searchResultsListBuilt = function searchResultsListBuilt($results) {
@@ -1341,13 +1388,13 @@ window.WIKIVERSE = (function ($) {
             //
             //not that updateSearchhistory is emptying the searchkeyword.data(parent) in case something is added to the searchhistory,
             //thus forcing the second (if not) state!
-            var parent = $searchKeyword.data('parent') || _wvObj.wikiverse.searchHistory[$searchKeyword.val().toLowerCase()];
+            var parent = $searchKeyword.data('parent') || wikiverse.searchHistory[$searchKeyword.val().toLowerCase()];
 
             var $thisBrick = buildBrick([parseInt($topBrick.css('left')), parseInt($topBrick.css('top')) - 200], undefined, parent);
             var result = $(this).data("topic");
 
             //concatenate the respective function to push bricks to the board (buildWikis, buildYoutubes, etc)
-            _wvObj.wikiverse["build" + result.Type]($thisBrick, result.Topic, brickDataLoaded);
+            wikiverse["build" + result.Type]($thisBrick, result.Topic, brickDataLoaded);
 
             $(this).tooltip('destroy');
             $(this).remove();
@@ -1403,10 +1450,10 @@ window.WIKIVERSE = (function ($) {
         // original color.
         // We do the same for the edges, and we only keep
         // edges that have both extremities colored.
-        _wvObj.wikiverse.mindmap.bind('clickNode', function (e) {
+        wikiverse.mindmap.bind('clickNode', function (e) {
 
             var nodeId = e.data.node.id,
-                toKeep = _wvObj.wikiverse.mindmap.graph.neighbors(nodeId);
+                toKeep = wikiverse.mindmap.graph.neighbors(nodeId);
             /* toKeep[nodeId] = e.data.node;
               wikiverse.mindmap.graph.nodes().forEach(function(n) {
                  if (toKeep[n.id]) {
@@ -1425,10 +1472,10 @@ window.WIKIVERSE = (function ($) {
             // Since the data has been modified, we need to
             // call the refresh method to make the colors
             // update effective.
-            _wvObj.wikiverse.mindmap.refresh();
+            wikiverse.mindmap.refresh();
 
             //if not search query node, scroll to brick
-            if (_wvObj.wikiverse.mindmap.graph.nodes(nodeId).source !== "searchQuery") {
+            if (wikiverse.mindmap.graph.nodes(nodeId).source !== "searchQuery") {
                 //scroll to clicked element
 
                 $('html, body').animate({
@@ -1503,7 +1550,7 @@ window.WIKIVERSE = (function ($) {
 
             //this is used in order to fire the searchresults in the sidebar
             if (triggerSearchResultsFunction) {
-                _wvObj.wikiverse[triggerSearchResultsFunction](results, searchResultsListBuilt);
+                wikiverse[triggerSearchResultsFunction](results, searchResultsListBuilt);
             }
         } else {
             $results.append("Nothing found for " + $searchKeyword.val() + " on " + source);
@@ -1561,7 +1608,7 @@ window.WIKIVERSE = (function ($) {
 
             var $nextBrick = buildBrick([parseInt($brick.css('left') + 500), parseInt($brick.css('top') + 500)], undefined, $brick.data('id'));
 
-            _wvObj.wikiverse.buildWikipedia($nextBrick, wikiData, brickDataLoaded);
+            wikiverse.buildWikipedia($nextBrick, wikiData, brickDataLoaded);
 
             var brickData = {
                 Topic: wikiData,
@@ -1612,8 +1659,8 @@ window.WIKIVERSE = (function ($) {
             //only show filters for sources that are present on the board
             updateFilters();
 
-            sigma.layouts.fruchtermanReingold.start(_wvObj.wikiverse.mindmap, fruchtermanReingoldSettings);
-            _wvObj.wikiverse.mindmap.refresh();
+            sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
+            wikiverse.mindmap.refresh();
 
             $('#closeBottomSidebar').removeClass('invisible');
             $('#closeBottomSidebar').show();
@@ -1802,7 +1849,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //build the gmaps brick (coming from database)
-    _wvObj.wikiverse.buildGmaps = function ($mapbrick, mapObj, callback) {
+    wikiverse.buildGmaps = function ($mapbrick, mapObj, callback) {
 
         var map;
         var myMaptypeID;
@@ -1962,7 +2009,7 @@ window.WIKIVERSE = (function ($) {
         });
     };
     //build the streetmap map brick (from database)
-    _wvObj.wikiverse.buildStreetMap = function ($mapbrick, streetObj, callback) {
+    wikiverse.buildStreetMap = function ($mapbrick, streetObj, callback) {
 
         var currentStreetMap;
 
@@ -2040,16 +2087,16 @@ window.WIKIVERSE = (function ($) {
         switch (source) {
 
             case "Flickr":
-                (0, _APIcalls.getFlickrs)(topic, _wvObj.wikiverse.flickrSortType, _wvObj.wikiverse.flickrSearchType, searchResultsLoaded, "buildFotoSearchResults");
+                (0, _APIcalls.getFlickrs)(topic, wikiverse.flickrSortType, wikiverse.flickrSearchType, searchResultsLoaded, "buildFotoSearchResults");
                 break;
 
             case "Instagram":
                 //remove whitespace from instagram query
-                (0, _APIcalls.getInstagrams)(topic.replace(/ /g, ''), _wvObj.wikiverse.instagramSearchType, searchResultsLoaded, "buildFotoSearchResults");
+                (0, _APIcalls.getInstagrams)(topic.replace(/ /g, ''), wikiverse.instagramSearchType, searchResultsLoaded, "buildFotoSearchResults");
                 break;
 
             case "Youtube":
-                (0, _APIcalls.getYoutubes)(topic, _wvObj.wikiverse.youtubeSortType, _wvObj.wikiverse.searchLang, searchResultsLoaded, "buildYoutubeSearchResults");
+                (0, _APIcalls.getYoutubes)(topic, wikiverse.youtubeSortType, wikiverse.searchLang, searchResultsLoaded, "buildYoutubeSearchResults");
                 break;
 
             case "Soundcloud":
@@ -2057,27 +2104,27 @@ window.WIKIVERSE = (function ($) {
                 break;
 
             case "Twitter":
-                (0, _APIcalls.getTweets)(topic, _wvObj.wikiverse.twitterSearchType, _wvObj.wikiverse.searchLang, searchResultsLoaded, "buildTwitterSearchResults");
+                (0, _APIcalls.getTweets)(topic, wikiverse.twitterSearchType, wikiverse.searchLang, searchResultsLoaded, "buildTwitterSearchResults");
                 break;
 
             case "Wikipedia":
-                (0, _APIcalls.getWikis)(topic, _wvObj.wikiverse.searchLang, searchResultsLoaded, "buildListResults");
+                (0, _APIcalls.getWikis)(topic, wikiverse.searchLang, searchResultsLoaded, "buildListResults");
                 break;
         }
     };
 
-    _wvObj.wikiverse.buildFlickr = function ($brick, photoObj, callback) {
+    wikiverse.buildFlickr = function ($brick, photoObj, callback) {
 
-        _wvObj.wikiverse.buildFoto($brick, photoObj, "Flickr", callback);
+        wikiverse.buildFoto($brick, photoObj, "Flickr", callback);
     };
 
-    _wvObj.wikiverse.buildInstagram = function ($brick, photoObj, callback) {
+    wikiverse.buildInstagram = function ($brick, photoObj, callback) {
 
-        _wvObj.wikiverse.buildFoto($brick, photoObj, "Instagram", callback);
+        wikiverse.buildFoto($brick, photoObj, "Instagram", callback);
     };
 
     //build a foto brick, either flickr or instagram
-    _wvObj.wikiverse.buildFoto = function ($brick, photoObj, type, callback) {
+    wikiverse.buildFoto = function ($brick, photoObj, type, callback) {
 
         $brick.addClass('foto');
         $brick.data('type', type);
@@ -2147,7 +2194,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //create the flickr brick
-    _wvObj.wikiverse.buildFotoSearchResults = function (results, searchResultsListBuilt) {
+    wikiverse.buildFotoSearchResults = function (results, searchResultsListBuilt) {
 
         results.forEach(function (result, index) {
 
@@ -2165,7 +2212,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //build the soundcloud brick
-    _wvObj.wikiverse.buildSoundcloud = function ($brick, soundcloudObj, callback) {
+    wikiverse.buildSoundcloud = function ($brick, soundcloudObj, callback) {
 
         $brick.addClass('w2-fix');
         $brick.data('type', 'Soundcloud');
@@ -2178,7 +2225,7 @@ window.WIKIVERSE = (function ($) {
         callback($brick);
     };
 
-    _wvObj.wikiverse.buildListResults = function (results, searchResultsListBuilt) {
+    wikiverse.buildListResults = function (results, searchResultsListBuilt) {
 
         $results.append(tableHover);
 
@@ -2201,7 +2248,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //stack the twitter search results in the sidebar
-    _wvObj.wikiverse.buildTwitterSearchResults = function (results) {
+    wikiverse.buildTwitterSearchResults = function (results) {
 
         $results.append(tableHover);
 
@@ -2217,7 +2264,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //build a tweet
-    _wvObj.wikiverse.buildTwitter = function ($brick, twitterObj, callback) {
+    wikiverse.buildTwitter = function ($brick, twitterObj, callback) {
 
         $brick.addClass('w2');
         $brick.addClass('Twitter');
@@ -2251,8 +2298,8 @@ window.WIKIVERSE = (function ($) {
         var searchQuery = $searchKeyword.val();
 
         //if search keyword is not already in history, add it
-        if (!_wvObj.wikiverse.searchHistory.hasOwnProperty(searchQuery.toLowerCase())) {
-            _wvObj.wikiverse.searchHistory[searchQuery.toLowerCase()] = Date.now();
+        if (!wikiverse.searchHistory.hasOwnProperty(searchQuery.toLowerCase())) {
+            wikiverse.searchHistory[searchQuery.toLowerCase()] = Date.now();
 
             //empty the $searchkeyword parent id so that a new searchquery parent is created
 
@@ -2261,11 +2308,11 @@ window.WIKIVERSE = (function ($) {
                     title: searchQuery
                 },
                 Type: "searchQuery",
-                Id: _wvObj.wikiverse.searchHistory[searchQuery.toLowerCase()]
+                Id: wikiverse.searchHistory[searchQuery.toLowerCase()]
             };
 
             //build a node for the searchquery
-            buildNode(searchQueryNodeData, _wvObj.wikiverse.searchHistory[searchQuery.toLowerCase()]);
+            buildNode(searchQueryNodeData, wikiverse.searchHistory[searchQuery.toLowerCase()]);
         }
     };
 
@@ -2331,7 +2378,7 @@ window.WIKIVERSE = (function ($) {
 
                             var $nextBrick = buildBrick([parseInt($brick.css('left')), parseInt($brick.css('top'))], undefined, $brick.data('id'));
 
-                            _wvObj.wikiverse.buildSection($nextBrick, sectionData, brickDataLoaded);
+                            wikiverse.buildSection($nextBrick, sectionData, brickDataLoaded);
 
                             var brickData = {
                                 Type: "wikiSection",
@@ -2349,16 +2396,8 @@ window.WIKIVERSE = (function ($) {
         });
     };
 
-    var rmOptions = {
-        speed: 700,
-        moreLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> more </button>',
-        lessLink: '<button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> less </button>',
-        afterToggle: function afterToggle() {
-            pckry.layout();
-        }
-    };
     //build a wiki Brick
-    _wvObj.wikiverse.buildWikipedia = function ($brick, topic, callback) {
+    wikiverse.buildWikipedia = function ($brick, topic, callback) {
 
         var $connections = $(wikiverse_nav);
 
@@ -2504,7 +2543,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //build a section brick
-    _wvObj.wikiverse.buildSection = function ($brick, section, callback) {
+    wikiverse.buildSection = function ($brick, section, callback) {
 
         $brick.data('type', 'wikiSection');
         $brick.data('topic', section);
@@ -2579,7 +2618,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //stack the youtube search results in the sidebar
-    _wvObj.wikiverse.buildYoutubeSearchResults = function (results) {
+    wikiverse.buildYoutubeSearchResults = function (results) {
 
         $results.append(tableHover);
 
@@ -2596,7 +2635,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //build a youtube brick
-    _wvObj.wikiverse.buildYoutube = function ($brick, youtubeObj, callback) {
+    wikiverse.buildYoutube = function ($brick, youtubeObj, callback) {
 
         var relatedButton = '<button class="btn btn-default btn-xs related" type="button">get related videos</button>';
         var youtubeThumb = '<img class="" id="ytplayer" type="text/html" src="' + youtubeObj.thumbnailURL + '">';
@@ -2640,7 +2679,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //play a youtube video
-    playYoutube = function playYoutube($brick, youtubeObj) {
+    var playYoutube = function playYoutube($brick, youtubeObj) {
 
         //stop all other players
         $('.youtube').find("iframe").remove();
@@ -2661,7 +2700,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //make each brick draggable
-    makeEachDraggable = function makeEachDraggable(i, itemElem) {
+    var makeEachDraggable = function makeEachDraggable(i, itemElem) {
 
         // make element draggable with Draggabilly
         var draggie;
@@ -2713,12 +2752,12 @@ window.WIKIVERSE = (function ($) {
     };
 
     //build a board -   this is called only for saved boards (coming from db)
-    _wvObj.wikiverse.buildBoard = function (board) {
+    wikiverse.buildBoard = function (board) {
 
         prepareBoardTitle(board);
 
         //overwrite the searchHistory with the one coming from db
-        _wvObj.wikiverse.searchHistory = board.search_history;
+        wikiverse.searchHistory = board.search_history;
 
         //if there are bricks in the board
         if (!$.isEmptyObject(board.bricks)) {
@@ -2730,39 +2769,39 @@ window.WIKIVERSE = (function ($) {
 
                     switch (brick.Type) {
                         case "Wikipedia":
-                            _wvObj.wikiverse.buildWikipedia($thisBrick, brick.Topic, brickDataLoaded);
+                            wikiverse.buildWikipedia($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "wikiSection":
-                            _wvObj.wikiverse.buildSection($thisBrick, brick.Topic, brickDataLoaded);
+                            wikiverse.buildSection($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "Flickr":
-                            _wvObj.wikiverse.buildFoto($thisBrick, brick.Topic, "Flickr", brickDataLoaded);
+                            wikiverse.buildFoto($thisBrick, brick.Topic, "Flickr", brickDataLoaded);
                             break;
 
                         case "Instagram":
-                            _wvObj.wikiverse.buildFoto($thisBrick, brick.Topic, "Instagram", brickDataLoaded);
+                            wikiverse.buildFoto($thisBrick, brick.Topic, "Instagram", brickDataLoaded);
                             break;
 
                         case "Youtube":
-                            _wvObj.wikiverse.buildYoutube($thisBrick, brick.Topic, brickDataLoaded);
+                            wikiverse.buildYoutube($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "gmaps":
-                            _wvObj.wikiverse.buildGmaps($thisBrick, brick.Topic, brickDataLoaded);
+                            wikiverse.buildGmaps($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "streetview":
-                            _wvObj.wikiverse.buildStreetMap($thisBrick, brick.Topic, brickDataLoaded);
+                            wikiverse.buildStreetMap($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "Soundcloud":
-                            _wvObj.wikiverse.buildSoundcloud($thisBrick, brick.Topic, brickDataLoaded);
+                            wikiverse.buildSoundcloud($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "Twitter":
-                            _wvObj.wikiverse.buildTwitter($thisBrick, brick.Topic, brickDataLoaded);
+                            wikiverse.buildTwitter($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         /*case "note":
@@ -2773,22 +2812,10 @@ window.WIKIVERSE = (function ($) {
             });
         }
         //this always needs to happen, also without any bricks, coz we need the search query nodes in the graph!
-        _wvObj.wikiverse.buildMindmap(board);
+        wikiverse.buildMindmap(board);
     };
 
-    _wvObj.wikiverse.buildMindmap = function (board) {
-
-        //overwrite the wikiverse mindmapobject
-        //used in both buildMindmap and init
-        _wvObj.wikiverse.mindmap = new sigma({
-            renderer: _wvObj.wikiverse.sigmaRenderer,
-            settings: _wvObj.wikiverse.sigmaSettings
-        });
-        //overwrite the wikiverse mindmap filter
-        _wvObj.wikiverse.filter = sigma.plugins.filter(_wvObj.wikiverse.mindmap);
-        _wvObj.wikiverse.cam = _wvObj.wikiverse.mindmap.camera;
-
-        mindMapEventHandler();
+    wikiverse.buildMindmap = function (board) {
 
         var mindmapObj = {
             nodes: [],
@@ -2858,7 +2885,7 @@ window.WIKIVERSE = (function ($) {
                 mindmapObj.edges.push(edge);
             }
         });
-        _wvObj.wikiverse.mindmap.graph.read(mindmapObj);
+        wikiverse.mindmap.graph.read(mindmapObj);
 
         updateFilters();
     };
@@ -2866,27 +2893,27 @@ window.WIKIVERSE = (function ($) {
     var removeNode = function removeNode(id, $brick) {
 
         //get the given node by Id
-        var nodesObj = _wvObj.wikiverse.mindmap.graph.getNodesById();
+        var nodesObj = wikiverse.mindmap.graph.getNodesById();
         var thisNode = nodesObj["n" + id];
 
         //recreate the children for this node
-        _wvObj.wikiverse.mindmap.graph.nodes().map(function (node, index) {
+        wikiverse.mindmap.graph.nodes().map(function (node, index) {
 
-            var neighbors = _wvObj.wikiverse.mindmap.graph.neighbors(node.id);
+            var neighbors = wikiverse.mindmap.graph.neighbors(node.id);
             delete neighbors[node.parent];
             node.children = neighbors;
         });
 
         //if for some reason, there is no parent, grab the root of the tree
         if (!thisNode.parent || thisNode.parent === "undefined") {
-            thisNode.parent = "n" + _wvObj.wikiverse.searchHistory[Object.keys(_wvObj.wikiverse.searchHistory)[0]];
+            thisNode.parent = "n" + wikiverse.searchHistory[Object.keys(wikiverse.searchHistory)[0]];
         }
 
         //drop the given node
-        _wvObj.wikiverse.mindmap.graph.dropNode("n" + id);
+        wikiverse.mindmap.graph.dropNode("n" + id);
 
         //get the last edge and grab its ID
-        var edgesArray = _wvObj.wikiverse.mindmap.graph.edges();
+        var edgesArray = wikiverse.mindmap.graph.edges();
         //if there are no edges, start with 0, if there are take the last edge, grab its id, remove the "e" from the id
         var lastEdgeId = edgesArray.length > 0 ? parseInt(edgesArray[edgesArray.length - 1].id.replace(/\D/g, '')) : 0;
 
@@ -2901,7 +2928,7 @@ window.WIKIVERSE = (function ($) {
             $("#" + nodeId).data('parent', parseInt(thisNode.parent.replace(/\D/g, '')));
 
             //create new edges for the child nodes to the parent
-            _wvObj.wikiverse.mindmap.graph.addEdge({
+            wikiverse.mindmap.graph.addEdge({
                 id: "e" + lastEdgeId,
                 // Reference extremities:
                 source: thisNode.parent,
@@ -2915,15 +2942,15 @@ window.WIKIVERSE = (function ($) {
         //if sidebar is open do the fruchertmanreingold, if not, dont do anything and save memory!
         if ($('#rightSidebar').hasClass('cbp-spmenu-open')) {
             updateFilters();
-            sigma.layouts.fruchtermanReingold.start(_wvObj.wikiverse.mindmap, fruchtermanReingoldSettings);
-            _wvObj.wikiverse.mindmap.refresh();
+            sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
+            wikiverse.mindmap.refresh();
         }
     };
 
     var buildNode = function buildNode(brickData, id, parent) {
 
         // Then, let's add some data to display:
-        _wvObj.wikiverse.mindmap.graph.addNode({
+        wikiverse.mindmap.graph.addNode({
             id: "n" + id,
             label: brickData.Topic.title,
             x: Math.random(),
@@ -2946,12 +2973,12 @@ window.WIKIVERSE = (function ($) {
         if (parent) {
 
             //get the last edge and grab its ID
-            var edgesArray = _wvObj.wikiverse.mindmap.graph.edges();
+            var edgesArray = wikiverse.mindmap.graph.edges();
             //if there are no edges, start with 0
             var lastEdgeId = edgesArray.length > 0 ? parseInt(edgesArray[edgesArray.length - 1].id.replace(/\D/g, '')) : 0;
             lastEdgeId++;
 
-            _wvObj.wikiverse.mindmap.graph.addEdge({
+            wikiverse.mindmap.graph.addEdge({
                 id: 'e' + lastEdgeId,
                 // Reference extremities:
                 source: 'n' + parent,
@@ -2965,15 +2992,15 @@ window.WIKIVERSE = (function ($) {
         //if sidebar is open do the fruchertmanreingold, if not, dont do anything and save memory!
         if ($('#bottomSidebar').hasClass('cbp-spmenu-open')) {
             updateFilters();
-            sigma.layouts.fruchtermanReingold.start(_wvObj.wikiverse.mindmap, fruchtermanReingoldSettings);
-            _wvObj.wikiverse.mindmap.refresh();
+            sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
+            wikiverse.mindmap.refresh();
         }
     };
 
     var updateFilters = function updateFilters() {
         $('#filter button').hide();
 
-        _wvObj.wikiverse.mindmap.graph.nodes().forEach(function (node, index) {
+        wikiverse.mindmap.graph.nodes().forEach(function (node, index) {
             $("#filter #filter_" + node.source).show();
         });
 
@@ -2981,7 +3008,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //toggle the search overlay
-    _wvObj.wikiverse.toggleSearch = function () {
+    wikiverse.toggleSearch = function () {
 
         $('#searchResults h3').hide();
 
@@ -2993,15 +3020,15 @@ window.WIKIVERSE = (function ($) {
     };
 
     //fork the board, copy it to your boards
-    _wvObj.wikiverse.forkBoard = function (wpnonce) {
+    wikiverse.forkBoard = function (wpnonce) {
         var forkedTitle = $('#wvTitle h1').html();
         var newAuthor = $('#wvAuthor').attr('data-currentUser');
 
-        _wvObj.wikiverse.createBoard(wpnonce, forkedTitle, newAuthor);
+        wikiverse.createBoard(wpnonce, forkedTitle, newAuthor);
     };
 
     //collect the bricks for saveboard/createboard/forkboard
-    _wvObj.wikiverse.collectBricks = function () {
+    wikiverse.collectBricks = function () {
 
         //get all bricks
         var bricks = pckry.getItemElements();
@@ -3036,7 +3063,7 @@ window.WIKIVERSE = (function ($) {
             "title": "",
             "author": $('#wvAuthor').attr('data-author'),
             "featured_image": featuredImage,
-            "search_history": _wvObj.wikiverse.searchHistory,
+            "search_history": wikiverse.searchHistory,
             "bricks": wikiverseParsed
         };
 
@@ -3044,9 +3071,9 @@ window.WIKIVERSE = (function ($) {
     };
 
     //save a board when modified
-    _wvObj.wikiverse.saveBoard = function (wpnonce) {
+    wikiverse.saveBoard = function (wpnonce) {
 
-        var board = _wvObj.wikiverse.collectBricks();
+        var board = wikiverse.collectBricks();
 
         board.title = $('#wvTitle').text();
 
@@ -3071,9 +3098,9 @@ window.WIKIVERSE = (function ($) {
     };
 
     //create a new board
-    _wvObj.wikiverse.createBoard = function (wpnonce, forkedTitle, newAuthor) {
+    wikiverse.createBoard = function (wpnonce, forkedTitle, newAuthor) {
 
-        var board = _wvObj.wikiverse.collectBricks();
+        var board = wikiverse.collectBricks();
 
         $("#saveBoardModal").modal('show');
 
@@ -3170,7 +3197,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //clear a board from all bricks
-    _wvObj.wikiverse.clearBoard = function (wpnonce) {
+    wikiverse.clearBoard = function (wpnonce) {
 
         if (confirm('Are you sure you want to clear this board?')) {
 
@@ -3178,12 +3205,12 @@ window.WIKIVERSE = (function ($) {
             pckry.remove(elements);
 
             //remove all nodes
-            _wvObj.wikiverse.mindmap.graph.clear();
+            wikiverse.mindmap.graph.clear();
 
             updateFilters();
 
             $("#filter #filter_All").hide();
-            _wvObj.wikiverse.mindmap.refresh();
+            wikiverse.mindmap.refresh();
         }
     };
 
@@ -3191,12 +3218,12 @@ window.WIKIVERSE = (function ($) {
     var sourceFilter = function sourceFilter(source) {
 
         //reset all filters first
-        _wvObj.wikiverse.filter.undo('node-source-equals-x').apply();
+        wikiverse.filter.undo('node-source-equals-x').apply();
 
         //if All, dont filter anything
         if (source !== "All") {
             //create the mot filter
-            _wvObj.wikiverse.filter.nodesBy(function (node) {
+            wikiverse.filter.nodesBy(function (node) {
                 return node.source === source || node.source === "searchQuery";
             }, 'node-source-equals-x').apply();
         }
@@ -3335,13 +3362,13 @@ window.WIKIVERSE = (function ($) {
             toggleSidebar();
         }
         //save, clear or edit board
-        _wvObj.wikiverse[$(this).attr('id')](wpnonce);
+        wikiverse[$(this).attr('id')](wpnonce);
     });
 
     //but also open the search if clicked
     $('.searchButton').on('click', function (event) {
         event.preventDefault();
-        _wvObj.wikiverse.toggleSearch();
+        wikiverse.toggleSearch();
 
         //Close the sidebar, if open:
         if ($sidebar.hasClass('cbp-spmenu-open')) {
@@ -3390,7 +3417,7 @@ window.WIKIVERSE = (function ($) {
     $sourceParams.find('select').on('change', function () {
 
         //wikiverse source parameter variable ()
-        _wvObj.wikiverse[$(this).attr('id')] = $(this).val();
+        wikiverse[$(this).attr('id')] = $(this).val();
 
         //call getconnections by triggering a change on sourcetype
         $sourceType.trigger('change');
@@ -3413,7 +3440,7 @@ window.WIKIVERSE = (function ($) {
         var thisResultsArray = $(this).data("results");
         var functionToBuildSearchResults = $(this).attr("fn");
 
-        _wvObj.wikiverse[functionToBuildSearchResults](thisResultsArray, searchResultsListBuilt);
+        wikiverse[functionToBuildSearchResults](thisResultsArray, searchResultsListBuilt);
         $sourceType.trigger('change');
     });
 
@@ -3428,52 +3455,14 @@ window.WIKIVERSE = (function ($) {
     /* END EVENTS */
 
     //return stars to be used elsewhere on page
-    _wvObj.wikiverse.stars = _stars.stars;
+    wikiverse.stars = _stars.stars;
 
-    return _wvObj.wikiverse;
+    return wikiverse;
 })(jQuery);
 
-},{"./APIcalls.js":1,"./helpers.js":2,"./reducers.js":12,"./stars.js":13,"./wvObj.js":15,"redux":8}],15:[function(require,module,exports){
-'use strict';
+//wv imports
 
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-var wikiverse = exports.wikiverse = {
-
-	sigmaSettings: {
-		doubleClickEnabled: false,
-		minEdgeSize: 1,
-		maxEdgeSize: 3,
-		minNodeSize: 5,
-		maxNodeSize: 15,
-		enableEdgeHovering: true,
-		edgeHoverColor: 'edge',
-		defaultEdgeHoverColor: '#000',
-		labelThreshold: 15,
-		edgeHoverSizeRatio: 1,
-		edgeHoverExtremities: true,
-		mouseWheelEnabled: false,
-		labelSize: "proportional",
-		labelColor: "node",
-		labelHoverShadow: "node",
-		labelHoverColor: "node"
-	},
-	sigmaRenderer: {
-		container: document.getElementById('mindmap'),
-		type: 'canvas'
-	},
-	//set default settings for the searches
-	searchLang: "en",
-	instagramSearchType: "hashtag",
-	flickrSearchType: "textQuery",
-	flickrSortType: "relevance",
-	youtubeSortType: "relevance",
-	twitterSearchType: "popular"
-
-};
-
-},{}],16:[function(require,module,exports){
+},{"./APIcalls.js":1,"./helpers.js":2,"./reducers.js":12,"./stars.js":13,"redux":8}],15:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
