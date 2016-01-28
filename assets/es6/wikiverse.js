@@ -1474,8 +1474,7 @@ window.WIKIVERSE = (function($) {
 
                     //if there is "may refer to", also include the first list
                     if(/may refer to/i.test(paragraph.text())){
-                        var mayReferToList = $(data.parse.text['*']).find('ul:first');
-                        paragraph.append(mayReferToList);
+                        paragraph.append($(data.parse.text['*']).find('ul:first'));
                     }
 
                     paragraph.find('.error').remove();
