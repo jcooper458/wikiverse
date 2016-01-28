@@ -2586,12 +2586,11 @@ window.WIKIVERSE = (function ($) {
                 if (data.parse.text['*'].length > 0) {
                     var paragraph = $(data.parse.text['*']).find('p:first');
 
+                    //if there is "may refer to", also include the first list
                     if (/may refer to/i.test(paragraph.text())) {
                         var mayReferToList = $(data.parse.text['*']).find('ul:first');
                         paragraph.append(mayReferToList);
                     }
-
-                    //if (paragraph.length){
 
                     paragraph.find('.error').remove();
                     paragraph.find('.reference').remove();
@@ -2599,7 +2598,7 @@ window.WIKIVERSE = (function ($) {
                     paragraph.find('.org').remove();
                     paragraph.find('.external').remove();
                     paragraph.find('#coordinates').remove();
-                    paragraph.find('*').css('max-width', '290px');
+                    //paragraph.find('*').css('max-width', '290px');
                     paragraph.find('img').unwrap();
                     paragraph.find('.IPA a').contents().unwrap();
 
