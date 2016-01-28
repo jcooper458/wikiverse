@@ -1090,6 +1090,8 @@ var wvReducer = exports.wvReducer = function wvReducer() {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+var $ = jQuery;
+
 //create the stars effect on homepage
 var stars = exports.stars = function stars(canvas) {
 
@@ -1331,7 +1333,7 @@ window.WIKIVERSE = (function ($) {
         wikiverse.searchHistory = {};
 
         wikiverse.buildBoard(state);
-        console.log(store.getState());
+        //console.log(store.getState());
     };
 
     var searchResultsListBuilt = function searchResultsListBuilt($results) {
@@ -2582,19 +2584,24 @@ window.WIKIVERSE = (function ($) {
             success: function success(data) {
 
                 if (data.parse.text['*'].length > 0) {
-                    var infobox = $(data.parse.text['*']).find('p:first');
+                    var paragraph = $(data.parse.text['*']).find('p:first');
 
-                    //if (infobox.length){
+                    if (/may refer to/i.test(paragraph.text())) {
+                        var mayReferToList = $(data.parse.text['*']).find('ul:first');
+                        paragraph.append(mayReferToList);
+                    }
 
-                    infobox.find('.error').remove();
-                    infobox.find('.reference').remove();
-                    infobox.find('.references').remove();
-                    infobox.find('.org').remove();
-                    infobox.find('.external').remove();
-                    infobox.find('#coordinates').remove();
-                    //infobox.find('*').css('max-width', '290px');
-                    infobox.find('img').unwrap();
-                    infobox.find('.IPA a').contents().unwrap();
+                    //if (paragraph.length){
+
+                    paragraph.find('.error').remove();
+                    paragraph.find('.reference').remove();
+                    paragraph.find('.references').remove();
+                    paragraph.find('.org').remove();
+                    paragraph.find('.external').remove();
+                    paragraph.find('#coordinates').remove();
+                    paragraph.find('*').css('max-width', '290px');
+                    paragraph.find('img').unwrap();
+                    paragraph.find('.IPA a').contents().unwrap();
 
                     var article = $('<div class="article"></div>');
 
@@ -2604,7 +2611,7 @@ window.WIKIVERSE = (function ($) {
                         article.insertAfter($brick.find(".wikiTitle"));
                     }
 
-                    article.append(infobox);
+                    article.append(paragraph);
 
                     article.readmore(rmOptions);
 
@@ -2885,7 +2892,7 @@ window.WIKIVERSE = (function ($) {
                             buildNote($thisBrick, brick.Topic, brickDataLoaded);
                         break;*/
                     }
-                }, 200 * index);
+                }, 150 * index);
             });
         }
         //this always needs to happen, also without any bricks, coz we need the search query nodes in the graph!
