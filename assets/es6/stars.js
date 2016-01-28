@@ -1,3 +1,5 @@
+var $ = jQuery;
+
 //create the stars effect on homepage
 export const stars = (canvas) => {
 
