@@ -2940,7 +2940,7 @@ window.WIKIVERSE = (function ($) {
         });
 
         //if sidebar is open do the fruchertmanreingold, if not, dont do anything and save memory!
-        if ($('#rightSidebar').hasClass('cbp-spmenu-open')) {
+        if ($('#bottomSidebar').hasClass('cbp-spmenu-open')) {
             updateFilters();
             sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
             wikiverse.mindmap.refresh();
