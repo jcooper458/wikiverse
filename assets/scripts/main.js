@@ -55,10 +55,6 @@
           }
         });
 
-        $.getJSON('/app/themes/wv/impressionism.json', function(json) {  
-          WIKIVERSE.demoMindmap(json);
-        });
-
       },
       finalize: function() {
         // JavaScript to be fired on the home page, after the init JS

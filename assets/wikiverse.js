@@ -436,6 +436,16 @@ var isPortrait = exports.isPortrait = function isPortrait(imgElement) {
     }
 };
 
+//find URLs in tweets/wikis,etc and replace them with clickable link
+var urlify = exports.urlify = function urlify(text) {
+    var urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, function (url) {
+        return '<a class="externalLink" target="_blank" href="' + url + '">' + url + '</a>';
+    });
+    // or alternatively
+    // return text.replace(urlRegex, '<a href="$1">$1</a>')
+};
+
 },{}],3:[function(require,module,exports){
 'use strict';
 
@@ -1262,7 +1272,7 @@ window.WIKIVERSE = (function ($) {
 
     // --------FUNCTION DEFINITIONS
     // These are defined here for JSHint function order checking
-    var buildFlickrSearchResults, buildInstagramSearchResults, buildFoto, buildYoutubeSearchResults, makeEachDraggable, playYoutube, destroyBoard;
+    var buildFlickrSearchResults, buildInstagramSearchResults, buildFoto, buildYoutubeSearchResults, makeEachDraggable, playYoutube;
 
     // --------SIGMA class enhancements, init, filters and eventhandlers
 
@@ -1286,16 +1296,6 @@ window.WIKIVERSE = (function ($) {
         var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
         var store = (0, _redux.createStore)(_reducers.wvReducer, state);
-
-        //overwrite the wikiverse mindmapobject
-        //used in both buildMindmap and init
-        _wvObj.wikiverse.mindmap = new sigma({
-            renderer: _wvObj.wikiverse.sigmaRenderer,
-            settings: _wvObj.wikiverse.sigmaSettings
-        });
-        //overwrite the wikiverse mindmap filter
-        _wvObj.wikiverse.filter = sigma.plugins.filter(_wvObj.wikiverse.mindmap);
-        mindMapEventHandler();
 
         //hide the sources button that hold results
         //  $('.source').hide();
@@ -1339,21 +1339,6 @@ window.WIKIVERSE = (function ($) {
 
         //remove the loading icon when done
         $sidebar.find("#loading").remove();
-    };
-
-    _wvObj.wikiverse.demoMindmap = function (json) {
-
-        _wvObj.wikiverse.mindmap = new sigma({
-            renderer: _wvObj.wikiverse.sigmaRenderer,
-            settings: _wvObj.wikiverse.sigmaSettings
-        });
-
-        mindMapEventHandler();
-
-        _wvObj.wikiverse.mindmap.graph.read(json);
-        sigma.layouts.fruchtermanReingold.start(_wvObj.wikiverse.mindmap, fruchtermanReingoldSettings);
-
-        _wvObj.wikiverse.mindmap.refresh();
     };
 
     //toggles the image size on click (works also for youtube)
@@ -2296,16 +2281,6 @@ window.WIKIVERSE = (function ($) {
         callback($brick);
     };
 
-    //find URLs in tweets/wikis,etc and replace them with clickable link
-    var urlify = function urlify(text) {
-        var urlRegex = /(https?:\/\/[^\s]+)/g;
-        return text.replace(urlRegex, function (url) {
-            return '<a class="externalLink" target="_blank" href="' + url + '">' + url + '</a>';
-        });
-        // or alternatively
-        // return text.replace(urlRegex, '<a href="$1">$1</a>')
-    };
-
     //build a tweet
     _wvObj.wikiverse.buildTwitter = function ($brick, twitterObj, callback) {
 
@@ -2319,7 +2294,7 @@ window.WIKIVERSE = (function ($) {
         //replace hashtags with links
         var tweet = twitterObj.title.replace(/(^|\W)(#[a-z\d][\w-]*)/ig, '$1<a hashtag="$2" href="#">$2</a>');
         tweet = tweet.replace(/(^|\W)(@[a-z\d][\w-]*)/ig, '$1<a hashtag="$2" href="#">$2</a>');
-        tweet = urlify(tweet);
+        tweet = (0, _helpers.urlify)(tweet);
 
         var $tweetContainer = $('<div class="col-md-2"><img class="twitterUserThumb" src="' + twitterObj.userThumb + '"></div><div class="col-md-10"><strong>' + twitterObj.user + '</strong><br><p>' + tweet + '</p></div>');
 

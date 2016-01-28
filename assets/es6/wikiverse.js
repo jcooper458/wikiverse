@@ -5,7 +5,7 @@ import { createStore } from 'redux'
 import { wvReducer } from './reducers.js'
 
 //wv imports
-import {strip, isPortrait} from './helpers.js'
+import {strip, isPortrait, urlify} from './helpers.js'
     
 import {
     getTweets, 
@@ -89,8 +89,7 @@ window.WIKIVERSE = (function($) {
         buildFoto,
         buildYoutubeSearchResults,
         makeEachDraggable,
-        playYoutube,
-        destroyBoard;
+        playYoutube;
 
     // --------SIGMA class enhancements, init, filters and eventhandlers
 
@@ -114,16 +113,6 @@ window.WIKIVERSE = (function($) {
     wikiverse.init = (state = {}) => {
 
         const store = createStore(wvReducer, state);
-
-        //overwrite the wikiverse mindmapobject
-        //used in both buildMindmap and init
-        wikiverse.mindmap = new sigma({
-            renderer: wikiverse.sigmaRenderer,
-            settings: wikiverse.sigmaSettings
-        });
-        //overwrite the wikiverse mindmap filter
-        wikiverse.filter = sigma.plugins.filter(wikiverse.mindmap);
-        mindMapEventHandler();
 
         //hide the sources button that hold results
         //  $('.source').hide();
@@ -167,21 +156,6 @@ window.WIKIVERSE = (function($) {
 
         //remove the loading icon when done
         $sidebar.find("#loading").remove();
-    }
-
-    wikiverse.demoMindmap = (json) => {
-
-        wikiverse.mindmap = new sigma({
-            renderer: wikiverse.sigmaRenderer,
-            settings: wikiverse.sigmaSettings
-        });
-
-        mindMapEventHandler();
-
-        wikiverse.mindmap.graph.read(json);
-        sigma.layouts.fruchtermanReingold.start(wikiverse.mindmap, fruchtermanReingoldSettings);
-
-        wikiverse.mindmap.refresh();
     }
 
     //toggles the image size on click (works also for youtube)
@@ -1170,16 +1144,6 @@ window.WIKIVERSE = (function($) {
         $brick.data('topic', noteObj);
 
         callback($brick);
-    }
-
-    //find URLs in tweets/wikis,etc and replace them with clickable link
-    const urlify = (text) => {
-        var urlRegex = /(https?:\/\/[^\s]+)/g;
-        return text.replace(urlRegex, function(url) {
-                return '<a class="externalLink" target="_blank" href="' + url + '">' + url + '</a>';
-            })
-            // or alternatively
-            // return text.replace(urlRegex, '<a href="$1">$1</a>')
     }
 
     //build a tweet
