@@ -5,7 +5,7 @@ import { createStore } from 'redux'
 import { wvReducer } from './reducers.js'
 
 //wv imports
-import {strip, isPortrait, urlify} from './helpers.js'
+import {strip, isPortrait, urlify, inrange, valid_coords} from './helpers.js'
     
 import {
     getTweets, 
@@ -327,28 +327,6 @@ window.WIKIVERSE = (function($) {
         pckry.layout();
     }
 
-
-
-
-    //function used within validate coordinates
-    const inrange = (min, number, max) => {
-        if (!isNaN(number) && (number >= min) && (number <= max)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    //validate if it is a coordinate
-    const valid_coords = (number_lat, number_lng) => {
-        if (inrange(-90, number_lat, 90) && inrange(-180, number_lng, 180)) {
-            $("#btnSaveResort").removeAttr("disabled");
-            return true;
-        } else {
-            $("#btnSaveResort").attr("disabled", "disabled");
-            return false;
-        }
-    }
 
     //build an empty brick
     const buildGmapsBrick = (x, y) => {

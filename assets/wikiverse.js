@@ -446,6 +446,26 @@ var urlify = exports.urlify = function urlify(text) {
     // return text.replace(urlRegex, '<a href="$1">$1</a>')
 };
 
+//function used within validate coordinates
+var inrange = exports.inrange = function inrange(min, number, max) {
+    if (!isNaN(number) && number >= min && number <= max) {
+        return true;
+    } else {
+        return false;
+    }
+};
+
+//validate if it is a coordinate
+var valid_coords = exports.valid_coords = function valid_coords(number_lat, number_lng) {
+    if (inrange(-90, number_lat, 90) && inrange(-180, number_lng, 180)) {
+        $("#btnSaveResort").removeAttr("disabled");
+        return true;
+    } else {
+        $("#btnSaveResort").attr("disabled", "disabled");
+        return false;
+    }
+};
+
 },{}],3:[function(require,module,exports){
 'use strict';
 
@@ -1499,26 +1519,6 @@ window.WIKIVERSE = (function ($) {
 
         $brick.fadeTo('slow', 1);
         pckry.layout();
-    };
-
-    //function used within validate coordinates
-    var inrange = function inrange(min, number, max) {
-        if (!isNaN(number) && number >= min && number <= max) {
-            return true;
-        } else {
-            return false;
-        }
-    };
-
-    //validate if it is a coordinate
-    var valid_coords = function valid_coords(number_lat, number_lng) {
-        if (inrange(-90, number_lat, 90) && inrange(-180, number_lng, 180)) {
-            $("#btnSaveResort").removeAttr("disabled");
-            return true;
-        } else {
-            $("#btnSaveResort").attr("disabled", "disabled");
-            return false;
-        }
     };
 
     //build an empty brick
