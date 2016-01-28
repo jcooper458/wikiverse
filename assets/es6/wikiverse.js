@@ -19,11 +19,9 @@ import {
     } from './APIcalls.js';
 
 import {stars} from './stars.js'
-
+import {wikiverse} from './wvObj.js'
 
 window.WIKIVERSE = (function($) {
-
-    const wikiverse = {};
 
     const close_icon = '<span class="cross control-buttons"><i class="fa fa-close"></i></span>';
     const fotoResizeButton = '<span class="resize control-buttons"><i class="fa fa-expand"></i></span>';
@@ -56,37 +54,6 @@ window.WIKIVERSE = (function($) {
         Soundcloud: ["\uF1be", "#FF6700"],
         searchQuery: ["\uF002", "#89A4BE"],
     };
-
-    wikiverse.sigmaSettings = {
-        doubleClickEnabled: false,
-        minEdgeSize: 1,
-        maxEdgeSize: 3,
-        minNodeSize: 5,
-        maxNodeSize: 15,
-        enableEdgeHovering: true,
-        edgeHoverColor: 'edge',
-        defaultEdgeHoverColor: '#000',
-        labelThreshold: 15,
-        edgeHoverSizeRatio: 1,
-        edgeHoverExtremities: true,
-        mouseWheelEnabled: false,
-        labelSize: "proportional",
-        labelColor: "node",
-        labelHoverShadow: "node",
-        labelHoverColor: "node"
-    };
-
-    wikiverse.sigmaRenderer = {
-        container: document.getElementById('mindmap'),
-        type: 'canvas'
-    };
-    //set default settings for the searches
-    wikiverse.searchLang = "en";
-    wikiverse.instagramSearchType = "hashtag";
-    wikiverse.flickrSearchType = "textQuery";
-    wikiverse.flickrSortType = "relevance";
-    wikiverse.youtubeSortType = "relevance";
-    wikiverse.twitterSearchType = "popular";
 
     //const is_root = location.pathname === "/";
 
@@ -162,10 +129,8 @@ window.WIKIVERSE = (function($) {
         //  $('.source').hide();
         $sourceParams.hide();
 
-        wikiverse.searchHistory = {};
-
         wikiverse.buildBoard(state);
-        //console.log(store.getState());
+        console.log(store.getState());
     }
 
     const searchResultsListBuilt = ($results) => {
@@ -1380,7 +1345,6 @@ window.WIKIVERSE = (function($) {
             getConnections($(this).find("option:selected").text(), topic.title, $brick.data('id'));
             $sourceType.trigger('change');
         });
-
 
         $brick.one("mouseenter", function() {
             getWikiSections($brick, topic);
