@@ -2075,6 +2075,7 @@ window.WIKIVERSE = (function ($) {
 
         _wvObj.wikiverse.buildFoto($brick, photoObj, "Instagram", callback);
     };
+
     //build a foto brick, either flickr or instagram
     _wvObj.wikiverse.buildFoto = function ($brick, photoObj, type, callback) {
 
@@ -2213,72 +2214,6 @@ window.WIKIVERSE = (function ($) {
             $results.find('.table').append($result);
         });
         searchResultsListBuilt($results);
-    };
-
-    //build a note
-    /*function buildNote($brick, topic, callback){
-         $brick.addClass('note');
-        $brick.addClass('transparent');
-        $brick.removeClass('well');
-        $brick.removeClass('well-sm');
-         $brick.append('<blockquote>' + topic.note + '</blockquote>');
-         callback($brick);
-    }*/
-    //create a note
-    var createNote = function createNote($brick, callback) {
-
-        $brick.addClass('note');
-        $brick.addClass('transparent');
-        $brick.removeClass('well');
-        $brick.removeClass('well-sm');
-
-        $brick.append(note);
-        $brick.append('<button id="saveNote" type="button" style="display: block; width: 100%;" class="btn btn-xs btn-default">save this note</button>');
-
-        //instantiate for furher multiple use
-        var $saveNotebutton = $('#saveNote');
-
-        //scroll to textarea
-        $('html, body').animate({
-            scrollTop: $brick.offset().top - 50
-        }, 1000, function () {
-            //when finished scrolling
-
-            //focus textarea
-            $brick.find('#note').focus();
-
-            //fade for highlight functionality
-            $brick.fadeTo('fast', 0.1).fadeTo('fast', 1.0);
-        });
-
-        //prepare object for note
-        var noteObj = {
-            note: ""
-        };
-
-        //on savenote click, swap the textarea with a blockquote
-        $saveNotebutton.on('click', function (event) {
-            event.preventDefault();
-            /* Act on the event */
-
-            var $textarea = $brick.find('#note');
-            var text = $textarea.val();
-
-            noteObj.note = text;
-
-            $textarea.remove();
-            $saveNotebutton.remove();
-
-            $brick.prepend('<blockquote>' + text + '</blockquote>');
-
-            pckry.layout();
-        });
-
-        //store the note temporarly
-        $brick.data('type', 'note');
-        $brick.data('topic', noteObj);
-
-        callback($brick);
     };
 
     //build a tweet
