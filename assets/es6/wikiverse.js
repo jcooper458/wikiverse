@@ -38,13 +38,6 @@ window.WIKIVERSE = (function($) {
     const loadingIcon = '<span id="loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate">';
     const note = '<textarea id="note" class="form-control" placeholder="add your own infos.." rows="3"></textarea>';
 
-    //used for pNotify
-    const myStack = {
-        "dir1": "down",
-        "dir2": "left",
-        "push": "top"
-    };
-
     const fruchtermanReingoldSettings = {
         autoArea: true,
         area: 1,
@@ -2091,20 +2084,6 @@ window.WIKIVERSE = (function($) {
                 $(id).html('');
                 $(id).append(data);
 
-                new PNotify({
-                    text: 'board saved',
-                    type: 'success',
-                    icon: 'fa fa-floppy-o',
-                    styling: 'fontawesome',
-                    shadow: false,
-                    animation: 'fade',
-                    addclass: "stack-topright",
-                    stack: myStack,
-                    nonblock: {
-                        nonblock: true,
-                        nonblock_opacity: 0.2
-                    }
-                });
             },
             error: function(MLHttpRequest, textStatus, errorThrown) {
                 alert(errorThrown);
@@ -2188,34 +2167,21 @@ window.WIKIVERSE = (function($) {
                         $('#wvAuthor').html('by ' + '<a href="/user/' + board.author + '">' + board.author + '</a>');
 
                         var $buttonToSwap;
-                        var PNotifyMessage;
+             
 
                         if (forkedTitle) {
                             $buttonToSwap = $('#forkBoard');
-                            PNotifyMessage = "This board now is owned by you. Go enhance it!";
+      
                         } else {
                             $buttonToSwap = $('#createBoard');
-                            PNotifyMessage = "board created successfully!";
+           
                         }
 
                         $buttonToSwap.removeAttr('id');
                         $buttonToSwap.attr('id', 'saveBoard');
                         $buttonToSwap.html('save changes');
 
-                        new PNotify({
-                            text: PNotifyMessage,
-                            type: 'success',
-                            icon: 'fa fa-floppy-o',
-                            styling: 'fontawesome',
-                            shadow: false,
-                            animation: 'fade',
-                            addclass: "stack-topright",
-                            stack: myStack,
-                            nonblock: {
-                                nonblock: true,
-                                nonblock_opacity: 0.2
-                            }
-                        });
+
                     },
                     error: function(MLHttpRequest, textStatus, errorThrown) {
                         alert(errorThrown);
@@ -2338,23 +2304,6 @@ window.WIKIVERSE = (function($) {
         pckry.remove( $thisBrick[0] )
         pckry.layout();
 
-    });
-
-    //detect if user is interacting with a board of somebody else
-    $packeryContainer.one('click', '.brick', function() {
-        new PNotify({
-            text: $('#author').attr('data-message'),
-            type: 'info',
-            styling: 'fontawesome',
-            shadow: false,
-            animation: 'fade',
-            addclass: "stack-topright",
-            stack: myStack,
-            nonblock: {
-                nonblock: true,
-                nonblock_opacity: 0.2
-            }
-        });
     });
 
     //Toggle Size of Images on click

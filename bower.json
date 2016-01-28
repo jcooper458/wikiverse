@@ -13,7 +13,6 @@
     "draggabilly": "~1.2.4",
     "imagesloaded": "~3.1.8",
     "modernizr": "2.8.2",
-    "pnotify": "~2.0.1",
     "readmore": "~2.0.5"
   },
   "overrides": {
