@@ -1056,7 +1056,6 @@ window.WIKIVERSE = (function($) {
             callback($brick);
             pckry.layout();
 
-            $('#global-loading').remove();
         });
 
     };
@@ -1435,7 +1434,6 @@ window.WIKIVERSE = (function($) {
                                         callback($brick);
                                         pckry.layout();
 
-                                        $('#global-loading').remove();
                                     });
                                 }
                             });
@@ -1735,55 +1733,54 @@ window.WIKIVERSE = (function($) {
 
         //if there are bricks in the board
         if (!$.isEmptyObject(board.bricks)) {
-
-            $('#global-loading').removeClass("invisible");
-
+            
             $.each(board.bricks, function(index, brick) {
+                setTimeout(function() {
+                    //build a brick at position 0,0
+                    var $thisBrick = (brick.Type === "gmaps" || brick.Type === "streetview") ? buildGmapsBrick([undefined, undefined]) : buildBrick([undefined, undefined], brick.Id, brick.Parent);
 
-                //build a brick at position 0,0
-                var $thisBrick = (brick.Type === "gmaps" || brick.Type === "streetview") ? buildGmapsBrick([undefined, undefined]) : buildBrick([undefined, undefined], brick.Id, brick.Parent);
+                    switch (brick.Type) {
+                        case "Wikipedia":
+                            wikiverse.buildWikipedia($thisBrick, brick.Topic, brickDataLoaded);
+                            break;
 
-                switch (brick.Type) {
-                    case "Wikipedia":
-                        wikiverse.buildWikipedia($thisBrick, brick.Topic, brickDataLoaded);
-                        break;
+                        case "wikiSection":
+                            wikiverse.buildSection($thisBrick, brick.Topic, brickDataLoaded);
+                            break;
 
-                    case "wikiSection":
-                        wikiverse.buildSection($thisBrick, brick.Topic, brickDataLoaded);
-                        break;
+                        case "Flickr":
+                            wikiverse.buildFoto($thisBrick, brick.Topic, "Flickr", brickDataLoaded);
+                            break;
 
-                    case "Flickr":
-                        wikiverse.buildFoto($thisBrick, brick.Topic, "Flickr", brickDataLoaded);
-                        break;
+                        case "Instagram":
+                            wikiverse.buildFoto($thisBrick, brick.Topic, "Instagram", brickDataLoaded);
+                            break;
 
-                    case "Instagram":
-                        wikiverse.buildFoto($thisBrick, brick.Topic, "Instagram", brickDataLoaded);
-                        break;
+                        case "Youtube":
+                            wikiverse.buildYoutube($thisBrick, brick.Topic, brickDataLoaded);
+                            break;
 
-                    case "Youtube":
-                        wikiverse.buildYoutube($thisBrick, brick.Topic, brickDataLoaded);
-                        break;
+                        case "gmaps":
+                            wikiverse.buildGmaps($thisBrick, brick.Topic, brickDataLoaded);
+                            break;
 
-                    case "gmaps":
-                        wikiverse.buildGmaps($thisBrick, brick.Topic, brickDataLoaded);
-                        break;
+                        case "streetview":
+                            wikiverse.buildStreetMap($thisBrick, brick.Topic, brickDataLoaded);
+                            break;
 
-                    case "streetview":
-                        wikiverse.buildStreetMap($thisBrick, brick.Topic, brickDataLoaded);
-                        break;
+                        case "Soundcloud":
+                            wikiverse.buildSoundcloud($thisBrick, brick.Topic, brickDataLoaded);
+                            break;
 
-                    case "Soundcloud":
-                        wikiverse.buildSoundcloud($thisBrick, brick.Topic, brickDataLoaded);
-                        break;
+                        case "Twitter":
+                            wikiverse.buildTwitter($thisBrick, brick.Topic, brickDataLoaded);
+                            break;
 
-                    case "Twitter":
-                        wikiverse.buildTwitter($thisBrick, brick.Topic, brickDataLoaded);
-                        break;
-
-                        /*case "note":
-                            buildNote($thisBrick, brick.Topic, brickDataLoaded);
-                        break;*/
-                }
+                            /*case "note":
+                                buildNote($thisBrick, brick.Topic, brickDataLoaded);
+                            break;*/
+                    }
+                }, 200*index);
             });
         }
         //this always needs to happen, also without any bricks, coz we need the search query nodes in the graph!
