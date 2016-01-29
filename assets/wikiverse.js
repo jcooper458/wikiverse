@@ -1608,7 +1608,7 @@ window.WIKIVERSE = (function ($) {
 
             var $nextBrick = buildBrick([parseInt($brick.css('left') + 500), parseInt($brick.css('top') + 500)], undefined, $brick.data('id'));
 
-            wikiverse.buildWikipedia($nextBrick, wikiData, brickDataLoaded);
+            buildWikipedia($nextBrick, wikiData, brickDataLoaded);
 
             var brickData = {
                 Topic: wikiData,
@@ -1849,7 +1849,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //build the gmaps brick (coming from database)
-    wikiverse.buildGmaps = function ($mapbrick, mapObj, callback) {
+    buildGmaps = function buildGmaps($mapbrick, mapObj, callback) {
 
         var map;
         var myMaptypeID;
@@ -2009,7 +2009,7 @@ window.WIKIVERSE = (function ($) {
         });
     };
     //build the streetmap map brick (from database)
-    wikiverse.buildStreetMap = function ($mapbrick, streetObj, callback) {
+    var buildStreetMap = function buildStreetMap($mapbrick, streetObj, callback) {
 
         var currentStreetMap;
 
@@ -2113,18 +2113,18 @@ window.WIKIVERSE = (function ($) {
         }
     };
 
-    wikiverse.buildFlickr = function ($brick, photoObj, callback) {
+    var buildFlickr = function buildFlickr($brick, photoObj, callback) {
 
-        wikiverse.buildFoto($brick, photoObj, "Flickr", callback);
+        buildFoto($brick, photoObj, "Flickr", callback);
     };
 
-    wikiverse.buildInstagram = function ($brick, photoObj, callback) {
+    var buildInstagram = function buildInstagram($brick, photoObj, callback) {
 
-        wikiverse.buildFoto($brick, photoObj, "Instagram", callback);
+        buildFoto($brick, photoObj, "Instagram", callback);
     };
 
     //build a foto brick, either flickr or instagram
-    wikiverse.buildFoto = function ($brick, photoObj, type, callback) {
+    var buildFoto = function buildFoto($brick, photoObj, type, callback) {
 
         $brick.addClass('foto');
         $brick.data('type', type);
@@ -2194,7 +2194,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //create the flickr brick
-    wikiverse.buildFotoSearchResults = function (results, searchResultsListBuilt) {
+    var buildFotoSearchResults = function buildFotoSearchResults(results, searchResultsListBuilt) {
 
         results.forEach(function (result, index) {
 
@@ -2212,7 +2212,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //build the soundcloud brick
-    wikiverse.buildSoundcloud = function ($brick, soundcloudObj, callback) {
+    var buildSoundcloud = function buildSoundcloud($brick, soundcloudObj, callback) {
 
         $brick.addClass('w2-fix');
         $brick.data('type', 'Soundcloud');
@@ -2225,7 +2225,7 @@ window.WIKIVERSE = (function ($) {
         callback($brick);
     };
 
-    wikiverse.buildListResults = function (results, searchResultsListBuilt) {
+    var buildListResults = function buildListResults(results, searchResultsListBuilt) {
 
         $results.append(tableHover);
 
@@ -2248,7 +2248,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //stack the twitter search results in the sidebar
-    wikiverse.buildTwitterSearchResults = function (results) {
+    var buildTwitterSearchResults = function buildTwitterSearchResults(results) {
 
         $results.append(tableHover);
 
@@ -2264,7 +2264,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //build a tweet
-    wikiverse.buildTwitter = function ($brick, twitterObj, callback) {
+    var buildTwitter = function buildTwitter($brick, twitterObj, callback) {
 
         $brick.addClass('w2');
         $brick.addClass('Twitter');
@@ -2380,7 +2380,7 @@ window.WIKIVERSE = (function ($) {
 
                             var $nextBrick = buildBrick([parseInt($brick.css('left')), parseInt($brick.css('top'))], undefined, $brick.data('id'));
 
-                            wikiverse.buildSection($nextBrick, sectionData, brickDataLoaded);
+                            buildSection($nextBrick, sectionData, brickDataLoaded);
 
                             var brickData = {
                                 Type: "wikiSection",
@@ -2399,7 +2399,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //build a wiki Brick
-    wikiverse.buildWikipedia = function ($brick, topic, callback) {
+    var buildWikipedia = function buildWikipedia($brick, topic, callback) {
 
         var $connections = $(wikiverse_nav);
 
@@ -2545,7 +2545,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //build a section brick
-    wikiverse.buildSection = function ($brick, section, callback) {
+    var buildSection = function buildSection($brick, section, callback) {
 
         $brick.data('type', 'wikiSection');
         $brick.data('topic', section);
@@ -2620,7 +2620,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //stack the youtube search results in the sidebar
-    wikiverse.buildYoutubeSearchResults = function (results) {
+    var buildYoutubeSearchResults = function buildYoutubeSearchResults(results) {
 
         $results.append(tableHover);
 
@@ -2634,50 +2634,6 @@ window.WIKIVERSE = (function ($) {
         });
 
         searchResultsListBuilt($results);
-    };
-
-    //build a youtube brick
-    wikiverse.buildYoutube = function ($brick, youtubeObj, callback) {
-
-        var relatedButton = '<button class="btn btn-default btn-xs related" type="button">get related videos</button>';
-        var youtubeThumb = '<img class="" id="ytplayer" type="text/html" src="' + youtubeObj.thumbnailURL + '">';
-
-        //stop all other players
-        $('.youtube').find("iframe").remove();
-        $('.youtube').find("img").show();
-        $('.youtube').find(".youtubePlayButton").show();
-        $('.youtube').removeClass("w2-fix");
-
-        //$brick.addClass('w2-fix');
-        $brick.addClass('youtube');
-
-        if (youtubeObj.size === "large") {
-            $brick.addClass('w2');
-        }
-
-        $brick.data('type', 'Youtube');
-        $brick.data('topic', youtubeObj);
-
-        $brick.append(relatedButton);
-
-        $brick.append(youtubeThumb);
-
-        $brick.append('<i class="fa youtubePlayButton fa-youtube-play"></i>');
-
-        imagesLoaded('#packery .youtube', function () {
-            pckry.layout();
-        });
-
-        $brick.find('.youtubePlayButton').on('click', function () {
-            playYoutube($brick, youtubeObj);
-        });
-
-        $brick.find('.related').on('click', function () {
-            (0, _APIcalls.getRelatedYoutubes)(youtubeObj.youtubeID, youtubeObj.query, searchResultsLoaded, "buildYoutubeSearchResults", $brick.data('id'));
-            $sourceType.trigger('change');
-        });
-
-        callback($brick);
     };
 
     //play a youtube video
@@ -2753,8 +2709,50 @@ window.WIKIVERSE = (function ($) {
         return $brick;
     };
 
+    //build a youtube brick
+    var buildYoutube = function buildYoutube($brick, youtubeObj, callback) {
+
+        var relatedButton = '<button class="btn btn-default btn-xs related" type="button">get related videos</button>';
+        var youtubeThumb = '<img class="" id="ytplayer" type="text/html" src="' + youtubeObj.thumbnailURL + '">';
+        var playButton = '<i class="fa youtubePlayButton fa-youtube-play"></i>';
+
+        //stop all other players
+        $('.youtube').find("iframe").remove();
+        $('.youtube').find("img").show();
+        $('.youtube').find(".youtubePlayButton").show();
+        $('.youtube').removeClass("w2-fix");
+
+        $brick.addClass('youtube');
+
+        if (youtubeObj.size === "large") {
+            $brick.addClass('w2');
+        }
+
+        $brick.data('type', 'Youtube');
+        $brick.data('topic', youtubeObj);
+
+        $brick.append(relatedButton);
+        $brick.append(youtubeThumb);
+        $brick.append(playButton);
+
+        imagesLoaded('#packery .youtube', function () {
+            pckry.layout();
+        });
+
+        $brick.find('.youtubePlayButton').on('click', function () {
+            playYoutube($brick, youtubeObj);
+        });
+
+        $brick.find('.related').on('click', function () {
+            (0, _APIcalls.getRelatedYoutubes)(youtubeObj.youtubeID, youtubeObj.query, searchResultsLoaded, "buildYoutubeSearchResults", $brick.data('id'));
+            $sourceType.trigger('change');
+        });
+
+        callback($brick);
+    };
+
     //build a board -   this is called only for saved boards (coming from db)
-    wikiverse.buildBoard = function (board) {
+    var buildBoard = function buildBoard(board) {
 
         prepareBoardTitle(board);
 
@@ -2769,39 +2767,39 @@ window.WIKIVERSE = (function ($) {
 
                     switch (brick.Type) {
                         case "Wikipedia":
-                            wikiverse.buildWikipedia($thisBrick, brick.Topic, brickDataLoaded);
+                            buildWikipedia($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "wikiSection":
-                            wikiverse.buildSection($thisBrick, brick.Topic, brickDataLoaded);
+                            buildSection($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "Flickr":
-                            wikiverse.buildFoto($thisBrick, brick.Topic, "Flickr", brickDataLoaded);
+                            buildFoto($thisBrick, brick.Topic, "Flickr", brickDataLoaded);
                             break;
 
                         case "Instagram":
-                            wikiverse.buildFoto($thisBrick, brick.Topic, "Instagram", brickDataLoaded);
+                            buildFoto($thisBrick, brick.Topic, "Instagram", brickDataLoaded);
                             break;
 
                         case "Youtube":
-                            wikiverse.buildYoutube($thisBrick, brick.Topic, brickDataLoaded);
+                            buildYoutube($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "gmaps":
-                            wikiverse.buildGmaps($thisBrick, brick.Topic, brickDataLoaded);
+                            buildGmaps($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "streetview":
-                            wikiverse.buildStreetMap($thisBrick, brick.Topic, brickDataLoaded);
+                            buildStreetMap($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "Soundcloud":
-                            wikiverse.buildSoundcloud($thisBrick, brick.Topic, brickDataLoaded);
+                            buildSoundcloud($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "Twitter":
-                            wikiverse.buildTwitter($thisBrick, brick.Topic, brickDataLoaded);
+                            buildTwitter($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         /*case "note":
@@ -2812,10 +2810,10 @@ window.WIKIVERSE = (function ($) {
             });
         }
         //this always needs to happen, also without any bricks, coz we need the search query nodes in the graph!
-        wikiverse.buildMindmap(board);
+        buildMindmap(board);
     };
 
-    wikiverse.buildMindmap = function (board) {
+    var buildMindmap = function buildMindmap(board) {
 
         var mindmapObj = {
             nodes: [],

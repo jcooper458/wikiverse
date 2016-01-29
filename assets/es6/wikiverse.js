@@ -416,7 +416,7 @@ window.WIKIVERSE = (function($) {
 
             var $nextBrick = buildBrick([parseInt($brick.css('left') + 500), parseInt($brick.css('top') + 500)], undefined, $brick.data('id'));
 
-            wikiverse.buildWikipedia($nextBrick, wikiData, brickDataLoaded);
+            buildWikipedia($nextBrick, wikiData, brickDataLoaded);
 
             var brickData = {
                 Topic: wikiData,
@@ -662,7 +662,7 @@ window.WIKIVERSE = (function($) {
     }
 
     //build the gmaps brick (coming from database)
-    wikiverse.buildGmaps = ($mapbrick, mapObj, callback) => {
+    buildGmaps = ($mapbrick, mapObj, callback) => {
 
             var map;
             var myMaptypeID;
@@ -829,7 +829,7 @@ window.WIKIVERSE = (function($) {
             });
         }
         //build the streetmap map brick (from database)
-    wikiverse.buildStreetMap = ($mapbrick, streetObj, callback) => {
+    const buildStreetMap = ($mapbrick, streetObj, callback) => {
 
         var currentStreetMap;
 
@@ -934,20 +934,20 @@ window.WIKIVERSE = (function($) {
         }
     }
 
-    wikiverse.buildFlickr = ($brick, photoObj, callback) => {
+    const buildFlickr = ($brick, photoObj, callback) => {
 
-        wikiverse.buildFoto($brick, photoObj, "Flickr", callback);
+        buildFoto($brick, photoObj, "Flickr", callback);
 
     }
 
-    wikiverse.buildInstagram = ($brick, photoObj, callback) => {
+    const buildInstagram = ($brick, photoObj, callback) => {
 
-        wikiverse.buildFoto($brick, photoObj, "Instagram", callback);
+        buildFoto($brick, photoObj, "Instagram", callback);
 
     }
     
     //build a foto brick, either flickr or instagram
-    wikiverse.buildFoto = ($brick, photoObj, type, callback) => {
+    const buildFoto = ($brick, photoObj, type, callback) => {
 
         $brick.addClass('foto');
         $brick.data('type', type);
@@ -1027,7 +1027,7 @@ window.WIKIVERSE = (function($) {
     };
 
     //create the flickr brick
-    wikiverse.buildFotoSearchResults = (results, searchResultsListBuilt) => {
+    const buildFotoSearchResults = (results, searchResultsListBuilt) => {
 
         results.forEach(function(result, index) {
 
@@ -1049,7 +1049,7 @@ window.WIKIVERSE = (function($) {
 
 
     //build the soundcloud brick
-    wikiverse.buildSoundcloud = ($brick, soundcloudObj, callback) => {
+    const buildSoundcloud = ($brick, soundcloudObj, callback) => {
 
         $brick.addClass('w2-fix');
         $brick.data('type', 'Soundcloud');
@@ -1062,7 +1062,7 @@ window.WIKIVERSE = (function($) {
         callback($brick);
     }
 
-    wikiverse.buildListResults = (results, searchResultsListBuilt) => {
+    const buildListResults = (results, searchResultsListBuilt) => {
 
         $results.append(tableHover);
 
@@ -1087,7 +1087,7 @@ window.WIKIVERSE = (function($) {
     }
 
     //stack the twitter search results in the sidebar
-    wikiverse.buildTwitterSearchResults = (results) => {
+    const buildTwitterSearchResults = (results) => {
 
         $results.append(tableHover);
 
@@ -1104,7 +1104,7 @@ window.WIKIVERSE = (function($) {
     }
 
     //build a tweet
-    wikiverse.buildTwitter = ($brick, twitterObj, callback) => {
+    const buildTwitter = ($brick, twitterObj, callback) => {
 
         $brick.addClass('w2');
         $brick.addClass('Twitter');
@@ -1222,7 +1222,7 @@ window.WIKIVERSE = (function($) {
 
                             var $nextBrick = buildBrick([parseInt($brick.css('left')), parseInt($brick.css('top'))], undefined, $brick.data('id'));
 
-                            wikiverse.buildSection($nextBrick, sectionData, brickDataLoaded);
+                            buildSection($nextBrick, sectionData, brickDataLoaded);
 
                             var brickData = {
                                 Type: "wikiSection",
@@ -1242,7 +1242,7 @@ window.WIKIVERSE = (function($) {
     }
 
     //build a wiki Brick
-    wikiverse.buildWikipedia = ($brick, topic, callback) => {
+    const buildWikipedia = ($brick, topic, callback) => {
 
         var $connections = $(wikiverse_nav);
 
@@ -1390,7 +1390,7 @@ window.WIKIVERSE = (function($) {
     };
 
     //build a section brick
-    wikiverse.buildSection = ($brick, section, callback) => {
+    const buildSection = ($brick, section, callback) => {
 
         $brick.data('type', 'wikiSection');
         $brick.data('topic', section);
@@ -1465,7 +1465,7 @@ window.WIKIVERSE = (function($) {
     };
 
     //stack the youtube search results in the sidebar
-    wikiverse.buildYoutubeSearchResults = (results) => {
+    const buildYoutubeSearchResults = (results) => {
 
         $results.append(tableHover);
 
@@ -1560,7 +1560,7 @@ window.WIKIVERSE = (function($) {
     }
 
     //build a youtube brick
-    wikiverse.buildYoutube = ($brick, youtubeObj, callback) => {
+    const buildYoutube = ($brick, youtubeObj, callback) => {
 
         let relatedButton = `<button class="btn btn-default btn-xs related" type="button">get related videos</button>`;
         let youtubeThumb = `<img class="" id="ytplayer" type="text/html" src="${youtubeObj.thumbnailURL}">`;
@@ -1603,7 +1603,7 @@ window.WIKIVERSE = (function($) {
 
 
     //build a board -   this is called only for saved boards (coming from db)
-    wikiverse.buildBoard = (board) => {
+    const buildBoard = (board) => {
 
         prepareBoardTitle(board);
 
@@ -1618,39 +1618,39 @@ window.WIKIVERSE = (function($) {
 
                     switch (brick.Type) {
                         case "Wikipedia":
-                            wikiverse.buildWikipedia($thisBrick, brick.Topic, brickDataLoaded);
+                            buildWikipedia($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "wikiSection":
-                            wikiverse.buildSection($thisBrick, brick.Topic, brickDataLoaded);
+                            buildSection($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "Flickr":
-                            wikiverse.buildFoto($thisBrick, brick.Topic, "Flickr", brickDataLoaded);
+                            buildFoto($thisBrick, brick.Topic, "Flickr", brickDataLoaded);
                             break;
 
                         case "Instagram":
-                            wikiverse.buildFoto($thisBrick, brick.Topic, "Instagram", brickDataLoaded);
+                            buildFoto($thisBrick, brick.Topic, "Instagram", brickDataLoaded);
                             break;
 
                         case "Youtube":
-                            wikiverse.buildYoutube($thisBrick, brick.Topic, brickDataLoaded);
+                            buildYoutube($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "gmaps":
-                            wikiverse.buildGmaps($thisBrick, brick.Topic, brickDataLoaded);
+                            buildGmaps($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "streetview":
-                            wikiverse.buildStreetMap($thisBrick, brick.Topic, brickDataLoaded);
+                            buildStreetMap($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "Soundcloud":
-                            wikiverse.buildSoundcloud($thisBrick, brick.Topic, brickDataLoaded);
+                            buildSoundcloud($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                         case "Twitter":
-                            wikiverse.buildTwitter($thisBrick, brick.Topic, brickDataLoaded);
+                            buildTwitter($thisBrick, brick.Topic, brickDataLoaded);
                             break;
 
                             /*case "note":
@@ -1661,10 +1661,10 @@ window.WIKIVERSE = (function($) {
             });
         }
         //this always needs to happen, also without any bricks, coz we need the search query nodes in the graph!
-        wikiverse.buildMindmap(board);
+        buildMindmap(board);
     }
 
-    wikiverse.buildMindmap = (board) => {
+    const buildMindmap = (board) => {
 
         var mindmapObj = {
             nodes: [],
