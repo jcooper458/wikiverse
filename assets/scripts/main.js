@@ -66,6 +66,7 @@
 
         $.getJSON('/wp-json/wp/v2/board/' + $("#postID").html(), function(board) { 
           window.WIKIVERSE.init(JSON.parse(board.content));
+          window.WIKIVERSE.buildBoard(JSON.parse(board.content));
         });
       },
       finalize: function() {

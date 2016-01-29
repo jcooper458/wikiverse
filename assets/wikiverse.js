@@ -1343,12 +1343,16 @@ window.WIKIVERSE = (function ($) {
         return this.nodesIndex;
     });
 
+    var initialState = {
+        search_history: {}
+    };
+
     //initiate the wikiverse search functionality
     //this is called on document ready (from _main.js)
     wikiverse.init = function () {
-        var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+        var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
 
-        var store = (0, _redux.createStore)(_reducers.wvReducer, state);
+        wikiverse.store = (0, _redux.createStore)(_reducers.wvReducer, state);
 
         //overwrite the wikiverse mindmapobject
         //used in both buildMindmap and init
@@ -1365,16 +1369,10 @@ window.WIKIVERSE = (function ($) {
         //hide the sources button that hold results
         //  $('.source').hide();
         $sourceParams.hide();
-
-        wikiverse.searchHistory = {};
-
-        wikiverse.buildBoard(state);
-        //console.log(store.getState());
     };
 
     var searchResultsListBuilt = function searchResultsListBuilt($results) {
 
-        //bind event to every row -> so you can start the wikiverse
         $results.find('.result').unbind('click').on('click', function (event) {
 
             //if there is no parent saved in the searchkeyword, you are searching for soemthign new, thus
@@ -1388,7 +1386,7 @@ window.WIKIVERSE = (function ($) {
             //
             //not that updateSearchhistory is emptying the searchkeyword.data(parent) in case something is added to the searchhistory,
             //thus forcing the second (if not) state!
-            var parent = $searchKeyword.data('parent') || wikiverse.searchHistory[$searchKeyword.val().toLowerCase()];
+            var parent = $searchKeyword.data('parent') || wikiverse.store.getState().search_history[$searchKeyword.val().toLowerCase()];
 
             var $thisBrick = buildBrick([parseInt($topBrick.css('left')), parseInt($topBrick.css('top')) - 200], undefined, parent);
             var result = $(this).data("topic");
@@ -1401,7 +1399,6 @@ window.WIKIVERSE = (function ($) {
 
             //build a node with the searchqueryNode as parent
             buildNode(result, $thisBrick.data('id'), parent);
-            return false;
         });
 
         //remove the loading icon when done
@@ -2297,9 +2294,13 @@ window.WIKIVERSE = (function ($) {
 
         var searchQuery = $searchKeyword.val();
 
+        console.log(wikiverse.store.getState());
+
+        var searchHistory = wikiverse.store.getState().search_history;
+
         //if search keyword is not already in history, add it
-        if (!wikiverse.searchHistory.hasOwnProperty(searchQuery.toLowerCase())) {
-            wikiverse.searchHistory[searchQuery.toLowerCase()] = Date.now();
+        if (!searchHistory.hasOwnProperty(searchQuery.toLowerCase())) {
+            searchHistory[searchQuery.toLowerCase()] = Date.now();
 
             //empty the $searchkeyword parent id so that a new searchquery parent is created
 
@@ -2308,11 +2309,11 @@ window.WIKIVERSE = (function ($) {
                     title: searchQuery
                 },
                 Type: "searchQuery",
-                Id: wikiverse.searchHistory[searchQuery.toLowerCase()]
+                Id: searchHistory[searchQuery.toLowerCase()]
             };
 
             //build a node for the searchquery
-            buildNode(searchQueryNodeData, wikiverse.searchHistory[searchQuery.toLowerCase()]);
+            buildNode(searchQueryNodeData, searchHistory[searchQuery.toLowerCase()]);
         }
     };
 
@@ -2756,13 +2757,11 @@ window.WIKIVERSE = (function ($) {
 
         prepareBoardTitle(board);
 
-        //overwrite the searchHistory with the one coming from db
-        wikiverse.searchHistory = board.search_history;
-
         //if there are bricks in the board
         if (!$.isEmptyObject(board.bricks)) {
 
             $.each(board.bricks, function (index, brick) {
+                //set a timeout to make the building of the bricks smooth and successive
                 setTimeout(function () {
                     //build a brick at position 0,0
                     var $thisBrick = brick.Type === "gmaps" || brick.Type === "streetview" ? buildGmapsBrick([undefined, undefined]) : buildBrick([undefined, undefined], brick.Id, brick.Parent);
