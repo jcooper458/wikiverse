@@ -185,7 +185,10 @@ window.WIKIVERSE = (function($) {
             //thus forcing the second (if not) state!
             var parent = $searchKeyword.data('parent') || wikiverse.store.getState().search_history[$searchKeyword.val().toLowerCase()];
 
-            var $thisBrick = buildBrick([parseInt($topBrick.css('left')), parseInt($topBrick.css('top')) - 200], undefined, parent);
+            var x = parseInt($topBrick.css('left'));
+            var y = parseInt($topBrick.css('top')) - 200;
+
+            var $thisBrick = buildBrick([x, y], undefined, parent);
             var result = $(this).data("topic");
 
             //concatenate the respective function to push bricks to the board (buildWikis, buildYoutubes, etc)
@@ -1133,26 +1136,24 @@ window.WIKIVERSE = (function($) {
 
     const updateSearchHistory = () => {
 
-        var searchQuery = $searchKeyword.val();
-
-        console.log(wikiverse.store.getState());
+        let searchQuery = $searchKeyword.val();
 
         let searchHistory = wikiverse.store.getState().search_history;
 
         //if search keyword is not already in history, add it
         if (!searchHistory.hasOwnProperty(searchQuery.toLowerCase())) {
-            searchHistory[searchQuery.toLowerCase()] =  Date.now();
+            searchHistory[searchQuery.toLowerCase()] =  Date.now().toString().substr(9);
 
             //empty the $searchkeyword parent id so that a new searchquery parent is created
 
-            var searchQueryNodeData = {
+            let searchQueryNodeData = {
                 Topic: {
                     title: searchQuery
                 },
                 Type: "searchQuery",
                 Id: searchHistory[searchQuery.toLowerCase()]
             }
-
+            console.log(wikiverse.store.getState().search_history);
             //build a node for the searchquery
             buildNode(searchQueryNodeData, searchHistory[searchQuery.toLowerCase()]);
         }
@@ -1585,7 +1586,7 @@ window.WIKIVERSE = (function($) {
         var $brick = $(defaultBrick);
 
         //if no id is passed from backend, get random not in this boards IDs
-        id = id || Date.now();
+        id = id || Date.now().toString().substr(9);
 
         $brick.data('id', id);
         $brick.attr('id', "n" + id);
