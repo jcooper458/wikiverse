@@ -6,11 +6,11 @@ import { wvReducer } from './reducers.js'
 
 //wv imports
 import {strip, isPortrait, urlify, inrange, valid_coords} from './helpers.js'
-    
+
 import {
-    getTweets, 
-    getYoutubes, 
-    getRelatedYoutubes, 
+    getTweets,
+    getYoutubes,
+    getRelatedYoutubes,
     getInstagrams,
     getFlickrs,
     getFlickrUsername,
@@ -97,6 +97,8 @@ window.WIKIVERSE = (function($) {
     };
     //const is_root = location.pathname === "/";
 
+    //DOMCACHE
+
     const wpnonce = $('#nonce').html();
 
     //topbrick is the toppest brick in regards to the scroll position
@@ -108,6 +110,7 @@ window.WIKIVERSE = (function($) {
     const $sidebar = $('#sidebar');
     const $sourceParams = $('.sourceParams');
     const $sourceType = $('.sourceType');
+    const $search = $('.search');
 
     //this is needed for all non-packery actions
     const $packeryContainer = $('.packery');
@@ -146,7 +149,7 @@ window.WIKIVERSE = (function($) {
 
     //initiate the wikiverse search functionality
     //this is called on document ready (from _main.js)
-    wikiverse.init = (state = initialState) => {
+    const init = (state = initialState) => {
 
         wikiverse.store = createStore(wvReducer, state);
 
@@ -383,7 +386,7 @@ window.WIKIVERSE = (function($) {
 
         packeryContainer.appendChild( $brick[0] );
         pckry.appended( $brick[0] );
-        
+
         $brick.each(makeEachDraggable);
 
         //fit the brick at given position: first is x, second y
@@ -945,7 +948,7 @@ window.WIKIVERSE = (function($) {
         wikiverse.buildFoto($brick, photoObj, "Instagram", callback);
 
     }
-    
+
     //build a foto brick, either flickr or instagram
     wikiverse.buildFoto = ($brick, photoObj, type, callback) => {
 
@@ -1549,7 +1552,7 @@ window.WIKIVERSE = (function($) {
 
         packeryContainer.appendChild( $brick[0] );
         pckry.appended( $brick[0] );
-        
+
         $brick.each(makeEachDraggable);
 
         //fit the brick at given position: first is x, second y
@@ -1603,7 +1606,7 @@ window.WIKIVERSE = (function($) {
 
 
     //build a board -   this is called only for saved boards (coming from db)
-    wikiverse.buildBoard = (board) => {
+    const buildBoard = (board) => {
 
         prepareBoardTitle(board);
 
@@ -1865,9 +1868,9 @@ window.WIKIVERSE = (function($) {
 
         $('#searchResults h3').hide();
 
-        $('.search').addClass('open');
-        $('.search input[type="search"]').val('');
-        $('.search input[type="search"]').focus();
+        $search.addClass('open');
+        $search.find('input[type="search"]').val('');
+        $search.find('input[type="search"]').focus();
 
         $('.source').hide();
 
@@ -1889,11 +1892,11 @@ window.WIKIVERSE = (function($) {
         //find all images
         var image = $(bricks).find('img:first');
 
-        //identify first brick with image 
+        //identify first brick with image
         var $firstBrickWithImage = $(image[0]).parents(".brick");
         var featuredImage;
-        
-        if(bricks.length > 0){            
+
+        if(bricks.length > 0){
             //if its a streetview, take the rendered streetview image stores in the gmaps function
             if ($firstBrickWithImage.data('type') === "streetview") {
                 featuredImage = $firstBrick.data('featuredImage');
@@ -2029,14 +2032,14 @@ window.WIKIVERSE = (function($) {
                         $('#wvAuthor').html('by ' + '<a href="/user/' + board.author + '">' + board.author + '</a>');
 
                         var $buttonToSwap;
-             
+
 
                         if (forkedTitle) {
                             $buttonToSwap = $('#forkBoard');
-      
+
                         } else {
                             $buttonToSwap = $('#createBoard');
-           
+
                         }
 
                         $buttonToSwap.removeAttr('id');
@@ -2204,7 +2207,7 @@ window.WIKIVERSE = (function($) {
     });
 
     //wv_search
-    $('.search input').keyup(function(e) {
+    $search.find('input').keyup(function(e) {
         e.preventDefault();
 
         //make enter save the board
@@ -2258,8 +2261,8 @@ window.WIKIVERSE = (function($) {
 
     //adding escape functionality for closing search
     $(document).keyup(function(e) {
-        if ($('.search').hasClass('open') && e.keyCode === 27) { // escape key maps to keycode `27`
-            $('.search').removeClass('open');
+        if ($search.hasClass('open') && e.keyCode === 27) { // escape key maps to keycode `27`
+            $search.removeClass('open');
         }
     });
 
@@ -2300,7 +2303,7 @@ window.WIKIVERSE = (function($) {
         var query = $("#searchInput input").val();
 
         //close the search
-        $('.search').removeClass('open');
+        $search.removeClass('open');
 
         //if not already open, open the sidebar:
         if (!$sidebar.hasClass('cbp-spmenu-open')) {
@@ -2328,9 +2331,7 @@ window.WIKIVERSE = (function($) {
     //---------------END -keyboard shortcuts----------------------------
     /* END EVENTS */
 
-    //return stars to be used elsewhere on page
-    wikiverse.stars = stars;
-
-    return wikiverse;
+    //return some functions to be used elsewhere
+    return {init, buildBoard, stars}
 
 })(jQuery);
