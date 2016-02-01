@@ -2713,7 +2713,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //build a youtube brick
-    var buildYoutube = function buildYoutube($brick, youtubeObj, callback) {
+    wikiverse.buildYoutube = function ($brick, youtubeObj, callback) {
 
         var relatedButton = '<button class="btn btn-default btn-xs related" type="button">get related videos</button>';
         var youtubeThumb = '<img class="" id="ytplayer" type="text/html" src="' + youtubeObj.thumbnailURL + '">';
