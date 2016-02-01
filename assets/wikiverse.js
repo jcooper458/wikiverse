@@ -2636,50 +2636,6 @@ window.WIKIVERSE = (function ($) {
         searchResultsListBuilt($results);
     };
 
-    //build a youtube brick
-    wikiverse.buildYoutube = function ($brick, youtubeObj, callback) {
-
-        var relatedButton = '<button class="btn btn-default btn-xs related" type="button">get related videos</button>';
-        var youtubeThumb = '<img class="" id="ytplayer" type="text/html" src="' + youtubeObj.thumbnailURL + '">';
-
-        //stop all other players
-        $('.youtube').find("iframe").remove();
-        $('.youtube').find("img").show();
-        $('.youtube').find(".youtubePlayButton").show();
-        $('.youtube').removeClass("w2-fix");
-
-        //$brick.addClass('w2-fix');
-        $brick.addClass('youtube');
-
-        if (youtubeObj.size === "large") {
-            $brick.addClass('w2');
-        }
-
-        $brick.data('type', 'Youtube');
-        $brick.data('topic', youtubeObj);
-
-        $brick.append(relatedButton);
-
-        $brick.append(youtubeThumb);
-
-        $brick.append('<i class="fa youtubePlayButton fa-youtube-play"></i>');
-
-        imagesLoaded('#packery .youtube', function () {
-            pckry.layout();
-        });
-
-        $brick.find('.youtubePlayButton').on('click', function () {
-            playYoutube($brick, youtubeObj);
-        });
-
-        $brick.find('.related').on('click', function () {
-            (0, _APIcalls.getRelatedYoutubes)(youtubeObj.youtubeID, youtubeObj.query, searchResultsLoaded, "buildYoutubeSearchResults", $brick.data('id'));
-            $sourceType.trigger('change');
-        });
-
-        callback($brick);
-    };
-
     //play a youtube video
     var playYoutube = function playYoutube($brick, youtubeObj) {
 
@@ -2751,6 +2707,48 @@ window.WIKIVERSE = (function ($) {
         pckry.layout();
 
         return $brick;
+    };
+
+    //build a youtube brick
+    wikiverse.buildYoutube = function ($brick, youtubeObj, callback) {
+
+        var relatedButton = '<button class="btn btn-default btn-xs related" type="button">get related videos</button>';
+        var youtubeThumb = '<img class="" id="ytplayer" type="text/html" src="' + youtubeObj.thumbnailURL + '">';
+        var playButton = '<i class="fa youtubePlayButton fa-youtube-play"></i>';
+
+        //stop all other players
+        $('.youtube').find("iframe").remove();
+        $('.youtube').find("img").show();
+        $('.youtube').find(".youtubePlayButton").show();
+        $('.youtube').removeClass("w2-fix");
+
+        $brick.addClass('youtube');
+
+        if (youtubeObj.size === "large") {
+            $brick.addClass('w2');
+        }
+
+        $brick.data('type', 'Youtube');
+        $brick.data('topic', youtubeObj);
+
+        $brick.append(relatedButton);
+        $brick.append(youtubeThumb);
+        $brick.append(playButton);
+
+        imagesLoaded('#packery .youtube', function () {
+            pckry.layout();
+        });
+
+        $brick.find('.youtubePlayButton').on('click', function () {
+            playYoutube($brick, youtubeObj);
+        });
+
+        $brick.find('.related').on('click', function () {
+            (0, _APIcalls.getRelatedYoutubes)(youtubeObj.youtubeID, youtubeObj.query, searchResultsLoaded, "buildYoutubeSearchResults", $brick.data('id'));
+            $sourceType.trigger('change');
+        });
+
+        callback($brick);
     };
 
     //build a board -   this is called only for saved boards (coming from db)
