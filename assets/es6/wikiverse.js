@@ -2331,7 +2331,7 @@ window.WIKIVERSE = (function($) {
     //---------------END -keyboard shortcuts----------------------------
     /* END EVENTS */
 
-    //return some functions to be used elsewhere
+    //return stars to be used elsewhere on page
     return {init, buildBoard, stars}
 
 })(jQuery);
