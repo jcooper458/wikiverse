@@ -1302,6 +1302,8 @@ window.WIKIVERSE = (function ($) {
     };
     //const is_root = location.pathname === "/";
 
+    //DOMCACHE
+
     var wpnonce = $('#nonce').html();
 
     //topbrick is the toppest brick in regards to the scroll position
@@ -1313,6 +1315,7 @@ window.WIKIVERSE = (function ($) {
     var $sidebar = $('#sidebar');
     var $sourceParams = $('.sourceParams');
     var $sourceType = $('.sourceType');
+    var $search = $('.search');
 
     //this is needed for all non-packery actions
     var $packeryContainer = $('.packery');
@@ -1849,7 +1852,7 @@ window.WIKIVERSE = (function ($) {
     };
 
     //build the gmaps brick (coming from database)
-    buildGmaps = function buildGmaps($mapbrick, mapObj, callback) {
+    var buildGmaps = function buildGmaps($mapbrick, mapObj, callback) {
 
         var map;
         var myMaptypeID;
@@ -3010,9 +3013,9 @@ window.WIKIVERSE = (function ($) {
 
         $('#searchResults h3').hide();
 
-        $('.search').addClass('open');
-        $('.search input[type="search"]').val('');
-        $('.search input[type="search"]').focus();
+        $search.addClass('open');
+        $search.find('input[type="search"]').val('');
+        $search.find('input[type="search"]').focus();
 
         $('.source').hide();
     };
@@ -3329,7 +3332,7 @@ window.WIKIVERSE = (function ($) {
     });
 
     //wv_search
-    $('.search input').keyup(function (e) {
+    $search.find('input').keyup(function (e) {
         e.preventDefault();
 
         //make enter save the board
@@ -3383,9 +3386,9 @@ window.WIKIVERSE = (function ($) {
 
     //adding escape functionality for closing search
     $(document).keyup(function (e) {
-        if ($('.search').hasClass('open') && e.keyCode === 27) {
+        if ($search.hasClass('open') && e.keyCode === 27) {
             // escape key maps to keycode `27`
-            $('.search').removeClass('open');
+            $search.removeClass('open');
         }
     });
 
@@ -3426,7 +3429,7 @@ window.WIKIVERSE = (function ($) {
         var query = $("#searchInput input").val();
 
         //close the search
-        $('.search').removeClass('open');
+        $search.removeClass('open');
 
         //if not already open, open the sidebar:
         if (!$sidebar.hasClass('cbp-spmenu-open')) {

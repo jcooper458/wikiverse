@@ -665,7 +665,7 @@ window.WIKIVERSE = (function($) {
     }
 
     //build the gmaps brick (coming from database)
-    buildGmaps = ($mapbrick, mapObj, callback) => {
+    const buildGmaps = ($mapbrick, mapObj, callback) => {
 
             var map;
             var myMaptypeID;
