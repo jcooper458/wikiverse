@@ -16,7 +16,7 @@ var getTweets = exports.getTweets = function getTweets(query, searchType, lang, 
     var queryString = query + '&result_type=' + searchType + '&lang=' + lang + '&count=50';
 
     $.ajax({
-        url: '/app/plugins/wp-twitter-api/api.php',
+        url: '/app/themes/wv/lib/twitterAPI.php',
         data: {
             "search": queryString
         },
