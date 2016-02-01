@@ -22,7 +22,7 @@
         //the user page needs an own packery instance
         //so that the imagesloaded can be called conventionally
         $('#packeryUser').imagesLoaded( function() {
-          
+
           // initialize Packery
           $('#packerySite').packery({
             itemSelector: '.brick',
@@ -39,9 +39,9 @@
     // Home page
     'home': {
       init: function() {
-        
-        WIKIVERSE.stars(document.getElementById("stars"));
-    
+
+        window.WIKIVERSE.stars(document.getElementById("stars"));
+
         $('a[href*=#]:not([href=#])').click(function() {
           if (location.pathname.replace(/^\//,'') === this.pathname.replace(/^\//,'') && location.hostname === this.hostname) {
             var target = $(this.hash);
@@ -62,9 +62,9 @@
     },
     // single board page
     'single_board': {
-      init: function() {       
+      init: function() {
 
-        $.getJSON('/wp-json/wp/v2/board/' + $("#postID").html(), function(board) { 
+        $.getJSON('/wp-json/wp/v2/board/' + $("#postID").html(), function(board) {
           window.WIKIVERSE.init(JSON.parse(board.content));
           window.WIKIVERSE.buildBoard(JSON.parse(board.content));
         });
@@ -78,12 +78,12 @@
     'start': {
       init: function() {
 
-        WIKIVERSE.init();
-        WIKIVERSE.toggleSearch();
+        window.WIKIVERSE.init();
+        window.WIKIVERSE.toggleSearch();
 
       },
       finalize: function() {
-        // JavaScript to be fired on the home page, after the init JS      
+        // JavaScript to be fired on the home page, after the init JS
       }
     },
     // About us page, note the change from about-us to about_us.

@@ -1349,7 +1349,7 @@ window.WIKIVERSE = (function ($) {
 
     //initiate the wikiverse search functionality
     //this is called on document ready (from _main.js)
-    wikiverse.init = function () {
+    var init = function init() {
         var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
 
         wikiverse.store = (0, _redux.createStore)(_reducers.wvReducer, state);
@@ -3452,10 +3452,8 @@ window.WIKIVERSE = (function ($) {
     //---------------END -keyboard shortcuts----------------------------
     /* END EVENTS */
 
-    //return stars to be used elsewhere on page
-    wikiverse.stars = _stars.stars;
-
-    return wikiverse;
+    //return some functions to be used elsewhere
+    return { init: init, buildBoard: buildBoard, stars: _stars.stars };
 })(jQuery);
 
 //wv imports
