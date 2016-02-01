@@ -146,7 +146,7 @@ window.WIKIVERSE = (function($) {
 
     //initiate the wikiverse search functionality
     //this is called on document ready (from _main.js)
-    wikiverse.init = (state = initialState) => {
+    const init = (state = initialState) => {
 
         wikiverse.store = createStore(wvReducer, state);
 
@@ -1603,7 +1603,7 @@ window.WIKIVERSE = (function($) {
 
 
     //build a board -   this is called only for saved boards (coming from db)
-    wikiverse.buildBoard = (board) => {
+    const buildBoard = (board) => {
 
         prepareBoardTitle(board);
 
@@ -2329,8 +2329,6 @@ window.WIKIVERSE = (function($) {
     /* END EVENTS */
 
     //return stars to be used elsewhere on page
-    wikiverse.stars = stars;
-
-    return wikiverse;
+    return {init, buildBoard, stars}
 
 })(jQuery);

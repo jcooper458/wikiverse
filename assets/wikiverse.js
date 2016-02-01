@@ -1349,7 +1349,7 @@ window.WIKIVERSE = (function ($) {
 
     //initiate the wikiverse search functionality
     //this is called on document ready (from _main.js)
-    wikiverse.init = function () {
+    var init = function init() {
         var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
 
         wikiverse.store = (0, _redux.createStore)(_reducers.wvReducer, state);
@@ -2636,50 +2636,6 @@ window.WIKIVERSE = (function ($) {
         searchResultsListBuilt($results);
     };
 
-    //build a youtube brick
-    wikiverse.buildYoutube = function ($brick, youtubeObj, callback) {
-
-        var relatedButton = '<button class="btn btn-default btn-xs related" type="button">get related videos</button>';
-        var youtubeThumb = '<img class="" id="ytplayer" type="text/html" src="' + youtubeObj.thumbnailURL + '">';
-
-        //stop all other players
-        $('.youtube').find("iframe").remove();
-        $('.youtube').find("img").show();
-        $('.youtube').find(".youtubePlayButton").show();
-        $('.youtube').removeClass("w2-fix");
-
-        //$brick.addClass('w2-fix');
-        $brick.addClass('youtube');
-
-        if (youtubeObj.size === "large") {
-            $brick.addClass('w2');
-        }
-
-        $brick.data('type', 'Youtube');
-        $brick.data('topic', youtubeObj);
-
-        $brick.append(relatedButton);
-
-        $brick.append(youtubeThumb);
-
-        $brick.append('<i class="fa youtubePlayButton fa-youtube-play"></i>');
-
-        imagesLoaded('#packery .youtube', function () {
-            pckry.layout();
-        });
-
-        $brick.find('.youtubePlayButton').on('click', function () {
-            playYoutube($brick, youtubeObj);
-        });
-
-        $brick.find('.related').on('click', function () {
-            (0, _APIcalls.getRelatedYoutubes)(youtubeObj.youtubeID, youtubeObj.query, searchResultsLoaded, "buildYoutubeSearchResults", $brick.data('id'));
-            $sourceType.trigger('change');
-        });
-
-        callback($brick);
-    };
-
     //play a youtube video
     var playYoutube = function playYoutube($brick, youtubeObj) {
 
@@ -2753,8 +2709,50 @@ window.WIKIVERSE = (function ($) {
         return $brick;
     };
 
+    //build a youtube brick
+    wikiverse.buildYoutube = function ($brick, youtubeObj, callback) {
+
+        var relatedButton = '<button class="btn btn-default btn-xs related" type="button">get related videos</button>';
+        var youtubeThumb = '<img class="" id="ytplayer" type="text/html" src="' + youtubeObj.thumbnailURL + '">';
+        var playButton = '<i class="fa youtubePlayButton fa-youtube-play"></i>';
+
+        //stop all other players
+        $('.youtube').find("iframe").remove();
+        $('.youtube').find("img").show();
+        $('.youtube').find(".youtubePlayButton").show();
+        $('.youtube').removeClass("w2-fix");
+
+        $brick.addClass('youtube');
+
+        if (youtubeObj.size === "large") {
+            $brick.addClass('w2');
+        }
+
+        $brick.data('type', 'Youtube');
+        $brick.data('topic', youtubeObj);
+
+        $brick.append(relatedButton);
+        $brick.append(youtubeThumb);
+        $brick.append(playButton);
+
+        imagesLoaded('#packery .youtube', function () {
+            pckry.layout();
+        });
+
+        $brick.find('.youtubePlayButton').on('click', function () {
+            playYoutube($brick, youtubeObj);
+        });
+
+        $brick.find('.related').on('click', function () {
+            (0, _APIcalls.getRelatedYoutubes)(youtubeObj.youtubeID, youtubeObj.query, searchResultsLoaded, "buildYoutubeSearchResults", $brick.data('id'));
+            $sourceType.trigger('change');
+        });
+
+        callback($brick);
+    };
+
     //build a board -   this is called only for saved boards (coming from db)
-    wikiverse.buildBoard = function (board) {
+    var buildBoard = function buildBoard(board) {
 
         prepareBoardTitle(board);
 
@@ -3455,9 +3453,7 @@ window.WIKIVERSE = (function ($) {
     /* END EVENTS */
 
     //return stars to be used elsewhere on page
-    wikiverse.stars = _stars.stars;
-
-    return wikiverse;
+    return { init: init, buildBoard: buildBoard, stars: _stars.stars };
 })(jQuery);
 
 //wv imports
