@@ -5,13 +5,12 @@ The core Javascript file responsible for the content aggregation is called wikiv
 License information will follow asap. 
 
 # Important:
-wikiverse might not work without these three plugins: 
+wikiverse needs this plugin to work:
 
-- Edit Author Slug (can be installed via Wordpress - set the slug to "user")
 - the development beta 2 version of WP-API plugin (will soon be obsolete due to integration in WP core)
-- wp-twitter-api (my own plugin - needs oauth configuration via the Wordpress backend)
 
-I added my composer.json to automate the installation of these plugins. Follow the bedrock / composer instruction to install the plugins. 
+
+I added my composer.json to automate the installation of this plugin. Follow the bedrock / composer instruction to install the plugins. 
 
 For the rest, just install the theme, and start building boards. Enjoy!
 
@@ -23,8 +22,7 @@ To install the theme, follow Bedrocks's documentation. In a nutshell, the needed
 2. Replace the composer.json with mine and run 
 3. composer update
 4. Install the theme-folder found here
-5. Activate and configure the Edit Author Slug plugin to have /user as the slug
-6. Activate wp-twitter-api and configure your twitter oauth credentials 
+6. Configure your twitter oauth credentials under Settings->Twitter API
 7. Activate WP-API
 
 
