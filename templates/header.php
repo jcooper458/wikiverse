@@ -54,7 +54,7 @@ else{
 
         <?php }  ?>
       </ul>
-      
+
       <ul class="nav navbar-nav navbar-right">
 
         <?php if ( is_user_logged_in() ) {
@@ -62,7 +62,7 @@ else{
 
           <?php if ( is_page('start') ) { ?>
           <li><a href="#" class="board-pilot invisible" id="clearBoard">clear board</a></li>
-          <li><a href="#" class="board-pilot invisible" id="createBoard" >save board</a></li>
+          <li><a href="#" class="board-pilot" id="createBoard" >save board</a></li>
           <?php }  ?>
           <?php if ( is_singular("board")) { ?>
           <?php if ( $current_user->ID != $post->post_author ) { // if is author ?>
